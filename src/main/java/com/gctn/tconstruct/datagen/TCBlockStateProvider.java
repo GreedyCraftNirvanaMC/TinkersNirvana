@@ -1,4 +1,4 @@
-package com.gctn.tconstruct.library.model;
+package com.gctn.tconstruct.datagen;
 
 import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.init.BlockRegister;
