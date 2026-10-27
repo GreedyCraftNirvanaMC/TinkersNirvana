@@ -92,7 +92,7 @@ public class ToolStationMenu extends AbstractContainerMenu {
             return ItemStack.EMPTY;
         }
         Slot quickMovedSlot = this.slots.get(quickMovedSlotIndex);
-        if (quickMovedSlot == null || !quickMovedSlot.hasItem()) {
+        if (quickMovedSlot == null || !quickMovedSlot.hasItem() || !quickMovedSlot.mayPickup(player)) {
             return ItemStack.EMPTY;
         }
 
@@ -292,12 +292,33 @@ public class ToolStationMenu extends AbstractContainerMenu {
                 && this.moveItemStackTo(stack, RESULT_MENU_SLOT, RESULT_MENU_SLOT + 1, false)) {
             return true;
         }
-        if (this.moveItemStackTo(stack, INPUT_MENU_SLOT_START, TOOL_STATION_SLOT_COUNT, false)) {
+        if (this.moveToActiveInputs(stack)) {
             return true;
         }
         return quickMovedSlotIndex < PLAYER_INVENTORY_END
                 ? this.moveItemStackTo(stack, HOTBAR_START, HOTBAR_END, false)
                 : this.moveItemStackTo(stack, PLAYER_INVENTORY_START, PLAYER_INVENTORY_END, false);
+    }
+
+    private boolean moveToActiveInputs(ItemStack stack) {
+        boolean moved = false;
+        // Vanilla's merge pass skips mayPlace/isActive. Check both before using it
+        // because each mode has duplicate Slot views over the same physical inputs.
+        for (int pass = 0; pass < 2; pass++) {
+            for (int index = INPUT_MENU_SLOT_START; index < TOOL_STATION_SLOT_COUNT; index++) {
+                Slot slot = this.slots.get(index);
+                if (!slot.isActive() || !slot.mayPlace(stack) || slot.hasItem() != (pass == 0)) {
+                    continue;
+                }
+                if (this.moveItemStackTo(stack, index, index + 1, false)) {
+                    moved = true;
+                    if (stack.isEmpty() || pass == 1) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return moved;
     }
 
     private boolean areInputSlotsEmpty() {

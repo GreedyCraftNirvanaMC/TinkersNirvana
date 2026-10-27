@@ -33,7 +33,7 @@ public class ToolRod extends ToolPart {
     public static void getAllParts(Collection<ItemStack> coloredParts) {
         List<Material> materials = TinkerMaterials.materials;
         for (Material material : materials) {
-            if (material.getStats() == null || !material.getStats().containsKey("Handle")) { continue; }
+            if (material.isHidden() || !material.hasStats("Handle")) { continue; }
             ItemStack stack = getPart(material);
             coloredParts.add(stack);
         }
@@ -44,12 +44,9 @@ public class ToolRod extends ToolPart {
         CompoundTag tag = new CompoundTag();
         tag.putString(Tags.PART_MATERIAL, material.identifier);
         stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(tag));
-        stack.set(DataComponents.ITEM_NAME, Component.literal(
-                        Component.translatable("material."+material.identifier+".name").getString()
-                        + " "
-                        + Component.translatable("item.tconstruct.tool_rod.name").getString()
-                )
-        );
+        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_name",
+                Component.translatable("material." + material.identifier + ".name"),
+                Component.translatable("item.tconstruct.tool_rod.name")));
         return stack;
     }
 

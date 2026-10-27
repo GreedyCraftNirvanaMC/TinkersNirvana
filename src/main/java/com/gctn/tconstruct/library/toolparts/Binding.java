@@ -42,12 +42,9 @@ public class Binding extends ToolPart {
         CompoundTag tag = new CompoundTag();
         tag.putString(Tags.PART_MATERIAL, material.identifier);
         stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(tag));
-        stack.set(DataComponents.ITEM_NAME, Component.literal(
-                        Component.translatable("material."+material.identifier+".name").getString()
-                        +" "
-                        +Component.translatable("item.tconstruct.binding.name").getString()
-                )
-        );
+        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_name",
+                Component.translatable("material." + material.identifier + ".name"),
+                Component.translatable("item.tconstruct.binding.name")));
         return stack;
     }
 

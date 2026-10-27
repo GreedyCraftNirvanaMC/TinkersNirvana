@@ -19,13 +19,8 @@ import static com.gctn.tconstruct.library.toolparts.ToolRod.TOOL_ROD;
 public class PartColor {
     public static final ItemColor PART_COLOR = (stack, tintIndex) -> {
         String materialId = TinkerDataComponents.getMaterialTag(stack).getString(Tags.PART_MATERIAL);
-        for (Material material : TinkerMaterials.materials) {
-            if (material.identifier.equals(materialId)) {
-                return material.color;
-            }
-        }
-
-        return 0xFFFFFFFF;
+        Material material = TinkerMaterials.getMaterial(materialId);
+        return material == null ? 0xFFFFFFFF : material.color;
     };
 
     @SubscribeEvent

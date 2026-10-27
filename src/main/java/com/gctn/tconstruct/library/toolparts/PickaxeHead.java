@@ -31,7 +31,7 @@ public class PickaxeHead extends ToolPart {
     public static void getAllColoredParts(Collection<ItemStack> coloredParts) {
         List<Material> materials = TinkerMaterials.materials;
         for (Material material : materials) {
-            if (material.getStats() == null || !material.getStats().containsKey("Head")) { continue; }
+            if (material.isHidden() || !material.hasStats("Head")) { continue; }
             ItemStack stack = getColoredPart(material);
             coloredParts.add(stack);
         }
@@ -42,12 +42,9 @@ public class PickaxeHead extends ToolPart {
         CompoundTag tag = new CompoundTag();
         tag.putString(Tags.PART_MATERIAL, material.identifier);
         stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(tag));
-        stack.set(DataComponents.ITEM_NAME, Component.literal(
-                        Component.translatable("material."+material.identifier+".name").getString()
-                        +" "
-                        +Component.translatable("item.tconstruct.pickaxe_head.name").getString()
-                )
-        );
+        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_name",
+                Component.translatable("material." + material.identifier + ".name"),
+                Component.translatable("item.tconstruct.pickaxe_head.name")));
         return stack;
     }
 

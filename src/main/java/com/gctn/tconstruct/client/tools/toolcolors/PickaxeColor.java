@@ -42,13 +42,8 @@ public class PickaxeColor {
      * @return 材质对应的颜色，匹配不到返回默认白色
      */
     private static int getMaterialColor(String materialId) {
-        for (Material material : TinkerMaterials.materials) {
-            if (material.identifier.equals(materialId)) {
-                return material.color;
-            }
-        }
-        // 材质ID匹配不到时返回默认色
-        return 0xFFFFFFFF;
+        Material material = TinkerMaterials.getMaterial(materialId);
+        return material == null ? 0xFFFFFFFF : material.color;
     }
 
     @SubscribeEvent

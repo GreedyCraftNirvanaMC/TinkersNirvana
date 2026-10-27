@@ -27,7 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.registries.DeferredItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Pickaxe extends TinkerTools {
@@ -41,6 +40,12 @@ public class Pickaxe extends TinkerTools {
 
     // Material order: handle, head, binding.
     public static ItemStack initPickaxe(Material matHandle, Material matHead, Material matBinding) {
+        if (matHandle == null || matHead == null || matBinding == null
+                || matHandle.getStats("Handle", HandleMaterialStats.class) == null
+                || matHead.getStats("Head", HeadMaterialStats.class) == null
+                || matBinding.getStats("Extra", ExtraMaterialStats.class) == null) {
+            return ItemStack.EMPTY;
+        }
         ItemStack stack = new ItemStack(PICKAXE.get());
 
         CompoundTag materialTag = new CompoundTag();
@@ -63,13 +68,9 @@ public class Pickaxe extends TinkerTools {
             stack.set(DataComponents.DAMAGE, 0);
         }
 
-        stack.set(DataComponents.ITEM_NAME, Component.literal(
-                        Component.translatable(
-                                "material." + matHead.identifier + ".name").getString()
-                                + " "
-                                + Component.translatable("item.tconstruct.pickaxe.name").getString()
-                )
-        );
+        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_name",
+                Component.translatable("material." + matHead.identifier + ".name"),
+                Component.translatable("item.tconstruct.pickaxe.name")));
         return stack;
     }
 
@@ -120,7 +121,7 @@ public class Pickaxe extends TinkerTools {
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miningEntity) {
         if (!level.isClientSide && state.getDestroySpeed(level, pos) != 0.0F) {
             if (!isBroken(stack)) {
-                boolean effective = isCorrectToolForDrops(stack, state);
+                boolean effective = state.is(BlockTags.MINEABLE_WITH_PICKAXE);
                 ToolTraits.forEach(stack, (trait, traitLevel) ->
                         trait.afterBlockBreak(stack, traitLevel, level, state, pos, miningEntity, effective));
             }
@@ -144,18 +145,12 @@ public class Pickaxe extends TinkerTools {
 
     @Override
     public List<RepairInfo> getRepairInfo(ItemStack stack) {
-        List<RepairInfo> repairInfos = new ArrayList<>();
         Material head = getMaterial(stack, "Head", "Head");
-        Material handle = getMaterial(stack, "Handle", "Handle");
         if (head == null) {
             return List.of();
         }
-        int headDurability = ((HeadMaterialStats) head.getStats().get("Head")).durability;
-        int handleDurability = ((HandleMaterialStats) handle.getStats().get("Handle")).durability;
-        repairInfos.add(new RepairInfo(head, 1.0F, headDurability));
-        repairInfos.add(new RepairInfo(handle, 0.8F, handleDurability));
-
-        return repairInfos;
+        HeadMaterialStats stats = head.getStats("Head", HeadMaterialStats.class);
+        return stats == null ? List.of() : List.of(new RepairInfo(head, 1.0F, stats.durability));
     }
 
 }

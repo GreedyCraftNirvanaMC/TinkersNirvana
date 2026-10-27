@@ -135,7 +135,12 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         if (this.mode == Mode.DISASSEMBLE) {
             return this.isDisassemblyPreview() && !this.getItem(RESULT_SLOT).isEmpty();
         }
-        return !this.getItem(RESULT_SLOT).isEmpty();
+        ItemStack expected = this.createCraftingResult();
+        if (!ItemStack.matches(expected, this.getItem(RESULT_SLOT))) {
+            this.updateResult();
+            return false;
+        }
+        return !expected.isEmpty();
     }
 
     public void resultSlotChanged(ItemStack newStack) {
@@ -173,6 +178,9 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     public ItemStack removeItem(int slot, int amount) {
         ItemStack removed = super.removeItem(slot, amount);
         this.commitDisassemblyAfterPartRemoval(slot, removed);
+        if (slot >= 0 && slot < INPUT_SLOT_COUNT && !removed.isEmpty()) {
+            this.inputsChanged();
+        }
         return removed;
     }
 
@@ -180,7 +188,25 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     public ItemStack removeItemNoUpdate(int slot) {
         ItemStack removed = super.removeItemNoUpdate(slot);
         this.commitDisassemblyAfterPartRemoval(slot, removed);
+        if (slot >= 0 && slot < INPUT_SLOT_COUNT && !removed.isEmpty()) {
+            this.inputsChanged();
+        }
         return removed;
+    }
+
+    @Override
+    public void setItem(int slot, ItemStack stack) {
+        super.setItem(slot, stack);
+        if (slot >= 0 && slot < INPUT_SLOT_COUNT) {
+            this.inputsChanged();
+        }
+    }
+
+    @Override
+    public void clearContent() {
+        super.clearContent();
+        this.disassemblyState = DISASSEMBLY_NONE;
+        this.setChanged();
     }
 
     @Override

@@ -57,14 +57,8 @@ public class ToolAssemblyRecipe {
     // 返回stack对应的材料，同时验证材料是否含有对应属性
     private static Material getMaterial(ItemStack stack, String requiredStat) {
         String materialId = TinkerDataComponents.getMaterialTag(stack).getString(Tags.PART_MATERIAL);
-        for (Material material : TinkerMaterials.materials) {
-            if (material.identifier.equals(materialId)
-                    && material.getStats() != null
-                    && material.getStats().containsKey(requiredStat)) {
-                return material;
-            }
-        }
-        return null;
+        Material material = TinkerMaterials.getMaterial(materialId);
+        return material != null && material.hasStats(requiredStat) ? material : null;
     }
 
     record PartRequirement(int inputSlot, Supplier<? extends Item> item, String requiredStat) {

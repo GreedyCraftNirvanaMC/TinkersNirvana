@@ -135,14 +135,8 @@ public abstract class TinkerTools extends Item {
 
     protected static Material getMaterial(ItemStack stack, String materialKey, String requiredStat) {
         String materialId = TinkerDataComponents.getMaterialTag(stack).getString(materialKey);
-        for (Material material : TinkerMaterials.materials) {
-            if (material.identifier.equals(materialId)
-                    && material.getStats() != null
-                    && material.getStats().containsKey(requiredStat)) {
-                return material;
-            }
-        }
-        return null;
+        Material material = TinkerMaterials.getMaterial(materialId);
+        return material != null && material.hasStats(requiredStat) ? material : null;
     }
 
     public static Component getDurabilityTip(ItemStack stack) {

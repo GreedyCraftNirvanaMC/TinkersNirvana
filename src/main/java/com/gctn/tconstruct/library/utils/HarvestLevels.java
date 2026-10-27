@@ -1,6 +1,9 @@
 package com.gctn.tconstruct.library.utils;
 
 import com.gctn.tconstruct.library.TinkerMaterials;
+import com.gctn.tconstruct.TinkersNirvana;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.BlockTags;
@@ -45,6 +48,10 @@ public class HarvestLevels {
         if (harvestLevel == HarvestLevels.DIAMOND) {
             return BlockTags.INCORRECT_FOR_IRON_TOOL;
         }
-        return BlockTags.INCORRECT_FOR_DIAMOND_TOOL;
+        if (harvestLevel < HarvestLevels.COBALT) {
+            return BlockTags.INCORRECT_FOR_DIAMOND_TOOL;
+        }
+        return TagKey.create(Registries.BLOCK,
+                ResourceLocation.fromNamespaceAndPath(TinkersNirvana.MODID, "incorrect_for_cobalt_tool"));
     }
 }

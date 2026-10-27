@@ -13,7 +13,7 @@ public class OreBlocks {
     public static final DeferredBlock<Block> COBALT_ORE =
             BlockRegister.registerBlockWithItem("cobalt_ore", () -> new Block(
                     BlockBehaviour.Properties.of()
-                            .strength(25.0F, 15.0F)
+                            .strength(10.0F, 15.0F)
                             .sound(SoundType.STONE)
                             .requiresCorrectToolForDrops()
             ));

@@ -10,9 +10,14 @@ import com.gctn.tconstruct.tools.traits.TinkerTraits;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Collections;
 
 public class TinkerMaterials {
-    public static final List<Material> materials = Lists.newArrayList();
+    private static final Map<String, Material> MATERIALS_BY_ID = new LinkedHashMap<>();
+    private static final List<Material> REGISTERED_MATERIALS = Lists.newArrayList();
+    public static final List<Material> materials = Collections.unmodifiableList(REGISTERED_MATERIALS);
     public static final List<Material> craftableMaterials = Lists.newArrayList();
     public static final List<Material> castableMaterials = Lists.newArrayList();
 
@@ -87,7 +92,10 @@ public class TinkerMaterials {
     public static Material mat(String name, int color) {
         // make materials show by default, integration will make them invisible
         Material mat = new Material(name, color, false);
-        materials.add(mat);
+        if (MATERIALS_BY_ID.putIfAbsent(name, mat) != null) {
+            throw new IllegalArgumentException("Duplicate material identifier: " + name);
+        }
+        REGISTERED_MATERIALS.add(mat);
         return mat;
     }
 
@@ -105,12 +113,12 @@ public class TinkerMaterials {
 
     // 注册材料属性
     public static void registerToolMaterialStats() {
-        wood.addMaterialStats(new HeadMaterialStats(35, HarvestLevels.STONE, 1, 2),
+        wood.addMaterialStats(new HeadMaterialStats(35, HarvestLevels.STONE, 2, 2),
                 new HandleMaterialStats(1, 25),
                 new ExtraMaterialStats(15));
-        stone.addMaterialStats(new HeadMaterialStats(100, HarvestLevels.IRON, 20, 4),
-                new HandleMaterialStats(1, 100),
-                new ExtraMaterialStats(150));
+        stone.addMaterialStats(new HeadMaterialStats(120, HarvestLevels.IRON, 3, 4),
+                new HandleMaterialStats(0.5F, -50),
+                new ExtraMaterialStats(20));
     }
 
     // 注册材料词条
@@ -136,12 +144,7 @@ public class TinkerMaterials {
     }
 
     public static Material getMaterial(String materialId) {
-        for (Material material : TinkerMaterials.materials) {
-            if (material.identifier.equals(materialId)) {
-                return material;
-            }
-        }
-        return null;
+        return MATERIALS_BY_ID.get(materialId);
     }
 
 }
