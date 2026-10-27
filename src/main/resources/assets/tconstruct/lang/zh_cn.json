@@ -1,0 +1,10 @@
+{
+  "traits.ecological.name": "生态",
+  "traits.cheap.name": "廉价",
+  "traits.cheapskate.name": "吝啬",
+  "traits.ecological.description": "放在物品栏中时缓慢恢复耐久。损坏的工具需要先修复。",
+  "traits.cheap.description": "修复时额外恢复少量耐久。",
+  "traits.cheapskate.description": "工具的耐久降低。",
+  "tooltip.tconstruct.trait.level": "%s %s",
+  "tooltip.tconstruct.hold_for_traits": "按住 %s 查看特性"
+}

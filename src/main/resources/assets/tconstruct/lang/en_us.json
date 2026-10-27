@@ -2,16 +2,12 @@
   "tinker_tool_parts_tab": "TinkerToolParts",
   "tinker_tools_tab": "TinkerTools",
   "tinker_blocks_tab": "TinkerBlocks",
-
   "block.tconstruct.toolstation": "Tool Station",
   "container.tconstruct.debug_toolstation": "Debug Tool Station",
-
   "item.tconstruct.tool_rod.name": "Tool Rod",
   "item.tconstruct.binding.name": "Binding",
   "item.tconstruct.pickaxe_head.name": "Pickaxe Head",
-
   "item.tconstruct.pickaxe.name": "Pickaxe",
-
   "material.wood.name": "Wood",
   "material.wood.prefix": "Wooden %s",
   "material.stone.name": "Stone",
@@ -45,18 +41,15 @@
   "material.alubrass.name": "Aluminum Brass",
   "material.alumite.name": "Alumite",
   "material.bloodbone.name": "Bloody Bone",
-
   "material.string.name": "String",
   "material.vine.name": "Vines",
   "material.slimevine_blue.name": "Blue Slimevine",
   "material.slimevine_orange.name": "Magma Slimevine",
   "material.slimevine_purple.name": "Purple Slimevine",
-
   "material.blaze.name": "Blazerod",
   "material.reed.name": "Reeds",
   "material.ice.name": "Ice",
   "material.endrod.name": "Endrod",
-
   "material.feather.name": "Feather",
   "material.leaf.name": "Leaf",
   "material.slimeleaf_blue.name": "Blue Slimeleaf",
@@ -71,27 +64,29 @@
   "container.tconstruct.toolstation.mode.shovel": "Shovel",
   "container.tconstruct.toolstation.mode.axe": "Axe",
   "container.tconstruct.toolstation.mode.debug": "Debug",
-
   "ui.mininglevel.stone": "Stone",
   "ui.mininglevel.iron": "Iron",
   "ui.mininglevel.diamond": "Diamond",
   "ui.mininglevel.obsidian": "Obsidian",
   "ui.mininglevel.cobalt": "Cobalt",
-
   "tooltip.tconstruct.hold_for_stats": "Hold %s for Stats",
   "tooltip.tconstruct.hold_for_more": "Hold %s for more",
   "tooltip.tconstruct.part.durability": "Durability: %s",
   "tooltip.tconstruct.handle.modifier": "Modifier: %s",
   "tooltip.tconstruct.handle": "Handle",
-
   "tooltip.tconstruct.tool.durability": "Durability: %s/%s",
   "tooltip.tconstruct.tool.durability.broken": "Durability: %s",
   "tooltip.tconstruct.tool.broken": "Broken",
-
   "tooltip.tconstruct.tool.mininglevel": "Mining Level: %s",
   "tooltip.tconstruct.tool.miningspeed": "Mining Speed: %s",
   "tooltip.tconstruct.tool.attack": "Attack: %s",
   "tooltip.tconstruct.tool.modifiers": "Modifiers: %s",
-
-  "traits.ecological.name": "Ecological"
+  "traits.ecological.name": "Ecological",
+  "traits.cheap.name": "Cheap",
+  "traits.cheapskate.name": "Cheapskate",
+  "traits.ecological.description": "Slowly repairs itself while in your inventory. Broken tools must be repaired first.",
+  "traits.cheap.description": "Repairs restore a little extra durability.",
+  "traits.cheapskate.description": "The tool has reduced durability.",
+  "tooltip.tconstruct.trait.level": "%s %s",
+  "tooltip.tconstruct.hold_for_traits": "Hold %s for Traits"
 }

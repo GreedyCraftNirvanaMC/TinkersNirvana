@@ -8,7 +8,7 @@ import com.gctn.tconstruct.library.stats.HeadMaterialStats;
 import com.gctn.tconstruct.library.utils.HarvestLevels;
 import com.gctn.tconstruct.library.utils.ToolHelper;
 import com.gctn.tconstruct.tools.TinkerTools;
-import com.gctn.tconstruct.tools.traits.TinkerTraits;
+import com.gctn.tconstruct.tools.traits.ToolTraits;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
@@ -48,11 +48,8 @@ public class PickaxeTips {
         HeadMaterialStats headStats = headMaterial.getStats("Head", HeadMaterialStats.class);
         if (headStats == null) { return; }
 
-        CompoundTag traitsTag = TinkerDataComponents.getTraitsTag(stack);
-        for (String traitTagKeys : traitsTag.getAllKeys()) {
-            Component traitsTip = Component.translatable("traits." + traitTagKeys + ".name")
-                    .withColor(TinkerTraits.getTraitColor(traitTagKeys));
-            upperTips.add(Either.left(traitsTip));
+        for (ToolTraits.Entry entry : ToolTraits.getTraits(stack)) {
+            upperTips.add(Either.left(entry.trait().getDisplayName(entry.level())));
         }
         upperTips.add(Either.left(Component.empty()));
 
@@ -78,10 +75,13 @@ public class PickaxeTips {
         } else if (Screen.hasControlDown()) {
             // TODO 按下Ctrl时显示详细信息
         } else if (Screen.hasAltDown()) {
-            // TODO 按下Alt时显示词条简介
+            for (ToolTraits.Entry entry : ToolTraits.getTraits(stack)) {
+                upperTips.add(Either.left(entry.trait().getDescription()));
+            }
         } else {
             upperTips.add(Either.left(TinkerTools.shiftTip));
             upperTips.add(Either.left(TinkerTools.controlTip));
+            upperTips.add(Either.left(Component.translatable("tooltip.tconstruct.hold_for_traits", "Alt").withColor(0xFFAAAAAA)));
         }
         if (ToolHelper.hasCreativeTabTip(tooltip, stack)) {
             upperTips.add(Either.left(Component.empty()));

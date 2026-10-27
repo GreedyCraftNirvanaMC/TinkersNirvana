@@ -5,6 +5,9 @@ import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.library.utils.ToolHelper;
+import com.gctn.tconstruct.tools.traits.ToolTraits;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -74,12 +77,35 @@ public abstract class TinkerTools extends Item {
             return;
         }
 
+        int original = amount;
+        for (ToolTraits.Entry entry : ToolTraits.getTraits(stack)) {
+            amount = entry.trait().onToolDamage(stack, entry.level(), original, amount, entity);
+        }
+        if (amount <= 0) {
+            return;
+        }
         int originalCount = stack.getCount();
         int maxDamage = stack.getMaxDamage();
         stack.hurtAndBreak(amount, entity, slot);
         if (stack.isEmpty()) {
             stack.setCount(originalCount);
             stack.setDamageValue(maxDamage);
+        }
+    }
+
+    /** Passive healing cannot revive broken tools, matching Antique's ToolHelper. */
+    public static void healTool(ItemStack stack, int amount, LivingEntity entity) {
+        if (amount > 0 && stack.isDamaged() && !isBroken(stack)) {
+            int healed = ToolTraits.modifyHealing(stack, amount, entity);
+            stack.setDamageValue(Math.max(0, stack.getDamageValue() - healed));
+        }
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+        if (!world.isClientSide) {
+            ToolTraits.forEach(stack, (trait, level) -> trait.onUpdate(stack, level, world, entity, slot, selected));
         }
     }
 
