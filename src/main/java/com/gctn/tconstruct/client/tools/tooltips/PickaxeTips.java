@@ -2,20 +2,20 @@ package com.gctn.tconstruct.client.tools.tooltips;
 
 import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.library.TinkerMaterials;
+import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.library.stats.HeadMaterialStats;
 import com.gctn.tconstruct.library.utils.HarvestLevels;
 import com.gctn.tconstruct.library.utils.ToolHelper;
 import com.gctn.tconstruct.tools.TinkerTools;
+import com.gctn.tconstruct.tools.traits.TinkerTraits;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -34,28 +34,26 @@ public class PickaxeTips {
         if (!stack.is(PICKAXE.get())) { return; }
         List<Either<FormattedText, TooltipComponent>> tooltip = event.getTooltipElements();
 
-        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-        if (customData == null) { return; }
-        CompoundTag nbtTag = customData.copyTag();
+        CompoundTag materials = TinkerDataComponents.getMaterialTag(stack);
+        List<Either<FormattedText, TooltipComponent>> upperTips = new ArrayList<>();
 
-        // TODO 用获取词条本地化代替测试文案，同时计算词条等级
-        String headMaterialId = nbtTag.getString("Head");
+        String headMaterialId = materials.getString("Head");
         Material headMaterial = TinkerMaterials.getMaterial(headMaterialId);
-        String handleMaterialId = nbtTag.getString("Handle");
+        String handleMaterialId = materials.getString("Handle");
         Material handleMaterial = TinkerMaterials.getMaterial(handleMaterialId);
-        String bindingMaterialId = nbtTag.getString("Binding");
+        String bindingMaterialId = materials.getString("Binding");
         Material bindingMaterial = TinkerMaterials.getMaterial(bindingMaterialId);
+        if (headMaterial == null || handleMaterial == null || bindingMaterial == null) { return; }
 
         HeadMaterialStats headStats = headMaterial.getStats("Head", HeadMaterialStats.class);
+        if (headStats == null) { return; }
 
-        Component headTraitsTip = Component.literal("词条").withColor(headMaterial.color);
-        Component handleTraitsTip = Component.literal("词条").withColor(handleMaterial.color);
-        Component bindingTraitsTip = Component.literal("词条").withColor(bindingMaterial.color);
-
-        List<Either<FormattedText, TooltipComponent>> upperTips = new ArrayList<>();
-        upperTips.add(Either.left(headTraitsTip));
-        upperTips.add(Either.left(handleTraitsTip));
-        upperTips.add(Either.left(bindingTraitsTip));
+        CompoundTag traitsTag = TinkerDataComponents.getTraitsTag(stack);
+        for (String traitTagKeys : traitsTag.getAllKeys()) {
+            Component traitsTip = Component.translatable("traits." + traitTagKeys + ".name")
+                    .withColor(TinkerTraits.getTraitColor(traitTagKeys));
+            upperTips.add(Either.left(traitsTip));
+        }
         upperTips.add(Either.left(Component.empty()));
 
         if (Screen.hasShiftDown()) {

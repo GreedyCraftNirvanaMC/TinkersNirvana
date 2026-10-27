@@ -1,9 +1,10 @@
 package com.gctn.tconstruct.library.toolparts;
 
 import com.gctn.tconstruct.library.TinkerMaterials;
+import com.gctn.tconstruct.init.TinkerDataComponents;
+import com.gctn.tconstruct.library.utils.Tags;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.library.materials.MaterialValue;
-import com.gctn.tconstruct.library.utils.Tags;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -40,7 +41,7 @@ public class PickaxeHead extends ToolPart {
         ItemStack stack = new ItemStack(PICKAXEHEAD.get());
         CompoundTag tag = new CompoundTag();
         tag.putString(Tags.PART_MATERIAL, material.identifier);
-        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+        stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(tag));
         stack.set(DataComponents.ITEM_NAME, Component.literal(
                         Component.translatable("material."+material.identifier+".name").getString()
                         +" "

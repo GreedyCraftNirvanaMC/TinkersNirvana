@@ -2,11 +2,11 @@ package com.gctn.tconstruct.client.tools.toolcolors;
 
 import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.library.TinkerMaterials;
+import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.Material;
 import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.nbt.Tag;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -17,19 +17,20 @@ import static com.gctn.tconstruct.tools.tools.Pickaxe.PICKAXE;
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public class PickaxeColor {
     public static final ItemColor PICKAXE_COLOR = (stack, tintIndex) -> {
-        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-        if (customData == null) return 0xFFFFFFFF; // 无NBT时返回默认白色
-
-        CompoundTag tag = customData.copyTag();
-        if (!tag.contains("Handle") || !tag.contains("Head") || !tag.contains("Binding")) return 0xFFFFFFFF;
+        CompoundTag materials = TinkerDataComponents.getMaterialTag(stack);
+        if (!materials.contains("Handle", Tag.TAG_STRING)
+                || !materials.contains("Head", Tag.TAG_STRING)
+                || !materials.contains("Binding", Tag.TAG_STRING)) {
+            return 0xFFFFFFFF;
+        }
 
         return switch (tintIndex) {
             case 0 -> // layer0 → Handle（手柄）
-                    getMaterialColor(tag.getString("Handle"));
+                    getMaterialColor(materials.getString("Handle"));
             case 1 -> // layer1 → Head（头部）
-                    getMaterialColor(tag.getString("Head"));
+                    getMaterialColor(materials.getString("Head"));
             case 2 -> // layer2 → Binding（绑定）
-                    getMaterialColor(tag.getString("Binding"));
+                    getMaterialColor(materials.getString("Binding"));
             default -> // 异常索引，返回默认色
                     0xFFFFFFFF;
         };

@@ -91,5 +91,7 @@
   "tooltip.tconstruct.tool.mininglevel": "Mining Level: %s",
   "tooltip.tconstruct.tool.miningspeed": "Mining Speed: %s",
   "tooltip.tconstruct.tool.attack": "Attack: %s",
-  "tooltip.tconstruct.tool.modifiers": "Modifiers: %s"
+  "tooltip.tconstruct.tool.modifiers": "Modifiers: %s",
+
+  "traits.ecological.name": "Ecological"
 }

@@ -1,15 +1,14 @@
 package com.gctn.tconstruct.tables.recipe;
 
 import com.gctn.tconstruct.library.TinkerMaterials;
+import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.library.toolparts.Binding;
 import com.gctn.tconstruct.library.toolparts.PickaxeHead;
 import com.gctn.tconstruct.library.toolparts.ToolRod;
 import com.gctn.tconstruct.tools.tools.Pickaxe;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.nbt.CompoundTag;
 
 public final class ToolStationDisassemblyRecipes {
     private ToolStationDisassemblyRecipes() {
@@ -35,15 +34,10 @@ public final class ToolStationDisassemblyRecipes {
     }
 
     private static PartList createPickaxeParts(ItemStack stack) {
-        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-        if (customData == null) {
-            return PartList.EMPTY;
-        }
-
-        CompoundTag tag = customData.copyTag();
-        Material handle = getMaterial(tag, "Handle", "Handle");
-        Material head = getMaterial(tag, "Head", "Head");
-        Material binding = getMaterial(tag, "Binding", "Extra");
+        CompoundTag materials = TinkerDataComponents.getMaterialTag(stack);
+        Material handle = getMaterial(materials, "Handle", "Handle");
+        Material head = getMaterial(materials, "Head", "Head");
+        Material binding = getMaterial(materials, "Binding", "Extra");
         if (handle == null || head == null || binding == null) {
             return PartList.EMPTY;
         }
@@ -55,8 +49,8 @@ public final class ToolStationDisassemblyRecipes {
         });
     }
 
-    private static Material getMaterial(CompoundTag tag, String materialKey, String requiredStat) {
-        String materialId = tag.getString(materialKey);
+    private static Material getMaterial(CompoundTag materials, String materialKey, String requiredStat) {
+        String materialId = materials.getString(materialKey);
         for (Material material : TinkerMaterials.materials) {
             if (material.identifier.equals(materialId)
                     && material.getStats() != null

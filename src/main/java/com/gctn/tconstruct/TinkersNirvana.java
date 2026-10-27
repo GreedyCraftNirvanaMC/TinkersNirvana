@@ -1,11 +1,13 @@
 package com.gctn.tconstruct;
 
 import com.gctn.tconstruct.init.ToolPartsRegistryBus;
+import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.init.ToolsRegistryBus;
 import com.gctn.tconstruct.library.MaterialList;
 import com.gctn.tconstruct.init.TableRegistryBus;
 import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.init.TinkerRegistry;
+import com.gctn.tconstruct.tools.traits.TinkerTraits;
 import com.gctn.tconstruct.init.BlockRegister;
 import com.gctn.tconstruct.init.ItemRegister;
 import com.mojang.logging.LogUtils;
@@ -24,6 +26,8 @@ public class TinkersNirvana {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public TinkersNirvana(IEventBus modEventBus, ModContainer modContainer) {
+        TinkerTraits.registerTraits();
+        TinkerDataComponents.register(modEventBus);
         TableRegistryBus.register(modEventBus);
         ToolPartsRegistryBus.register(modEventBus);
         ToolsRegistryBus.register(modEventBus);

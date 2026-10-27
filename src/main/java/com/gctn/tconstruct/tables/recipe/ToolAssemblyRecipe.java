@@ -1,14 +1,12 @@
 package com.gctn.tconstruct.tables.recipe;
 
 import com.gctn.tconstruct.library.TinkerMaterials;
-import com.gctn.tconstruct.library.materials.Material;
+import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.utils.Tags;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
+import com.gctn.tconstruct.library.materials.Material;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -58,13 +56,7 @@ public class ToolAssemblyRecipe {
 
     // 返回stack对应的材料，同时验证材料是否含有对应属性
     private static Material getMaterial(ItemStack stack, String requiredStat) {
-        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-        if (customData == null) {
-            return null;
-        }
-
-        CompoundTag tag = customData.copyTag();
-        String materialId = tag.getString(Tags.PART_MATERIAL);
+        String materialId = TinkerDataComponents.getMaterialTag(stack).getString(Tags.PART_MATERIAL);
         for (Material material : TinkerMaterials.materials) {
             if (material.identifier.equals(materialId)
                     && material.getStats() != null

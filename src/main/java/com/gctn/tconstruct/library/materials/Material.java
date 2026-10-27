@@ -1,9 +1,9 @@
 package com.gctn.tconstruct.library.materials;
 
 import com.gctn.tconstruct.library.stats.AbstractMaterialStats;
+import com.gctn.tconstruct.tools.traits.AbstractTraits;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Material {
     public final String identifier;
@@ -11,6 +11,7 @@ public class Material {
     public final boolean hidden;
 
     public Map<String, AbstractMaterialStats> stats = new HashMap<>();
+    public Map<String, ArrayList<AbstractTraits>> traits = new HashMap<>();
 
     // 是否可以直接使用部件加工台(默认false)
     protected boolean craftable = false;
@@ -71,6 +72,19 @@ public class Material {
     public <T extends AbstractMaterialStats> T getStats(String identifier, Class<T> statClass) {
         AbstractMaterialStats stat = stats.get(identifier);
         return statClass.isInstance(stat) ? statClass.cast(stat) : null;
+    }
+
+    // 添加词条属性
+    public void addMaterialTraits(AbstractTraits.TraitPosPair... traitPairs) {
+        for (AbstractTraits.TraitPosPair traitPair : traitPairs) {
+            ArrayList<AbstractTraits> list = this.traits.computeIfAbsent(traitPair.pos(), k -> new ArrayList<>());
+            list.addAll(List.of(traitPair.traits()));
+        }
+    }
+
+    // 获取词条属性
+    public List<AbstractTraits> getTraits(String pos) {
+        return traits.getOrDefault(pos, new ArrayList<>());
     }
 
     public int getColor() { return color; }

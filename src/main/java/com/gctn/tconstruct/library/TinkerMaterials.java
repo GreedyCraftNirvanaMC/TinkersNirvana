@@ -5,6 +5,8 @@ import com.gctn.tconstruct.library.stats.ExtraMaterialStats;
 import com.gctn.tconstruct.library.stats.HandleMaterialStats;
 import com.gctn.tconstruct.library.stats.HeadMaterialStats;
 import com.gctn.tconstruct.library.utils.HarvestLevels;
+import com.gctn.tconstruct.tools.traits.AbstractTraits;
+import com.gctn.tconstruct.tools.traits.EcologicalTraits;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -111,6 +113,12 @@ public class TinkerMaterials {
                 new ExtraMaterialStats(150));
     }
 
+    // 注册材料词条
+    public static void registerToolMaterialTraits() {
+        wood.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", new EcologicalTraits(1)),
+                AbstractTraits.TraitPosPair.of("Handle", new EcologicalTraits(1)));
+    }
+
     static {
         xu = new Material("unstable", 0xFFFFFFFF, true);
         unknown = new Material("unknown", 0xFFFFFFFF, true);
@@ -123,6 +131,7 @@ public class TinkerMaterials {
         setCastableMaterials(iron, pigiron);
 
         registerToolMaterialStats();
+        registerToolMaterialTraits();
     }
 
     public static Material getMaterial(String materialId) {

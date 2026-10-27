@@ -1,11 +1,13 @@
 package com.gctn.tconstruct.tools.tools;
 
 import com.gctn.tconstruct.library.materials.Material;
+import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.stats.ExtraMaterialStats;
 import com.gctn.tconstruct.library.stats.HandleMaterialStats;
 import com.gctn.tconstruct.library.stats.HeadMaterialStats;
 import com.gctn.tconstruct.library.utils.HarvestLevels;
 import com.gctn.tconstruct.tools.TinkerTools;
+import com.gctn.tconstruct.tools.traits.AbstractTraits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -33,19 +35,25 @@ public class Pickaxe extends TinkerTools {
             Pickaxe::new);
 
     /** Forces this class's static registration entry to be initialized. */
-    public static void init() {
-    }
+    public static void init() {}
 
     public Pickaxe() {}
 
     // Material order: handle, head, binding.
     public static ItemStack initPickaxe(Material matHandle, Material matHead, Material matBinding) {
         ItemStack stack = new ItemStack(PICKAXE.get());
-        CompoundTag tag = new CompoundTag();
-        tag.putString("Handle", matHandle.identifier);
-        tag.putString("Head", matHead.identifier);
-        tag.putString("Binding", matBinding.identifier);
-        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+
+        CompoundTag materialTag = new CompoundTag();
+        materialTag.putString("Handle", matHandle.identifier);
+        materialTag.putString("Head", matHead.identifier);
+        materialTag.putString("Binding", matBinding.identifier);
+        stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(materialTag));
+
+        CompoundTag traitsTag = new CompoundTag();
+        addTraits(traitsTag, matHead.getTraits("Head"));
+        addTraits(traitsTag, matHandle.getTraits("Handle"));
+        addTraits(traitsTag, matBinding.getTraits("Extra"));
+        stack.set(TinkerDataComponents.TINKER_TRAITS.get(), CustomData.of(traitsTag));
 
         HeadMaterialStats headStats = (HeadMaterialStats) matHead.getStats().get("Head");
         if (headStats != null) {
@@ -63,6 +71,19 @@ public class Pickaxe extends TinkerTools {
                 )
         );
         return stack;
+    }
+
+    private static void addTraits(CompoundTag traitsTag, List<AbstractTraits> traits) {
+        for (AbstractTraits trait : traits) {
+            CompoundTag traitTag = traitsTag.getCompound(trait.identifier);
+            if (traitsTag.contains(trait.identifier)) {
+                traitTag.putInt("Level", trait.addLevel(traitTag.getInt("Level")));
+            } else {
+                traitTag.putInt("Level", trait.level);
+            }
+            traitTag.putInt("StrengthenNumber", trait.strengthenNumber);
+            traitsTag.put(trait.identifier, traitTag);
+        }
     }
 
     private static int getPickaxeDurability(Material matHandle, Material matHead, Material matBinding) {

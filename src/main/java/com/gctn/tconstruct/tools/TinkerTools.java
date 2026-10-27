@@ -2,15 +2,14 @@ package com.gctn.tconstruct.tools;
 
 import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.library.TinkerMaterials;
+import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.library.utils.ToolHelper;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -109,12 +108,7 @@ public abstract class TinkerTools extends Item {
     ).withColor(0xFFAAAAAA);
 
     protected static Material getMaterial(ItemStack stack, String materialKey, String requiredStat) {
-        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-        if (customData == null) {
-            return null;
-        }
-
-        String materialId = customData.copyTag().getString(materialKey);
+        String materialId = TinkerDataComponents.getMaterialTag(stack).getString(materialKey);
         for (Material material : TinkerMaterials.materials) {
             if (material.identifier.equals(materialId)
                     && material.getStats() != null

@@ -2,12 +2,10 @@ package com.gctn.tconstruct.client.toolparts;
 
 import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.library.TinkerMaterials;
-import com.gctn.tconstruct.library.materials.Material;
+import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.utils.Tags;
+import com.gctn.tconstruct.library.materials.Material;
 import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.component.CustomData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -20,13 +18,7 @@ import static com.gctn.tconstruct.library.toolparts.ToolRod.TOOL_ROD;
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public class PartColor {
     public static final ItemColor PART_COLOR = (stack, tintIndex) -> {
-        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-        if (customData == null) return 0xFFFFFFFF; // 无NBT时返回默认白色
-
-        CompoundTag tag = customData.copyTag();
-        if (!tag.contains(Tags.PART_MATERIAL)) return 0xFFFFFFFF;
-
-        String materialId = tag.getString(Tags.PART_MATERIAL);
+        String materialId = TinkerDataComponents.getMaterialTag(stack).getString(Tags.PART_MATERIAL);
         for (Material material : TinkerMaterials.materials) {
             if (material.identifier.equals(materialId)) {
                 return material.color;
