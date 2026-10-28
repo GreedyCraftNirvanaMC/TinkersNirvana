@@ -6,7 +6,7 @@ import com.gctn.tconstruct.library.stats.HandleMaterialStats;
 import com.gctn.tconstruct.library.stats.HeadMaterialStats;
 import com.gctn.tconstruct.library.utils.HarvestLevels;
 import com.gctn.tconstruct.tools.traits.AbstractTraits;
-import com.gctn.tconstruct.tools.traits.EcologicalTraits;
+import com.gctn.tconstruct.tools.traits.TinkerTraits;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -115,8 +115,9 @@ public class TinkerMaterials {
 
     // 注册材料词条
     public static void registerToolMaterialTraits() {
-        wood.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", new EcologicalTraits(1)),
-                AbstractTraits.TraitPosPair.of("Handle", new EcologicalTraits(1)));
+        wood.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, TinkerTraits.getTrait("ecological")));
+        stone.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", TinkerTraits.getTrait("cheapskate")),
+                AbstractTraits.TraitPosPair.of(null, TinkerTraits.getTrait("cheap")));
     }
 
     static {

@@ -11,7 +11,7 @@ public class Material {
     public final boolean hidden;
 
     public Map<String, AbstractMaterialStats> stats = new HashMap<>();
-    public Map<String, ArrayList<AbstractTraits>> traits = new HashMap<>();
+    private final Map<String, List<AbstractTraits>> traits = new HashMap<>();
 
     // 是否可以直接使用部件加工台(默认false)
     protected boolean craftable = false;
@@ -77,14 +77,19 @@ public class Material {
     // 添加词条属性
     public void addMaterialTraits(AbstractTraits.TraitPosPair... traitPairs) {
         for (AbstractTraits.TraitPosPair traitPair : traitPairs) {
-            ArrayList<AbstractTraits> list = this.traits.computeIfAbsent(traitPair.pos(), k -> new ArrayList<>());
-            list.addAll(List.of(traitPair.traits()));
+            List<AbstractTraits> list = this.traits.computeIfAbsent(traitPair.pos(), k -> new ArrayList<>());
+            for (AbstractTraits trait : traitPair.traits()) {
+                if (list.stream().anyMatch(existing -> existing.identifier.equals(trait.identifier))) {
+                    throw new IllegalArgumentException("Duplicate material trait: " + trait.identifier);
+                }
+                list.add(trait);
+            }
         }
     }
 
     // 获取词条属性
     public List<AbstractTraits> getTraits(String pos) {
-        return traits.getOrDefault(pos, new ArrayList<>());
+        return List.copyOf(traits.getOrDefault(pos, traits.getOrDefault(null, List.of())));
     }
 
     public int getColor() { return color; }

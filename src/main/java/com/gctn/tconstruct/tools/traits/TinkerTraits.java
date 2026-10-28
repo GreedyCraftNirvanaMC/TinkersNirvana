@@ -9,7 +9,7 @@ import java.util.Map;
 /** 集中注册并查询所有匠魂词条。 */
 public final class TinkerTraits {
     /** 按注册顺序保存词条，便于遍历所有词条。 */
-    public static final List<AbstractTraits> traits = new ArrayList<>();
+    private static final List<AbstractTraits> traits = new ArrayList<>();
     private static final Map<String, AbstractTraits> TRAITS_BY_NAME = new LinkedHashMap<>();
     private static boolean registered;
 
@@ -27,6 +27,8 @@ public final class TinkerTraits {
         registered = true;
 
         registerTrait(new EcologicalTraits(1));
+        registerTrait(new CheapTraits());
+        registerTrait(new CheapskateTraits());
     }
 
     /** 注册一个词条；同一 identifier 不能注册两次。 */
