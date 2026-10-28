@@ -7,13 +7,12 @@ import com.gctn.tconstruct.library.stats.HandleMaterialStats;
 import com.gctn.tconstruct.library.stats.HeadMaterialStats;
 import com.gctn.tconstruct.library.utils.HarvestLevels;
 import com.gctn.tconstruct.tools.TinkerTools;
-import com.gctn.tconstruct.tools.traits.AbstractTraits;
+import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
@@ -51,16 +50,17 @@ public class Pickaxe extends TinkerTools {
         stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(materialTag));
 
         CompoundTag traitsTag = new CompoundTag();
-        addTraits(traitsTag, matHead.getTraits("Head"));
-        addTraits(traitsTag, matHandle.getTraits("Handle"));
-        addTraits(traitsTag, matBinding.getTraits("Extra"));
+        ToolTraits.addTraits(traitsTag, matHead.getTraits("Head"));
+        ToolTraits.addTraits(traitsTag, matHandle.getTraits("Handle"));
+        ToolTraits.addTraits(traitsTag, matBinding.getTraits("Extra"));
         stack.set(TinkerDataComponents.TINKER_TRAITS.get(), CustomData.of(traitsTag));
 
         HeadMaterialStats headStats = (HeadMaterialStats) matHead.getStats().get("Head");
         if (headStats != null) {
             stack.set(DataComponents.TOOL, getPickaxeInfo(headStats));
             stack.set(DataComponents.ATTRIBUTE_MODIFIERS, getPickaxeAttibute(headStats));
-            stack.set(DataComponents.MAX_DAMAGE, getPickaxeDurability(matHandle, matHead, matBinding));
+            stack.set(DataComponents.MAX_DAMAGE,
+                    ToolTraits.modifyDurability(stack, getPickaxeDurability(matHandle, matHead, matBinding)));
             stack.set(DataComponents.DAMAGE, 0);
         }
 
@@ -72,20 +72,6 @@ public class Pickaxe extends TinkerTools {
                 )
         );
         return stack;
-    }
-
-    private static void addTraits(CompoundTag traitsTag, List<AbstractTraits.TraitEntry> traits) {
-        for (AbstractTraits.TraitEntry entry : traits) {
-            AbstractTraits trait = entry.trait();
-            CompoundTag traitTag = traitsTag.getCompound(trait.identifier);
-            if (traitsTag.contains(trait.identifier)) {
-                traitTag.putInt("Level", trait.addLevel(traitTag.getInt("Level"), entry.level()));
-            } else {
-                traitTag.putInt("Level", entry.level());
-            }
-            traitTag.putInt("StrengthenNumber", trait.strengthenNumber);
-            traitsTag.put(trait.identifier, traitTag);
-        }
     }
 
     private static int getPickaxeDurability(Material matHandle, Material matHead, Material matBinding) {
@@ -134,6 +120,11 @@ public class Pickaxe extends TinkerTools {
     @Override
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miningEntity) {
         if (!level.isClientSide && state.getDestroySpeed(level, pos) != 0.0F) {
+            if (!isBroken(stack)) {
+                boolean effective = isCorrectToolForDrops(stack, state);
+                ToolTraits.forEach(stack, (trait, traitLevel) ->
+                        trait.afterBlockBreak(stack, traitLevel, level, state, pos, miningEntity, effective));
+            }
             damageTool(stack, 1, miningEntity, EquipmentSlot.MAINHAND);
         }
         return true;
@@ -146,7 +137,10 @@ public class Pickaxe extends TinkerTools {
 
     @Override
     public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        damageTool(stack, 2, attacker, EquipmentSlot.MAINHAND);
+        if (!attacker.level().isClientSide && !isBroken(stack)) {
+            ToolTraits.forEach(stack, (trait, traitLevel) -> trait.afterHit(stack, traitLevel, target, attacker));
+            damageTool(stack, 2, attacker, EquipmentSlot.MAINHAND);
+        }
     }
 
     @Override
@@ -154,7 +148,7 @@ public class Pickaxe extends TinkerTools {
         List<RepairInfo> repairInfos = new ArrayList<>();
         Material head = getMaterial(stack, "Head", "Head");
         Material handle = getMaterial(stack, "Handle", "Handle");
-        if (head == null) {
+        if (head == null || handle == null) {
             return List.of();
         }
         int headDurability = ((HeadMaterialStats) head.getStats().get("Head")).durability;

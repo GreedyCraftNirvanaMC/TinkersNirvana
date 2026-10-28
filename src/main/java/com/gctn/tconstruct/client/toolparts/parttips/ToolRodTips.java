@@ -43,9 +43,7 @@ public class ToolRodTips {
         List<Either<FormattedText, TooltipComponent>> addedTips = new ArrayList<>();
 
         for (AbstractTraits.TraitEntry entry : material.getTraits("Handle")) {
-            AbstractTraits trait = entry.trait();
-            Component traitsTip = Component.literal(trait.getTranslatedName()).withColor(trait.color);
-            addedTips.add(Either.left(traitsTip));
+            addedTips.add(Either.left(entry.trait().getDisplayName(entry.level())));
         }
         addedTips.add(Either.left(Component.empty()));
 
@@ -70,9 +68,15 @@ public class ToolRodTips {
             addedTips.add(Either.left(modifierTip));
             addedTips.add(Either.left(durabilityTip));
         } else if (Screen.hasAltDown()) {
-            // TODO 按下Alt时显示词条简介
+            for (AbstractTraits.TraitEntry entry : material.getTraits("Handle")) {
+                addedTips.add(Either.left(entry.trait().getDescription()));
+            }
         } else {
             addedTips.add(Either.left(shiftTip));
+            if (!material.getTraits("Handle").isEmpty()) {
+                addedTips.add(Either.left(Component.translatable("tooltip.tconstruct.hold_for_traits", "Alt")
+                        .withColor(0xFFAAAAAA)));
+            }
         }
         if (ToolHelper.hasCreativeTabTip(tooltip, stack)) {
             addedTips.add(Either.left(Component.empty()));

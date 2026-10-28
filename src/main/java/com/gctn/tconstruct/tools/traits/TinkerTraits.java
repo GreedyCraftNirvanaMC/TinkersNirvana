@@ -9,15 +9,21 @@ import java.util.Map;
 /** 集中注册并查询所有匠魂词条。 */
 public final class TinkerTraits {
     /** 按注册顺序保存词条，便于遍历所有词条。 */
-    public static final List<AbstractTraits> traits = new ArrayList<>();
+    private static final List<AbstractTraits> traits = new ArrayList<>();
     private static final Map<String, AbstractTraits> TRAITS_BY_NAME = new LinkedHashMap<>();
     private static boolean registered;
 
     private static final TraitEcological ECOLOGICAL = new TraitEcological();
+    private static final TraitCheap CHEAP = new TraitCheap();
+    private static final TraitCheapskate CHEAPSKATE = new TraitCheapskate();
 
     /** 生成工具/部件时使用的初始配置；工具后续的实际等级保存在自身 Tag 中。 */
     public static final AbstractTraits.TraitEntry ECOLOGICAL_1 =
             new AbstractTraits.TraitEntry(ECOLOGICAL, 1);
+    public static final AbstractTraits.TraitEntry CHEAP_1 =
+            new AbstractTraits.TraitEntry(CHEAP, 1);
+    public static final AbstractTraits.TraitEntry CHEAPSKATE_1 =
+            new AbstractTraits.TraitEntry(CHEAPSKATE, 1);
 
     private TinkerTraits() {
     }
@@ -34,6 +40,8 @@ public final class TinkerTraits {
         registered = true;
 
         registerTrait(ECOLOGICAL);
+        registerTrait(CHEAP);
+        registerTrait(CHEAPSKATE);
     }
 
     /** 注册一个词条；同一 identifier 不能注册两次。 */

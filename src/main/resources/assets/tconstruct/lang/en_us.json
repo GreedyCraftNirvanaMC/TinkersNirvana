@@ -93,5 +93,12 @@
   "tooltip.tconstruct.tool.attack": "Attack: %s",
   "tooltip.tconstruct.tool.modifiers": "Modifiers: %s",
 
-  "traits.ecological.name": "Ecological"
+  "traits.ecological.name": "Ecological",
+  "traits.cheap.name": "Cheap",
+  "traits.cheapskate.name": "Cheapskate",
+  "traits.ecological.description": "Slowly repairs itself while in your inventory. Broken tools must be repaired first.",
+  "traits.cheap.description": "Healing restores an extra 5% durability, rounded down.",
+  "traits.cheapskate.description": "Reduces assembled tool durability by 20%, rounded down to at least one.",
+  "tooltip.tconstruct.trait.level": "%s %s",
+  "tooltip.tconstruct.hold_for_traits": "Hold %s for Traits"
 }

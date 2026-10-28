@@ -5,6 +5,7 @@ import com.gctn.tconstruct.library.MaterialList;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.tools.TinkerTools;
 import com.gctn.tconstruct.tools.TinkerTools.RepairInfo;
+import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -71,25 +72,25 @@ public final class ToolStationDefaultRecipes {
 
     // 获取修复结果
     private static ItemStack createRepairResult(Container container) {
-        ItemStack tool = container.getItem(TOOL_SLOT);
         RepairPlan repairPlan = createRepairPlan(container);
         if (repairPlan == null || repairPlan.isEmpty()) {
             return ItemStack.EMPTY;
         }
 
-        ItemStack repairedTool = tool.copy();
+        ItemStack repairedTool = repairPlan.resultTool.copy();
         repairedTool.setCount(1);
-        repairedTool.setDamageValue(repairPlan.remainingDamage);
         return repairedTool;
     }
 
     // 获取修复方案(包括修复量和材料消耗情况)
     private static RepairPlan createRepairPlan(Container container) {
 
-        ItemStack tool = container.getItem(TOOL_SLOT);
-        if (!isRepairableTool(tool)) {
+        ItemStack sourceTool = container.getItem(TOOL_SLOT);
+        if (!isRepairableTool(sourceTool)) {
             return null;
         }
+        // 所有词条计算只作用于副本，预览不能修改输入工具。
+        ItemStack tool = sourceTool.copy();
         int remainingDamage = tool.getDamageValue();
         int[] totalRepairAmount = new int[MATERIAL_SLOT_COUNT];
 
@@ -99,6 +100,7 @@ public final class ToolStationDefaultRecipes {
                 break;
             }
 
+            int previousDamage = remainingDamage;
             double matchEfficiency = 1 + (repairMatches.size() - 1) / 9.0;
             for (RepairMatch repairMatch : repairMatches) {
                 if (remainingDamage == 0) {
@@ -113,13 +115,22 @@ public final class ToolStationDefaultRecipes {
                         matchEfficiency
                 );
 
+                if (repairAmount <= 0) {
+                    continue;
+                }
+                int healedAmount = Math.min(remainingDamage, repairAmount);
                 int slot = repairMatch.slot() - FIRST_MATERIAL_SLOT;
                 totalRepairAmount[slot] += 1;
-                remainingDamage = Math.max(0, remainingDamage - repairAmount);
+                remainingDamage -= healedAmount;
+                tool.setDamageValue(remainingDamage);
+                ToolTraits.forEach(tool, (trait, level) -> trait.onRepair(tool, level, healedAmount));
+            }
+            if (remainingDamage == previousDamage) {
+                break;
             }
         }
 
-        return new RepairPlan(totalRepairAmount, remainingDamage);
+        return new RepairPlan(totalRepairAmount, tool);
     }
 
     // 获取修复槽位和对应材料信息
@@ -189,10 +200,11 @@ public final class ToolStationDefaultRecipes {
     }
 
     private static int getRepairAmount(ItemStack tool, float partEfficient, double repairEfficient, double matchEfficient) {
-        return Math.max(1, (int) Math.ceil(tool.getMaxDamage() * partEfficient * repairEfficient * matchEfficient));
+        int base = Math.max(1, (int) Math.ceil(tool.getMaxDamage() * partEfficient * repairEfficient * matchEfficient));
+        return ToolTraits.modifyHealing(tool, base, null);
     }
 
-    private record RepairPlan(int[] repairCount, int remainingDamage) {
+    private record RepairPlan(int[] repairCount, ItemStack resultTool) {
         boolean isEmpty() {
             for (int count : repairCount) {
                 if (count > 0) {

@@ -5,16 +5,13 @@ import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.library.utils.ToolHelper;
-import com.gctn.tconstruct.tools.traits.AbstractTraits;
-import com.gctn.tconstruct.tools.traits.TinkerTraits;
-import net.minecraft.nbt.CompoundTag;
+import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
@@ -76,7 +73,11 @@ public abstract class TinkerTools extends Item {
     }
 
     protected final void damageTool(ItemStack stack, int amount, LivingEntity entity, EquipmentSlot slot) {
-        if (amount <= 0 || isBroken(stack)) {
+        if (entity.level().isClientSide || amount <= 0 || isBroken(stack)) {
+            return;
+        }
+        amount = ToolTraits.modifyDamage(stack, amount, entity);
+        if (amount <= 0) {
             return;
         }
 
@@ -86,6 +87,14 @@ public abstract class TinkerTools extends Item {
         if (stack.isEmpty()) {
             stack.setCount(originalCount);
             stack.setDamageValue(maxDamage);
+        }
+    }
+
+    /** 被动治疗不能复活损坏工具；材料修复走组装台的独立模拟流程。 */
+    public static void healTool(ItemStack stack, int amount, LivingEntity entity) {
+        if (!entity.level().isClientSide && amount > 0 && stack.isDamaged() && !isBroken(stack)) {
+            int healed = ToolTraits.modifyHealing(stack, amount, entity);
+            stack.setDamageValue(Math.max(0, stack.getDamageValue() - healed));
         }
     }
 
@@ -150,15 +159,8 @@ public abstract class TinkerTools extends Item {
     // 词条触发器部分
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        if(!(stack.getItem() instanceof TinkerTools)) { return; }
-        CompoundTag traitsTag = TinkerDataComponents.getTraitsTag(stack);
-        for (String traitId : traitsTag.getAllKeys()) {
-            AbstractTraits trait = TinkerTraits.getTrait(traitId);
-            if (trait != null) {continue;}
-            CompoundTag traitTag = traitsTag.getCompound(traitId);
-            int traitLevel = traitTag.getInt("Level");
-            trait.inventoryTick(stack, level, entity, slotId, isSelected, traitTag);
-        }
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
+        ToolTraits.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
 }
