@@ -1,55 +1,55 @@
-package com.gctn.tconstruct.library.toolparts;
+package com.gctn.tconstruct.library.toolparts; // 声明此类所属的包，使其与对应功能模块保持一致。
 
-import com.gctn.tconstruct.library.TinkerMaterials;
-import com.gctn.tconstruct.init.TinkerDataComponents;
-import com.gctn.tconstruct.library.utils.Tags;
-import com.gctn.tconstruct.library.materials.Material;
-import com.gctn.tconstruct.library.materials.MaterialValue;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
-import net.neoforged.neoforge.registries.DeferredItem;
+import com.gctn.tconstruct.library.TinkerMaterials; // 引入 com.gctn.tconstruct.library.TinkerMaterials，供本文件使用。
+import com.gctn.tconstruct.init.TinkerDataComponents; // 引入 com.gctn.tconstruct.init.TinkerDataComponents，供本文件使用。
+import com.gctn.tconstruct.library.utils.Tags; // 引入 com.gctn.tconstruct.library.utils.Tags，供本文件使用。
+import com.gctn.tconstruct.library.materials.Material; // 引入 com.gctn.tconstruct.library.materials.Material，供本文件使用。
+import com.gctn.tconstruct.library.materials.MaterialValue; // 引入 com.gctn.tconstruct.library.materials.MaterialValue，供本文件使用。
+import net.minecraft.core.component.DataComponents; // 引入 net.minecraft.core.component.DataComponents，供本文件使用。
+import net.minecraft.nbt.CompoundTag; // 引入 net.minecraft.nbt.CompoundTag，供本文件使用。
+import net.minecraft.network.chat.Component; // 引入 net.minecraft.network.chat.Component，供本文件使用。
+import net.minecraft.world.item.Item; // 引入 net.minecraft.world.item.Item，供本文件使用。
+import net.minecraft.world.item.ItemStack; // 引入 net.minecraft.world.item.ItemStack，供本文件使用。
+import net.minecraft.world.item.component.CustomData; // 引入 net.minecraft.world.item.component.CustomData，供本文件使用。
+import net.neoforged.neoforge.registries.DeferredItem; // 引入 net.neoforged.neoforge.registries.DeferredItem，供本文件使用。
 
-import java.util.Collection;
-import java.util.List;
+import java.util.Collection; // 引入 java.util.Collection，供本文件使用。
+import java.util.List; // 引入 java.util.List，供本文件使用。
 
 /**
  * 只为可见且具有头部属性的材料生成镐头变体。
  * 根据保存的材料给共享模型着色，无需为每种材料分别注册物品。
  */
-public class PickaxeHead extends ToolPart {
-    public PickaxeHead(int cost) {
-        super(cost);
-    }
+public class PickaxeHead extends ToolPart { // 定义 PickaxeHead 的实现类型，具体职责见上方说明。
+    public PickaxeHead(int cost) { // 定义 PickaxeHead 的调用入口，参数和具体处理见下方实现。
+        super(cost); // 向当前声明或调用传入 super(cost)。
+    } // 结束当前作用域。
 
-    public static final DeferredItem<Item> PICKAXEHEAD = ITEMS.register("parts/pickaxe_head",
-            () -> new PickaxeHead(MaterialValue.VALUE_Ingot * 2));
+    public static final DeferredItem<Item> PICKAXEHEAD = ITEMS.register("parts/pickaxe_head", // 设置 PICKAXEHEAD 为 ITEMS.register("parts/pickaxe_head",。
+            () -> new PickaxeHead(MaterialValue.VALUE_Ingot * 2)); // 定义回调或映射规则，在对应条目被处理时执行。
 
     /** 显式触发本类的静态注册条目初始化。 */
-    public static void init() {
-    }
+    public static void init() { // 定义 init 的调用入口，参数和具体处理见下方实现。
+    } // 结束当前作用域。
 
-    public static void getAllColoredParts(Collection<ItemStack> coloredParts) {
-        List<Material> materials = TinkerMaterials.materials;
-        for (Material material : materials) {
-            if (material.isHidden() || !material.hasStats("Head")) { continue; }
-            ItemStack stack = getColoredPart(material);
-            coloredParts.add(stack);
-        }
-    }
+    public static void getAllColoredParts(Collection<ItemStack> coloredParts) { // 定义 getAllColoredParts 的调用入口，参数和具体处理见下方实现。
+        List<Material> materials = TinkerMaterials.materials; // 设置 materials 为 TinkerMaterials.materials。
+        for (Material material : materials) { // 遍历 Material material : materials，逐项执行当前处理。
+            if (material.isHidden() || !material.hasStats("Head")) { continue; } // 检查 material.isHidden() || !material.hasStats("Head")；按条件决定是否执行本分支。
+            ItemStack stack = getColoredPart(material); // 设置 stack 为 getColoredPart(material)。
+            coloredParts.add(stack); // 向集合或构建器追加条目。
+        } // 结束当前作用域。
+    } // 结束当前作用域。
 
-    public static ItemStack getColoredPart(Material material) {
-        ItemStack stack = new ItemStack(PICKAXEHEAD.get());
-        CompoundTag tag = new CompoundTag();
-        tag.putString(Tags.PART_MATERIAL, material.identifier);
-        stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(tag));
-        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_name",
-                Component.translatable("material." + material.identifier + ".name"),
-                Component.translatable("item.tconstruct.pickaxe_head.name")));
-        return stack;
-    }
+    public static ItemStack getColoredPart(Material material) { // 定义 getColoredPart 的调用入口，参数和具体处理见下方实现。
+        ItemStack stack = new ItemStack(PICKAXEHEAD.get()); // 设置 stack 为 new ItemStack(PICKAXEHEAD.get())。
+        CompoundTag tag = new CompoundTag(); // 设置 tag 为 new CompoundTag()。
+        tag.putString(Tags.PART_MATERIAL, material.identifier); // 写入字符串存档字段。
+        stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(tag)); // 设置目标槽位、组件或属性的值。
+        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_name", // 设置目标槽位、组件或属性的值。
+                Component.translatable("material." + material.identifier + ".name"), // 调用 translatable，执行当前流程所需的处理。
+                Component.translatable("item.tconstruct.pickaxe_head.name"))); // 调用 translatable，执行当前流程所需的处理。
+        return stack; // 返回 stack，将当前分支的结果交给调用者。
+    } // 结束当前作用域。
 
-}
+} // 结束当前作用域。
