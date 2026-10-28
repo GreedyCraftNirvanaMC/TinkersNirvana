@@ -23,9 +23,9 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Authoritative station inventory plus crafting/disassembly state machine.
- * Normal output is a derived preview; disassembly instead keeps a real source until the first part is taken.
- * All viewers and automation share this state, so input changes refresh and output pickup revalidates it.
+ * 管理工具台的权威库存，以及合成、拆解状态机。
+ * 普通合成结果只是派生预览；拆解时则在取走首个部件前始终保留真实源工具。
+ * 所有玩家与自动化共用此状态，因此输入变化必须刷新预览，领取结果时必须重新校验。
  */
 public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     private static final int CONTAINER_SIZE = ToolStationMenu.CONTAINER_SIZE;
@@ -60,7 +60,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
 
         @Override
         public void set(int index, int value) {
-            // Only the block entity changes authoritative state; client data slots use SimpleContainerData.
+            // 只有方块实体可以修改权威状态，客户端数据槽使用 SimpleContainerData。
         }
 
         @Override
@@ -123,8 +123,8 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     }
 
     public void inputsChanged() {
-        // A commit can touch several inputs. Wait until it finishes to rebuild
-        // previews and run the deterministic repair callbacks again.
+        // 一次确认操作可能修改多个输入，等待全部修改完成后再重建
+        // 预览并执行确定性的修复回调。
         if (this.consumingInputs) return;
         if (this.disassemblyState == DISASSEMBLY_COMMITTED && this.areInputSlotsEmpty()) {
             this.disassemblyState = DISASSEMBLY_NONE;
@@ -144,8 +144,8 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         if (this.mode == Mode.DISASSEMBLE) {
             return this.isDisassemblyPreview() && !this.getItem(RESULT_SLOT).isEmpty();
         }
-        // Other viewers/automation may have changed inputs after this preview was
-        // sent. Revalidate on the server before giving the result to a player.
+        // 预览发送后，其他玩家或自动化可能已改变输入。
+        // 将结果交给玩家前，必须在服务端重新校验。
         ItemStack expected = this.createCraftingResult();
         if (!ItemStack.matches(expected, this.getItem(RESULT_SLOT))) {
             this.updateResult();
@@ -180,8 +180,8 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         if (!this.isDisassemblyPreview()) {
             return;
         }
-        // Taking the first part turns preview parts into real items and deletes
-        // their source exactly once. Later part pickups are ordinary removals.
+        // 取走第一个部件时，将预览部件确认为真实物品，并且只消耗
+        // 一次源工具；之后取走其他部件按普通库存移除处理。
         this.disassemblyState = DISASSEMBLY_COMMITTED;
         this.items.set(RESULT_SLOT, ItemStack.EMPTY);
         this.setChanged();
@@ -234,7 +234,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
 
     @Override
     public boolean canTakeItem(Container target, int slot, ItemStack stack) {
-        // The result slot has crafting semantics and may only be taken through ToolStationResultSlot.
+        // 结果槽具有合成事务语义，只允许通过 ToolStationResultSlot 领取。
         return slot >= 0 && slot < INPUT_SLOT_COUNT;
     }
 
@@ -244,13 +244,13 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         }
     }
 
-    /** Removes generated preview parts before the block drops its real contents. */
+    /** 方块掉落真实库存前，先移除生成的部件预览。 */
     public void prepareForRemoval() {
         if (this.isDisassemblyPreview()) {
             this.clearInputSlots();
             this.disassemblyState = DISASSEMBLY_NONE;
         } else if (this.mode != Mode.DISASSEMBLE) {
-            // Crafting output is derived from the inputs and must not be dropped as an extra item.
+            // 合成结果由输入派生，不能作为额外物品一并掉落。
             this.items.set(RESULT_SLOT, ItemStack.EMPTY);
         }
         this.setChanged();

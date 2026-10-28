@@ -12,9 +12,9 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * Defines persistent, synchronized per-stack material and trait data for Minecraft 1.21.1.
- * CustomData is treated as immutable: readers receive copies and mutations replace the component.
- * The persistent codec also supplies the default network codec in this Minecraft version.
+ * 为 Minecraft 1.21.1 定义可持久化、可网络同步的物品材料与词条组件。
+ * 将 CustomData 视为不可变数据：读取时返回副本，修改时替换整个组件。
+ * 此版本中，持久化编解码器也会用于生成默认的网络编解码器。
  */
 public final class TinkerDataComponents {
     public static final DeferredRegister.DataComponents COMPONENTS =

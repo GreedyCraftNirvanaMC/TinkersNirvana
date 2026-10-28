@@ -12,8 +12,8 @@ import java.util.Locale;
 import static com.gctn.tconstruct.TinkersNirvana.MODID;
 
 /**
- * Small formatting and localization helpers shared by ported code.
- * DecimalFormat instances are intended for client presentation, not concurrent server calculations.
+ * 移植代码共用的格式化与本地化辅助方法。
+ * DecimalFormat 实例供客户端界面显示使用，不应直接用于服务端的并发计算。
  */
 public class Util {
     public static final DecimalFormat df = new DecimalFormat("#,###,###.##", DecimalFormatSymbols.getInstance(Locale.US));
@@ -30,19 +30,19 @@ public class Util {
     }
 
     public static String translate(String key, Object... pars) {
-        // Arguments belong to the translation, not to the translation key.
-        // getString resolves text; Component.toString is a debugging representation.
-        // Use a translatable Component directly when sending text to a player so
-        // localization happens on the receiving client instead of the server.
+        // 参数应传给译文，而不是用于格式化翻译键。
+        // getString 返回解析后的文本，Component.toString 只提供调试表示。
+        // 向玩家发送文字时应直接使用可翻译的 Component，
+        // 使文字在接收客户端按其语言解析。
         return Component.translatable(key, pars).getString();
     }
 
     /**
-     * Returns the actual color value for a chatformatting
+     * 返回聊天格式对应的实际颜色值。
      */
     public static int enumChatFormattingToColor(ChatFormatting color) {
-        // Modern ChatFormatting already stores RGB. The old ordinal-based formula
-        // corrupts those colors, and style-only entries (BOLD, RESET) have no RGB.
+        // 当前 ChatFormatting 已直接保存 RGB 值，旧版按枚举序号推导颜色的公式
+        // 会算错颜色；BOLD、RESET 等纯样式条目也没有对应的 RGB 值。
         Integer rgb = color.getColor();
         return rgb == null ? 0xFFFFFF : rgb;
     }

@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * Registers tank-only source/flowing fluids and their fluid types.
- * These fluids intentionally have no world blocks or buckets; capabilities move them between machines.
- * Client texture and tint registration is isolated in SmelteryClientEvents.
+ * 注册只供储罐使用的源流体、流动流体及其流体类型。
+ * 这些流体没有可放置方块或流体桶，机器之间通过流体能力传输。
+ * 客户端的纹理与着色注册集中在 SmelteryClientEvents 中。
  */
 public final class SmelteryFluids {
     private static final DeferredRegister<FluidType> TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, TinkersNirvana.MODID);

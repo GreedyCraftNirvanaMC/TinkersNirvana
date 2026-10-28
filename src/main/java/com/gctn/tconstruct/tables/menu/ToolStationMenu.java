@@ -21,9 +21,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Connects station state to mode-aware slots and native inventory click handling.
- * Each physical input has multiple Slot views for layout changes; only the selected mode may accept transfers.
- * Preview generation and ingredient consumption stay in the block entity rather than client UI code.
+ * 将工具台状态连接到模式感知槽位和原版物品栏点击逻辑。
+ * 每个物理输入槽有多个布局视图，只有当前模式对应的视图允许接收物品转移。
+ * 预览生成与原料消耗由方块实体负责，客户端界面不直接处理这些操作。
  */
 public class ToolStationMenu extends AbstractContainerMenu {
     public static final int CONTAINER_SIZE = 7;
@@ -307,8 +307,8 @@ public class ToolStationMenu extends AbstractContainerMenu {
 
     private boolean moveToActiveInputs(ItemStack stack) {
         boolean moved = false;
-        // Vanilla's merge pass skips mayPlace/isActive. Check both before using it
-        // because each mode has duplicate Slot views over the same physical inputs.
+        // 原版合并阶段不会检查 mayPlace 和 isActive，调用前需要补充这两项校验，
+        // 因为各模式的 Slot 视图会指向同一组物理输入槽。
         for (int pass = 0; pass < 2; pass++) {
             for (int index = INPUT_MENU_SLOT_START; index < TOOL_STATION_SLOT_COUNT; index++) {
                 Slot slot = this.slots.get(index);

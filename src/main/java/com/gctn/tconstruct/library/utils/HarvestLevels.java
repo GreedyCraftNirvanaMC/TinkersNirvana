@@ -11,9 +11,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.tags.TagKey;
 
 /**
- * Bridges Antique numeric harvest levels to Minecraft 1.21.1 incorrect-for-tool block tags.
- * The names describe what can be harvested, not the material of the tool itself.
- * Cobalt remains a separate custom tier above the vanilla diamond/netherite mining gate.
+ * 将 Antique 的数字采掘等级映射到 Minecraft 1.21.1 的 incorrect-for-tool 方块标签。
+ * 等级名称表示可采掘的材料，而不是工具自身的材料。
+ * 钴保持为独立的自定义等级，高于原版钻石与下界合金工具的采掘门槛。
  */
 public class HarvestLevels {
 
@@ -24,7 +24,7 @@ public class HarvestLevels {
     public static final int COBALT = 4;
 
     private HarvestLevels() {
-    } // non-instantiable
+    } // 工具类不允许创建实例。
 
     public static Component getHarvestLevelName(int harvestLevel) {
         MutableComponent name = switch (harvestLevel) {

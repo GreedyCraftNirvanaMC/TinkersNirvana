@@ -16,8 +16,8 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 /**
- * Registers blocks together with their inventory items, including legacy item IDs.
- * Category enumeration forces static entries to exist before the shared deferred register is attached.
+ * 统一注册方块及对应的物品形式，并保留已有的物品标识符。
+ * 先遍历各分类以触发其静态注册，再将共享的延迟注册器挂到模组事件总线上。
  */
 public class BlockRegister {
     public static final DeferredRegister.Blocks BLOCKS =
@@ -40,7 +40,7 @@ public class BlockRegister {
     }
 
     public static Collection<DeferredBlock<?>> entries() {
-        // Calling each category's entries initializes its static registrations.
+        // 调用各分类的 entries 方法，以触发其静态注册条目初始化。
         Collection<DeferredBlock<?>> entries = new ArrayList<>();
         entries.addAll(TableBlocks.entries());
         entries.addAll(SmelteryRegistration.blocks());

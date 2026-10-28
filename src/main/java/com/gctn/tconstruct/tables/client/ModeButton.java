@@ -15,8 +15,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * Client button displaying a mode icon, selected state and translatable narration.
- * Its callback requests a server mode change; the button itself does not change inventory state.
+ * 客户端模式按钮，显示图标、选中状态和可翻译的朗读文本。
+ * 按钮回调只请求服务端切换模式，不直接修改库存状态。
  */
 @OnlyIn(Dist.CLIENT)
 class ModeButton extends AbstractButton {

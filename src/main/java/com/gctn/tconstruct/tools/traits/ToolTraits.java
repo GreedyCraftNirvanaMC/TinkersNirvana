@@ -17,9 +17,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
- * Assembles, validates and dispatches per-stack traits in stable priority order.
- * Unknown or invalid saved entries are retained but never executed, preserving forward compatibility.
- * Copy-on-write state updates keep immutable CustomData components safe for persistence and synchronization.
+ * 以稳定的优先级顺序组装、校验和分发各个物品栈的词条。
+ * 保留但不执行未知或无效的存档条目，以便兼容后续版本的数据。
+ * 状态修改采用写时复制，保证不可变 CustomData 组件可以安全地持久化和同步。
  */
 public final class ToolTraits {
     private ToolTraits() {}

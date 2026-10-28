@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LGPL-3.0-only
-// Adapted from TinkersAntique's Smeltery detector; see THIRD_PARTY_NOTICES.md.
+// 改编自 TinkersAntique 的冶炼炉检测器，来源与许可说明见 THIRD_PARTY_NOTICES.md。
 package com.gctn.tconstruct.smeltery;
 
 import com.gctn.tconstruct.smeltery.block.SmelteryControllerBlock;
@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Detects Antique-style floors and unframed walls around a rectangular air interior.
- * The first invalid wall layer ends the usable height; corners and a roof are not required.
- * Unloaded chunks suspend detection instead of being treated as missing blocks or force-loaded.
+ * 检测围绕矩形空气内部空间的 Antique 式炉底和无框炉壁。
+ * 首个无效炉壁层决定可用高度，结构不要求四角或顶盖。
+ * 未加载区块会使检测暂停，不会被当作缺失方块，也不会被强制加载。
  */
 public record SmelteryStructure(BlockPos min, BlockPos max, List<BlockPos> members, List<BlockPos> tanks) {
     public static final int MAX_INNER_SIZE = 9;
@@ -58,8 +58,8 @@ public record SmelteryStructure(BlockPos min, BlockPos max, List<BlockPos> membe
             var state = level.getBlockState(controller);
             BlockPos inside = controller.relative(state.getValue(SmelteryControllerBlock.FACING).getOpposite());
             if (!air(inside)) return null;
-            // The world bounds and loaded() bound the scan. An arbitrary 64-block
-            // descent cap rejects tall structures that upward scanning permits.
+            // 世界高度边界和 loaded() 已限制扫描范围，额外设置 64 格
+            // 下降上限会错误拒绝向上扫描原本允许的高大结构。
             while (air(inside.below())) inside = inside.below();
             int minX = edge(inside, Direction.WEST).getX() + 1;
             int maxX = edge(inside, Direction.EAST).getX() - 1;
@@ -67,7 +67,7 @@ public record SmelteryStructure(BlockPos min, BlockPos max, List<BlockPos> membe
             int maxZ = edge(inside, Direction.SOUTH).getZ() - 1;
             int width = maxX - minX + 1, depth = maxZ - minZ + 1;
             if (width < 1 || width > MAX_INNER_SIZE || depth < 1 || depth > MAX_INNER_SIZE) return null;
-            // The controller must be on a side, rather than an ignored corner or the floor.
+            // 控制器必须位于侧壁，不能放在被忽略的角落或炉底。
             boolean onX = (controller.getX() == minX - 1 || controller.getX() == maxX + 1) && controller.getZ() >= minZ && controller.getZ() <= maxZ;
             boolean onZ = (controller.getZ() == minZ - 1 || controller.getZ() == maxZ + 1) && controller.getX() >= minX && controller.getX() <= maxX;
             if (!onX && !onZ) return null;

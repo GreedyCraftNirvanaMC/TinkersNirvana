@@ -10,8 +10,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Registers the tool station and its legacy block-item identifier.
- * Keeping the item path stable preserves existing stacks and loot references across this port.
+ * 注册工具装配台，并保留已有的方块物品标识符。
+ * 保持物品路径不变，使移植前后的现有物品栈和掉落引用仍能正确匹配。
  */
 public class TableBlocks {
     public static final DeferredBlock<ToolStationBlock> TOOL_STATION =

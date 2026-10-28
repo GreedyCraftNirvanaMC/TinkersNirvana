@@ -10,9 +10,9 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Per-viewer inventory paging over a potentially large controller inventory.
- * Only 27 item slots are synchronized; page changes remap a server-side Container view.
- * Slot count is split into two 16-bit data values because native menu data packets truncate integers.
+ * 为每位玩家分别管理大型控制器库存的分页。
+ * 只同步 27 个物品槽位，切页时重新映射服务端的 Container 视图。
+ * 原版菜单数据包会截断整数，因此槽位总数拆分为两个 16 位值同步。
  */
 public class SmelteryMenu extends AbstractContainerMenu {
     public static final int VISIBLE_SLOTS = 27, DATA_COUNT = 32;

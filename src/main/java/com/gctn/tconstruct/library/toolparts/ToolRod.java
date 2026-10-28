@@ -17,8 +17,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Creates stack variants of the handle part using persistent material IDs.
- * Names remain translatable so a server-created part displays in the receiving client language.
+ * 使用持久化材料标识符创建手柄部件的物品栈变体。
+ * 名称保留为可翻译组件，使服务端创建的部件仍能按照接收客户端的语言显示。
  */
 public class ToolRod extends ToolPart {
     public ToolRod(int cost) {
@@ -28,7 +28,7 @@ public class ToolRod extends ToolPart {
     public static final DeferredItem<Item> TOOL_ROD = ITEMS.register("parts/tool_rod",
             () -> new ToolRod(MaterialValue.VALUE_Ingot));
 
-    /** Forces this class's static registration entry to be initialized. */
+    /** 显式触发本类的静态注册条目初始化。 */
     public static void init() {
     }
 

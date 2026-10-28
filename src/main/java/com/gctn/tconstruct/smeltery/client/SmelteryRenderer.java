@@ -7,9 +7,9 @@ import net.minecraft.client.renderer.blockentity.*;
 import net.minecraft.world.phys.AABB;
 
 /**
- * Renders ordered fluid layers across the detected multiblock interior.
- * The render bounds cover the full structure, since its fluid may be visible when the controller is off screen.
- * Over-capacity contents are proportionally compressed instead of rendering outside a resized structure.
+ * 在检测出的多方块内部空间中按顺序渲染各流体层。
+ * 渲染范围覆盖整个结构，因为控制器离开屏幕时仍可能看见炉内流体。
+ * 超出容量的流体按比例压缩显示，避免结构缩小时渲染到炉体外部。
  */
 public class SmelteryRenderer implements BlockEntityRenderer<SmelteryControllerBlockEntity> {
     public SmelteryRenderer(BlockEntityRendererProvider.Context context) {}

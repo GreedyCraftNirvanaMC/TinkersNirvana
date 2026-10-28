@@ -9,8 +9,8 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.fluids.FluidStack;
 
 /**
- * Draws six translucent textured faces for a fluid cuboid in local block coordinates.
- * Native fluid extensions provide texture/tint, allowing compatible third-party fluids to render in tanks.
+ * 在方块局部坐标中绘制流体长方体的六个半透明纹理面。
+ * 纹理和颜色通过原生流体扩展取得，使储罐也能显示兼容的第三方流体。
  */
 final class FluidRenderer {
     private FluidRenderer() {}

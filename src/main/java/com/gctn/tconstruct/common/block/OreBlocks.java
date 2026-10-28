@@ -10,8 +10,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Registers the cobalt ore block with Antique hardness and correct-tool drop requirements.
- * Mining tier restrictions live in data tags so native loot/tool rules enforce them consistently.
+ * 按 Antique 的硬度和正确工具掉落要求注册钴矿石。
+ * 采掘等级限制通过数据标签定义，由原版掉落与工具判定统一执行。
  */
 public class OreBlocks {
     public static final DeferredBlock<Block> COBALT_ORE =

@@ -11,8 +11,8 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
 /**
- * Registers smeltery screens, block-entity renderers and fluid texture/tint extensions.
- * All methods are restricted to the client distribution so dedicated servers avoid rendering classes.
+ * 注册冶炼炉界面、方块实体渲染器，以及流体纹理和着色扩展。
+ * 所有方法均限定在客户端加载，避免专用服务端访问渲染类。
  */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public final class SmelteryClientEvents {

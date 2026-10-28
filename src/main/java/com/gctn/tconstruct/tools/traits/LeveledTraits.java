@@ -1,8 +1,8 @@
 package com.gctn.tconstruct.tools.traits;
 
 /**
- * Trait base for additive levels rather than maximum-only merging.
- * By default each distinct contributed strength counts once, matching Antique leveled-trait behavior.
+ * 采用等级相加规则的词条基类，区别于仅取最高等级的普通词条。
+ * 默认情况下，每种不同的初始强度只贡献一次，与 Antique 的可叠加词条行为一致。
  */
 public abstract class LeveledTraits extends AbstractTraits {
     protected LeveledTraits(String identifier, int maxLevel, int strengthenNumber, int color) {

@@ -32,9 +32,9 @@ import java.util.List;
 import static com.gctn.tconstruct.tools.tools.Pickaxe.PICKAXE;
 
 /**
- * Displays assembled-tool traits and keyboard-selected stat or part details.
- * Speed and attack come from the actual stack components, which may differ from current material defaults.
- * Trait descriptions and part contributions are separate views of the same assembled tool.
+ * 显示组装工具的词条，并根据按键选择展示整体属性或各部件信息。
+ * 速度和攻击值读取物品栈的实际组件，可能与当前材料默认值不同。
+ * 词条说明和部件贡献分别从整体与部件角度展示同一把工具。
  */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public class PickaxeTips {

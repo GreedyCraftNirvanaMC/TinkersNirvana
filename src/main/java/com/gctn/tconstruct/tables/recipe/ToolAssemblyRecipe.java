@@ -12,8 +12,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Fixed part-slot requirements and a material-based tool factory.
- * Preview creation validates every material without consuming inputs; consumption is a separate commit step.
+ * 定义固定的部件槽位要求，以及根据材料创建工具的工厂。
+ * 生成预览时只校验所有材料，不消耗输入；原料消耗在独立的确认步骤中执行。
  */
 public class ToolAssemblyRecipe {
     private final PartRequirement[] requirements;

@@ -4,8 +4,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Adds Antique Cheap healing from the original amount, rounded down.
- * Using the original value avoids compounding earlier trait bonuses, and long arithmetic avoids overflow.
+ * 根据原始恢复量计算 Antique 廉价词条的额外治疗，结果向下取整。
+ * 使用原始值可避免重复放大前面词条的加成，使用 long 运算防止整数溢出。
  */
 public final class TraitCheap extends AbstractTraits {
     public TraitCheap() {

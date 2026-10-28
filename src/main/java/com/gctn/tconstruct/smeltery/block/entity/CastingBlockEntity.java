@@ -17,15 +17,15 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
 /**
- * Two-slot casting inventory, recipe-sized fluid buffer and server cooling progress.
- * The mold locks while fluid is present; automation can insert molds and extract results only.
- * Completion creates output once and clears fluid, optionally consuming the template item.
+ * 管理双槽浇铸库存、按配方定容的流体缓冲区和服务端冷却进度。
+ * 存在流体时锁定铸模，自动化只能放入铸模并取走成品。
+ * 完成时只生成一次输出并清空流体，配方可选择同时消耗模板物品。
  */
 public class CastingBlockEntity extends SyncedBlockEntity {
     private int cooling;
     private SmelteryRecipe coolingRecipe;
-    // Slot 0 holds the mold, slot 1 the finished result. Separate ownership lets
-    // automation extract output without also extracting a reusable mold.
+    // 槽位 0 保存铸模，槽位 1 保存成品；分开管理两者，
+    // 使自动化能够只提取成品而不取走可重复使用的铸模。
     private final ItemStackHandler items = new ItemStackHandler(2) {
         @Override public int getSlotLimit(int slot) { return slot == 0 ? 1 : 64; }
         @Override public boolean isItemValid(int slot, ItemStack stack) { return slot == 0 && tank.isEmpty() && getStackInSlot(1).isEmpty(); }
@@ -44,8 +44,8 @@ public class CastingBlockEntity extends SyncedBlockEntity {
                     || !isEmpty() && !FluidStack.isSameFluidSameComponents(getFluid(), resource)) return 0;
             var recipe = SmelteryRecipes.casting(level, isBasin(), items.getStackInSlot(0), resource);
             if (recipe == null) return 0;
-            // Recipes determine capacity. SIMULATE must not change that capacity,
-            // cooling progress, or synchronized block-entity state.
+            // 容量由配方决定，SIMULATE 不能改变容量、
+            // 冷却进度或需要同步的方块实体状态。
             int accepted = Math.min(resource.getAmount(), Math.max(0, recipe.fluids().getFirst().getAmount() - getFluidAmount()));
             if (action.simulate() || accepted <= 0) return accepted;
             setCapacity(recipe.fluids().getFirst().getAmount());
@@ -85,13 +85,13 @@ public class CastingBlockEntity extends SyncedBlockEntity {
         if (casting.tank.isEmpty() || !casting.items.getStackInSlot(1).isEmpty()) return;
         var recipe = SmelteryRecipes.casting(level, casting.isBasin(), casting.items.getStackInSlot(0), casting.tank.getFluid());
         if (recipe == null || casting.tank.getFluidAmount() != recipe.fluids().getFirst().getAmount()) { casting.cooling = 0; return; }
-        // Keep persisted progress on the first lookup, but restart when a data-pack
-        // reload replaces a recipe while the fluid and cast remain in place.
+        // 首次查询保留已保存的进度，但如果数据包重载在保留流体与铸模的情况下
+        // 替换了配方，就重新开始冷却。
         if (casting.coolingRecipe != null && casting.coolingRecipe != recipe) casting.cooling = 0;
         casting.coolingRecipe = recipe;
         if (++casting.cooling >= recipe.time()) {
-            // Server-thread completion creates output once and then consumes
-            // fluid and, for one-use casts, the template item.
+            // 在服务端线程中完成时只生成一次成品，随后消耗
+            // 流体，并按一次性铸模配方的要求消耗模板。
             if (recipe.consumeInput()) casting.items.setStackInSlot(0, ItemStack.EMPTY);
             casting.items.setStackInSlot(1, recipe.result().copy());
             casting.tank.setFluid(FluidStack.EMPTY);

@@ -11,9 +11,9 @@ import net.minecraft.world.item.ItemStack;
 import java.util.*;
 
 /**
- * Plans material repair on a copy, recording exact per-slot consumption for confirmation.
- * Only materials accepted by the tool contribute; slot splitting does not multiply material diversity.
- * Callbacks run on the copied result so refreshing or cancelling a preview cannot alter the input tool.
+ * 在副本上规划材料修复，并记录确认时各槽位需要消耗的准确数量。
+ * 只有工具认可的材料才参与修复，将同种材料拆到多个槽位不会增加材料种类加成。
+ * 回调仅作用于结果副本，刷新或取消预览不能修改输入工具。
  */
 public final class ToolStationDefaultRecipes {
     private static final int TOOL_SLOT = 0;
@@ -97,8 +97,8 @@ public final class ToolStationDefaultRecipes {
         int remainingDamage = tool.getDamageValue();
         int[] totalRepairAmount = new int[MATERIAL_SLOT_COUNT];
 
-        // Count virtual consumption instead of shrinking real ingredients. This
-        // lets preview, validation and commit reproduce the same deterministic plan.
+        // 只记录模拟消耗数量，不减少真实原料，
+        // 使预览、校验和确认消耗都能重现同一套确定性方案。
         while (remainingDamage > 0) {
             Collection<RepairMatch> repairMatches = findRepairMatches(container, tool, totalRepairAmount);
             if (repairMatches.isEmpty()) {
@@ -106,8 +106,8 @@ public final class ToolStationDefaultRecipes {
             }
 
             int previousDamage = remainingDamage;
-            // Count material identities, never slots: dividing one stack across
-            // inputs must not grant extra repair efficiency.
+            // 按材料种类计数，而不是按槽位计数，避免将同一堆原料分散到多个
+            // 输入槽后获得额外修复效率。
             long distinctMaterials = repairMatches.stream().map(RepairMatch::materialId).distinct().count();
             double matchEfficiency = 1 + (distinctMaterials - 1) / 9.0;
             for (RepairMatch repairMatch : repairMatches) {
@@ -195,8 +195,8 @@ public final class ToolStationDefaultRecipes {
 
     private static int getRepairAmount(ItemStack tool, int materialDurability, float partEfficient, double repairEfficient, double matchEfficient) {
         int base = Math.max(1, (int) Math.ceil(materialDurability * partEfficient * repairEfficient * matchEfficient));
-        // This is a pure amount calculation. onRepair runs once, after applying the
-        // actual (possibly capped) healing to the preview copy in createRepairPlan.
+        // 此处只计算恢复量，onRepair 在 createRepairPlan 中应用
+        // 实际恢复量之后仅调用一次，实际恢复量可能受到剩余损耗上限限制。
         return ToolTraits.modifyHealing(tool, base, null);
     }
 

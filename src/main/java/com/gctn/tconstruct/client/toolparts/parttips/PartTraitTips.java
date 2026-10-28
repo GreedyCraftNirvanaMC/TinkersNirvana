@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Shows head/binding trait names and optional Alt descriptions on the client.
- * Handle tooltips are handled separately by ToolRodTips to avoid appending the same trait twice.
+ * 在客户端显示镐头和绑定结的词条名称，按 Alt 时额外显示说明。
+ * 手柄提示由 ToolRodTips 单独处理，避免重复添加同一词条。
  */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public final class PartTraitTips {

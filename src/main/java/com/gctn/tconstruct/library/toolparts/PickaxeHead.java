@@ -17,8 +17,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Creates head variants only for visible materials that provide head stats.
- * The shared item model is tinted from the saved material; separate items per material are unnecessary.
+ * 只为可见且具有头部属性的材料生成镐头变体。
+ * 根据保存的材料给共享模型着色，无需为每种材料分别注册物品。
  */
 public class PickaxeHead extends ToolPart {
     public PickaxeHead(int cost) {
@@ -28,7 +28,7 @@ public class PickaxeHead extends ToolPart {
     public static final DeferredItem<Item> PICKAXEHEAD = ITEMS.register("parts/pickaxe_head",
             () -> new PickaxeHead(MaterialValue.VALUE_Ingot * 2));
 
-    /** Forces this class's static registration entry to be initialized. */
+    /** 显式触发本类的静态注册条目初始化。 */
     public static void init() {
     }
 

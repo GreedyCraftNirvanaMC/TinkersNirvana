@@ -10,13 +10,13 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 /**
- * Stores membership and forwards drain operations to the currently valid controller.
- * Every call rechecks ownership and loaded chunks, so cached capabilities cannot access an old owner.
- * An unloaded owner cannot be stolen by another controller during structure detection.
+ * 保存结构归属，并将排液操作转发给当前有效的控制器。
+ * 每次调用都重新检查归属和区块加载状态，防止缓存的能力访问旧控制器。
+ * 结构检测时，不能将属于未加载控制器的构件抢占给另一控制器。
  */
 public class SmelteryComponentBlockEntity extends SyncedBlockEntity {
     private BlockPos controller;
-    // Providers remain valid when the structure changes; every operation resolves the current owner.
+    // 结构改变后能力提供者仍可保留，每次操作都重新解析当前控制器。
     private final IFluidHandler drain = new IFluidHandler() {
         private IFluidHandler target() { var owner = controller(); return owner != null && owner.isFormed() ? owner.tank() : null; }
         @Override public int getTanks() { var t = target(); return t == null ? 0 : t.getTanks(); }

@@ -16,8 +16,8 @@ import static com.gctn.tconstruct.library.toolparts.PickaxeHead.PICKAXEHEAD;
 import static com.gctn.tconstruct.library.toolparts.ToolRod.TOOL_ROD;
 
 /**
- * Registers client-only tint handlers for the shared material-part models.
- * Unknown saved material IDs fall back to white instead of preventing item rendering.
+ * 只在客户端为共享的材料部件模型注册着色处理器。
+ * 存档中的材料标识符无法识别时使用白色，避免物品无法渲染。
  */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public class PartColor {

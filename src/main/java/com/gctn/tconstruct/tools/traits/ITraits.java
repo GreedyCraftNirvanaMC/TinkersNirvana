@@ -11,9 +11,9 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
 /**
- * Optional trait lifecycle hooks; unimplemented hooks deliberately leave behavior unchanged.
- * Amount modifiers receive both original and accumulated values so ordered traits compose predictably.
- * Preview callbacks must be deterministic and affect only the supplied tool copy.
+ * 可选的词条生命周期回调，未覆盖的方法保持原有行为不变。
+ * 数量修正回调同时接收原始值和累计值，使有序执行的多个词条能够稳定组合。
+ * 预览回调必须具有确定性，且只能修改传入的工具副本。
  */
 public interface ITraits {
     /** 仅服务端调用；traitTag 的修改由分发器写回，不要同时直接替换本词条的组件数据。 */

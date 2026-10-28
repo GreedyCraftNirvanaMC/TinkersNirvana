@@ -9,8 +9,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 
 /**
- * Client GUI for inventory pages, heating progress, fuel and selectable fluid layers.
- * Click hit-testing uses the same layer sizing as rendering, and selection is committed by the server menu.
+ * 客户端冶炼炉界面，展示库存分页、加热进度、燃料和可选择的流体层。
+ * 点击检测与绘制使用相同的分层尺寸，最终流体选择由服务端菜单确认。
  */
 public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
     public SmelteryScreen(SmelteryMenu menu, Inventory inventory, Component title) {

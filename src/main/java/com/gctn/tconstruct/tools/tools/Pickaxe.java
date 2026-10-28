@@ -30,20 +30,20 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import java.util.List;
 
 /**
- * Assembles the current handle/head/binding tool and implements mining/combat wear.
- * Head, extra and handle stats are combined in Antique order, then material traits modify final durability.
- * Minecraft Tool rules handle mining and drops, while the attribute component supplies combat bonuses.
+ * 组装当前的手柄、头部和绑定结，并实现挖掘及战斗损耗。
+ * 先按 Antique 顺序合并头部、额外部件和手柄属性，再由材料词条修改最终耐久。
+ * Minecraft 的 Tool 规则处理挖掘与掉落，属性组件提供战斗加成。
  */
 public class Pickaxe extends TinkerTools {
     public static final DeferredItem<Item> PICKAXE = ITEMS.register("pickaxe/pickaxe",
             Pickaxe::new);
 
-    /** Forces this class's static registration entry to be initialized. */
+    /** 显式触发本类的静态注册条目初始化。 */
     public static void init() {}
 
     public Pickaxe() {}
 
-    // Material order: handle, head, binding.
+    // 材料参数顺序：手柄、头部、绑定结。
     public static ItemStack initPickaxe(Material matHandle, Material matHead, Material matBinding) {
         if (matHandle == null || matHead == null || matBinding == null) {
             return ItemStack.EMPTY;
@@ -51,15 +51,15 @@ public class Pickaxe extends TinkerTools {
         HandleMaterialStats handleStats = matHandle.getStats("Handle", HandleMaterialStats.class);
         HeadMaterialStats headStats = matHead.getStats("Head", HeadMaterialStats.class);
         ExtraMaterialStats bindingStats = matBinding.getStats("Extra", ExtraMaterialStats.class);
-        // Unsupported or incompletely ported materials must not produce tools
-        // whose missing MAX_DAMAGE component makes them accidentally unbreakable.
+        // 不受支持或尚未完整移植的材料不能生成工具，
+        // 否则缺失 MAX_DAMAGE 组件可能导致工具意外变得无法损坏。
         if (handleStats == null || headStats == null || bindingStats == null) {
             return ItemStack.EMPTY;
         }
         ItemStack stack = new ItemStack(PICKAXE.get());
 
-        // IDs reconstruct materials; generated tool/attribute components keep a
-        // snapshot of stats so a material-definition change cannot rewrite saves.
+        // 通过材料标识符还原材料，生成的工具和属性组件保存一份
+        // 属性快照，避免材料定义变化后改写已有工具的存档属性。
         CompoundTag materialTag = new CompoundTag();
         materialTag.putString("Handle", matHandle.identifier);
         materialTag.putString("Head", matHead.identifier);
@@ -86,15 +86,15 @@ public class Pickaxe extends TinkerTools {
 
     private static int getPickaxeDurability(HandleMaterialStats handleStats, HeadMaterialStats headStats,
                                             ExtraMaterialStats bindingStats) {
-        // Match Antique ToolNBT: combine head/extra, round the handle product,
-        // add the flat handle bonus, and only then clamp the final durability.
+        // 遵循 Antique 的 ToolNBT：合并头部与额外耐久，乘手柄系数并取整，
+        // 再加上手柄固定耐久，最后限制最终耐久的最小值。
         return Math.max(1, Math.round((headStats.durability + bindingStats.durability) * handleStats.modifer)
                 + handleStats.durability);
     }
 
     private static Tool getPickaxeInfo(HeadMaterialStats headStats) {
-        // Rules are ordered: deny under-tier drops before the pickaxe rule grants
-        // drops. The speed rule still applies to blocks above the harvest tier.
+        // 按顺序应用规则：先拒绝超出采掘等级的掉落，再由镐规则允许
+        // 其他掉落；挖掘速度规则仍可作用于超出采掘等级的方块。
         return new Tool(List.of(
                 Tool.Rule.deniesDrops(HarvestLevels.getIncorrectBlocksForDrops(headStats.harvestLevel)),
                 Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_PICKAXE, headStats.miningspeed)
@@ -153,8 +153,8 @@ public class Pickaxe extends TinkerTools {
 
     @Override
     public List<RepairInfo> getRepairInfo(ItemStack stack) {
-        // Antique pickaxes repair from the head only. Handle/binding durability
-        // changes maximum wear, but does not make those materials repair inputs.
+        // Antique 的镐只使用头部材料修复，手柄与绑定结的耐久
+        // 会改变最大可承受损耗，但不会使其材料成为有效修复原料。
         Material head = getMaterial(stack, "Head", "Head");
         if (head == null) {
             return List.of();

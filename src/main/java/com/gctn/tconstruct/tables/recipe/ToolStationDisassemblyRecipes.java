@@ -11,8 +11,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
 /**
- * Reconstructs the three material parts of a supported, fully repaired pickaxe.
- * It only describes output; the block entity owns cancellation and the once-only source-consumption step.
+ * 将受支持且已完全修复的镐还原为三个对应材料的部件。
+ * 本类只描述输出，取消预览及源工具的一次性消耗由方块实体负责。
  */
 public final class ToolStationDisassemblyRecipes {
     private ToolStationDisassemblyRecipes() {

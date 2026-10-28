@@ -20,9 +20,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.List;
 
 /**
- * Common lifecycle for component-based tools that remain repairable at zero durability.
- * Native damage processing handles enchantments and creative immunity; an exhausted stack is restored as broken.
- * Assembly writes stats once so saved tools are not silently rebuilt when material definitions change.
+ * 基于数据组件的工具共用的生命周期逻辑，耐久耗尽后仍保留工具以供修复。
+ * 原版损耗流程处理附魔与创造模式免损，耗尽的物品栈随后恢复为损坏状态。
+ * 组装时一次性写入属性，避免材料定义变化后悄悄重建存档中的旧工具。
  */
 public abstract class TinkerTools extends Item {
     public static final int DEFAULT_MODIFIER_SLOTS = 3;
@@ -39,24 +39,24 @@ public abstract class TinkerTools extends Item {
     }
 
     /**
-     * Returns the number of modifier slots that can still be used on this tool.
+     * 返回工具当前仍可使用的强化槽数量。
      */
     public final int getAvailableModifierSlots(ItemStack stack) {
         int totalSlots = getBaseModifierSlots(stack) + getMaterialModifierSlotAdjustment(stack);
         return Math.max(0, totalSlots - Math.max(0, getUsedModifierSlots(stack)));
     }
 
-    /** Override for tool types whose base modifier slot count is not 3. */
+    /** 基础强化槽数量不是 3 的工具可以覆盖此方法。 */
     protected int getBaseModifierSlots(ItemStack stack) {
         return DEFAULT_MODIFIER_SLOTS;
     }
 
-    /** Hook for modifier slots added or removed by material traits. */
+    /** 供材料词条增加或减少强化槽数量的扩展点。 */
     protected int getMaterialModifierSlotAdjustment(ItemStack stack) {
         return 0;
     }
 
-    /** Hook for the number of slots consumed by applied modifiers. */
+    /** 用于统计已应用强化占用的槽位数量。 */
     protected int getUsedModifierSlots(ItemStack stack) {
         return 0;
     }
@@ -90,8 +90,8 @@ public abstract class TinkerTools extends Item {
         int maxDamage = stack.getMaxDamage();
         stack.hurtAndBreak(amount, entity, slot);
         if (stack.isEmpty()) {
-            // Native damage modifiers and break notification have run. Restore
-            // this stack with its components intact so the station can repair it.
+            // 原版损耗修正和损坏通知已经执行，此时恢复
+            // 同一个物品栈并保留其组件，使工具台仍能修复该工具。
             stack.setCount(originalCount);
             stack.setDamageValue(maxDamage);
         }

@@ -17,8 +17,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Creates the extra part used by pickaxe assembly and disassembly.
- * Its material contributes extra durability and traits, while the head controls harvesting behavior.
+ * 创建镐组装与拆解使用的绑定结部件。
+ * 绑定结材料提供额外耐久和词条，采掘行为由头部材料决定。
  */
 public class Binding extends ToolPart {
     public Binding(int cost) {
@@ -28,7 +28,7 @@ public class Binding extends ToolPart {
     public static final DeferredItem<Item> BINDING = ITEMS.register("parts/binding",
             () -> new Binding(MaterialValue.VALUE_Ingot));
 
-    /** Forces this class's static registration entry to be initialized. */
+    /** 显式触发本类的静态注册条目初始化。 */
     public static void init() {
     }
 

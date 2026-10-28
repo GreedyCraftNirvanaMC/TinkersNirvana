@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Maps repair ingredients to fractions of one material unit.
- * Wood uses live item tags for modded planks/logs; explicit item IDs cover the remaining built-in inputs.
- * Values describe a single item, so callers must account for stack counts separately.
+ * 将修复原料换算为单个材料单位的比例。
+ * 木材通过实时物品标签兼容其他模组的木板和原木，其余内置原料通过物品标识符匹配。
+ * 数值只表示一个物品的材料量，调用者需要另外处理物品栈数量。
  */
 public class MaterialList {
     public static final Map<Material, Map<String, Double>> MATERIAL_MAP = new HashMap<>();

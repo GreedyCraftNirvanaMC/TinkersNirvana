@@ -8,8 +8,8 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.blockentity.*;
 
 /**
- * Draws the horizontal spout and falling stream from synchronized fluid identity.
- * The stream ends at a basin fluid surface and can extend beyond the faucet block render bounds.
+ * 根据同步的流体种类绘制水平出液部分和下落的流体束。
+ * 流体束在铸造盆的液面处结束，且允许超出浇注口方块本身的渲染范围。
  */
 public class FaucetRenderer implements BlockEntityRenderer<FaucetBlockEntity> {
     public FaucetRenderer(BlockEntityRendererProvider.Context context) {}

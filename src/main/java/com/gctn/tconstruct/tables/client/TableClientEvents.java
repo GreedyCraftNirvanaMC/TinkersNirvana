@@ -8,8 +8,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 /**
- * Registers station screens only on the physical client.
- * Keeping GUI classes out of common setup allows the same mod JAR to load on dedicated servers.
+ * 只在物理客户端注册工具台界面。
+ * 将界面类与通用初始化逻辑分离，使同一个模组 JAR 也能在专用服务端加载。
  */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public class TableClientEvents {

@@ -10,23 +10,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Ordered fluid layers sharing one capacity; the first layer is selected for generic draining.
- * Simulation never mutates storage or notifies listeners, and read APIs return copies of mutable FluidStacks.
- * Reducing capacity preserves excess contents; further filling waits until there is free shared space.
+ * 多个有序流体层共用一个容量，通用排液默认选择第一层。
+ * 模拟操作不修改库存或通知监听器，读取接口返回可变 FluidStack 的副本。
+ * 容量缩小时保留超出的流体，只有共享空间足够时才允许继续注入。
  */
 public class MultiFluidTank implements IFluidHandler {
     private final List<FluidStack> fluids = new ArrayList<>();
     private final Runnable changed;
     private int capacity;
-    // A long also handles oversized legacy NBT without wrapping the free-space
-    // calculation. Normal machines remain bounded by their integer capacity.
+    // 使用 long 统计总量，避免旧存档中超大的 NBT 数值使剩余空间
+    // 计算发生溢出；正常机器仍受整型容量限制。
     private long totalAmount;
 
     public MultiFluidTank(Runnable changed) { this.changed = changed; }
     public void setCapacity(int capacity) { this.capacity = Math.max(0, capacity); }
     public int capacity() { return capacity; }
     public int amount() { return (int) Math.min(Integer.MAX_VALUE, totalAmount); }
-    /** Snapshot stacks may be inspected/modified without owning the tank's storage. */
+    /** 返回快照，调用者检查或修改这些流体栈不会改变储罐本身。 */
     public List<FluidStack> contents() { return fluids.stream().map(FluidStack::copy).toList(); }
     public void select(int index) {
         if (index > 0 && index < fluids.size()) { fluids.addFirst(fluids.remove(index)); changed.run(); }
@@ -38,8 +38,8 @@ public class MultiFluidTank implements IFluidHandler {
 
     @Override public int fill(FluidStack resource, FluidAction action) {
         if (resource.isEmpty()) return 0;
-        // Shared capacity is checked once in O(1), rather than summing every
-        // layer for every slot in a large smeltery's heating loop.
+        // 以 O(1) 检查共享剩余容量，避免大型冶炼炉加热时
+        // 对每个槽位都重新累加所有流体层。
         int accepted = (int) Math.min(resource.getAmount(), Math.max(0L, capacity - totalAmount));
         if (accepted > 0 && action.execute()) {
             var existing = fluids.stream().filter(f -> FluidStack.isSameFluidSameComponents(f, resource)).findFirst();
@@ -52,8 +52,8 @@ public class MultiFluidTank implements IFluidHandler {
     }
 
     @Override public FluidStack drain(FluidStack resource, FluidAction action) {
-        // Typed draining selects a matching layer; untyped draining delegates to
-        // the first. Only execution changes storage, totals and dirty state.
+        // 按流体排液时选择匹配层，未指定流体的排液操作使用
+        // 第一层；只有实际执行才修改库存、总量和脏标记。
         if (resource.isEmpty()) return FluidStack.EMPTY;
         for (int i = 0; i < fluids.size(); i++) {
             FluidStack stored = fluids.get(i);
@@ -82,8 +82,8 @@ public class MultiFluidTank implements IFluidHandler {
     }
 
     public void load(CompoundTag tag, HolderLookup.Provider registries) {
-        // Replace saved contents without firing gameplay callbacks. Capacity is
-        // restored separately and may legitimately be smaller than stored fluid.
+        // 加载时直接替换存储内容，不触发游戏逻辑回调。容量单独
+        // 恢复，允许其小于已经保存的流体总量。
         fluids.clear();
         totalAmount = 0;
         for (var entry : tag.getList("Fluids", CompoundTag.TAG_COMPOUND)) {

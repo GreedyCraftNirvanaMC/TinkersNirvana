@@ -5,8 +5,8 @@ import com.gctn.tconstruct.tools.tools.Pickaxe;
 import net.neoforged.bus.api.IEventBus;
 
 /**
- * Queues built-in tool items before attaching their shared deferred register.
- * Material-specific stats belong to individual stacks, rather than separate registered item types.
+ * 先登记内置工具，再挂接它们共享的延迟注册器。
+ * 材料决定的属性保存在各个物品栈中，不为每种材料单独注册工具物品。
  */
 public class ToolsRegistryBus {
     public static void register(IEventBus eventBus) {

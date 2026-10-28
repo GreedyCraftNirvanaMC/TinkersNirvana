@@ -7,8 +7,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 
 /**
- * Removes combat modifiers from exhausted Tinker tools.
- * The saved attribute component is preserved, allowing a station repair to restore normal behavior.
+ * 移除耐久耗尽的匠魂工具提供的战斗属性修饰。
+ * 保留物品栈中保存的属性组件，使工具台修复后能够恢复正常属性。
  */
 @EventBusSubscriber(modid = TinkersNirvana.MODID)
 public final class TinkerToolEvents {

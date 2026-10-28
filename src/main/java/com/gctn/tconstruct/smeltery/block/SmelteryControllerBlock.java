@@ -20,8 +20,8 @@ import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.BlockHitResult;
 
 /**
- * Directional controller block that validates and opens a formed smeltery.
- * Ticking occurs only on the server; the active blockstate and packets drive client visuals.
+ * 具有朝向的冶炼炉控制器方块，负责校验并打开已成形的结构。
+ * 只在服务端执行刻更新，客户端通过激活方块状态和数据包显示效果。
  */
 public class SmelteryControllerBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;

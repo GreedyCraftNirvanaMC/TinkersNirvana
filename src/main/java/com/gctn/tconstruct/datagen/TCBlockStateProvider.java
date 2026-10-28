@@ -15,8 +15,8 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
 /**
- * Generates simple cube blockstates/models and their item models.
- * Only simpleEntries are handled: machine blocks keep hand-authored multipart or directional models.
+ * 生成简单立方体方块的状态文件、方块模型和物品模型。
+ * 只处理 simpleEntries；机器方块保留手工编写的组合模型或方向模型。
  */
 @EventBusSubscriber(modid = "tconstruct", value = Dist.CLIENT)
 public class TCBlockStateProvider extends BlockStateProvider {

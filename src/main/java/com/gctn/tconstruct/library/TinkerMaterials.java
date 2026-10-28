@@ -15,9 +15,9 @@ import java.util.LinkedHashMap;
 import java.util.Collections;
 
 /**
- * Defines the port material catalog and indexes identifiers used in saved item components.
- * Most entries reserve Antique materials; only entries with the required stats can form working parts.
- * Wood/stone stats follow Antique tools/TinkerMaterials.java and its ToolNBT calculation order.
+ * 定义移植中的材料目录，并建立存档组件使用的材料标识符索引。
+ * 大部分条目为 Antique 材料预留；只有提供所需部位属性的材料才能生成有效部件。
+ * 木材与石材属性遵循 Antique 的 tools/TinkerMaterials.java，以及 ToolNBT 的计算顺序。
  */
 public class TinkerMaterials {
     private static final Map<String, Material> MATERIALS_BY_ID = new LinkedHashMap<>();
@@ -28,7 +28,7 @@ public class TinkerMaterials {
     public static final List<Material> craftableMaterials = Collections.unmodifiableList(CRAFTABLE_MATERIALS);
     public static final List<Material> castableMaterials = Collections.unmodifiableList(CASTABLE_MATERIALS);
 
-    // natural resources/blocks
+    // 天然资源与方块材料。
     public static final Material wood       = mat("wood", 0xff8e661b);
     public static final Material stone      = mat("stone", 0xff999999);
     public static final Material flint      = mat("flint", 0xff696969);
@@ -41,26 +41,26 @@ public class TinkerMaterials {
     public static final Material sponge     = mat("sponge", 0xffcacc4e);
     public static final Material firewood   = mat("firewood", 0xffcc5300);
 
-    // Slime
+    // 黏液材料。
     public static final Material knightslime= mat("knightslime", 0xfff18ff0);
     public static final Material slime      = mat("slime", 0xff82c873);
     public static final Material blueslime  = mat("blueslime", 0xff74c8c7);
     public static final Material magmaslime = mat("magmaslime", 0xffff960d);
 
-    // Metals
+    // 金属材料。
     public static final Material iron       = mat("iron", 0xffcacaca);
     public static final Material pigiron    = mat("pigiron", 0xffef9e9b);
 
-    // Nether Materials
+    // 下界材料。
     public static final Material netherrack = mat("netherrack", 0xffb84f4f);
     public static final Material ardite     = mat("ardite", 0xffd14210);
     public static final Material cobalt     = mat("cobalt", 0xff2882d4);
     public static final Material manyullyn  = mat("manyullyn", 0xffa15cf8);
 
-    // Special Bone Materials
+    // 特殊骨质材料。
     public static final Material bloodbone  = mat("bloodbone", 0xffc70000);
 
-    // Common Metals + Alloys
+    // 常见金属及合金。
     public static final Material copper     = mat("copper", 0xffed9f07);
     public static final Material bronze     = mat("bronze", 0xffe3bd68);
     public static final Material lead       = mat("lead", 0xff4d4968);
@@ -70,26 +70,26 @@ public class TinkerMaterials {
     public static final Material alubrass   = mat("alubrass", 0xfff0d467);
     public static final Material alumite    = mat("alumite", 0xffffa7e9);
 
-    // specul
+    // 特殊材料。
     public static final Material xu;
 
-    // unknown
+    // 未知材料。
     public static final Material unknown;
 
-    // bowstring materials 弓弦
+    // 弓弦材料。
     public static final Material string    = mat("string", 0xffeeeeee);
     public static final Material vine      = mat("vine", 0xff40a10f);
     public static final Material slimevine_blue   = mat("slimevine_blue", 0xff74c8c7);
     //public static final Material slimevine_orange = mat("slimevine_orange", 0xffff960d);
     public static final Material slimevine_purple = mat("slimevine_purple", 0xffc873c8);
 
-    // additional arrow shaft 额外箭杆
+    // 额外箭杆材料。
     public static final Material blaze     = mat("blaze", 0xffffc100);
     public static final Material reed      = mat("reed", 0xffaadb74);
     public static final Material ice       = mat("ice", 0xff97d7e0);
     public static final Material endrod    = mat("endrod", 0xffe8ffd6);
 
-    // fletching 箭羽
+    // 箭羽材料。
     public static final Material feather   = mat("feather", 0xffeeeeee);
     public static final Material leaf      = mat("leaf", 0xff1d730c);
     public static final Material slimeleaf_blue   = mat("slimeleaf_blue", 0xff74c8c7);
@@ -97,7 +97,7 @@ public class TinkerMaterials {
     public static final Material slimeleaf_purple = mat("slimeleaf_purple", 0xffc873c8);
 
     public static Material mat(String name, int color) {
-        // make materials show by default, integration will make them invisible
+        // 材料默认可见，兼容集成逻辑可按需隐藏。
         Material mat = new Material(name, color, false);
         if (MATERIALS_BY_ID.putIfAbsent(name, mat) != null) {
             throw new IllegalArgumentException("Duplicate material identifier: " + name);

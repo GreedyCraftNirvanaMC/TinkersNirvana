@@ -18,12 +18,12 @@ import net.minecraft.world.phys.shapes.*;
 import net.neoforged.neoforge.fluids.FluidUtil;
 
 /**
- * Casting table/basin block with native fluid-container interaction and item pickup.
- * Server ticks process casting, while the client renderer reads synchronized fluid and item contents.
+ * 铸件台或铸造盆方块，支持原版流体容器交互和物品领取。
+ * 服务端通过刻更新处理浇铸，客户端渲染器读取同步后的流体与物品内容。
  */
 public class CastingBlock extends BaseEntityBlock {
-    // Cache immutable unions rather than build voxel shapes for every raycast,
-    // collision check and selection frame.
+    // 缓存不可变的形状并集，避免每次射线检测、
+    // 碰撞检测或绘制选中边框时重新创建体素形状。
     private static final VoxelShape TABLE_SHAPE = Shapes.or(box(0, 10, 0, 16, 16, 16), box(0, 0, 0, 4, 10, 4),
             box(12, 0, 0, 16, 10, 4), box(0, 0, 12, 4, 10, 16), box(12, 0, 12, 16, 10, 16));
     private static final VoxelShape BASIN_SHAPE = Shapes.or(box(0, 0, 0, 16, 4, 16), box(0, 4, 0, 2, 16, 16),

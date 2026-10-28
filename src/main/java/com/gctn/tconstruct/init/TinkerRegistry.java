@@ -22,8 +22,8 @@ import java.util.function.Supplier;
 import static com.gctn.tconstruct.library.TinkerMaterials.*;
 
 /**
- * Builds creative tabs after item registration, using component-bearing stack factories.
- * A bare pickaxe/part has no material; its creative variant must carry the same data as crafted output.
+ * 物品注册完成后，使用带有材料组件的物品栈构建创造模式分类页。
+ * 未初始化的工具或部件没有材料信息；创造模式中的变体必须携带与合成结果一致的数据。
  */
 public class TinkerRegistry {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
@@ -75,7 +75,7 @@ public class TinkerRegistry {
                     .build());
 
     public static void register(IEventBus eventBus) {
-        // Creative mode tabs
+        // 创造模式分类页。
         CREATIVE_MODE_TABS.register(eventBus);
     }
 }

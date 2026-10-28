@@ -10,8 +10,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 /**
- * Independent four-bucket lava storage used as smeltery fuel.
- * Fluid changes synchronize the renderer and update comparator output; drains never expose this fuel tank.
+ * 独立保存四桶熔岩，供冶炼炉作为燃料使用。
+ * 流体变化时同步渲染状态并更新比较器输出，排液口不会暴露此燃料储罐。
  */
 public class SearedTankBlockEntity extends SmelteryComponentBlockEntity {
     public static final int CAPACITY = 4000;

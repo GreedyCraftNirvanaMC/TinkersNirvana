@@ -8,8 +8,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 /**
- * Synchronizes the fluid identity used to render an active faucet stream.
- * It owns no transferred volume: source and destination retain the authoritative fluid amounts.
+ * 同步浇注口正在流动的流体种类，供客户端绘制流体束。
+ * 本实体不持有传输中的实际体积，源端和目标端始终保存权威流体数量。
  */
 public class FaucetBlockEntity extends SyncedBlockEntity {
     private FluidStack flowing = FluidStack.EMPTY;

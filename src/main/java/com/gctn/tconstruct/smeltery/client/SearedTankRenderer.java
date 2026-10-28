@@ -6,8 +6,8 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.blockentity.*;
 
 /**
- * Draws stored lava inside the transparent fuel-tank model.
- * The amount is synchronized by the block entity and converted to a fraction of its fixed capacity.
+ * 在透明的燃料储罐模型内部绘制已存储的熔岩。
+ * 流体数量由方块实体同步，并换算成固定容量的占比。
  */
 public class SearedTankRenderer implements BlockEntityRenderer<SearedTankBlockEntity> {
     public SearedTankRenderer(BlockEntityRendererProvider.Context context) {}

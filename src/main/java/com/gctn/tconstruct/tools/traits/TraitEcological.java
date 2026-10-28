@@ -8,8 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 /**
- * Attempts slow passive healing while a tool is carried by a living entity.
- * Only the server rolls randomness; healTool refuses broken tools and the active use stack is skipped.
+ * 工具由生物携带时，尝试缓慢恢复其耐久。
+ * 只由服务端进行随机判定；跳过正在使用的工具，healTool 也会拒绝恢复已损坏工具。
  */
 public final class TraitEcological extends AbstractTraits {
     public TraitEcological() {

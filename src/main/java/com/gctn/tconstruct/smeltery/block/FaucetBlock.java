@@ -20,9 +20,9 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 /**
- * Scheduled server transfer between the fluid capability behind the faucet and the block below.
- * Right-click toggles pouring and a redstone rising edge starts it; no transfer tick is scheduled while idle.
- * Simulation determines the transferable amount before any source fluid is consumed.
+ * 通过服务端计划刻，将浇注口后方的流体能力连接到下方方块。
+ * 右键切换浇注状态，红石信号上升沿启动浇注，空闲时不安排传输更新。
+ * 实际消耗源流体前，先通过模拟确定允许转移的数量。
  */
 public class FaucetBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -81,7 +81,7 @@ public class FaucetBlock extends BaseEntityBlock {
             if (accepted > 0) {
                 var drained = source.drain(offered.copyWithAmount(accepted), FluidAction.EXECUTE);
                 int filled = target.fill(drained, FluidAction.EXECUTE);
-                // Preserve fluid even if a third-party handler changes its answer during the transfer.
+                // 若第三方处理器在传输期间改变接收结果，尝试将未接收的流体退回源端。
                 if (filled < drained.getAmount()) source.fill(drained.copyWithAmount(drained.getAmount() - filled), FluidAction.EXECUTE);
                 moved = filled > 0;
                 if (moved && visual != null) visual.setFlowing(drained);
