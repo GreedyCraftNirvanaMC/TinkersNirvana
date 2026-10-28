@@ -1,4 +1,6 @@
 
+Smeltery building, usage, and data-pack recipes: [Smeltery guide](SMELTERY.md).
+
 Installation information
 =======
 

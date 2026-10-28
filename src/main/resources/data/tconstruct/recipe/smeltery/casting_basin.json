@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "B B",
+    "B B",
+    "BBB"
+  ],
+  "key": {
+    "B": {
+      "item": "tconstruct:seared_brick"
+    }
+  },
+  "result": {
+    "id": "tconstruct:casting_basin",
+    "count": 1
+  }
+}

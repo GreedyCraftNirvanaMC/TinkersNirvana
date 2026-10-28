@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "tag": "minecraft:sand"
+  },
+  "fluid_result": {
+    "id": "tconstruct:molten_glass",
+    "amount": 1000
+  },
+  "temperature": 750,
+  "time": 150
+}

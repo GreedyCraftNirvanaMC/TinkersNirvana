@@ -3,6 +3,7 @@ package com.gctn.tconstruct.init;
 import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.common.block.OreBlocks;
 import com.gctn.tconstruct.tables.block.TableBlocks;
+import com.gctn.tconstruct.smeltery.SmelteryRegistration;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -38,6 +39,7 @@ public class BlockRegister {
         // Calling each category's entries initializes its static registrations.
         Collection<DeferredBlock<?>> entries = new ArrayList<>();
         entries.addAll(TableBlocks.entries());
+        entries.addAll(SmelteryRegistration.blocks());
         return entries;
     }
 

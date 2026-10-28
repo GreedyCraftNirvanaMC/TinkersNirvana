@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "tag": "c:ingots/gold"
+  },
+  "fluid_result": {
+    "id": "tconstruct:molten_gold",
+    "amount": 144
+  },
+  "temperature": 532,
+  "time": 100
+}

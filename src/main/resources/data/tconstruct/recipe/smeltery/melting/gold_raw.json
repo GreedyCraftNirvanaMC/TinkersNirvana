@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "tag": "c:raw_materials/gold"
+  },
+  "fluid_result": {
+    "id": "tconstruct:molten_gold",
+    "amount": 288
+  },
+  "temperature": 532,
+  "time": 200
+}
