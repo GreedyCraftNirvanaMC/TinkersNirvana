@@ -1,0 +1,17 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "CASTING_TABLE",
+  "ingredient": {
+    "item": "tconstruct:ingot_cast"
+  },
+  "fluids": [
+    {
+      "id": "tconstruct:molten_cobalt",
+      "amount": 144
+    }
+  ],
+  "result": {
+    "id": "tconstruct:cobalt_ingot"
+  },
+  "time": 100
+}

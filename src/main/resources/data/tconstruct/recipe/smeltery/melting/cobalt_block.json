@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "tag": "c:storage_blocks/cobalt"
+  },
+  "fluid_result": {
+    "id": "tconstruct:molten_cobalt",
+    "amount": 1296
+  },
+  "temperature": 950,
+  "time": 300
+}

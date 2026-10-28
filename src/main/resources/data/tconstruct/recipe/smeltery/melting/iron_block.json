@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "tag": "c:storage_blocks/iron"
+  },
+  "fluid_result": {
+    "id": "tconstruct:molten_iron",
+    "amount": 1296
+  },
+  "temperature": 769,
+  "time": 300
+}

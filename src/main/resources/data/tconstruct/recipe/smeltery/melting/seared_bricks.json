@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "item": "tconstruct:seared_bricks"
+  },
+  "fluid_result": {
+    "id": "tconstruct:seared_stone",
+    "amount": 288
+  },
+  "temperature": 800,
+  "time": 160
+}

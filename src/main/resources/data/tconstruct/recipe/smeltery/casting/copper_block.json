@@ -1,0 +1,14 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "CASTING_BASIN",
+  "fluids": [
+    {
+      "id": "tconstruct:molten_copper",
+      "amount": 1296
+    }
+  ],
+  "result": {
+    "id": "minecraft:copper_block"
+  },
+  "time": 200
+}

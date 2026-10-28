@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "item": "tconstruct:cobalt_ore"
+  },
+  "fluid_result": {
+    "id": "tconstruct:molten_cobalt",
+    "amount": 288
+  },
+  "temperature": 950,
+  "time": 240
+}

@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "tag": "c:ingots/iron"
+  },
+  "fluid_result": {
+    "id": "tconstruct:molten_iron",
+    "amount": 144
+  },
+  "temperature": 769,
+  "time": 100
+}

@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "item": "minecraft:obsidian"
+  },
+  "fluid_result": {
+    "id": "tconstruct:molten_obsidian",
+    "amount": 288
+  },
+  "temperature": 1000,
+  "time": 200
+}

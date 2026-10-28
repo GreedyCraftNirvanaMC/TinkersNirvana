@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "tag": "c:storage_blocks/copper"
+  },
+  "fluid_result": {
+    "id": "tconstruct:molten_copper",
+    "amount": 1296
+  },
+  "temperature": 542,
+  "time": 300
+}

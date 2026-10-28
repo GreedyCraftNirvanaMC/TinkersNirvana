@@ -1,0 +1,12 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/molten_metal"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/molten_metal_flow"
+    }
+  ]
+}
