@@ -13,6 +13,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
@@ -73,13 +74,14 @@ public class Pickaxe extends TinkerTools {
         return stack;
     }
 
-    private static void addTraits(CompoundTag traitsTag, List<AbstractTraits> traits) {
-        for (AbstractTraits trait : traits) {
+    private static void addTraits(CompoundTag traitsTag, List<AbstractTraits.TraitEntry> traits) {
+        for (AbstractTraits.TraitEntry entry : traits) {
+            AbstractTraits trait = entry.trait();
             CompoundTag traitTag = traitsTag.getCompound(trait.identifier);
             if (traitsTag.contains(trait.identifier)) {
-                traitTag.putInt("Level", trait.addLevel(traitTag.getInt("Level")));
+                traitTag.putInt("Level", trait.addLevel(traitTag.getInt("Level"), entry.level()));
             } else {
-                traitTag.putInt("Level", trait.level);
+                traitTag.putInt("Level", entry.level());
             }
             traitTag.putInt("StrengthenNumber", trait.strengthenNumber);
             traitsTag.put(trait.identifier, traitTag);

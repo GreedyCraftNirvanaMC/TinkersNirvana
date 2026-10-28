@@ -5,11 +5,17 @@ import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.library.utils.ToolHelper;
+import com.gctn.tconstruct.tools.traits.AbstractTraits;
+import com.gctn.tconstruct.tools.traits.TinkerTraits;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -140,4 +146,19 @@ public abstract class TinkerTools extends Item {
 
     public record RepairInfo(Material material, float partEfficient, int durability) {
     }
+
+    // 词条触发器部分
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        if(!(stack.getItem() instanceof TinkerTools)) { return; }
+        CompoundTag traitsTag = TinkerDataComponents.getTraitsTag(stack);
+        for (String traitId : traitsTag.getAllKeys()) {
+            AbstractTraits trait = TinkerTraits.getTrait(traitId);
+            if (trait != null) {continue;}
+            CompoundTag traitTag = traitsTag.getCompound(traitId);
+            int traitLevel = traitTag.getInt("Level");
+            trait.inventoryTick(stack, level, entity, slotId, isSelected, traitTag);
+        }
+    }
+
 }

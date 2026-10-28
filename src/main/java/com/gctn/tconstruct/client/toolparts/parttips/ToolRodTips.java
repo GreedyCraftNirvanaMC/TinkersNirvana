@@ -42,7 +42,8 @@ public class ToolRodTips {
 
         List<Either<FormattedText, TooltipComponent>> addedTips = new ArrayList<>();
 
-        for (AbstractTraits trait : material.traits.getOrDefault("Handle", new ArrayList<>())) {
+        for (AbstractTraits.TraitEntry entry : material.getTraits("Handle")) {
+            AbstractTraits trait = entry.trait();
             Component traitsTip = Component.literal(trait.getTranslatedName()).withColor(trait.color);
             addedTips.add(Either.left(traitsTip));
         }

@@ -11,7 +11,7 @@ public class Material {
     public final boolean hidden;
 
     public Map<String, AbstractMaterialStats> stats = new HashMap<>();
-    public Map<String, ArrayList<AbstractTraits>> traits = new HashMap<>();
+    public Map<String, ArrayList<AbstractTraits.TraitEntry>> traits = new HashMap<>();
 
     // 是否可以直接使用部件加工台(默认false)
     protected boolean craftable = false;
@@ -77,13 +77,13 @@ public class Material {
     // 添加词条属性
     public void addMaterialTraits(AbstractTraits.TraitPosPair... traitPairs) {
         for (AbstractTraits.TraitPosPair traitPair : traitPairs) {
-            ArrayList<AbstractTraits> list = this.traits.computeIfAbsent(traitPair.pos(), k -> new ArrayList<>());
+            ArrayList<AbstractTraits.TraitEntry> list = this.traits.computeIfAbsent(traitPair.pos(), k -> new ArrayList<>());
             list.addAll(List.of(traitPair.traits()));
         }
     }
 
     // 获取词条属性
-    public List<AbstractTraits> getTraits(String pos) {
+    public List<AbstractTraits.TraitEntry> getTraits(String pos) {
         return traits.getOrDefault(pos, new ArrayList<>());
     }
 
