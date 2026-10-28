@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "tag": "c:nuggets/cobalt"
+  },
+  "fluid_result": {
+    "id": "tconstruct:molten_cobalt",
+    "amount": 16
+  },
+  "temperature": 950,
+  "time": 40
+}

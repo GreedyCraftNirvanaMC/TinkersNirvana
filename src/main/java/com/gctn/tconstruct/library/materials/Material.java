@@ -11,7 +11,7 @@ public class Material {
     public final boolean hidden;
 
     public Map<String, AbstractMaterialStats> stats = new HashMap<>();
-    private final Map<String, List<AbstractTraits>> traits = new HashMap<>();
+    private final Map<String, List<AbstractTraits.TraitEntry>> traits = new HashMap<>();
 
     // 是否可以直接使用部件加工台(默认false)
     protected boolean craftable = false;
@@ -77,18 +77,19 @@ public class Material {
     // 添加词条属性
     public void addMaterialTraits(AbstractTraits.TraitPosPair... traitPairs) {
         for (AbstractTraits.TraitPosPair traitPair : traitPairs) {
-            List<AbstractTraits> list = this.traits.computeIfAbsent(traitPair.pos(), k -> new ArrayList<>());
-            for (AbstractTraits trait : traitPair.traits()) {
-                if (list.stream().anyMatch(existing -> existing.identifier.equals(trait.identifier))) {
-                    throw new IllegalArgumentException("Duplicate material trait: " + trait.identifier);
+            List<AbstractTraits.TraitEntry> list = this.traits.computeIfAbsent(traitPair.pos(), k -> new ArrayList<>());
+            for (AbstractTraits.TraitEntry entry : traitPair.traits()) {
+                if (list.stream().anyMatch(existing -> existing.trait().identifier.equals(entry.trait().identifier))) {
+                    throw new IllegalArgumentException("Duplicate material trait: " + entry.trait().identifier);
                 }
-                list.add(trait);
+                list.add(entry);
             }
         }
     }
 
     // 获取词条属性
-    public List<AbstractTraits> getTraits(String pos) {
+    public List<AbstractTraits.TraitEntry> getTraits(String pos) {
+        // null 位置表示默认配置；指定位置的配置整体替换默认配置，而不是追加。
         return List.copyOf(traits.getOrDefault(pos, traits.getOrDefault(null, List.of())));
     }
 

@@ -1,0 +1,18 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "CASTING_TABLE",
+  "ingredient": {
+    "tag": "c:ingots"
+  },
+  "fluids": [
+    {
+      "id": "tconstruct:molten_gold",
+      "amount": 288
+    }
+  ],
+  "result": {
+    "id": "tconstruct:ingot_cast"
+  },
+  "time": 80,
+  "consume_input": true
+}

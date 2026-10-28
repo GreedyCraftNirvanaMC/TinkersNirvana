@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "item": "minecraft:cobblestone"
+  },
+  "fluid_result": {
+    "id": "tconstruct:seared_stone",
+    "amount": 72
+  },
+  "temperature": 800,
+  "time": 160
+}

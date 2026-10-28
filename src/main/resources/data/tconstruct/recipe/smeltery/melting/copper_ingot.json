@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "tag": "c:ingots/copper"
+  },
+  "fluid_result": {
+    "id": "tconstruct:molten_copper",
+    "amount": 144
+  },
+  "temperature": 542,
+  "time": 100
+}

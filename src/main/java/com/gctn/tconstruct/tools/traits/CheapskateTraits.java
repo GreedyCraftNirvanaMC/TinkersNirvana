@@ -4,7 +4,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class CheapskateTraits extends AbstractTraits {
     public CheapskateTraits() {
-        super("cheapskate", 1, 1, -1, 0xFFAAAAAA);
+        super("cheapskate", 1, -1, 0xFFAAAAAA);
     }
 
     @Override

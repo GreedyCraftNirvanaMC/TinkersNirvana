@@ -13,11 +13,24 @@ public final class TinkerTraits {
     private static final Map<String, AbstractTraits> TRAITS_BY_NAME = new LinkedHashMap<>();
     private static boolean registered;
 
+    private static final TraitEcological ECOLOGICAL = new TraitEcological();
+    private static final TraitCheap CHEAP = new TraitCheap();
+    private static final TraitCheapskate CHEAPSKATE = new TraitCheapskate();
+
+    /** 生成工具/部件时使用的初始配置；工具后续的实际等级保存在自身 Tag 中。 */
+    public static final AbstractTraits.TraitEntry ECOLOGICAL_1 =
+            new AbstractTraits.TraitEntry(ECOLOGICAL, 1);
+    public static final AbstractTraits.TraitEntry CHEAP_1 =
+            new AbstractTraits.TraitEntry(CHEAP, 1);
+    public static final AbstractTraits.TraitEntry CHEAPSKATE_1 =
+            new AbstractTraits.TraitEntry(CHEAPSKATE, 1);
+
     private TinkerTraits() {
     }
 
     /**
-     * 在这里注册所有内置词条。添加新词条时，在此函数中增加一行 registerTrait(...)
+     * 在这里注册所有内置词条定义，与初始等级常量共用同一个定义对象。
+     * 添加新词条时，在此函数中增加一行 registerTrait(...)，
      * 即可同时让遍历、反向查找和颜色查询支持该词条。
      */
     public static void registerTraits() {
@@ -26,9 +39,9 @@ public final class TinkerTraits {
         }
         registered = true;
 
-        registerTrait(new EcologicalTraits(1));
-        registerTrait(new CheapTraits());
-        registerTrait(new CheapskateTraits());
+        registerTrait(ECOLOGICAL);
+        registerTrait(CHEAP);
+        registerTrait(CHEAPSKATE);
     }
 
     /** 注册一个词条；同一 identifier 不能注册两次。 */

@@ -1,0 +1,14 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "CASTING_BASIN",
+  "fluids": [
+    {
+      "id": "tconstruct:molten_glass",
+      "amount": 1000
+    }
+  ],
+  "result": {
+    "id": "minecraft:glass"
+  },
+  "time": 100
+}

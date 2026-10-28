@@ -1,6 +1,16 @@
 {
   "replace": false,
   "values": [
+    "tconstruct:seared_bricks",
+    "tconstruct:seared_stone",
+    "tconstruct:seared_glass",
+    "tconstruct:seared_tank",
+    "tconstruct:smeltery_drain",
+    "tconstruct:smeltery_controller",
+    "tconstruct:faucet",
+    "tconstruct:casting_table",
+    "tconstruct:casting_basin",
+    "tconstruct:cobalt_block",
     "tconstruct:cobalt_ore"
   ]
 }

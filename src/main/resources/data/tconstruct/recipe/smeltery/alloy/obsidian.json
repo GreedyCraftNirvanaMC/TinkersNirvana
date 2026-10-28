@@ -1,0 +1,19 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "ALLOY",
+  "fluids": [
+    {
+      "id": "minecraft:water",
+      "amount": 125
+    },
+    {
+      "id": "minecraft:lava",
+      "amount": 125
+    }
+  ],
+  "fluid_result": {
+    "id": "tconstruct:molten_obsidian",
+    "amount": 36
+  },
+  "temperature": 1000
+}

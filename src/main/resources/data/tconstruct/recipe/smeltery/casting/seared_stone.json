@@ -1,0 +1,14 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "CASTING_BASIN",
+  "fluids": [
+    {
+      "id": "tconstruct:seared_stone",
+      "amount": 288
+    }
+  ],
+  "result": {
+    "id": "tconstruct:seared_stone"
+  },
+  "time": 100
+}

@@ -10,6 +10,7 @@ import com.gctn.tconstruct.init.TinkerRegistry;
 import com.gctn.tconstruct.tools.traits.TinkerTraits;
 import com.gctn.tconstruct.init.BlockRegister;
 import com.gctn.tconstruct.init.ItemRegister;
+import com.gctn.tconstruct.smeltery.SmelteryRegistration;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -29,6 +30,7 @@ public class TinkersNirvana {
         TinkerTraits.registerTraits();
         TinkerDataComponents.register(modEventBus);
         TableRegistryBus.register(modEventBus);
+        SmelteryRegistration.register(modEventBus);
         ToolPartsRegistryBus.register(modEventBus);
         ToolsRegistryBus.register(modEventBus);
         TinkerRegistry.register(modEventBus);

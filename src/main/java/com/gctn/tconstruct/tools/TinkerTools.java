@@ -6,13 +6,13 @@ import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.library.utils.ToolHelper;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -73,17 +73,14 @@ public abstract class TinkerTools extends Item {
     }
 
     protected final void damageTool(ItemStack stack, int amount, LivingEntity entity, EquipmentSlot slot) {
-        if (amount <= 0 || isBroken(stack)) {
+        if (entity.level().isClientSide || amount <= 0 || isBroken(stack)) {
             return;
         }
-
-        int original = amount;
-        for (ToolTraits.Entry entry : ToolTraits.getTraits(stack)) {
-            amount = entry.trait().onToolDamage(stack, entry.level(), original, amount, entity);
-        }
+        amount = ToolTraits.modifyDamage(stack, amount, entity);
         if (amount <= 0) {
             return;
         }
+
         int originalCount = stack.getCount();
         int maxDamage = stack.getMaxDamage();
         stack.hurtAndBreak(amount, entity, slot);
@@ -93,19 +90,11 @@ public abstract class TinkerTools extends Item {
         }
     }
 
-    /** Passive healing cannot revive broken tools, matching Antique's ToolHelper. */
+    /** 被动治疗不能复活损坏工具；材料修复走组装台的独立模拟流程。 */
     public static void healTool(ItemStack stack, int amount, LivingEntity entity) {
-        if (amount > 0 && stack.isDamaged() && !isBroken(stack)) {
+        if (!entity.level().isClientSide && amount > 0 && stack.isDamaged() && !isBroken(stack)) {
             int healed = ToolTraits.modifyHealing(stack, amount, entity);
             stack.setDamageValue(Math.max(0, stack.getDamageValue() - healed));
-        }
-    }
-
-    @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(stack, world, entity, slot, selected);
-        if (!world.isClientSide) {
-            ToolTraits.forEach(stack, (trait, level) -> trait.onUpdate(stack, level, world, entity, slot, selected));
         }
     }
 
@@ -160,4 +149,12 @@ public abstract class TinkerTools extends Item {
 
     public record RepairInfo(Material material, float partEfficient, int durability) {
     }
+
+    // 词条触发器部分
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
+        ToolTraits.inventoryTick(stack, level, entity, slotId, isSelected);
+    }
+
 }

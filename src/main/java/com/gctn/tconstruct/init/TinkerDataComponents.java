@@ -34,6 +34,7 @@ public final class TinkerDataComponents {
         return data.copyTag();
     }
 
+    /** 返回词条数据副本；运行状态请通过 ToolTraits.updateTraitData 修改并写回。 */
     public static CompoundTag getTraitsTag(ItemStack stack) {
         CustomData data = stack.get(TINKER_TRAITS.get());
         return data == null ? new CompoundTag() : data.copyTag();

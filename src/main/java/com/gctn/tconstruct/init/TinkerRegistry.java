@@ -5,6 +5,7 @@ import com.gctn.tconstruct.library.toolparts.Binding;
 import com.gctn.tconstruct.library.toolparts.PickaxeHead;
 import com.gctn.tconstruct.library.toolparts.ToolRod;
 import com.gctn.tconstruct.tools.tools.Pickaxe;
+import com.gctn.tconstruct.smeltery.SmelteryRegistration;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -63,6 +64,10 @@ public class TinkerRegistry {
                         for (DeferredBlock<?> block : BlockRegister.simpleEntries()) {
                             output.accept(block.get());
                         }
+                        output.accept(SmelteryRegistration.SEARED_BRICK.get());
+                        output.accept(SmelteryRegistration.INGOT_CAST.get());
+                        output.accept(SmelteryRegistration.COBALT_INGOT.get());
+                        output.accept(SmelteryRegistration.COBALT_NUGGET.get());
                     }))
                     .build());
 

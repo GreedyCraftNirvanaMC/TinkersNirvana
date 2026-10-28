@@ -4,6 +4,8 @@ An early NeoForge port of TinkersAntique for Minecraft 1.21.1. Currently include
 wood/stone pickaxes, three tool parts, a tool station, and a cobalt ore block.
 Other listed materials and tool-station modes are still under development.
 
+Smeltery building, usage, and data-pack recipes: [Smeltery guide](SMELTERY.md).
+
 ## Build and install
 
 Use Java 21 and run `gradlew.bat build` (Windows) or `./gradlew build`. Install the

@@ -64,7 +64,8 @@ public class Pickaxe extends TinkerTools {
         if (headStats != null) {
             stack.set(DataComponents.TOOL, getPickaxeInfo(headStats));
             stack.set(DataComponents.ATTRIBUTE_MODIFIERS, getPickaxeAttibute(headStats));
-            stack.set(DataComponents.MAX_DAMAGE, ToolTraits.modifyDurability(stack, getPickaxeDurability(matHandle, matHead, matBinding)));
+            stack.set(DataComponents.MAX_DAMAGE,
+                    ToolTraits.modifyDurability(stack, getPickaxeDurability(matHandle, matHead, matBinding)));
             stack.set(DataComponents.DAMAGE, 0);
         }
 
@@ -138,7 +139,7 @@ public class Pickaxe extends TinkerTools {
     @Override
     public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (!attacker.level().isClientSide && !isBroken(stack)) {
-            ToolTraits.forEach(stack, (trait, level) -> trait.afterHit(stack, level, target, attacker));
+            ToolTraits.forEach(stack, (trait, traitLevel) -> trait.afterHit(stack, traitLevel, target, attacker));
             damageTool(stack, 2, attacker, EquipmentSlot.MAINHAND);
         }
     }

@@ -3,32 +3,38 @@ package com.gctn.tconstruct.tools.traits;
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
-/** Single reader/dispatcher for persisted traits. Unknown data is preserved but not executed. */
+/** 工具词条的统一组装、读取和分发入口；未知存档数据保留但不执行。 */
 public final class ToolTraits {
     private ToolTraits() {}
 
-    public static void addTraits(CompoundTag tag, List<AbstractTraits> traits) {
-        for (AbstractTraits trait : traits) {
+    public static void addTraits(CompoundTag tag, List<AbstractTraits.TraitEntry> traits) {
+        for (AbstractTraits.TraitEntry entry : traits) {
+            AbstractTraits trait = entry.trait();
             CompoundTag data = tag.getCompound(trait.identifier);
-            if (trait instanceof LeveledTraits) {
-                // Antique applies each distinct strength once, even when several parts supply it.
+            if (trait instanceof LeveledTraits leveled && !leveled.stacksRepeatedLevels()) {
                 int[] applied = data.getIntArray("AppliedLevels");
-                if (java.util.Arrays.stream(applied).anyMatch(value -> value == trait.level)) {
+                if (Arrays.stream(applied).anyMatch(value -> value == entry.level())) {
                     continue;
                 }
-                int[] updated = java.util.Arrays.copyOf(applied, applied.length + 1);
-                updated[applied.length] = trait.level;
+                int[] updated = Arrays.copyOf(applied, applied.length + 1);
+                updated[applied.length] = entry.level();
                 data.putIntArray("AppliedLevels", updated);
             }
-            data.putInt("Level", trait.addLevel(data.getInt("Level")));
+            int combinedLevel = trait.addLevel(data.getInt("Level"), entry.level());
+            data.putInt("Level", Math.clamp(combinedLevel, 1, trait.maxLevel));
             data.putInt("StrengthenNumber", trait.strengthenNumber);
             tag.put(trait.identifier, data);
         }
@@ -42,9 +48,9 @@ public final class ToolTraits {
             if (trait == null || !tag.contains(id, Tag.TAG_COMPOUND)) {
                 continue;
             }
-            int level = tag.getCompound(id).getInt("Level");
-            if (level > 0) {
-                entries.add(new Entry(trait, Math.min(level, trait.maxLevel)));
+            CompoundTag data = tag.getCompound(id);
+            if (data.contains("Level", Tag.TAG_INT) && data.getInt("Level") > 0) {
+                entries.add(new Entry(trait, Math.min(data.getInt("Level"), trait.maxLevel)));
             }
         }
         entries.sort(Comparator.<Entry>comparingInt(entry -> entry.trait().getPriority()).reversed()
@@ -58,6 +64,37 @@ public final class ToolTraits {
         }
     }
 
+    /**
+     * 修改指定词条的独立状态并写回。回调结束后重新读取根 Tag，保留嵌套回调对其他词条的修改。
+     * 不在共享定义上保存计时器等状态；客户端只读回调不能调用本方法。
+     */
+    public static void updateTraitData(ItemStack tool, String id, Consumer<CompoundTag> action) {
+        CompoundTag tag = TinkerDataComponents.getTraitsTag(tool);
+        if (!tag.contains(id, Tag.TAG_COMPOUND)) {
+            return;
+        }
+        CompoundTag original = tag.getCompound(id);
+        CompoundTag updated = original.copy();
+        action.accept(updated);
+        if (!original.equals(updated)) {
+            CompoundTag latest = TinkerDataComponents.getTraitsTag(tool);
+            latest.put(id, updated);
+            tool.set(TinkerDataComponents.TINKER_TRAITS.get(), CustomData.of(latest));
+        }
+    }
+
+    public static void inventoryTick(ItemStack tool, Level world, Entity entity, int slot, boolean selected) {
+        if (world.isClientSide) {
+            return;
+        }
+        for (Entry entry : getTraits(tool)) {
+            updateTraitData(tool, entry.trait().identifier, data -> {
+                data.putInt("Level", entry.level());
+                entry.trait().inventoryTick(tool, world, entity, slot, selected, data);
+            });
+        }
+    }
+
     public static int modifyDurability(ItemStack tool, int durability) {
         for (Entry entry : getTraits(tool)) {
             durability = entry.trait().modifyDurability(tool, entry.level(), durability);
@@ -65,7 +102,21 @@ public final class ToolTraits {
         return Math.max(1, durability);
     }
 
+    public static int modifyDamage(ItemStack tool, int amount, LivingEntity entity) {
+        if (amount <= 0) {
+            return 0;
+        }
+        int original = amount;
+        for (Entry entry : getTraits(tool)) {
+            amount = entry.trait().onToolDamage(tool, entry.level(), original, amount, entity);
+        }
+        return Math.max(0, amount);
+    }
+
     public static int modifyHealing(ItemStack tool, int amount, LivingEntity entity) {
+        if (amount <= 0) {
+            return 0;
+        }
         int original = amount;
         for (Entry entry : getTraits(tool)) {
             amount = entry.trait().onToolHeal(tool, entry.level(), original, amount, entity);

@@ -88,7 +88,8 @@ public class PickaxeTips {
         } else {
             upperTips.add(Either.left(TinkerTools.shiftTip));
             upperTips.add(Either.left(TinkerTools.controlTip));
-            upperTips.add(Either.left(Component.translatable("tooltip.tconstruct.hold_for_traits", "Alt").withColor(0xFFAAAAAA)));
+            upperTips.add(Either.left(Component.translatable("tooltip.tconstruct.hold_for_traits", "Alt")
+                    .withColor(0xFFAAAAAA)));
         }
         if (ToolHelper.hasCreativeTabTip(tooltip, stack)) {
             upperTips.add(Either.left(Component.empty()));

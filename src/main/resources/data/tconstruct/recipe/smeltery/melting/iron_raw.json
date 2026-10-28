@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "tag": "c:raw_materials/iron"
+  },
+  "fluid_result": {
+    "id": "tconstruct:molten_iron",
+    "amount": 288
+  },
+  "temperature": 769,
+  "time": 200
+}

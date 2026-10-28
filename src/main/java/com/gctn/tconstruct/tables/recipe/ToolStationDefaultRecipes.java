@@ -3,7 +3,6 @@ package com.gctn.tconstruct.tables.recipe;
 import com.gctn.tconstruct.library.MaterialList;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.tools.TinkerTools;
-import com.gctn.tconstruct.tools.traits.ToolTraits;
 import com.gctn.tconstruct.tools.TinkerTools.RepairInfo;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -70,7 +69,6 @@ public final class ToolStationDefaultRecipes {
 
     // 获取修复结果
     private static ItemStack createRepairResult(Container container) {
-        ItemStack tool = container.getItem(TOOL_SLOT);
         RepairPlan repairPlan = createRepairPlan(container);
         if (repairPlan == null || repairPlan.isEmpty()) {
             return ItemStack.EMPTY;
@@ -84,11 +82,12 @@ public final class ToolStationDefaultRecipes {
     // 获取修复方案(包括修复量和材料消耗情况)
     private static RepairPlan createRepairPlan(Container container) {
 
-        ItemStack tool = container.getItem(TOOL_SLOT);
-        if (!isRepairableTool(tool)) {
+        ItemStack sourceTool = container.getItem(TOOL_SLOT);
+        if (!isRepairableTool(sourceTool)) {
             return null;
         }
-        tool = tool.copy();
+        // 所有词条计算只作用于副本，预览不能修改输入工具。
+        ItemStack tool = sourceTool.copy();
         int remainingDamage = tool.getDamageValue();
         int[] totalRepairAmount = new int[MATERIAL_SLOT_COUNT];
 
@@ -109,10 +108,12 @@ public final class ToolStationDefaultRecipes {
                 if (repairAmount <= 0) {
                     continue;
                 }
+                int healedAmount = Math.min(remainingDamage, repairAmount);
                 int slot = repairMatch.slot() - FIRST_MATERIAL_SLOT;
                 totalRepairAmount[slot] += 1;
-                remainingDamage = Math.max(0, remainingDamage - repairAmount);
+                remainingDamage -= healedAmount;
                 tool.setDamageValue(remainingDamage);
+                ToolTraits.forEach(tool, (trait, level) -> trait.onRepair(tool, level, healedAmount));
             }
             if (remainingDamage == previousDamage) {
                 break;

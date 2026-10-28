@@ -22,6 +22,7 @@ import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/** 手柄仍由 ToolRodTips 展示属性；此处只负责头部和绑定结，避免重复添加。 */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public final class PartTraitTips {
     private PartTraitTips() {}
@@ -37,19 +38,21 @@ public final class PartTraitTips {
         } else {
             return;
         }
-        Material material = TinkerMaterials.getMaterial(TinkerDataComponents.getMaterialTag(stack).getString(Tags.PART_MATERIAL));
+        Material material = TinkerMaterials.getMaterial(
+                TinkerDataComponents.getMaterialTag(stack).getString(Tags.PART_MATERIAL));
         if (material == null || !material.hasStats(stat)) {
             return;
         }
         List<Either<FormattedText, TooltipComponent>> tips = new ArrayList<>();
-        for (AbstractTraits trait : material.getTraits(stat)) {
-            tips.add(Either.left(trait.getDisplayName(trait.level)));
+        for (AbstractTraits.TraitEntry entry : material.getTraits(stat)) {
+            tips.add(Either.left(entry.trait().getDisplayName(entry.level())));
             if (Screen.hasAltDown()) {
-                tips.add(Either.left(trait.getDescription()));
+                tips.add(Either.left(entry.trait().getDescription()));
             }
         }
         if (!Screen.hasAltDown() && !tips.isEmpty()) {
-            tips.add(Either.left(Component.translatable("tooltip.tconstruct.hold_for_traits", "Alt").withColor(0xFFAAAAAA)));
+            tips.add(Either.left(Component.translatable("tooltip.tconstruct.hold_for_traits", "Alt")
+                    .withColor(0xFFAAAAAA)));
         }
         event.getTooltipElements().addAll(1, tips);
     }

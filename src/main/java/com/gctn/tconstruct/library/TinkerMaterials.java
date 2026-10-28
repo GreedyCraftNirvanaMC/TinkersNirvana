@@ -123,9 +123,9 @@ public class TinkerMaterials {
 
     // 注册材料词条
     public static void registerToolMaterialTraits() {
-        wood.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, TinkerTraits.getTrait("ecological")));
-        stone.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", TinkerTraits.getTrait("cheapskate")),
-                AbstractTraits.TraitPosPair.of(null, TinkerTraits.getTrait("cheap")));
+        wood.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, TinkerTraits.ECOLOGICAL_1));
+        stone.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", TinkerTraits.CHEAPSKATE_1),
+                AbstractTraits.TraitPosPair.of(null, TinkerTraits.CHEAP_1));
     }
 
     static {

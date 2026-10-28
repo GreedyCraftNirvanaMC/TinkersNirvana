@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "MELTING",
+  "ingredient": {
+    "tag": "c:nuggets/iron"
+  },
+  "fluid_result": {
+    "id": "tconstruct:molten_iron",
+    "amount": 16
+  },
+  "temperature": 769,
+  "time": 40
+}

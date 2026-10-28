@@ -1,0 +1,14 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "CASTING_BASIN",
+  "fluids": [
+    {
+      "id": "tconstruct:molten_obsidian",
+      "amount": 288
+    }
+  ],
+  "result": {
+    "id": "minecraft:obsidian"
+  },
+  "time": 100
+}

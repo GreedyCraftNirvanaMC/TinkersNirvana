@@ -1,0 +1,17 @@
+{
+  "type": "tconstruct:smeltery",
+  "operation": "CASTING_TABLE",
+  "ingredient": {
+    "item": "tconstruct:ingot_cast"
+  },
+  "fluids": [
+    {
+      "id": "tconstruct:molten_copper",
+      "amount": 144
+    }
+  ],
+  "result": {
+    "id": "minecraft:copper_ingot"
+  },
+  "time": 100
+}
