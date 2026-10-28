@@ -8,6 +8,10 @@ import com.gctn.tconstruct.tools.tools.Pickaxe;
 
 import java.util.Map;
 
+/**
+ * Maps implemented station modes to their exact assembly requirements.
+ * Only pickaxes currently have a recipe; other displayed modes intentionally return no result.
+ */
 public final class ToolStationAssemblyRecipes {
     private static final Map<Mode, ToolAssemblyRecipe> RECIPES = Map.of(
             Mode.PICKAXE, new ToolAssemblyRecipe(

@@ -6,6 +6,11 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.blockentity.*;
 import net.minecraft.world.phys.AABB;
 
+/**
+ * Renders ordered fluid layers across the detected multiblock interior.
+ * The render bounds cover the full structure, since its fluid may be visible when the controller is off screen.
+ * Over-capacity contents are proportionally compressed instead of rendering outside a resized structure.
+ */
 public class SmelteryRenderer implements BlockEntityRenderer<SmelteryControllerBlockEntity> {
     public SmelteryRenderer(BlockEntityRendererProvider.Context context) {}
     @Override public void render(SmelteryControllerBlockEntity controller, float partialTick, PoseStack poses, MultiBufferSource buffers, int light, int overlay) {

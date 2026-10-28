@@ -15,6 +15,10 @@ import static com.gctn.tconstruct.library.toolparts.Binding.BINDING;
 import static com.gctn.tconstruct.library.toolparts.PickaxeHead.PICKAXEHEAD;
 import static com.gctn.tconstruct.library.toolparts.ToolRod.TOOL_ROD;
 
+/**
+ * Registers client-only tint handlers for the shared material-part models.
+ * Unknown saved material IDs fall back to white instead of preventing item rendering.
+ */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public class PartColor {
     public static final ItemColor PART_COLOR = (stack, tintIndex) -> {

@@ -11,6 +11,11 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+/**
+ * Defines persistent, synchronized per-stack material and trait data for Minecraft 1.21.1.
+ * CustomData is treated as immutable: readers receive copies and mutations replace the component.
+ * The persistent codec also supplies the default network codec in this Minecraft version.
+ */
 public final class TinkerDataComponents {
     public static final DeferredRegister.DataComponents COMPONENTS =
             DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, TinkersNirvana.MODID);

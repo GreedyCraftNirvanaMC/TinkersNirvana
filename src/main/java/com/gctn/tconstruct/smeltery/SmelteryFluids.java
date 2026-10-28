@@ -14,7 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-/** Tank fluids intentionally have no placeable block; casting and pipes handle their transfer. */
+/**
+ * Registers tank-only source/flowing fluids and their fluid types.
+ * These fluids intentionally have no world blocks or buckets; capabilities move them between machines.
+ * Client texture and tint registration is isolated in SmelteryClientEvents.
+ */
 public final class SmelteryFluids {
     private static final DeferredRegister<FluidType> TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, TinkersNirvana.MODID);
     private static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(Registries.FLUID, TinkersNirvana.MODID);

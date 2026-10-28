@@ -8,6 +8,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * Shared dirty-marking and block-entity packet support for small smeltery components.
+ * Their update tags reuse saved state; the large controller overrides this to send only visual data.
+ */
 public abstract class SyncedBlockEntity extends BlockEntity {
     protected SyncedBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) { super(type, pos, state); }
     public void sync() {

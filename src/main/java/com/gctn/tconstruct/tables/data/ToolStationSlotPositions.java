@@ -1,5 +1,10 @@
 package com.gctn.tconstruct.tables.data;
 
+/**
+ * Shared coordinates and active-slot masks for station modes.
+ * Menus and screens use one layout definition so clickable slots match their rendered backgrounds.
+ * Inactive inputs containing real items remain visible so changing modes cannot trap inventory.
+ */
 public final class ToolStationSlotPositions {
     public static final int INPUT_SLOT_COUNT = 6;
 

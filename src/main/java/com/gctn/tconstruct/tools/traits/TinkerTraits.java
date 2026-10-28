@@ -6,7 +6,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** 集中注册并查询所有匠魂词条。 */
+/**
+ * Owns one immutable instance per built-in trait and its initial material assignments.
+ * Identifier lookup is indexed and duplicate registrations fail early instead of changing saved-tool behavior.
+ */
 public final class TinkerTraits {
     /** 按注册顺序保存词条，便于遍历所有词条。 */
     private static final List<AbstractTraits> traits = new ArrayList<>();

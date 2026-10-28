@@ -16,6 +16,10 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Creates head variants only for visible materials that provide head stats.
+ * The shared item model is tinted from the saved material; separate items per material are unnecessary.
+ */
 public class PickaxeHead extends ToolPart {
     public PickaxeHead(int cost) {
         super(cost);

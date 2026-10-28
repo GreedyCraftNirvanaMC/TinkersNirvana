@@ -8,6 +8,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 
+/**
+ * Client GUI for inventory pages, heating progress, fuel and selectable fluid layers.
+ * Click hit-testing uses the same layer sizing as rendering, and selection is committed by the server menu.
+ */
 public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
     public SmelteryScreen(SmelteryMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);

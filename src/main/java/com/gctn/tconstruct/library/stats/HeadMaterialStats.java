@@ -1,5 +1,9 @@
 package com.gctn.tconstruct.library.stats;
 
+/**
+ * Head values determine mining tier, speed, attack bonus and head-based repair amount.
+ * Attack is measured in health points; the player base attack is added separately by Minecraft.
+ */
 public class HeadMaterialStats extends AbstractMaterialStats {
     public final int durability; // usually between 1 and 1000
     public final int harvestLevel; // see HarvestLevels class

@@ -14,6 +14,10 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
+/**
+ * Generates simple cube blockstates/models and their item models.
+ * Only simpleEntries are handled: machine blocks keep hand-authored multipart or directional models.
+ */
 @EventBusSubscriber(modid = "tconstruct", value = Dist.CLIENT)
 public class TCBlockStateProvider extends BlockStateProvider {
     public TCBlockStateProvider(PackOutput output, ExistingFileHelper existingFileHelper) {

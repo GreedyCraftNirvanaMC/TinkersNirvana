@@ -10,6 +10,10 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
+/**
+ * Registers smeltery screens, block-entity renderers and fluid texture/tint extensions.
+ * All methods are restricted to the client distribution so dedicated servers avoid rendering classes.
+ */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public final class SmelteryClientEvents {
     @SubscribeEvent private static void screens(RegisterMenuScreensEvent event) { event.register(SmelteryRegistration.MENU.get(), SmelteryScreen::new); }

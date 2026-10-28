@@ -8,7 +8,13 @@
 - Keep trait definitions immutable, validate saved levels, and dispatch callbacks
   in a stable priority order without modifying unknown saved trait data.
 - Show trait levels and Alt descriptions on tools and all supported parts.
-
+- Port the Smeltery multiblock to NeoForge 1.21.1, including seared construction
+  blocks, lava tanks, variable inventory, melting, layered fluid storage, drain
+  selection, fluid automation, faucets, and casting.
+- Add survival smeltery recipes, cobalt melting/casting products, data-pack machine
+  recipes, Chinese player-facing text, and adapted TinkersAntique assets.
+- Preserve stored fluids across structure invalidation/resizing and pause access
+  while required chunks are unloaded.
 
 ### Port review improvements
 
@@ -24,19 +30,29 @@
   hidden materials from creative part lists.
 - Add block loot tables and mining tags; retain Antique's Cobalt-tier ore gate
   and hardness. Correct the sample datagen model that replaced ore with cobblestone.
+- Fix Ctrl tooltip trait access after the trait-definition refactor and dispatch
+  repair callbacks once per consumed ingredient using the actual capped healing.
+- Batch station ingredient consumption so intermediate mutations do not regenerate
+  repair/assembly previews. Remove duplicate unused Cheap/Cheapskate definitions.
+- Restore native RGB colors and translation argument handling in shared utilities.
+  Align part material volumes with Antique and the smeltery's 144 mB ingot unit;
+  populate and deduplicate craftable/castable material category lists.
+- Index machine recipes by operation and invalidate the cache immediately on
+  data-pack replacement. Restart heating/cooling when loaded recipes change.
+- Cache shared tank totals using overflow-safe accounting, validate tank indexes,
+  bound loaded progress, cache casting shapes, and permit raised controllers more
+  than 64 blocks above the floor.
+- Document all Java classes and explain critical registration, component, trait,
+  inventory transaction, structure, synchronization, and rendering decisions.
 
 ### Remaining port gaps identified
 
 - Antique's repair-history diminishing returns, modifier repair penalties, and
   original/modified durability scaling are not yet ported. The current repair
   station uses head material units plus trait healing callbacks.
-- Recipe acquisition/world generation, higher-tier materials, reinforcement and
+- Tool/part acquisition recipes, world generation, higher-tier materials, reinforcement and
   other modifiers, additional tools, projectile systems, and their traits remain
   unported. Shovel/axe/debug station modes have no recipes.
 - Existing pre-trait/pre-stat-fix tools retain saved data; no automatic migration
   is performed. Older literal names stay literal until a tool is rebuilt.
-
-- Port the Smeltery multiblock to NeoForge 1.21.1, including seared construction blocks, lava tanks, variable inventory, melting, layered fluid storage, drain selection, fluid automation, faucets, and casting.
-- Add survival recipes, cobalt melting/casting products, data-pack machine recipes, Chinese player-facing text, and adapted TinkersAntique assets.
-- Preserve stored fluids across structure invalidation/resizing and pause access while required chunks are unloaded.
 

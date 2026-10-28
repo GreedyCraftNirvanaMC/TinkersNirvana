@@ -19,6 +19,11 @@ import net.minecraft.world.phys.shapes.*;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
+/**
+ * Scheduled server transfer between the fluid capability behind the faucet and the block below.
+ * Right-click toggles pouring and a redstone rising edge starts it; no transfer tick is scheduled while idle.
+ * Simulation determines the transferable amount before any source fluid is consumed.
+ */
 public class FaucetBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POURING = BlockStateProperties.POWERED;

@@ -29,6 +29,11 @@ import net.neoforged.neoforge.registries.DeferredItem;
 
 import java.util.List;
 
+/**
+ * Assembles the current handle/head/binding tool and implements mining/combat wear.
+ * Head, extra and handle stats are combined in Antique order, then material traits modify final durability.
+ * Minecraft Tool rules handle mining and drops, while the attribute component supplies combat bonuses.
+ */
 public class Pickaxe extends TinkerTools {
     public static final DeferredItem<Item> PICKAXE = ITEMS.register("pickaxe/pickaxe",
             Pickaxe::new);
@@ -40,14 +45,21 @@ public class Pickaxe extends TinkerTools {
 
     // Material order: handle, head, binding.
     public static ItemStack initPickaxe(Material matHandle, Material matHead, Material matBinding) {
-        if (matHandle == null || matHead == null || matBinding == null
-                || matHandle.getStats("Handle", HandleMaterialStats.class) == null
-                || matHead.getStats("Head", HeadMaterialStats.class) == null
-                || matBinding.getStats("Extra", ExtraMaterialStats.class) == null) {
+        if (matHandle == null || matHead == null || matBinding == null) {
+            return ItemStack.EMPTY;
+        }
+        HandleMaterialStats handleStats = matHandle.getStats("Handle", HandleMaterialStats.class);
+        HeadMaterialStats headStats = matHead.getStats("Head", HeadMaterialStats.class);
+        ExtraMaterialStats bindingStats = matBinding.getStats("Extra", ExtraMaterialStats.class);
+        // Unsupported or incompletely ported materials must not produce tools
+        // whose missing MAX_DAMAGE component makes them accidentally unbreakable.
+        if (handleStats == null || headStats == null || bindingStats == null) {
             return ItemStack.EMPTY;
         }
         ItemStack stack = new ItemStack(PICKAXE.get());
 
+        // IDs reconstruct materials; generated tool/attribute components keep a
+        // snapshot of stats so a material-definition change cannot rewrite saves.
         CompoundTag materialTag = new CompoundTag();
         materialTag.putString("Handle", matHandle.identifier);
         materialTag.putString("Head", matHead.identifier);
@@ -60,14 +72,11 @@ public class Pickaxe extends TinkerTools {
         ToolTraits.addTraits(traitsTag, matBinding.getTraits("Extra"));
         stack.set(TinkerDataComponents.TINKER_TRAITS.get(), CustomData.of(traitsTag));
 
-        HeadMaterialStats headStats = (HeadMaterialStats) matHead.getStats().get("Head");
-        if (headStats != null) {
-            stack.set(DataComponents.TOOL, getPickaxeInfo(headStats));
-            stack.set(DataComponents.ATTRIBUTE_MODIFIERS, getPickaxeAttibute(headStats));
-            stack.set(DataComponents.MAX_DAMAGE,
-                    ToolTraits.modifyDurability(stack, getPickaxeDurability(matHandle, matHead, matBinding)));
-            stack.set(DataComponents.DAMAGE, 0);
-        }
+        stack.set(DataComponents.TOOL, getPickaxeInfo(headStats));
+        stack.set(DataComponents.ATTRIBUTE_MODIFIERS, getPickaxeAttributes(headStats));
+        stack.set(DataComponents.MAX_DAMAGE, ToolTraits.modifyDurability(stack,
+                getPickaxeDurability(handleStats, headStats, bindingStats)));
+        stack.set(DataComponents.DAMAGE, 0);
 
         stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_name",
                 Component.translatable("material." + matHead.identifier + ".name"),
@@ -75,26 +84,24 @@ public class Pickaxe extends TinkerTools {
         return stack;
     }
 
-    private static int getPickaxeDurability(Material matHandle, Material matHead, Material matBinding) {
-        HandleMaterialStats handleStats = (HandleMaterialStats) matHandle.getStats().get("Handle");
-        ExtraMaterialStats bindingStats = (ExtraMaterialStats) matBinding.getStats().get("Extra");
-        HeadMaterialStats headStats = (HeadMaterialStats) matHead.getStats().get("Head");
-
-        float handleModifier = handleStats != null ? handleStats.modifer : 1.0F;
-        int handleDurability = handleStats != null ? handleStats.durability : 0;
-        int bindingDurability = bindingStats != null ? bindingStats.durability : 0;
-
-        return Math.max(1, Math.round((headStats.durability + bindingDurability) * handleModifier) + handleDurability);
+    private static int getPickaxeDurability(HandleMaterialStats handleStats, HeadMaterialStats headStats,
+                                            ExtraMaterialStats bindingStats) {
+        // Match Antique ToolNBT: combine head/extra, round the handle product,
+        // add the flat handle bonus, and only then clamp the final durability.
+        return Math.max(1, Math.round((headStats.durability + bindingStats.durability) * handleStats.modifer)
+                + handleStats.durability);
     }
 
     private static Tool getPickaxeInfo(HeadMaterialStats headStats) {
+        // Rules are ordered: deny under-tier drops before the pickaxe rule grants
+        // drops. The speed rule still applies to blocks above the harvest tier.
         return new Tool(List.of(
                 Tool.Rule.deniesDrops(HarvestLevels.getIncorrectBlocksForDrops(headStats.harvestLevel)),
                 Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_PICKAXE, headStats.miningspeed)
         ), 1.0F, 1);
     }
 
-    private static ItemAttributeModifiers getPickaxeAttibute(HeadMaterialStats headStats) {
+    private static ItemAttributeModifiers getPickaxeAttributes(HeadMaterialStats headStats) {
         double attackSpeed = 1.2;
         return ItemAttributeModifiers.builder()
                 .add(
@@ -146,6 +153,8 @@ public class Pickaxe extends TinkerTools {
 
     @Override
     public List<RepairInfo> getRepairInfo(ItemStack stack) {
+        // Antique pickaxes repair from the head only. Handle/binding durability
+        // changes maximum wear, but does not make those materials repair inputs.
         Material head = getMaterial(stack, "Head", "Head");
         if (head == null) {
             return List.of();

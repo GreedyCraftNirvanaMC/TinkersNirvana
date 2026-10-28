@@ -5,6 +5,11 @@ import com.gctn.tconstruct.tools.traits.AbstractTraits;
 
 import java.util.*;
 
+/**
+ * Shared material definition containing part-specific stats and initial trait assignments.
+ * Definitions are populated during setup; damage, effective trait levels and cooldowns live on stacks.
+ * A position-specific trait list replaces the default list, including an intentionally empty override.
+ */
 public class Material {
     public final String identifier;
     public final int color;
@@ -18,8 +23,6 @@ public class Material {
 
     // 是否可以使用浇筑方式合成(默认false)
     protected boolean castable = false;
-
-    private boolean isHidden;
 
     // 参数不全的默认初始化
     public Material(String identifier, int color) { this(identifier, color, false); }

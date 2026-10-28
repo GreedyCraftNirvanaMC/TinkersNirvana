@@ -6,6 +6,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * Routes station result insertion and pickup through the server transaction state.
+ * The action mode is captured before removal because clearing a disassembly source cancels its preview.
+ * Only disassembly accepts an inserted source; other modes expose generated output.
+ */
 public class ToolStationResultSlot extends Slot {
     private final ToolStationMenu menu;
     private Mode takenMode;

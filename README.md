@@ -1,7 +1,8 @@
 # TinkersNirvana
 
 An early NeoForge port of TinkersAntique for Minecraft 1.21.1. Currently includes
-wood/stone pickaxes, three tool parts, a tool station, and a cobalt ore block.
+wood/stone pickaxes, three tool parts, a tool station, cobalt ore, and a Smeltery
+with melting, alloying, fluid automation, and casting.
 Other listed materials and tool-station modes are still under development.
 
 Smeltery building, usage, and data-pack recipes: [Smeltery guide](SMELTERY.md).

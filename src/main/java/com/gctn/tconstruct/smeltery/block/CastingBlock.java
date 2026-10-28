@@ -17,7 +17,17 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
 import net.neoforged.neoforge.fluids.FluidUtil;
 
+/**
+ * Casting table/basin block with native fluid-container interaction and item pickup.
+ * Server ticks process casting, while the client renderer reads synchronized fluid and item contents.
+ */
 public class CastingBlock extends BaseEntityBlock {
+    // Cache immutable unions rather than build voxel shapes for every raycast,
+    // collision check and selection frame.
+    private static final VoxelShape TABLE_SHAPE = Shapes.or(box(0, 10, 0, 16, 16, 16), box(0, 0, 0, 4, 10, 4),
+            box(12, 0, 0, 16, 10, 4), box(0, 0, 12, 4, 10, 16), box(12, 0, 12, 16, 10, 16));
+    private static final VoxelShape BASIN_SHAPE = Shapes.or(box(0, 0, 0, 16, 4, 16), box(0, 4, 0, 2, 16, 16),
+            box(14, 4, 0, 16, 16, 16), box(2, 4, 0, 14, 16, 2), box(2, 4, 14, 14, 16, 16));
     private static final MapCodec<CastingBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             propertiesCodec(), Codec.BOOL.fieldOf("basin").forGetter(CastingBlock::isBasin)).apply(i, CastingBlock::new));
     private final boolean basin;
@@ -30,8 +40,7 @@ public class CastingBlock extends BaseEntityBlock {
         return level.isClientSide ? null : createTickerHelper(type, SmelteryRegistration.CASTING_ENTITY.get(), CastingBlockEntity::tick);
     }
     @Override protected VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos, CollisionContext context) {
-        if (!basin) return Shapes.or(box(0, 10, 0, 16, 16, 16), box(0, 0, 0, 4, 10, 4), box(12, 0, 0, 16, 10, 4), box(0, 0, 12, 4, 10, 16), box(12, 0, 12, 16, 10, 16));
-        return Shapes.or(box(0, 0, 0, 16, 4, 16), box(0, 4, 0, 2, 16, 16), box(14, 4, 0, 16, 16, 16), box(2, 4, 0, 14, 16, 2), box(2, 4, 14, 14, 16, 16));
+        return basin ? BASIN_SHAPE : TABLE_SHAPE;
     }
     @Override protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide) return ItemInteractionResult.SUCCESS;

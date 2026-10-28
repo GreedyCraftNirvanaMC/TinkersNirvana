@@ -6,6 +6,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * One mode-specific view over a physical station input slot.
+ * Inactive views reject pickup/insertion, while taking a preview part commits disassembly.
+ */
 public class ModeAwareInputSlot extends Slot {
     private final ToolStationMenu menu;
     private final Mode slotMode;

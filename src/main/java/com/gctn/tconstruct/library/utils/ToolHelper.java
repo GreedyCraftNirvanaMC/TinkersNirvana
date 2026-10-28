@@ -8,6 +8,10 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
+/**
+ * Read-only presentation helpers for material tools.
+ * Durability colors clamp empty/invalid ranges, and creative-tab detection avoids duplicating tooltip spacing.
+ */
 public class ToolHelper {
     public static boolean hasCreativeTabTip(
             List<Either<FormattedText, TooltipComponent>> tooltip, ItemStack stack

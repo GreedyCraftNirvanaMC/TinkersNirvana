@@ -8,6 +8,10 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.blockentity.*;
 import net.minecraft.world.item.ItemDisplayContext;
 
+/**
+ * Renders a recipe-sized fluid surface plus the mold or cooled output item.
+ * Table and basin use different local heights to keep visuals inside their block models.
+ */
 public class CastingRenderer implements BlockEntityRenderer<CastingBlockEntity> {
     public CastingRenderer(BlockEntityRendererProvider.Context context) {}
     @Override public void render(CastingBlockEntity casting, float partialTick, PoseStack poses, MultiBufferSource buffers, int light, int overlay) {

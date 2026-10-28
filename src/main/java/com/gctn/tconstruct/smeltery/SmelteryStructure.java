@@ -11,7 +11,11 @@ import net.minecraft.world.level.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Ports Antique's floor, unframed walls, air interior and open-top detection rules. */
+/**
+ * Detects Antique-style floors and unframed walls around a rectangular air interior.
+ * The first invalid wall layer ends the usable height; corners and a roof are not required.
+ * Unloaded chunks suspend detection instead of being treated as missing blocks or force-loaded.
+ */
 public record SmelteryStructure(BlockPos min, BlockPos max, List<BlockPos> members, List<BlockPos> tanks) {
     public static final int MAX_INNER_SIZE = 9;
     public int width() { return max.getX() - min.getX() + 1; }
@@ -54,8 +58,9 @@ public record SmelteryStructure(BlockPos min, BlockPos max, List<BlockPos> membe
             var state = level.getBlockState(controller);
             BlockPos inside = controller.relative(state.getValue(SmelteryControllerBlock.FACING).getOpposite());
             if (!air(inside)) return null;
-            int descended = 0;
-            while (descended < 64 && air(inside.below())) { inside = inside.below(); descended++; }
+            // The world bounds and loaded() bound the scan. An arbitrary 64-block
+            // descent cap rejects tall structures that upward scanning permits.
+            while (air(inside.below())) inside = inside.below();
             int minX = edge(inside, Direction.WEST).getX() + 1;
             int maxX = edge(inside, Direction.EAST).getX() - 1;
             int minZ = edge(inside, Direction.NORTH).getZ() + 1;

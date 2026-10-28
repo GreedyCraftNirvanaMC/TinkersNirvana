@@ -31,6 +31,8 @@ Recipes live in `data/<namespace>/recipe/` and use the `tconstruct:smeltery` rec
 
 `MELTING` needs an ingredient and `fluid_result`. `ALLOY` needs a `fluids` list and `fluid_result`; all inputs must fit one atomic transaction. Casting needs one entry in `fluids` and an item-stack `result`, with an optional `ingredient` for the mold. Omit `ingredient` for an empty basin or table. Set `consume_input` to consume the mold/template on completion. Casting `time` is cooling time in ticks; melting `time` is heating time in ticks. The current lava fuel supports recipes up to temperature 1000. Ingredients support the standard NeoForge ingredient codecs, including tags.
 
+Data-pack reloads take effect on the next processing tick. In-progress heating/cooling restarts when its loaded recipe definitions change; item inputs, molds, stored fluids, and remaining fuel are retained.
+
 Add full-cube Smeltery component blocks to `tconstruct:smeltery_floor` and/or `tconstruct:smeltery_wall` block tags. Custom structure blocks also need a compatible component block entity to participate in ownership tracking.
 
 ## In-game verification

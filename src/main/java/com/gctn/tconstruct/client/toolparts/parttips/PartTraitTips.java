@@ -22,7 +22,10 @@ import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-/** 手柄仍由 ToolRodTips 展示属性；此处只负责头部和绑定结，避免重复添加。 */
+/**
+ * Shows head/binding trait names and optional Alt descriptions on the client.
+ * Handle tooltips are handled separately by ToolRodTips to avoid appending the same trait twice.
+ */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public final class PartTraitTips {
     private PartTraitTips() {}

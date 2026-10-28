@@ -7,7 +7,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-/** Visual state only; the source and casting block retain ownership of every transferred mB. */
+/**
+ * Synchronizes the fluid identity used to render an active faucet stream.
+ * It owns no transferred volume: source and destination retain the authoritative fluid amounts.
+ */
 public class FaucetBlockEntity extends SyncedBlockEntity {
     private FluidStack flowing = FluidStack.EMPTY;
     public FaucetBlockEntity(BlockPos pos, BlockState state) { super(SmelteryRegistration.FAUCET_ENTITY.get(), pos, state); }

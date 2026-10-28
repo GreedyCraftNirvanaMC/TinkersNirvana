@@ -11,6 +11,10 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * Fixed part-slot requirements and a material-based tool factory.
+ * Preview creation validates every material without consuming inputs; consumption is a separate commit step.
+ */
 public class ToolAssemblyRecipe {
     private final PartRequirement[] requirements;
     private final Function<Material[], ItemStack> resultFactory;

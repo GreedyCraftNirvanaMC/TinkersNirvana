@@ -19,6 +19,10 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 
+/**
+ * Opens the server-owned tool-station menu and drops only real inventory on removal.
+ * Derived crafting output and uncommitted disassembly parts must be removed before native inventory drops.
+ */
 public class ToolStationBlock extends BaseEntityBlock {
     public static final MapCodec<ToolStationBlock> CODEC = simpleCodec(ToolStationBlock::new);
 

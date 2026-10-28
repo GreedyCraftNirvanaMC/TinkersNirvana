@@ -17,7 +17,11 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 
-/** Data-pack recipes for the four operations performed by the smeltery and its casting blocks. */
+/**
+ * Data-pack definition for melting, alloying, table casting or basin casting.
+ * The codec validates operation-specific inputs/outputs and bounds processing times before machine code uses them.
+ * Mutable stacks are copied at construction and item results are copied when assembled.
+ */
 public record SmelteryRecipe(Operation operation, Ingredient ingredient, List<FluidStack> fluids,
                              FluidStack fluidResult, ItemStack result, int temperature, int time,
                              boolean consumeInput) implements Recipe<SingleRecipeInput> {

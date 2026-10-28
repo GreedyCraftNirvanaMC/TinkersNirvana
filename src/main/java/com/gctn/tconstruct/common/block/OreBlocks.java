@@ -9,6 +9,10 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Registers the cobalt ore block with Antique hardness and correct-tool drop requirements.
+ * Mining tier restrictions live in data tags so native loot/tool rules enforce them consistently.
+ */
 public class OreBlocks {
     public static final DeferredBlock<Block> COBALT_ORE =
             BlockRegister.registerBlockWithItem("cobalt_ore", () -> new Block(

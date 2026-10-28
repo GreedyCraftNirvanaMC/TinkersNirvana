@@ -21,6 +21,10 @@ import java.util.function.Supplier;
 
 import static com.gctn.tconstruct.library.TinkerMaterials.*;
 
+/**
+ * Builds creative tabs after item registration, using component-bearing stack factories.
+ * A bare pickaxe/part has no material; its creative variant must carry the same data as crafted output.
+ */
 public class TinkerRegistry {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TinkersNirvana.MODID);
@@ -35,7 +39,6 @@ public class TinkerRegistry {
                         ToolRod.getAllParts(tempStacks);
                         Binding.getAllColoredParts(tempStacks);
                         PickaxeHead.getAllColoredParts(tempStacks);
-                        int i = 0;
                         for (ItemStack itemStack : tempStacks) {
                             output.accept(itemStack);
                         }

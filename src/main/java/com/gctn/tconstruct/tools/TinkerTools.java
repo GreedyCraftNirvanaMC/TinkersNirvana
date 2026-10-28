@@ -19,6 +19,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
 
+/**
+ * Common lifecycle for component-based tools that remain repairable at zero durability.
+ * Native damage processing handles enchantments and creative immunity; an exhausted stack is restored as broken.
+ * Assembly writes stats once so saved tools are not silently rebuilt when material definitions change.
+ */
 public abstract class TinkerTools extends Item {
     public static final int DEFAULT_MODIFIER_SLOTS = 3;
 
@@ -85,6 +90,8 @@ public abstract class TinkerTools extends Item {
         int maxDamage = stack.getMaxDamage();
         stack.hurtAndBreak(amount, entity, slot);
         if (stack.isEmpty()) {
+            // Native damage modifiers and break notification have run. Restore
+            // this stack with its components intact so the station can repair it.
             stack.setCount(originalCount);
             stack.setDamageValue(maxDamage);
         }

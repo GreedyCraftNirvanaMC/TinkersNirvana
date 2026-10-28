@@ -5,6 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.blockentity.*;
 
+/**
+ * Draws stored lava inside the transparent fuel-tank model.
+ * The amount is synchronized by the block entity and converted to a fraction of its fixed capacity.
+ */
 public class SearedTankRenderer implements BlockEntityRenderer<SearedTankBlockEntity> {
     public SearedTankRenderer(BlockEntityRendererProvider.Context context) {}
     @Override public void render(SearedTankBlockEntity tank, float partialTick, PoseStack poses, MultiBufferSource buffers, int light, int overlay) {

@@ -6,6 +6,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 
+/**
+ * Removes combat modifiers from exhausted Tinker tools.
+ * The saved attribute component is preserved, allowing a station repair to restore normal behavior.
+ */
 @EventBusSubscriber(modid = TinkersNirvana.MODID)
 public final class TinkerToolEvents {
     private TinkerToolEvents() {

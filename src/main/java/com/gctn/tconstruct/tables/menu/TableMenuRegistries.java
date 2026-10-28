@@ -9,6 +9,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
+/**
+ * Registers matching client and server constructors for the station menu.
+ * The client constructor uses a placeholder container; normal menu synchronization supplies its contents.
+ */
 public class TableMenuRegistries {
     public static final DeferredRegister<MenuType<?>> TABLE_MENU_TYPES =
             DeferredRegister.create(Registries.MENU, TinkersNirvana.MODID);

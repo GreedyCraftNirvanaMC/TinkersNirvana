@@ -1,7 +1,8 @@
 package com.gctn.tconstruct.library.utils;
 
 /**
- * Holds all the NBT Tag keys used by the standard tinkers stuff.
+ * Legacy and current NBT field names retained for the ongoing Antique port.
+ * Only PART_MATERIAL is currently used directly here; reserved fields do not imply those features are implemented.
  */
 public final class Tags {
 

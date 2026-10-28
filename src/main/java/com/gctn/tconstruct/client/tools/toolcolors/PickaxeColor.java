@@ -14,6 +14,10 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
 import static com.gctn.tconstruct.tools.tools.Pickaxe.PICKAXE;
 
+/**
+ * Maps the three pickaxe model layers to saved handle, head and binding materials.
+ * Missing or unknown material data renders safely without mutating or migrating the item stack.
+ */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public class PickaxeColor {
     public static final ItemColor PICKAXE_COLOR = (stack, tintIndex) -> {

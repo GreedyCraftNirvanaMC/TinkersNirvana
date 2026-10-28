@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Supplier;
 
+/**
+ * Registers blocks together with their inventory items, including legacy item IDs.
+ * Category enumeration forces static entries to exist before the shared deferred register is attached.
+ */
 public class BlockRegister {
     public static final DeferredRegister.Blocks BLOCKS =
         DeferredRegister.createBlocks(TinkersNirvana.MODID);

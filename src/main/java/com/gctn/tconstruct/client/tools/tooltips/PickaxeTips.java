@@ -31,6 +31,11 @@ import java.util.List;
 
 import static com.gctn.tconstruct.tools.tools.Pickaxe.PICKAXE;
 
+/**
+ * Displays assembled-tool traits and keyboard-selected stat or part details.
+ * Speed and attack come from the actual stack components, which may differ from current material defaults.
+ * Trait descriptions and part contributions are separate views of the same assembled tool.
+ */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public class PickaxeTips {
     @SubscribeEvent
@@ -112,7 +117,7 @@ public class PickaxeTips {
                 Component.translatable("tooltip.tconstruct." + label),
                 Component.translatable("material." + material.identifier + ".name")).withColor(material.color)));
         for (var trait : material.getTraits(stat)) {
-            tips.add(Either.left(trait.getDisplayName(trait.level)));
+            tips.add(Either.left(trait.trait().getDisplayName(trait.level())));
         }
     }
 }

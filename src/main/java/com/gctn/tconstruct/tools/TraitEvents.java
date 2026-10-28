@@ -8,6 +8,10 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
+/**
+ * Adapts native mining events to the common trait callback interface.
+ * Break speed is calculated on both sides; world-changing callbacks execute only in the server break event.
+ */
 @EventBusSubscriber(modid = TinkersNirvana.MODID)
 public final class TraitEvents {
     private TraitEvents() {}

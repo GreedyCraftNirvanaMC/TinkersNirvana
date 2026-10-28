@@ -9,6 +9,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
+/**
+ * Stores membership and forwards drain operations to the currently valid controller.
+ * Every call rechecks ownership and loaded chunks, so cached capabilities cannot access an old owner.
+ * An unloaded owner cannot be stolen by another controller during structure detection.
+ */
 public class SmelteryComponentBlockEntity extends SyncedBlockEntity {
     private BlockPos controller;
     // Providers remain valid when the structure changes; every operation resolves the current owner.

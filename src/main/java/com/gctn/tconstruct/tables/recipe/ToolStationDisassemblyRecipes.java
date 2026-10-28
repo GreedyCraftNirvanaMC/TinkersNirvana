@@ -10,6 +10,10 @@ import com.gctn.tconstruct.tools.tools.Pickaxe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
+/**
+ * Reconstructs the three material parts of a supported, fully repaired pickaxe.
+ * It only describes output; the block entity owns cancellation and the once-only source-consumption step.
+ */
 public final class ToolStationDisassemblyRecipes {
     private ToolStationDisassemblyRecipes() {
     }

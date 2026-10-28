@@ -9,6 +9,10 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Registers the tool station and its legacy block-item identifier.
+ * Keeping the item path stable preserves existing stacks and loot references across this port.
+ */
 public class TableBlocks {
     public static final DeferredBlock<ToolStationBlock> TOOL_STATION =
         BlockRegister.registerBlockWithItem("toolstation", "blockitem/toolstation", () -> new ToolStationBlock(

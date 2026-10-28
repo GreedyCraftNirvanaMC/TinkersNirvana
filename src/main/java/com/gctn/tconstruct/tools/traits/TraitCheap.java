@@ -3,6 +3,10 @@ package com.gctn.tconstruct.tools.traits;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * Adds Antique Cheap healing from the original amount, rounded down.
+ * Using the original value avoids compounding earlier trait bonuses, and long arithmetic avoids overflow.
+ */
 public final class TraitCheap extends AbstractTraits {
     public TraitCheap() {
         super("cheap", 1, -1, 0xFF555555);

@@ -17,6 +17,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.fluids.FluidUtil;
 
+/**
+ * Construction block with ownership-aware brick, glass, drain or lava-tank behavior.
+ * Only drains expose the controller fluid inventory; fuel tanks hold their own separate lava.
+ */
 public class SmelteryComponentBlock extends BaseEntityBlock {
     public enum Kind { BRICK, GLASS, TANK, DRAIN }
     private static final MapCodec<SmelteryComponentBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(

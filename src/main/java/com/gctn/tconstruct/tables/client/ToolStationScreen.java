@@ -17,6 +17,10 @@ import net.neoforged.api.distmarker.OnlyIn;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Renders the station layout and sends mode requests using native menu button packets.
+ * Slot visibility comes from synchronized menu state; preview items are never created by the screen.
+ */
 @OnlyIn(Dist.CLIENT)
 public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> {
     private static final ResourceLocation BACKGROUND_TEXTURE =

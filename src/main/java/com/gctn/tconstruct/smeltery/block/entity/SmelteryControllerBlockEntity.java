@@ -3,6 +3,7 @@ package com.gctn.tconstruct.smeltery.block.entity;
 import com.gctn.tconstruct.smeltery.*;
 import com.gctn.tconstruct.smeltery.block.SmelteryControllerBlock;
 import com.gctn.tconstruct.smeltery.menu.SmelteryMenu;
+import com.gctn.tconstruct.library.materials.MaterialValue;
 import com.gctn.tconstruct.smeltery.recipe.*;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
@@ -27,15 +28,23 @@ import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.*;
 
+/**
+ * Owns multiblock membership, variable item inventory, heating, fuel and layered fluids.
+ * Structure changes preserve fluid and eject only items that no longer fit; unloaded chunks pause access.
+ * Server menus synchronize 27 slots per viewer, while block updates carry only fluid/structure visuals.
+ */
 public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
-    public static final int INGOT = 144;
+    public static final int INGOT = MaterialValue.VALUE_Ingot;
     public static final int CAPACITY_PER_BLOCK = INGOT * 8;
     private NonNullList<ItemStack> items = NonNullList.create();
     private int[] heat = new int[0];
     private SmelteryRecipe[] recipes = new SmelteryRecipe[0];
+    private List<net.minecraft.world.item.crafting.RecipeHolder<SmelteryRecipe>> recipeSnapshot;
     private final MultiFluidTank tank = new MultiFluidTank(() -> { fluidsDirty = true; setChanged(); });
     private SmelteryStructure structure;
     private final Set<BlockPos> members = new HashSet<>();
+    // Missing chunks suspend access without resizing/ejecting items until all
+    // members can be inspected. This differs from a genuinely invalid structure.
     private boolean suspended, needsCheck = true, fluidsDirty, clientFormed;
     private int ticks, fuel;
     private BlockPos min = BlockPos.ZERO, max = BlockPos.ZERO;
@@ -66,7 +75,7 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
     public int fuel() { return fuel; }
     public int progress(int slot) {
         if (slot < 0 || slot >= heat.length || recipes[slot] == null) return 0;
-        return Math.min(1000, heat[slot] * 1000 / recipes[slot].time());
+        return (int) Math.clamp((long) heat[slot] * 1000 / recipes[slot].time(), 0L, 1000L);
     }
     public void requestCheck() { needsCheck = true; }
 
@@ -77,7 +86,16 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
         ticks++;
         if (needsCheck || ticks % 20 == 0) checkStructure();
         if (!isFormed()) return;
-        if (ticks % 100 == 0) Arrays.fill(recipes, null); // Pick up data-pack recipe reloads.
+        // RecipeManager replaces its immutable recipe map on reload. Reuse the
+        // indexed list until then; old progress must not complete a new recipe.
+        var currentRecipes = SmelteryRecipes.all(level);
+        if (recipeSnapshot != currentRecipes) {
+            if (recipeSnapshot != null) Arrays.fill(heat, 0);
+            Arrays.fill(recipes, null);
+            recipeSnapshot = currentRecipes;
+        }
+        // Simulate full output acceptance before spending fuel/progress, so a
+        // full tank cannot consume a melting input. Each item occupies one slot.
         boolean heating = false;
         for (int slot = 0; slot < items.size(); slot++) {
             ItemStack input = items.get(slot);
@@ -104,6 +122,8 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
     }
 
     private boolean ensureFuel() {
+        // Work ticks are stored between operations; idle machines spend no fuel.
+        // Any tank in the structure can supply the next small lava batch.
         if (fuel > 0) return true;
         for (BlockPos pos : structure.tanks()) {
             if (level.getBlockEntity(pos) instanceof SearedTankBlockEntity fuelTank && fuelTank.tank().getFluidAmount() >= 50) {
@@ -165,6 +185,8 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
         suspended = false;
         SmelteryStructure next = detection.structure();
         if (Objects.equals(structure, next) && (next != null || members.isEmpty() && tank.capacity() == 0)) { updateActive(); return; }
+        // Release old ownership before claiming the new footprint. Loaded parts
+        // verify membership before exposing the controller's capabilities.
         releaseMembers();
         structure = next;
         if (next != null) {
@@ -194,6 +216,8 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
     public void releaseStructure() { releaseMembers(); structure = null; tank.setCapacity(0); }
     private void resize(int size) {
         if (size == items.size()) return;
+        // Preserve slot order/progress for retained inputs and eject only excess
+        // items. Shrinking fluid capacity never truncates the fluid inventory.
         var resized = NonNullList.withSize(size, ItemStack.EMPTY);
         for (int i = 0; i < items.size(); i++) {
             if (i < size) resized.set(i, items.get(i));
@@ -235,6 +259,8 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
         saveVisuals(tag, registries);
     }
     private void saveVisuals(CompoundTag tag, HolderLookup.Provider registries) {
+        // Nearby clients need this subset, not the entire variable inventory.
+        // Item contents are synchronized only through the paged menu.
         tank.save(tag, registries);
         tag.putInt("Capacity", tank.capacity());
         tag.putInt("Fuel", fuel);
@@ -243,6 +269,8 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
     }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        // Bound saved-NBT allocations: valid footprints have at most 9x9 item
+        // slots per height layer. Recipe references are rebuilt after loading.
         int limit = level == null ? 81 * 4096 : 81 * level.getHeight();
         items = NonNullList.withSize(Math.clamp(tag.getInt("InventorySize"), 0, limit), ItemStack.EMPTY);
         ListTag inventoryTag = tag.getList("Items", Tag.TAG_COMPOUND);
@@ -252,7 +280,9 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
             if (slot >= 0 && slot < items.size()) items.set(slot, ItemStack.parse(registries, entry).orElse(ItemStack.EMPTY));
         }
         heat = Arrays.copyOf(tag.getIntArray("Heat"), items.size());
+        for (int i = 0; i < heat.length; i++) heat[i] = Math.clamp(heat[i], 0, 72000);
         recipes = new SmelteryRecipe[items.size()];
+        recipeSnapshot = null;
         members.clear();
         for (long pos : tag.getLongArray("Members")) members.add(BlockPos.of(pos));
         loadVisuals(tag, registries);

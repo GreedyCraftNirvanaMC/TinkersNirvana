@@ -4,7 +4,11 @@ import net.minecraft.network.chat.Component;
 
 import java.util.Objects;
 
-/** 共享且不可变的词条定义；材料赋予等级与工具运行状态均不存放在定义中。 */
+/**
+ * Immutable shared trait identity, limits and presentation metadata.
+ * TraitEntry stores a material contribution; actual tool levels and runtime state remain in stack components.
+ * Ordinary traits merge by maximum level, while LeveledTraits explicitly opts into addition.
+ */
 public abstract class AbstractTraits implements ITraits {
     public final String identifier;
     public final int maxLevel;

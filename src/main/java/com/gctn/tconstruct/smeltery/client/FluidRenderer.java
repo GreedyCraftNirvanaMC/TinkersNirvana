@@ -8,6 +8,10 @@ import net.minecraft.client.renderer.texture.*;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
+/**
+ * Draws six translucent textured faces for a fluid cuboid in local block coordinates.
+ * Native fluid extensions provide texture/tint, allowing compatible third-party fluids to render in tanks.
+ */
 final class FluidRenderer {
     private FluidRenderer() {}
     static void box(PoseStack poses, MultiBufferSource buffers, FluidStack fluid,

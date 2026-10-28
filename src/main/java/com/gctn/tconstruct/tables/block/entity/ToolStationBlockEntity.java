@@ -22,6 +22,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * Authoritative station inventory plus crafting/disassembly state machine.
+ * Normal output is a derived preview; disassembly instead keeps a real source until the first part is taken.
+ * All viewers and automation share this state, so input changes refresh and output pickup revalidates it.
+ */
 public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     private static final int CONTAINER_SIZE = ToolStationMenu.CONTAINER_SIZE;
     private static final int INPUT_SLOT_COUNT = ToolStationMenu.INPUT_SLOT_COUNT;
@@ -41,6 +46,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     private NonNullList<ItemStack> items = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
     private Mode mode = Mode.DEFAULT;
     private int disassemblyState = DISASSEMBLY_NONE;
+    private boolean consumingInputs;
 
     private final ContainerData menuData = new ContainerData() {
         @Override
@@ -117,6 +123,9 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     }
 
     public void inputsChanged() {
+        // A commit can touch several inputs. Wait until it finishes to rebuild
+        // previews and run the deterministic repair callbacks again.
+        if (this.consumingInputs) return;
         if (this.disassemblyState == DISASSEMBLY_COMMITTED && this.areInputSlotsEmpty()) {
             this.disassemblyState = DISASSEMBLY_NONE;
         }
@@ -135,6 +144,8 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         if (this.mode == Mode.DISASSEMBLE) {
             return this.isDisassemblyPreview() && !this.getItem(RESULT_SLOT).isEmpty();
         }
+        // Other viewers/automation may have changed inputs after this preview was
+        // sent. Revalidate on the server before giving the result to a player.
         ItemStack expected = this.createCraftingResult();
         if (!ItemStack.matches(expected, this.getItem(RESULT_SLOT))) {
             this.updateResult();
@@ -169,6 +180,8 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         if (!this.isDisassemblyPreview()) {
             return;
         }
+        // Taking the first part turns preview parts into real items and deletes
+        // their source exactly once. Later part pickups are ordinary removals.
         this.disassemblyState = DISASSEMBLY_COMMITTED;
         this.items.set(RESULT_SLOT, ItemStack.EMPTY);
         this.setChanged();
@@ -268,15 +281,16 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
             return;
         }
 
-        if (this.mode == Mode.DEFAULT) {
-            ToolStationDefaultRecipes.consumeInputs(this);
-        } else {
-            ToolAssemblyRecipe recipe = ToolStationAssemblyRecipes.get(this.mode);
-            if (recipe == null) {
-                this.updateResult();
-                return;
+        this.consumingInputs = true;
+        try {
+            if (this.mode == Mode.DEFAULT) {
+                ToolStationDefaultRecipes.consumeInputs(this);
+            } else {
+                ToolAssemblyRecipe recipe = ToolStationAssemblyRecipes.get(this.mode);
+                if (recipe != null) recipe.consumeInputs(this);
             }
-            recipe.consumeInputs(this);
+        } finally {
+            this.consumingInputs = false;
         }
         this.updateResult();
     }

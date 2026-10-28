@@ -30,6 +30,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * Registers smeltery blocks, items, entities, recipes, menus and automation capabilities.
+ * Block/item entries share the common registers; machine types have their own deferred registries.
+ * Capability adapters resolve current ownership rather than holding stale multiblock references.
+ */
 public final class SmelteryRegistration {
     public static final TagKey<Block> FLOOR = TagKey.create(Registries.BLOCK, id("smeltery_floor"));
     public static final TagKey<Block> WALL = TagKey.create(Registries.BLOCK, id("smeltery_wall"));

@@ -25,6 +25,10 @@ import java.util.List;
 
 import static com.gctn.tconstruct.library.toolparts.ToolRod.TOOL_ROD;
 
+/**
+ * Displays handle traits and Shift durability details or Alt descriptions.
+ * Tooltip construction is read-only and obtains typed stats before displaying a saved material.
+ */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public class ToolRodTips {
 

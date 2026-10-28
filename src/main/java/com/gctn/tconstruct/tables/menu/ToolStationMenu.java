@@ -20,6 +20,11 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * Connects station state to mode-aware slots and native inventory click handling.
+ * Each physical input has multiple Slot views for layout changes; only the selected mode may accept transfers.
+ * Preview generation and ingredient consumption stay in the block entity rather than client UI code.
+ */
 public class ToolStationMenu extends AbstractContainerMenu {
     public static final int CONTAINER_SIZE = 7;
 

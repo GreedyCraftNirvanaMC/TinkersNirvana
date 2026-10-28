@@ -9,7 +9,11 @@ import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 
-/** Each viewer has its own page. Only the 27 visible item slots are sent over the network. */
+/**
+ * Per-viewer inventory paging over a potentially large controller inventory.
+ * Only 27 item slots are synchronized; page changes remap a server-side Container view.
+ * Slot count is split into two 16-bit data values because native menu data packets truncate integers.
+ */
 public class SmelteryMenu extends AbstractContainerMenu {
     public static final int VISIBLE_SLOTS = 27, DATA_COUNT = 32;
     public static final int PREVIOUS = 10000, NEXT = 10001;

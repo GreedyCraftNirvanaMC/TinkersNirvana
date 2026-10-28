@@ -9,6 +9,10 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
+/**
+ * Independent four-bucket lava storage used as smeltery fuel.
+ * Fluid changes synchronize the renderer and update comparator output; drains never expose this fuel tank.
+ */
 public class SearedTankBlockEntity extends SmelteryComponentBlockEntity {
     public static final int CAPACITY = 4000;
     private final FluidTank tank = new FluidTank(CAPACITY, stack -> stack.getFluid().isSame(Fluids.LAVA)) {

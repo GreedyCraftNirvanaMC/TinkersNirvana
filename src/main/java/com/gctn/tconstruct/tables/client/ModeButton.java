@@ -14,6 +14,10 @@ import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+/**
+ * Client button displaying a mode icon, selected state and translatable narration.
+ * Its callback requests a server mode change; the button itself does not change inventory state.
+ */
 @OnlyIn(Dist.CLIENT)
 class ModeButton extends AbstractButton {
     private static final int SIZE = 18;

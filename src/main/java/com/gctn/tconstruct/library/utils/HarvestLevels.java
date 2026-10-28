@@ -10,6 +10,11 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.tags.TagKey;
 
+/**
+ * Bridges Antique numeric harvest levels to Minecraft 1.21.1 incorrect-for-tool block tags.
+ * The names describe what can be harvested, not the material of the tool itself.
+ * Cobalt remains a separate custom tier above the vanilla diamond/netherite mining gate.
+ */
 public class HarvestLevels {
 
     public static final int STONE = 0;

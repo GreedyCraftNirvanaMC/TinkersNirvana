@@ -9,6 +9,11 @@ import net.minecraft.world.item.ItemStack;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Maps repair ingredients to fractions of one material unit.
+ * Wood uses live item tags for modded planks/logs; explicit item IDs cover the remaining built-in inputs.
+ * Values describe a single item, so callers must account for stack counts separately.
+ */
 public class MaterialList {
     public static final Map<Material, Map<String, Double>> MATERIAL_MAP = new HashMap<>();
 

@@ -16,8 +16,16 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
+/**
+ * Two-slot casting inventory, recipe-sized fluid buffer and server cooling progress.
+ * The mold locks while fluid is present; automation can insert molds and extract results only.
+ * Completion creates output once and clears fluid, optionally consuming the template item.
+ */
 public class CastingBlockEntity extends SyncedBlockEntity {
     private int cooling;
+    private SmelteryRecipe coolingRecipe;
+    // Slot 0 holds the mold, slot 1 the finished result. Separate ownership lets
+    // automation extract output without also extracting a reusable mold.
     private final ItemStackHandler items = new ItemStackHandler(2) {
         @Override public int getSlotLimit(int slot) { return slot == 0 ? 1 : 64; }
         @Override public boolean isItemValid(int slot, ItemStack stack) { return slot == 0 && tank.isEmpty() && getStackInSlot(1).isEmpty(); }
@@ -36,12 +44,14 @@ public class CastingBlockEntity extends SyncedBlockEntity {
                     || !isEmpty() && !FluidStack.isSameFluidSameComponents(getFluid(), resource)) return 0;
             var recipe = SmelteryRecipes.casting(level, isBasin(), items.getStackInSlot(0), resource);
             if (recipe == null) return 0;
+            // Recipes determine capacity. SIMULATE must not change that capacity,
+            // cooling progress, or synchronized block-entity state.
             int accepted = Math.min(resource.getAmount(), Math.max(0, recipe.fluids().getFirst().getAmount() - getFluidAmount()));
             if (action.simulate() || accepted <= 0) return accepted;
             setCapacity(recipe.fluids().getFirst().getAmount());
             return super.fill(resource, action);
         }
-        @Override protected void onContentsChanged() { cooling = 0; sync(); }
+        @Override protected void onContentsChanged() { cooling = 0; coolingRecipe = null; sync(); }
     };
     private final IItemHandler automation = new IItemHandler() {
         @Override public int getSlots() { return 2; }
@@ -75,7 +85,13 @@ public class CastingBlockEntity extends SyncedBlockEntity {
         if (casting.tank.isEmpty() || !casting.items.getStackInSlot(1).isEmpty()) return;
         var recipe = SmelteryRecipes.casting(level, casting.isBasin(), casting.items.getStackInSlot(0), casting.tank.getFluid());
         if (recipe == null || casting.tank.getFluidAmount() != recipe.fluids().getFirst().getAmount()) { casting.cooling = 0; return; }
+        // Keep persisted progress on the first lookup, but restart when a data-pack
+        // reload replaces a recipe while the fluid and cast remain in place.
+        if (casting.coolingRecipe != null && casting.coolingRecipe != recipe) casting.cooling = 0;
+        casting.coolingRecipe = recipe;
         if (++casting.cooling >= recipe.time()) {
+            // Server-thread completion creates output once and then consumes
+            // fluid and, for one-use casts, the template item.
             if (recipe.consumeInput()) casting.items.setStackInSlot(0, ItemStack.EMPTY);
             casting.items.setStackInSlot(1, recipe.result().copy());
             casting.tank.setFluid(FluidStack.EMPTY);
@@ -94,6 +110,7 @@ public class CastingBlockEntity extends SyncedBlockEntity {
         items.deserializeNBT(registries, tag.getCompound("Items"));
         tank.setCapacity(Math.max(1, tag.getInt("Capacity")));
         tank.readFromNBT(registries, tag.getCompound("Tank"));
-        cooling = Math.max(0, tag.getInt("Cooling"));
+        cooling = Math.clamp(tag.getInt("Cooling"), 0, 72000);
+        coolingRecipe = null;
     }
 }

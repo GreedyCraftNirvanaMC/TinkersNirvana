@@ -14,12 +14,19 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.Collections;
 
+/**
+ * Defines the port material catalog and indexes identifiers used in saved item components.
+ * Most entries reserve Antique materials; only entries with the required stats can form working parts.
+ * Wood/stone stats follow Antique tools/TinkerMaterials.java and its ToolNBT calculation order.
+ */
 public class TinkerMaterials {
     private static final Map<String, Material> MATERIALS_BY_ID = new LinkedHashMap<>();
     private static final List<Material> REGISTERED_MATERIALS = Lists.newArrayList();
     public static final List<Material> materials = Collections.unmodifiableList(REGISTERED_MATERIALS);
-    public static final List<Material> craftableMaterials = Lists.newArrayList();
-    public static final List<Material> castableMaterials = Lists.newArrayList();
+    private static final List<Material> CRAFTABLE_MATERIALS = Lists.newArrayList();
+    private static final List<Material> CASTABLE_MATERIALS = Lists.newArrayList();
+    public static final List<Material> craftableMaterials = Collections.unmodifiableList(CRAFTABLE_MATERIALS);
+    public static final List<Material> castableMaterials = Collections.unmodifiableList(CASTABLE_MATERIALS);
 
     // natural resources/blocks
     public static final Material wood       = mat("wood", 0xff8e661b);
@@ -102,12 +109,14 @@ public class TinkerMaterials {
     public static void setCraftableMaterials(Material... matList) {
         for (Material mat : matList) {
             mat.setCraftable(true);
+            if (!CRAFTABLE_MATERIALS.contains(mat)) CRAFTABLE_MATERIALS.add(mat);
         }
     }
 
     public static void setCastableMaterials(Material... matList) {
         for (Material mat : matList) {
             mat.setCastable(true);
+            if (!CASTABLE_MATERIALS.contains(mat)) CASTABLE_MATERIALS.add(mat);
         }
     }
 

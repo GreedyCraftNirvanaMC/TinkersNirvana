@@ -9,6 +9,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
+/**
+ * Registers the station block-entity factory against its supported block.
+ * Deferred suppliers delay resolving the block until the registry lifecycle permits it.
+ */
 public class TableEntityRegistries {
     public static final DeferredRegister<BlockEntityType<?>> TABLE_ENTITY_TYPES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, TinkersNirvana.MODID);

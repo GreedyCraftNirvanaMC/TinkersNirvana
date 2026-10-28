@@ -4,11 +4,17 @@ import com.gctn.tconstruct.library.MaterialList;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.tools.TinkerTools;
 import com.gctn.tconstruct.tools.TinkerTools.RepairInfo;
+import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
 
+/**
+ * Plans material repair on a copy, recording exact per-slot consumption for confirmation.
+ * Only materials accepted by the tool contribute; slot splitting does not multiply material diversity.
+ * Callbacks run on the copied result so refreshing or cancelling a preview cannot alter the input tool.
+ */
 public final class ToolStationDefaultRecipes {
     private static final int TOOL_SLOT = 0;
     private static final int FIRST_MATERIAL_SLOT = 1;
@@ -91,6 +97,8 @@ public final class ToolStationDefaultRecipes {
         int remainingDamage = tool.getDamageValue();
         int[] totalRepairAmount = new int[MATERIAL_SLOT_COUNT];
 
+        // Count virtual consumption instead of shrinking real ingredients. This
+        // lets preview, validation and commit reproduce the same deterministic plan.
         while (remainingDamage > 0) {
             Collection<RepairMatch> repairMatches = findRepairMatches(container, tool, totalRepairAmount);
             if (repairMatches.isEmpty()) {
@@ -98,6 +106,8 @@ public final class ToolStationDefaultRecipes {
             }
 
             int previousDamage = remainingDamage;
+            // Count material identities, never slots: dividing one stack across
+            // inputs must not grant extra repair efficiency.
             long distinctMaterials = repairMatches.stream().map(RepairMatch::materialId).distinct().count();
             double matchEfficiency = 1 + (distinctMaterials - 1) / 9.0;
             for (RepairMatch repairMatch : repairMatches) {
@@ -185,7 +195,8 @@ public final class ToolStationDefaultRecipes {
 
     private static int getRepairAmount(ItemStack tool, int materialDurability, float partEfficient, double repairEfficient, double matchEfficient) {
         int base = Math.max(1, (int) Math.ceil(materialDurability * partEfficient * repairEfficient * matchEfficient));
-        ToolTraits.forEach(tool, (trait, level) -> trait.onRepair(tool, level, base));
+        // This is a pure amount calculation. onRepair runs once, after applying the
+        // actual (possibly capped) healing to the preview copy in createRepairPlan.
         return ToolTraits.modifyHealing(tool, base, null);
     }
 

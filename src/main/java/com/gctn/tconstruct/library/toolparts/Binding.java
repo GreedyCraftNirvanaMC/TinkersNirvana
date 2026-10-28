@@ -16,6 +16,10 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Creates the extra part used by pickaxe assembly and disassembly.
+ * Its material contributes extra durability and traits, while the head controls harvesting behavior.
+ */
 public class Binding extends ToolPart {
     public Binding(int cost) {
         super(cost);

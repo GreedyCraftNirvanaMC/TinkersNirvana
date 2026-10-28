@@ -16,9 +16,11 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Creates stack variants of the handle part using persistent material IDs.
+ * Names remain translatable so a server-created part displays in the receiving client language.
+ */
 public class ToolRod extends ToolPart {
-    private final String materialTag = "";
-
     public ToolRod(int cost) {
         super(cost);
     }

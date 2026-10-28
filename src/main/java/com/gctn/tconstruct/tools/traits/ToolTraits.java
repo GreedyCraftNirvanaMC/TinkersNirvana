@@ -16,7 +16,11 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-/** 工具词条的统一组装、读取和分发入口；未知存档数据保留但不执行。 */
+/**
+ * Assembles, validates and dispatches per-stack traits in stable priority order.
+ * Unknown or invalid saved entries are retained but never executed, preserving forward compatibility.
+ * Copy-on-write state updates keep immutable CustomData components safe for persistence and synchronization.
+ */
 public final class ToolTraits {
     private ToolTraits() {}
 

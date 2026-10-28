@@ -7,6 +7,10 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.blockentity.*;
 
+/**
+ * Draws the horizontal spout and falling stream from synchronized fluid identity.
+ * The stream ends at a basin fluid surface and can extend beyond the faucet block render bounds.
+ */
 public class FaucetRenderer implements BlockEntityRenderer<FaucetBlockEntity> {
     public FaucetRenderer(BlockEntityRendererProvider.Context context) {}
     @Override public void render(FaucetBlockEntity faucet, float partialTick, PoseStack poses, MultiBufferSource buffers, int light, int overlay) {

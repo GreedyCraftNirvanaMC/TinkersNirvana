@@ -10,7 +10,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
-/** 生命周期回调默认无效果，具体词条只需覆盖自己关心的触发点。 */
+/**
+ * Optional trait lifecycle hooks; unimplemented hooks deliberately leave behavior unchanged.
+ * Amount modifiers receive both original and accumulated values so ordered traits compose predictably.
+ * Preview callbacks must be deterministic and affect only the supplied tool copy.
+ */
 public interface ITraits {
     /** 仅服务端调用；traitTag 的修改由分发器写回，不要同时直接替换本词条的组件数据。 */
     default void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId,
