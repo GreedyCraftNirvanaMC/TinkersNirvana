@@ -12,6 +12,11 @@ import com.gctn.tconstruct.tools.traits.ToolTraits;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -26,6 +31,11 @@ import java.util.List;
 
 import static com.gctn.tconstruct.tools.tools.Pickaxe.PICKAXE;
 
+/**
+ * 显示组装工具的词条，并根据按键选择展示整体属性或各部件信息。
+ * 速度和攻击值读取物品栈的实际组件，可能与当前材料默认值不同。
+ * 词条说明和部件贡献分别从整体与部件角度展示同一把工具。
+ */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public class PickaxeTips {
     @SubscribeEvent
@@ -59,10 +69,10 @@ public class PickaxeTips {
                     HarvestLevels.getHarvestLevelName(headStats.harvestLevel)
             ).withColor(0xFFAAAAAA);
             Component miningSpeedTip = Component.translatable("tooltip.tconstruct.tool.miningspeed",
-                    Component.literal(String.valueOf(headStats.miningspeed)).withColor(0xFF78A0CD)
+                    Component.literal(String.valueOf(stack.getDestroySpeed(Blocks.STONE.defaultBlockState()))).withColor(0xFF78A0CD)
             ).withColor(0xFFAAAAAA);
             Component attackTip = Component.translatable("tooltip.tconstruct.tool.attack",
-                    Component.literal(String.valueOf(headStats.attack)).withColor(0xFFD76464)
+                    Component.literal(ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT.format(getAttackBonus(stack))).withColor(0xFFD76464)
             ).withColor(0xFFAAAAAA);
             Component modifiersTip = Component.translatable("tooltip.tconstruct.tool.modifiers",
                     ((TinkerTools) stack.getItem()).getAvailableModifierSlots(stack)
@@ -73,7 +83,9 @@ public class PickaxeTips {
             upperTips.add(Either.left(attackTip));
             upperTips.add(Either.left(modifiersTip));
         } else if (Screen.hasControlDown()) {
-            // TODO 按下Ctrl时显示详细信息
+            addPartInfo(upperTips, handleMaterial, "Handle", "handle");
+            addPartInfo(upperTips, headMaterial, "Head", "head");
+            addPartInfo(upperTips, bindingMaterial, "Extra", "binding");
         } else if (Screen.hasAltDown()) {
             for (ToolTraits.Entry entry : ToolTraits.getTraits(stack)) {
                 upperTips.add(Either.left(entry.trait().getDescription()));
@@ -88,5 +100,24 @@ public class PickaxeTips {
             upperTips.add(Either.left(Component.empty()));
         }
         tooltip.addAll(1, upperTips);
+    }
+    private static double getAttackBonus(ItemStack stack) {
+        if (TinkerTools.isBroken(stack)) {
+            return 0;
+        }
+        ItemAttributeModifiers attributes = stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
+        return new ItemAttributeModifiers(attributes.modifiers().stream()
+                .filter(entry -> entry.attribute().equals(Attributes.ATTACK_DAMAGE)).toList(), false)
+                .compute(0, EquipmentSlot.MAINHAND);
+    }
+
+    private static void addPartInfo(List<Either<FormattedText, TooltipComponent>> tips,
+                                    Material material, String stat, String label) {
+        tips.add(Either.left(Component.translatable("tooltip.tconstruct.tool.part",
+                Component.translatable("tooltip.tconstruct." + label),
+                Component.translatable("material." + material.identifier + ".name")).withColor(material.color)));
+        for (var trait : material.getTraits(stat)) {
+            tips.add(Either.left(trait.trait().getDisplayName(trait.level())));
+        }
     }
 }

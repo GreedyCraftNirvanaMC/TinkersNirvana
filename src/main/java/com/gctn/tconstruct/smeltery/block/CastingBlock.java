@@ -17,7 +17,17 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
 import net.neoforged.neoforge.fluids.FluidUtil;
 
+/**
+ * 铸件台或铸造盆方块，支持原版流体容器交互和物品领取。
+ * 服务端通过刻更新处理浇铸，客户端渲染器读取同步后的流体与物品内容。
+ */
 public class CastingBlock extends BaseEntityBlock {
+    // 缓存不可变的形状并集，避免每次射线检测、
+    // 碰撞检测或绘制选中边框时重新创建体素形状。
+    private static final VoxelShape TABLE_SHAPE = Shapes.or(box(0, 10, 0, 16, 16, 16), box(0, 0, 0, 4, 10, 4),
+            box(12, 0, 0, 16, 10, 4), box(0, 0, 12, 4, 10, 16), box(12, 0, 12, 16, 10, 16));
+    private static final VoxelShape BASIN_SHAPE = Shapes.or(box(0, 0, 0, 16, 4, 16), box(0, 4, 0, 2, 16, 16),
+            box(14, 4, 0, 16, 16, 16), box(2, 4, 0, 14, 16, 2), box(2, 4, 14, 14, 16, 16));
     private static final MapCodec<CastingBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             propertiesCodec(), Codec.BOOL.fieldOf("basin").forGetter(CastingBlock::isBasin)).apply(i, CastingBlock::new));
     private final boolean basin;
@@ -30,8 +40,7 @@ public class CastingBlock extends BaseEntityBlock {
         return level.isClientSide ? null : createTickerHelper(type, SmelteryRegistration.CASTING_ENTITY.get(), CastingBlockEntity::tick);
     }
     @Override protected VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos, CollisionContext context) {
-        if (!basin) return Shapes.or(box(0, 10, 0, 16, 16, 16), box(0, 0, 0, 4, 10, 4), box(12, 0, 0, 16, 10, 4), box(0, 0, 12, 4, 10, 16), box(12, 0, 12, 16, 10, 16));
-        return Shapes.or(box(0, 0, 0, 16, 4, 16), box(0, 4, 0, 2, 16, 16), box(14, 4, 0, 16, 16, 16), box(2, 4, 0, 14, 16, 2), box(2, 4, 14, 14, 16, 16));
+        return basin ? BASIN_SHAPE : TABLE_SHAPE;
     }
     @Override protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide) return ItemInteractionResult.SUCCESS;

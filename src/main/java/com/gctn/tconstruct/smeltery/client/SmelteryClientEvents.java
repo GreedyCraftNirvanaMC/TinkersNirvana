@@ -10,6 +10,10 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
+/**
+ * 注册冶炼炉界面、方块实体渲染器，以及流体纹理和着色扩展。
+ * 所有方法均限定在客户端加载，避免专用服务端访问渲染类。
+ */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public final class SmelteryClientEvents {
     @SubscribeEvent private static void screens(RegisterMenuScreensEvent event) { event.register(SmelteryRegistration.MENU.get(), SmelteryScreen::new); }

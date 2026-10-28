@@ -6,6 +6,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * 将结果槽的放入与取出操作交给服务端事务状态处理。
+ * 取出前记录操作模式，因为清空拆解源工具会取消对应预览。
+ * 只有拆解模式允许放入源工具，其他模式仅展示生成的结果。
+ */
 public class ToolStationResultSlot extends Slot {
     private final ToolStationMenu menu;
     private Mode takenMode;

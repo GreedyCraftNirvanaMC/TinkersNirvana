@@ -16,6 +16,10 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * 创建镐组装与拆解使用的绑定结部件。
+ * 绑定结材料提供额外耐久和词条，采掘行为由头部材料决定。
+ */
 public class Binding extends ToolPart {
     public Binding(int cost) {
         super(cost);
@@ -24,7 +28,7 @@ public class Binding extends ToolPart {
     public static final DeferredItem<Item> BINDING = ITEMS.register("parts/binding",
             () -> new Binding(MaterialValue.VALUE_Ingot));
 
-    /** Forces this class's static registration entry to be initialized. */
+    /** 显式触发本类的静态注册条目初始化。 */
     public static void init() {
     }
 
@@ -42,12 +46,9 @@ public class Binding extends ToolPart {
         CompoundTag tag = new CompoundTag();
         tag.putString(Tags.PART_MATERIAL, material.identifier);
         stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(tag));
-        stack.set(DataComponents.ITEM_NAME, Component.literal(
-                        Component.translatable("material."+material.identifier+".name").getString()
-                        +" "
-                        +Component.translatable("item.tconstruct.binding.name").getString()
-                )
-        );
+        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_name",
+                Component.translatable("material." + material.identifier + ".name"),
+                Component.translatable("item.tconstruct.binding.name")));
         return stack;
     }
 

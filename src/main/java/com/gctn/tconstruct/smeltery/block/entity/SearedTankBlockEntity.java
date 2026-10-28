@@ -9,6 +9,10 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
+/**
+ * 独立保存四桶熔岩，供冶炼炉作为燃料使用。
+ * 流体变化时同步渲染状态并更新比较器输出，排液口不会暴露此燃料储罐。
+ */
 public class SearedTankBlockEntity extends SmelteryComponentBlockEntity {
     public static final int CAPACITY = 4000;
     private final FluidTank tank = new FluidTank(CAPACITY, stack -> stack.getFluid().isSame(Fluids.LAVA)) {

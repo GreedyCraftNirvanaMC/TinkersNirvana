@@ -14,7 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-/** Tank fluids intentionally have no placeable block; casting and pipes handle their transfer. */
+/**
+ * 注册只供储罐使用的源流体、流动流体及其流体类型。
+ * 这些流体没有可放置方块或流体桶，机器之间通过流体能力传输。
+ * 客户端的纹理与着色注册集中在 SmelteryClientEvents 中。
+ */
 public final class SmelteryFluids {
     private static final DeferredRegister<FluidType> TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, TinkersNirvana.MODID);
     private static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(Registries.FLUID, TinkersNirvana.MODID);

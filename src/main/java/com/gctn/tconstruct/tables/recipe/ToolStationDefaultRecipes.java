@@ -1,17 +1,20 @@
 package com.gctn.tconstruct.tables.recipe;
 
-import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.library.MaterialList;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.tools.TinkerTools;
 import com.gctn.tconstruct.tools.TinkerTools.RepairInfo;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
 
+/**
+ * 在副本上规划材料修复，并记录确认时各槽位需要消耗的准确数量。
+ * 只有工具认可的材料才参与修复，将同种材料拆到多个槽位不会增加材料种类加成。
+ * 回调仅作用于结果副本，刷新或取消预览不能修改输入工具。
+ */
 public final class ToolStationDefaultRecipes {
     private static final int TOOL_SLOT = 0;
     private static final int FIRST_MATERIAL_SLOT = 1;
@@ -94,6 +97,8 @@ public final class ToolStationDefaultRecipes {
         int remainingDamage = tool.getDamageValue();
         int[] totalRepairAmount = new int[MATERIAL_SLOT_COUNT];
 
+        // 只记录模拟消耗数量，不减少真实原料，
+        // 使预览、校验和确认消耗都能重现同一套确定性方案。
         while (remainingDamage > 0) {
             Collection<RepairMatch> repairMatches = findRepairMatches(container, tool, totalRepairAmount);
             if (repairMatches.isEmpty()) {
@@ -101,20 +106,15 @@ public final class ToolStationDefaultRecipes {
             }
 
             int previousDamage = remainingDamage;
-            double matchEfficiency = 1 + (repairMatches.size() - 1) / 9.0;
+            // 按材料种类计数，而不是按槽位计数，避免将同一堆原料分散到多个
+            // 输入槽后获得额外修复效率。
+            long distinctMaterials = repairMatches.stream().map(RepairMatch::materialId).distinct().count();
+            double matchEfficiency = 1 + (distinctMaterials - 1) / 9.0;
             for (RepairMatch repairMatch : repairMatches) {
                 if (remainingDamage == 0) {
                     break;
                 }
-                int repairAmount = getRepairAmount(tool, repairMatch.partEfficient, repairMatch.matEfficient, matchEfficiency);
-                // 测试日志，后续删除
-                TinkersNirvana.LOGGER.debug(
-                        "Repair match: part={}, material={}, match={}",
-                        repairMatch.partEfficient(),
-                        repairMatch.matEfficient(),
-                        matchEfficiency
-                );
-
+                int repairAmount = getRepairAmount(tool, repairMatch.durability, repairMatch.partEfficient, repairMatch.matEfficient, matchEfficiency);
                 if (repairAmount <= 0) {
                     continue;
                 }
@@ -173,10 +173,9 @@ public final class ToolStationDefaultRecipes {
             if(materialStack.getCount() <= totalRepairAmount[slot - FIRST_MATERIAL_SLOT]) {
                 continue;
             }
-            String inputItemId = BuiltInRegistries.ITEM.getKey(materialStack.getItem()).toString();
-            double matEfficient = materialMatchesInput(material, inputItemId);
+            double matEfficient = MaterialList.getMaterialValue(material, materialStack);
             if (matEfficient > 0.0) {
-                repairMatches.add(new RepairMatch(slot, partEfficient, matEfficient));
+                repairMatches.add(new RepairMatch(slot, material.identifier, repairInfo.durability(), partEfficient, matEfficient));
             }
         }
 
@@ -194,13 +193,10 @@ public final class ToolStationDefaultRecipes {
                 && stack.getDamageValue() > 0;
     }
 
-    private static double materialMatchesInput(Material material, String inputItemId) {
-        Map<String, Double> efficiencies = MaterialList.MATERIAL_MAP.get(material);
-        return efficiencies == null ? 0.0 : efficiencies.getOrDefault(inputItemId, 0.0);
-    }
-
-    private static int getRepairAmount(ItemStack tool, float partEfficient, double repairEfficient, double matchEfficient) {
-        int base = Math.max(1, (int) Math.ceil(tool.getMaxDamage() * partEfficient * repairEfficient * matchEfficient));
+    private static int getRepairAmount(ItemStack tool, int materialDurability, float partEfficient, double repairEfficient, double matchEfficient) {
+        int base = Math.max(1, (int) Math.ceil(materialDurability * partEfficient * repairEfficient * matchEfficient));
+        // 此处只计算恢复量，onRepair 在 createRepairPlan 中应用
+        // 实际恢复量之后仅调用一次，实际恢复量可能受到剩余损耗上限限制。
         return ToolTraits.modifyHealing(tool, base, null);
     }
 
@@ -215,6 +211,6 @@ public final class ToolStationDefaultRecipes {
         }
     }
 
-    private record RepairMatch(int slot, float partEfficient, double matEfficient) {
+    private record RepairMatch(int slot, String materialId, int durability, float partEfficient, double matEfficient) {
     }
 }

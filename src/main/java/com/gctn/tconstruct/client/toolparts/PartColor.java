@@ -15,17 +15,16 @@ import static com.gctn.tconstruct.library.toolparts.Binding.BINDING;
 import static com.gctn.tconstruct.library.toolparts.PickaxeHead.PICKAXEHEAD;
 import static com.gctn.tconstruct.library.toolparts.ToolRod.TOOL_ROD;
 
+/**
+ * 只在客户端为共享的材料部件模型注册着色处理器。
+ * 存档中的材料标识符无法识别时使用白色，避免物品无法渲染。
+ */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public class PartColor {
     public static final ItemColor PART_COLOR = (stack, tintIndex) -> {
         String materialId = TinkerDataComponents.getMaterialTag(stack).getString(Tags.PART_MATERIAL);
-        for (Material material : TinkerMaterials.materials) {
-            if (material.identifier.equals(materialId)) {
-                return material.color;
-            }
-        }
-
-        return 0xFFFFFFFF;
+        Material material = TinkerMaterials.getMaterial(materialId);
+        return material == null ? 0xFFFFFFFF : material.color;
     };
 
     @SubscribeEvent

@@ -5,6 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.blockentity.*;
 
+/**
+ * 在透明的燃料储罐模型内部绘制已存储的熔岩。
+ * 流体数量由方块实体同步，并换算成固定容量的占比。
+ */
 public class SearedTankRenderer implements BlockEntityRenderer<SearedTankBlockEntity> {
     public SearedTankRenderer(BlockEntityRendererProvider.Context context) {}
     @Override public void render(SearedTankBlockEntity tank, float partialTick, PoseStack poses, MultiBufferSource buffers, int light, int overlay) {

@@ -10,6 +10,10 @@ import com.gctn.tconstruct.tools.tools.Pickaxe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
+/**
+ * 将受支持且已完全修复的镐还原为三个对应材料的部件。
+ * 本类只描述输出，取消预览及源工具的一次性消耗由方块实体负责。
+ */
 public final class ToolStationDisassemblyRecipes {
     private ToolStationDisassemblyRecipes() {
     }
@@ -51,14 +55,8 @@ public final class ToolStationDisassemblyRecipes {
 
     private static Material getMaterial(CompoundTag materials, String materialKey, String requiredStat) {
         String materialId = materials.getString(materialKey);
-        for (Material material : TinkerMaterials.materials) {
-            if (material.identifier.equals(materialId)
-                    && material.getStats() != null
-                    && material.getStats().containsKey(requiredStat)) {
-                return material;
-            }
-        }
-        return null;
+        Material material = TinkerMaterials.getMaterial(materialId);
+        return material != null && material.hasStats(requiredStat) ? material : null;
     }
 
     public record PartList(ItemStack[] parts) {

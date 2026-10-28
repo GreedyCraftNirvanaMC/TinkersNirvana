@@ -17,6 +17,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.fluids.FluidUtil;
 
+/**
+ * 具有归属关系的冶炼炉构件，分别提供砖块、玻璃、排液口或熔岩储罐行为。
+ * 只有排液口暴露控制器中的熔液库存，燃料储罐单独保存熔岩。
+ */
 public class SmelteryComponentBlock extends BaseEntityBlock {
     public enum Kind { BRICK, GLASS, TANK, DRAIN }
     private static final MapCodec<SmelteryComponentBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(

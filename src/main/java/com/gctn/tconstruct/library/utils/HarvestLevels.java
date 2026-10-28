@@ -1,12 +1,20 @@
 package com.gctn.tconstruct.library.utils;
 
 import com.gctn.tconstruct.library.TinkerMaterials;
+import com.gctn.tconstruct.TinkersNirvana;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.tags.TagKey;
 
+/**
+ * 将 Antique 的数字采掘等级映射到 Minecraft 1.21.1 的 incorrect-for-tool 方块标签。
+ * 等级名称表示可采掘的材料，而不是工具自身的材料。
+ * 钴保持为独立的自定义等级，高于原版钻石与下界合金工具的采掘门槛。
+ */
 public class HarvestLevels {
 
     public static final int STONE = 0;
@@ -16,7 +24,7 @@ public class HarvestLevels {
     public static final int COBALT = 4;
 
     private HarvestLevels() {
-    } // non-instantiable
+    } // 工具类不允许创建实例。
 
     public static Component getHarvestLevelName(int harvestLevel) {
         MutableComponent name = switch (harvestLevel) {
@@ -45,6 +53,10 @@ public class HarvestLevels {
         if (harvestLevel == HarvestLevels.DIAMOND) {
             return BlockTags.INCORRECT_FOR_IRON_TOOL;
         }
-        return BlockTags.INCORRECT_FOR_DIAMOND_TOOL;
+        if (harvestLevel < HarvestLevels.COBALT) {
+            return BlockTags.INCORRECT_FOR_DIAMOND_TOOL;
+        }
+        return TagKey.create(Registries.BLOCK,
+                ResourceLocation.fromNamespaceAndPath(TinkersNirvana.MODID, "incorrect_for_cobalt_tool"));
     }
 }

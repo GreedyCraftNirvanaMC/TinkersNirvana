@@ -3,6 +3,7 @@ package com.gctn.tconstruct.smeltery.block.entity;
 import com.gctn.tconstruct.smeltery.*;
 import com.gctn.tconstruct.smeltery.block.SmelteryControllerBlock;
 import com.gctn.tconstruct.smeltery.menu.SmelteryMenu;
+import com.gctn.tconstruct.library.materials.MaterialValue;
 import com.gctn.tconstruct.smeltery.recipe.*;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
@@ -27,15 +28,23 @@ import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.*;
 
+/**
+ * 管理多方块结构归属、可变大小物品库存、加热、燃料和分层流体。
+ * 结构变化时保留流体，只弹出不再容纳的物品；所需区块未加载时暂停访问。
+ * 服务端菜单为每位玩家同步 27 个槽位，方块更新只发送流体和结构的可视状态。
+ */
 public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
-    public static final int INGOT = 144;
+    public static final int INGOT = MaterialValue.VALUE_Ingot;
     public static final int CAPACITY_PER_BLOCK = INGOT * 8;
     private NonNullList<ItemStack> items = NonNullList.create();
     private int[] heat = new int[0];
     private SmelteryRecipe[] recipes = new SmelteryRecipe[0];
+    private List<net.minecraft.world.item.crafting.RecipeHolder<SmelteryRecipe>> recipeSnapshot;
     private final MultiFluidTank tank = new MultiFluidTank(() -> { fluidsDirty = true; setChanged(); });
     private SmelteryStructure structure;
     private final Set<BlockPos> members = new HashSet<>();
+    // 所需区块缺失时暂停访问，直到所有构件都可检查前不调整库存或弹出物品。
+    // 这种情况需要与结构实际损坏区分处理。
     private boolean suspended, needsCheck = true, fluidsDirty, clientFormed;
     private int ticks, fuel;
     private BlockPos min = BlockPos.ZERO, max = BlockPos.ZERO;
@@ -66,7 +75,7 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
     public int fuel() { return fuel; }
     public int progress(int slot) {
         if (slot < 0 || slot >= heat.length || recipes[slot] == null) return 0;
-        return Math.min(1000, heat[slot] * 1000 / recipes[slot].time());
+        return (int) Math.clamp((long) heat[slot] * 1000 / recipes[slot].time(), 0L, 1000L);
     }
     public void requestCheck() { needsCheck = true; }
 
@@ -77,7 +86,16 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
         ticks++;
         if (needsCheck || ticks % 20 == 0) checkStructure();
         if (!isFormed()) return;
-        if (ticks % 100 == 0) Arrays.fill(recipes, null); // Pick up data-pack recipe reloads.
+        // RecipeManager 在重载时替换不可变的配方映射，此前一直复用
+        // 已有索引列表；旧配方进度不能直接用于完成新配方。
+        var currentRecipes = SmelteryRecipes.all(level);
+        if (recipeSnapshot != currentRecipes) {
+            if (recipeSnapshot != null) Arrays.fill(heat, 0);
+            Arrays.fill(recipes, null);
+            recipeSnapshot = currentRecipes;
+        }
+        // 消耗燃料或推进进度前，先模拟是否能完整接收输出，
+        // 避免满罐时仍消耗熔炼输入；每个槽位只容纳一个物品。
         boolean heating = false;
         for (int slot = 0; slot < items.size(); slot++) {
             ItemStack input = items.get(slot);
@@ -88,7 +106,7 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
             if (!ensureFuel()) break;
             heating = true;
             if (++heat[slot] >= recipe.time()) {
-                // Capacity was checked in this iteration, before consuming the input.
+                // 本轮已在消耗输入前完成容量检查。
                 tank.fill(recipe.fluidResult(), FluidAction.EXECUTE);
                 items.set(slot, ItemStack.EMPTY);
                 heat[slot] = 0;
@@ -104,6 +122,8 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
     }
 
     private boolean ensureFuel() {
+        // 未用完的工作刻数保留到后续操作，机器空闲时不消耗燃料。
+        // 结构中的任意燃料储罐都可以供应下一小批熔岩。
         if (fuel > 0) return true;
         for (BlockPos pos : structure.tanks()) {
             if (level.getBlockEntity(pos) instanceof SearedTankBlockEntity fuelTank && fuelTank.tank().getFluidAmount() >= 50) {
@@ -122,7 +142,7 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
         for (var holder : SmelteryRecipes.all(level)) {
             var recipe = holder.value();
             if (recipe.operation() != SmelteryRecipe.Operation.ALLOY || recipe.temperature() > 1000) continue;
-            // Run the whole transaction in a copy first, including recipes with repeated fluid inputs.
+            // 先在副本上模拟整个事务，同时正确处理多次要求同一种流体的配方。
             MultiFluidTank trial = new MultiFluidTank(() -> {});
             trial.setCapacity(tank.capacity());
             tank.contents().forEach(f -> trial.fill(f, FluidAction.EXECUTE));
@@ -165,6 +185,8 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
         suspended = false;
         SmelteryStructure next = detection.structure();
         if (Objects.equals(structure, next) && (next != null || members.isEmpty() && tank.capacity() == 0)) { updateActive(); return; }
+        // 认领新结构范围前先解除旧归属，已加载的构件
+        // 会先检查是否仍属于该控制器，再暴露其能力。
         releaseMembers();
         structure = next;
         if (next != null) {
@@ -194,6 +216,8 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
     public void releaseStructure() { releaseMembers(); structure = null; tank.setCapacity(0); }
     private void resize(int size) {
         if (size == items.size()) return;
+        // 保留仍可容纳输入的槽位顺序和进度，只弹出超出的
+        // 物品；流体容量缩小时不截断已有流体。
         var resized = NonNullList.withSize(size, ItemStack.EMPTY);
         for (int i = 0; i < items.size(); i++) {
             if (i < size) resized.set(i, items.get(i));
@@ -220,7 +244,7 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
     @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putInt("InventorySize", items.size());
-        // Vanilla ContainerHelper stores Slot as a byte; large smelteries exceed 256 slots.
+        // 原版 ContainerHelper 使用字节保存 Slot，而大型冶炼炉可能超过 256 个槽位。
         ListTag inventoryTag = new ListTag();
         for (int slot = 0; slot < items.size(); slot++) {
             if (!items.get(slot).isEmpty()) {
@@ -235,6 +259,8 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
         saveVisuals(tag, registries);
     }
     private void saveVisuals(CompoundTag tag, HolderLookup.Provider registries) {
+        // 附近客户端只需要这些可视数据，无需接收整个可变大小库存。
+        // 物品内容仅通过分页菜单同步。
         tank.save(tag, registries);
         tag.putInt("Capacity", tank.capacity());
         tag.putInt("Fuel", fuel);
@@ -243,6 +269,8 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
     }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        // 限制读取存档 NBT 时的内存分配：有效结构每层最多有 9×9 个物品
+        // 槽位；配方引用在加载后重新构建。
         int limit = level == null ? 81 * 4096 : 81 * level.getHeight();
         items = NonNullList.withSize(Math.clamp(tag.getInt("InventorySize"), 0, limit), ItemStack.EMPTY);
         ListTag inventoryTag = tag.getList("Items", Tag.TAG_COMPOUND);
@@ -252,7 +280,9 @@ public class SmelteryControllerBlockEntity extends BaseContainerBlockEntity {
             if (slot >= 0 && slot < items.size()) items.set(slot, ItemStack.parse(registries, entry).orElse(ItemStack.EMPTY));
         }
         heat = Arrays.copyOf(tag.getIntArray("Heat"), items.size());
+        for (int i = 0; i < heat.length; i++) heat[i] = Math.clamp(heat[i], 0, 72000);
         recipes = new SmelteryRecipe[items.size()];
+        recipeSnapshot = null;
         members.clear();
         for (long pos : tag.getLongArray("Members")) members.add(BlockPos.of(pos));
         loadVisuals(tag, registries);

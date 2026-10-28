@@ -16,9 +16,11 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * 使用持久化材料标识符创建手柄部件的物品栈变体。
+ * 名称保留为可翻译组件，使服务端创建的部件仍能按照接收客户端的语言显示。
+ */
 public class ToolRod extends ToolPart {
-    private final String materialTag = "";
-
     public ToolRod(int cost) {
         super(cost);
     }
@@ -26,14 +28,14 @@ public class ToolRod extends ToolPart {
     public static final DeferredItem<Item> TOOL_ROD = ITEMS.register("parts/tool_rod",
             () -> new ToolRod(MaterialValue.VALUE_Ingot));
 
-    /** Forces this class's static registration entry to be initialized. */
+    /** 显式触发本类的静态注册条目初始化。 */
     public static void init() {
     }
 
     public static void getAllParts(Collection<ItemStack> coloredParts) {
         List<Material> materials = TinkerMaterials.materials;
         for (Material material : materials) {
-            if (material.getStats() == null || !material.getStats().containsKey("Handle")) { continue; }
+            if (material.isHidden() || !material.hasStats("Handle")) { continue; }
             ItemStack stack = getPart(material);
             coloredParts.add(stack);
         }
@@ -44,12 +46,9 @@ public class ToolRod extends ToolPart {
         CompoundTag tag = new CompoundTag();
         tag.putString(Tags.PART_MATERIAL, material.identifier);
         stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(tag));
-        stack.set(DataComponents.ITEM_NAME, Component.literal(
-                        Component.translatable("material."+material.identifier+".name").getString()
-                        + " "
-                        + Component.translatable("item.tconstruct.tool_rod.name").getString()
-                )
-        );
+        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_name",
+                Component.translatable("material." + material.identifier + ".name"),
+                Component.translatable("item.tconstruct.tool_rod.name")));
         return stack;
     }
 

@@ -14,6 +14,10 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
 import static com.gctn.tconstruct.tools.tools.Pickaxe.PICKAXE;
 
+/**
+ * 将镐模型的三个图层映射到存档中的手柄、头部和绑定结材料。
+ * 材料数据缺失或无法识别时安全回退，不修改或迁移物品栈数据。
+ */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public class PickaxeColor {
     public static final ItemColor PICKAXE_COLOR = (stack, tintIndex) -> {
@@ -42,13 +46,8 @@ public class PickaxeColor {
      * @return 材质对应的颜色，匹配不到返回默认白色
      */
     private static int getMaterialColor(String materialId) {
-        for (Material material : TinkerMaterials.materials) {
-            if (material.identifier.equals(materialId)) {
-                return material.color;
-            }
-        }
-        // 材质ID匹配不到时返回默认色
-        return 0xFFFFFFFF;
+        Material material = TinkerMaterials.getMaterial(materialId);
+        return material == null ? 0xFFFFFFFF : material.color;
     }
 
     @SubscribeEvent

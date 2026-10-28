@@ -4,7 +4,11 @@ import net.minecraft.network.chat.Component;
 
 import java.util.Objects;
 
-/** 共享且不可变的词条定义；材料赋予等级与工具运行状态均不存放在定义中。 */
+/**
+ * 共享且不可变的词条定义，保存标识符、等级上限和显示信息。
+ * TraitEntry 保存材料贡献的初始等级，实际工具等级与运行状态保存在物品栈组件中。
+ * 普通词条合并时取最高等级，LeveledTraits 则显式启用等级相加规则。
+ */
 public abstract class AbstractTraits implements ITraits {
     public final String identifier;
     public final int maxLevel;

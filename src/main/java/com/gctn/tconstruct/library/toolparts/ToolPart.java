@@ -5,6 +5,10 @@ import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+/**
+ * 携带材料信息的工具部件共用的物品基类。
+ * 材料成本使用 MaterialValue 单位表示，供后续部件加工流程使用。
+ */
 public abstract class ToolPart extends Item {
     public static final DeferredRegister.Items ITEMS =
             DeferredRegister.createItems(TinkersNirvana.MODID);

@@ -7,6 +7,10 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.blockentity.*;
 
+/**
+ * 根据同步的流体种类绘制水平出液部分和下落的流体束。
+ * 流体束在铸造盆的液面处结束，且允许超出浇注口方块本身的渲染范围。
+ */
 public class FaucetRenderer implements BlockEntityRenderer<FaucetBlockEntity> {
     public FaucetRenderer(BlockEntityRendererProvider.Context context) {}
     @Override public void render(FaucetBlockEntity faucet, float partialTick, PoseStack poses, MultiBufferSource buffers, int light, int overlay) {

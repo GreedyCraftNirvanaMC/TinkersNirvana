@@ -30,6 +30,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * 注册冶炼炉的方块、物品、方块实体、配方、菜单和自动化能力。
+ * 方块与物品共用通用注册器，机器类型使用各自的延迟注册器。
+ * 能力适配器每次解析当前归属，避免持有已经失效的多方块结构引用。
+ */
 public final class SmelteryRegistration {
     public static final TagKey<Block> FLOOR = TagKey.create(Registries.BLOCK, id("smeltery_floor"));
     public static final TagKey<Block> WALL = TagKey.create(Registries.BLOCK, id("smeltery_wall"));

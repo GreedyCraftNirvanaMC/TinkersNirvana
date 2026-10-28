@@ -1,5 +1,10 @@
 package com.gctn.tconstruct.tables.data;
 
+/**
+ * 集中定义各工具台模式的槽位坐标和启用规则。
+ * 菜单与界面使用同一份布局，保证实际点击区域与绘制的槽位背景一致。
+ * 未启用但仍存有真实物品的输入槽保持可见，避免切换模式后物品无法取回。
+ */
 public final class ToolStationSlotPositions {
     public static final int INPUT_SLOT_COUNT = 6;
 

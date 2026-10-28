@@ -8,6 +8,10 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.blockentity.*;
 import net.minecraft.world.item.ItemDisplayContext;
 
+/**
+ * 绘制按配方容量计算的流体表面，以及铸模或冷却后的成品物品。
+ * 铸件台与铸造盆使用不同的局部高度，使显示内容位于各自模型内部。
+ */
 public class CastingRenderer implements BlockEntityRenderer<CastingBlockEntity> {
     public CastingRenderer(BlockEntityRendererProvider.Context context) {}
     @Override public void render(CastingBlockEntity casting, float partialTick, PoseStack poses, MultiBufferSource buffers, int light, int overlay) {

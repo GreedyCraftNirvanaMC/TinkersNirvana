@@ -5,6 +5,11 @@ import com.gctn.tconstruct.tools.traits.AbstractTraits;
 
 import java.util.*;
 
+/**
+ * 共享的材料定义，保存各部位属性和材料初始赋予的词条。
+ * 定义在初始化阶段填充；耐久损耗、实际词条等级和冷却等运行状态保存在物品栈中。
+ * 指定部位的词条列表会完整替换默认列表，也允许用空列表显式取消默认词条。
+ */
 public class Material {
     public final String identifier;
     public final int color;
@@ -18,8 +23,6 @@ public class Material {
 
     // 是否可以使用浇筑方式合成(默认false)
     protected boolean castable = false;
-
-    private boolean isHidden;
 
     // 参数不全的默认初始化
     public Material(String identifier, int color) { this(identifier, color, false); }

@@ -16,6 +16,10 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * 只为可见且具有头部属性的材料生成镐头变体。
+ * 根据保存的材料给共享模型着色，无需为每种材料分别注册物品。
+ */
 public class PickaxeHead extends ToolPart {
     public PickaxeHead(int cost) {
         super(cost);
@@ -24,14 +28,14 @@ public class PickaxeHead extends ToolPart {
     public static final DeferredItem<Item> PICKAXEHEAD = ITEMS.register("parts/pickaxe_head",
             () -> new PickaxeHead(MaterialValue.VALUE_Ingot * 2));
 
-    /** Forces this class's static registration entry to be initialized. */
+    /** 显式触发本类的静态注册条目初始化。 */
     public static void init() {
     }
 
     public static void getAllColoredParts(Collection<ItemStack> coloredParts) {
         List<Material> materials = TinkerMaterials.materials;
         for (Material material : materials) {
-            if (material.getStats() == null || !material.getStats().containsKey("Head")) { continue; }
+            if (material.isHidden() || !material.hasStats("Head")) { continue; }
             ItemStack stack = getColoredPart(material);
             coloredParts.add(stack);
         }
@@ -42,12 +46,9 @@ public class PickaxeHead extends ToolPart {
         CompoundTag tag = new CompoundTag();
         tag.putString(Tags.PART_MATERIAL, material.identifier);
         stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(tag));
-        stack.set(DataComponents.ITEM_NAME, Component.literal(
-                        Component.translatable("material."+material.identifier+".name").getString()
-                        +" "
-                        +Component.translatable("item.tconstruct.pickaxe_head.name").getString()
-                )
-        );
+        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_name",
+                Component.translatable("material." + material.identifier + ".name"),
+                Component.translatable("item.tconstruct.pickaxe_head.name")));
         return stack;
     }
 

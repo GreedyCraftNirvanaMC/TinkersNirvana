@@ -14,6 +14,10 @@ import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+/**
+ * 客户端模式按钮，显示图标、选中状态和可翻译的朗读文本。
+ * 按钮回调只请求服务端切换模式，不直接修改库存状态。
+ */
 @OnlyIn(Dist.CLIENT)
 class ModeButton extends AbstractButton {
     private static final int SIZE = 18;

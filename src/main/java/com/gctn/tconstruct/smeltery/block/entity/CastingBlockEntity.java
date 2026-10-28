@@ -16,8 +16,16 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
+/**
+ * 管理双槽浇铸库存、按配方定容的流体缓冲区和服务端冷却进度。
+ * 存在流体时锁定铸模，自动化只能放入铸模并取走成品。
+ * 完成时只生成一次输出并清空流体，配方可选择同时消耗模板物品。
+ */
 public class CastingBlockEntity extends SyncedBlockEntity {
     private int cooling;
+    private SmelteryRecipe coolingRecipe;
+    // 槽位 0 保存铸模，槽位 1 保存成品；分开管理两者，
+    // 使自动化能够只提取成品而不取走可重复使用的铸模。
     private final ItemStackHandler items = new ItemStackHandler(2) {
         @Override public int getSlotLimit(int slot) { return slot == 0 ? 1 : 64; }
         @Override public boolean isItemValid(int slot, ItemStack stack) { return slot == 0 && tank.isEmpty() && getStackInSlot(1).isEmpty(); }
@@ -36,12 +44,14 @@ public class CastingBlockEntity extends SyncedBlockEntity {
                     || !isEmpty() && !FluidStack.isSameFluidSameComponents(getFluid(), resource)) return 0;
             var recipe = SmelteryRecipes.casting(level, isBasin(), items.getStackInSlot(0), resource);
             if (recipe == null) return 0;
+            // 容量由配方决定，SIMULATE 不能改变容量、
+            // 冷却进度或需要同步的方块实体状态。
             int accepted = Math.min(resource.getAmount(), Math.max(0, recipe.fluids().getFirst().getAmount() - getFluidAmount()));
             if (action.simulate() || accepted <= 0) return accepted;
             setCapacity(recipe.fluids().getFirst().getAmount());
             return super.fill(resource, action);
         }
-        @Override protected void onContentsChanged() { cooling = 0; sync(); }
+        @Override protected void onContentsChanged() { cooling = 0; coolingRecipe = null; sync(); }
     };
     private final IItemHandler automation = new IItemHandler() {
         @Override public int getSlots() { return 2; }
@@ -75,7 +85,13 @@ public class CastingBlockEntity extends SyncedBlockEntity {
         if (casting.tank.isEmpty() || !casting.items.getStackInSlot(1).isEmpty()) return;
         var recipe = SmelteryRecipes.casting(level, casting.isBasin(), casting.items.getStackInSlot(0), casting.tank.getFluid());
         if (recipe == null || casting.tank.getFluidAmount() != recipe.fluids().getFirst().getAmount()) { casting.cooling = 0; return; }
+        // 首次查询保留已保存的进度，但如果数据包重载在保留流体与铸模的情况下
+        // 替换了配方，就重新开始冷却。
+        if (casting.coolingRecipe != null && casting.coolingRecipe != recipe) casting.cooling = 0;
+        casting.coolingRecipe = recipe;
         if (++casting.cooling >= recipe.time()) {
+            // 在服务端线程中完成时只生成一次成品，随后消耗
+            // 流体，并按一次性铸模配方的要求消耗模板。
             if (recipe.consumeInput()) casting.items.setStackInSlot(0, ItemStack.EMPTY);
             casting.items.setStackInSlot(1, recipe.result().copy());
             casting.tank.setFluid(FluidStack.EMPTY);
@@ -94,6 +110,7 @@ public class CastingBlockEntity extends SyncedBlockEntity {
         items.deserializeNBT(registries, tag.getCompound("Items"));
         tank.setCapacity(Math.max(1, tag.getInt("Capacity")));
         tank.readFromNBT(registries, tag.getCompound("Tank"));
-        cooling = Math.max(0, tag.getInt("Cooling"));
+        cooling = Math.clamp(tag.getInt("Cooling"), 0, 72000);
+        coolingRecipe = null;
     }
 }

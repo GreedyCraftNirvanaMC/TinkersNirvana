@@ -8,6 +8,10 @@ import com.gctn.tconstruct.tools.tools.Pickaxe;
 
 import java.util.Map;
 
+/**
+ * 将已实现的工具台模式映射到准确的组装要求。
+ * 目前只有镐具备组装配方，其他已显示的模式暂不生成结果。
+ */
 public final class ToolStationAssemblyRecipes {
     private static final Map<Mode, ToolAssemblyRecipe> RECIPES = Map.of(
             Mode.PICKAXE, new ToolAssemblyRecipe(

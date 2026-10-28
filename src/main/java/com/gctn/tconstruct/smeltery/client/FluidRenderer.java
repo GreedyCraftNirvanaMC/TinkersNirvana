@@ -8,6 +8,10 @@ import net.minecraft.client.renderer.texture.*;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
+/**
+ * 在方块局部坐标中绘制流体长方体的六个半透明纹理面。
+ * 纹理和颜色通过原生流体扩展取得，使储罐也能显示兼容的第三方流体。
+ */
 final class FluidRenderer {
     private FluidRenderer() {}
     static void box(PoseStack poses, MultiBufferSource buffers, FluidStack fluid,

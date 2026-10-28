@@ -6,7 +6,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** 集中注册并查询所有匠魂词条。 */
+/**
+ * 每种内置词条只保留一个不可变定义实例，并集中保存其初始材料配置。
+ * 通过索引查询标识符，并在重复注册时立即报错，避免改变已保存工具的词条行为。
+ */
 public final class TinkerTraits {
     /** 按注册顺序保存词条，便于遍历所有词条。 */
     private static final List<AbstractTraits> traits = new ArrayList<>();

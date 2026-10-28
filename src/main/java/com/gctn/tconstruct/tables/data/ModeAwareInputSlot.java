@@ -6,6 +6,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * 物理输入槽在特定工具台模式下的一个视图。
+ * 未激活的视图拒绝放入和取出；取走拆解预览中的部件时确认拆解。
+ */
 public class ModeAwareInputSlot extends Slot {
     private final ToolStationMenu menu;
     private final Mode slotMode;

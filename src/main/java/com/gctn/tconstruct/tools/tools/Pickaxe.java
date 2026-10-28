@@ -27,22 +27,39 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.registries.DeferredItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 组装当前的手柄、头部和绑定结，并实现挖掘及战斗损耗。
+ * 先按 Antique 顺序合并头部、额外部件和手柄属性，再由材料词条修改最终耐久。
+ * Minecraft 的 Tool 规则处理挖掘与掉落，属性组件提供战斗加成。
+ */
 public class Pickaxe extends TinkerTools {
     public static final DeferredItem<Item> PICKAXE = ITEMS.register("pickaxe/pickaxe",
             Pickaxe::new);
 
-    /** Forces this class's static registration entry to be initialized. */
+    /** 显式触发本类的静态注册条目初始化。 */
     public static void init() {}
 
     public Pickaxe() {}
 
-    // Material order: handle, head, binding.
+    // 材料参数顺序：手柄、头部、绑定结。
     public static ItemStack initPickaxe(Material matHandle, Material matHead, Material matBinding) {
+        if (matHandle == null || matHead == null || matBinding == null) {
+            return ItemStack.EMPTY;
+        }
+        HandleMaterialStats handleStats = matHandle.getStats("Handle", HandleMaterialStats.class);
+        HeadMaterialStats headStats = matHead.getStats("Head", HeadMaterialStats.class);
+        ExtraMaterialStats bindingStats = matBinding.getStats("Extra", ExtraMaterialStats.class);
+        // 不受支持或尚未完整移植的材料不能生成工具，
+        // 否则缺失 MAX_DAMAGE 组件可能导致工具意外变得无法损坏。
+        if (handleStats == null || headStats == null || bindingStats == null) {
+            return ItemStack.EMPTY;
+        }
         ItemStack stack = new ItemStack(PICKAXE.get());
 
+        // 通过材料标识符还原材料，生成的工具和属性组件保存一份
+        // 属性快照，避免材料定义变化后改写已有工具的存档属性。
         CompoundTag materialTag = new CompoundTag();
         materialTag.putString("Handle", matHandle.identifier);
         materialTag.putString("Head", matHead.identifier);
@@ -55,45 +72,36 @@ public class Pickaxe extends TinkerTools {
         ToolTraits.addTraits(traitsTag, matBinding.getTraits("Extra"));
         stack.set(TinkerDataComponents.TINKER_TRAITS.get(), CustomData.of(traitsTag));
 
-        HeadMaterialStats headStats = (HeadMaterialStats) matHead.getStats().get("Head");
-        if (headStats != null) {
-            stack.set(DataComponents.TOOL, getPickaxeInfo(headStats));
-            stack.set(DataComponents.ATTRIBUTE_MODIFIERS, getPickaxeAttibute(headStats));
-            stack.set(DataComponents.MAX_DAMAGE,
-                    ToolTraits.modifyDurability(stack, getPickaxeDurability(matHandle, matHead, matBinding)));
-            stack.set(DataComponents.DAMAGE, 0);
-        }
+        stack.set(DataComponents.TOOL, getPickaxeInfo(headStats));
+        stack.set(DataComponents.ATTRIBUTE_MODIFIERS, getPickaxeAttributes(headStats));
+        stack.set(DataComponents.MAX_DAMAGE, ToolTraits.modifyDurability(stack,
+                getPickaxeDurability(handleStats, headStats, bindingStats)));
+        stack.set(DataComponents.DAMAGE, 0);
 
-        stack.set(DataComponents.ITEM_NAME, Component.literal(
-                        Component.translatable(
-                                "material." + matHead.identifier + ".name").getString()
-                                + " "
-                                + Component.translatable("item.tconstruct.pickaxe.name").getString()
-                )
-        );
+        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_name",
+                Component.translatable("material." + matHead.identifier + ".name"),
+                Component.translatable("item.tconstruct.pickaxe.name")));
         return stack;
     }
 
-    private static int getPickaxeDurability(Material matHandle, Material matHead, Material matBinding) {
-        HandleMaterialStats handleStats = (HandleMaterialStats) matHandle.getStats().get("Handle");
-        ExtraMaterialStats bindingStats = (ExtraMaterialStats) matBinding.getStats().get("Extra");
-        HeadMaterialStats headStats = (HeadMaterialStats) matHead.getStats().get("Head");
-
-        float handleModifier = handleStats != null ? handleStats.modifer : 1.0F;
-        int handleDurability = handleStats != null ? handleStats.durability : 0;
-        int bindingDurability = bindingStats != null ? bindingStats.durability : 0;
-
-        return Math.max(1, Math.round((headStats.durability + bindingDurability) * handleModifier) + handleDurability);
+    private static int getPickaxeDurability(HandleMaterialStats handleStats, HeadMaterialStats headStats,
+                                            ExtraMaterialStats bindingStats) {
+        // 遵循 Antique 的 ToolNBT：合并头部与额外耐久，乘手柄系数并取整，
+        // 再加上手柄固定耐久，最后限制最终耐久的最小值。
+        return Math.max(1, Math.round((headStats.durability + bindingStats.durability) * handleStats.modifer)
+                + handleStats.durability);
     }
 
     private static Tool getPickaxeInfo(HeadMaterialStats headStats) {
+        // 按顺序应用规则：先拒绝超出采掘等级的掉落，再由镐规则允许
+        // 其他掉落；挖掘速度规则仍可作用于超出采掘等级的方块。
         return new Tool(List.of(
                 Tool.Rule.deniesDrops(HarvestLevels.getIncorrectBlocksForDrops(headStats.harvestLevel)),
                 Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_PICKAXE, headStats.miningspeed)
         ), 1.0F, 1);
     }
 
-    private static ItemAttributeModifiers getPickaxeAttibute(HeadMaterialStats headStats) {
+    private static ItemAttributeModifiers getPickaxeAttributes(HeadMaterialStats headStats) {
         double attackSpeed = 1.2;
         return ItemAttributeModifiers.builder()
                 .add(
@@ -121,7 +129,7 @@ public class Pickaxe extends TinkerTools {
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miningEntity) {
         if (!level.isClientSide && state.getDestroySpeed(level, pos) != 0.0F) {
             if (!isBroken(stack)) {
-                boolean effective = isCorrectToolForDrops(stack, state);
+                boolean effective = state.is(BlockTags.MINEABLE_WITH_PICKAXE);
                 ToolTraits.forEach(stack, (trait, traitLevel) ->
                         trait.afterBlockBreak(stack, traitLevel, level, state, pos, miningEntity, effective));
             }
@@ -145,18 +153,14 @@ public class Pickaxe extends TinkerTools {
 
     @Override
     public List<RepairInfo> getRepairInfo(ItemStack stack) {
-        List<RepairInfo> repairInfos = new ArrayList<>();
+        // Antique 的镐只使用头部材料修复，手柄与绑定结的耐久
+        // 会改变最大可承受损耗，但不会使其材料成为有效修复原料。
         Material head = getMaterial(stack, "Head", "Head");
-        Material handle = getMaterial(stack, "Handle", "Handle");
-        if (head == null || handle == null) {
+        if (head == null) {
             return List.of();
         }
-        int headDurability = ((HeadMaterialStats) head.getStats().get("Head")).durability;
-        int handleDurability = ((HandleMaterialStats) handle.getStats().get("Handle")).durability;
-        repairInfos.add(new RepairInfo(head, 1.0F, headDurability));
-        repairInfos.add(new RepairInfo(handle, 0.8F, handleDurability));
-
-        return repairInfos;
+        HeadMaterialStats stats = head.getStats("Head", HeadMaterialStats.class);
+        return stats == null ? List.of() : List.of(new RepairInfo(head, 1.0F, stats.durability));
     }
 
 }

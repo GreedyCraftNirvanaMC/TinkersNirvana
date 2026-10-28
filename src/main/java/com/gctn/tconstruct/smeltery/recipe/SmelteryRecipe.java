@@ -17,7 +17,11 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 
-/** Data-pack recipes for the four operations performed by the smeltery and its casting blocks. */
+/**
+ * 数据包中的熔炼、合金、铸件台浇铸或铸造盆浇铸配方定义。
+ * 编解码器在机器使用配方前校验各操作所需的输入输出，并限制处理时长。
+ * 构造时复制可变的物品栈和流体栈，创建物品结果时也返回副本。
+ */
 public record SmelteryRecipe(Operation operation, Ingredient ingredient, List<FluidStack> fluids,
                              FluidStack fluidResult, ItemStack result, int temperature, int time,
                              boolean consumeInput) implements Recipe<SingleRecipeInput> {

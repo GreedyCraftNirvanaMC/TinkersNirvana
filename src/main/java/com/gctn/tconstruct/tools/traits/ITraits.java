@@ -10,7 +10,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
-/** 生命周期回调默认无效果，具体词条只需覆盖自己关心的触发点。 */
+/**
+ * 可选的词条生命周期回调，未覆盖的方法保持原有行为不变。
+ * 数量修正回调同时接收原始值和累计值，使有序执行的多个词条能够稳定组合。
+ * 预览回调必须具有确定性，且只能修改传入的工具副本。
+ */
 public interface ITraits {
     /** 仅服务端调用；traitTag 的修改由分发器写回，不要同时直接替换本词条的组件数据。 */
     default void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId,

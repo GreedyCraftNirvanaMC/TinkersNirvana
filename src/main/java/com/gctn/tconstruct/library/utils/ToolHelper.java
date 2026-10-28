@@ -8,6 +8,10 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
+/**
+ * 材料工具的只读界面辅助方法。
+ * 耐久颜色会限制空值或异常比例的范围，创造模式分类提示检测用于避免重复添加空行。
+ */
 public class ToolHelper {
     public static boolean hasCreativeTabTip(
             List<Either<FormattedText, TooltipComponent>> tooltip, ItemStack stack

@@ -16,7 +16,11 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-/** 工具词条的统一组装、读取和分发入口；未知存档数据保留但不执行。 */
+/**
+ * 以稳定的优先级顺序组装、校验和分发各个物品栈的词条。
+ * 保留但不执行未知或无效的存档条目，以便兼容后续版本的数据。
+ * 状态修改采用写时复制，保证不可变 CustomData 组件可以安全地持久化和同步。
+ */
 public final class ToolTraits {
     private ToolTraits() {}
 

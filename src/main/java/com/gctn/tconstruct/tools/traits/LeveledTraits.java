@@ -1,6 +1,9 @@
 package com.gctn.tconstruct.tools.traits;
 
-/** 可叠加词条，默认按 Antique 规则：每种不同的初始强度只贡献一次。 */
+/**
+ * 采用等级相加规则的词条基类，区别于仅取最高等级的普通词条。
+ * 默认情况下，每种不同的初始强度只贡献一次，与 Antique 的可叠加词条行为一致。
+ */
 public abstract class LeveledTraits extends AbstractTraits {
     protected LeveledTraits(String identifier, int maxLevel, int strengthenNumber, int color) {
         super(identifier, maxLevel, strengthenNumber, color);

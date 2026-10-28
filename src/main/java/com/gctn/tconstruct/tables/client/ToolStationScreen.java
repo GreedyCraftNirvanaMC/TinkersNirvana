@@ -17,6 +17,10 @@ import net.neoforged.api.distmarker.OnlyIn;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 绘制工具台布局，并通过原版菜单按钮数据包发送模式切换请求。
+ * 槽位是否可见取决于同步后的菜单状态，界面本身不创建任何预览物品。
+ */
 @OnlyIn(Dist.CLIENT)
 public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> {
     private static final ResourceLocation BACKGROUND_TEXTURE =

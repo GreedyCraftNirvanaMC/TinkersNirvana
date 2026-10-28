@@ -21,6 +21,10 @@ import java.util.function.Supplier;
 
 import static com.gctn.tconstruct.library.TinkerMaterials.*;
 
+/**
+ * 物品注册完成后，使用带有材料组件的物品栈构建创造模式分类页。
+ * 未初始化的工具或部件没有材料信息；创造模式中的变体必须携带与合成结果一致的数据。
+ */
 public class TinkerRegistry {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TinkersNirvana.MODID);
@@ -35,7 +39,6 @@ public class TinkerRegistry {
                         ToolRod.getAllParts(tempStacks);
                         Binding.getAllColoredParts(tempStacks);
                         PickaxeHead.getAllColoredParts(tempStacks);
-                        int i = 0;
                         for (ItemStack itemStack : tempStacks) {
                             output.accept(itemStack);
                         }
@@ -72,7 +75,7 @@ public class TinkerRegistry {
                     .build());
 
     public static void register(IEventBus eventBus) {
-        // Creative mode tabs
+        // 创造模式分类页。
         CREATIVE_MODE_TABS.register(eventBus);
     }
 }

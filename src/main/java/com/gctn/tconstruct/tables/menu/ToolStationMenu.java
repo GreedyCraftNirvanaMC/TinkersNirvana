@@ -20,6 +20,11 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * 将工具台状态连接到模式感知槽位和原版物品栏点击逻辑。
+ * 每个物理输入槽有多个布局视图，只有当前模式对应的视图允许接收物品转移。
+ * 预览生成与原料消耗由方块实体负责，客户端界面不直接处理这些操作。
+ */
 public class ToolStationMenu extends AbstractContainerMenu {
     public static final int CONTAINER_SIZE = 7;
 
@@ -92,7 +97,7 @@ public class ToolStationMenu extends AbstractContainerMenu {
             return ItemStack.EMPTY;
         }
         Slot quickMovedSlot = this.slots.get(quickMovedSlotIndex);
-        if (quickMovedSlot == null || !quickMovedSlot.hasItem()) {
+        if (quickMovedSlot == null || !quickMovedSlot.hasItem() || !quickMovedSlot.mayPickup(player)) {
             return ItemStack.EMPTY;
         }
 
@@ -292,12 +297,33 @@ public class ToolStationMenu extends AbstractContainerMenu {
                 && this.moveItemStackTo(stack, RESULT_MENU_SLOT, RESULT_MENU_SLOT + 1, false)) {
             return true;
         }
-        if (this.moveItemStackTo(stack, INPUT_MENU_SLOT_START, TOOL_STATION_SLOT_COUNT, false)) {
+        if (this.moveToActiveInputs(stack)) {
             return true;
         }
         return quickMovedSlotIndex < PLAYER_INVENTORY_END
                 ? this.moveItemStackTo(stack, HOTBAR_START, HOTBAR_END, false)
                 : this.moveItemStackTo(stack, PLAYER_INVENTORY_START, PLAYER_INVENTORY_END, false);
+    }
+
+    private boolean moveToActiveInputs(ItemStack stack) {
+        boolean moved = false;
+        // 原版合并阶段不会检查 mayPlace 和 isActive，调用前需要补充这两项校验，
+        // 因为各模式的 Slot 视图会指向同一组物理输入槽。
+        for (int pass = 0; pass < 2; pass++) {
+            for (int index = INPUT_MENU_SLOT_START; index < TOOL_STATION_SLOT_COUNT; index++) {
+                Slot slot = this.slots.get(index);
+                if (!slot.isActive() || !slot.mayPlace(stack) || slot.hasItem() != (pass == 0)) {
+                    continue;
+                }
+                if (this.moveItemStackTo(stack, index, index + 1, false)) {
+                    moved = true;
+                    if (stack.isEmpty() || pass == 1) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return moved;
     }
 
     private boolean areInputSlotsEmpty() {
