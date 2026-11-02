@@ -17,6 +17,7 @@ import com.gctn.tconstruct.gadgets.block.entity.WoodenHopperBlockEntity;
 import com.gctn.tconstruct.gadgets.menu.WoodenHopperMenu;
 import com.gctn.tconstruct.init.BlockRegister;
 import com.gctn.tconstruct.init.ItemRegister;
+import com.gctn.tconstruct.smeltery.SmelteryModule;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -31,6 +32,8 @@ import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.TorchBlock;
 import net.minecraft.world.level.block.WallTorchBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
@@ -52,7 +55,9 @@ public final class GadgetModule {
     private static final DeferredRegister<BlockEntityType<?>> ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, TinkersNirvana.MODID);
     private static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, TinkersNirvana.MODID);
     public static final DeferredBlock<WoodenHopperBlock> WOODEN_HOPPER = BlockRegister.registerBlockWithItem("wooden_hopper", () ->
-            new WoodenHopperBlock(BlockBehaviour.Properties.of().strength(3, 8).sound(SoundType.WOOD).noOcclusion()));
+            new WoodenHopperBlock(BlockBehaviour.Properties.of().strength(3, 4.8F).sound(SoundType.WOOD).noOcclusion()));
+    public static final DeferredBlock<Block> FIREWOOD = BlockRegister.registerBlockWithItem("firewood", () ->
+            new Block(BlockBehaviour.Properties.of().strength(2, 4.2F).sound(SoundType.WOOD).lightLevel(state -> 7)));
     public static final DeferredBlock<PunjiBlock> PUNJI = BlockRegister.registerBlockWithItem("punji", () ->
             new PunjiBlock(BlockBehaviour.Properties.of().strength(3).sound(SoundType.GRASS).noOcclusion()));
     public static final DeferredBlock<WoodenRailBlock> WOODEN_RAIL = BlockRegister.registerBlockWithItem("wood_rail", () ->
@@ -79,6 +84,10 @@ public final class GadgetModule {
         BLOCKS.put("punji", PUNJI);
         BLOCKS.put("wood_rail", WOODEN_RAIL);
         BLOCKS.put("wood_rail_trapdoor", TRAPDOOR_RAIL);
+        BLOCKS.put("firewood", FIREWOOD);
+        addBuildingShapes("lavawood", SmelteryModule.LAVAWOOD);
+        addBuildingShapes("firewood", FIREWOOD);
+        addBuildingShapes("mud_bricks", SmelteryModule.MUD_BRICKS);
         BLOCKS.put("stone_torch", STONE_TORCH);
         BLOCKS.put("stone_wall_torch", STONE_WALL_TORCH);
         BLOCKS.put("stone_ladder", STONE_LADDER);
@@ -86,7 +95,7 @@ public final class GadgetModule {
                 "brick_square", "brick_triangle", "brick_small", "road", "tile", "creeper"}) {
             String name = "brownstone_" + type;
             var base = BlockRegister.registerBlockWithItem(name, () ->
-                    new BrownstoneBlock(BlockBehaviour.Properties.of().strength(3, 20).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+                    new BrownstoneBlock(BlockBehaviour.Properties.of().strength(3, 12).sound(SoundType.STONE).requiresCorrectToolForDrops()));
             BLOCKS.put(name, base);
             BLOCKS.put(name + "_slab", BlockRegister.registerBlockWithItem(name + "_slab", () ->
                     new BrownstoneSlabBlock(BlockBehaviour.Properties.ofFullCopy(base.get()))));
@@ -120,6 +129,15 @@ public final class GadgetModule {
     private static BlockBehaviour.Properties railProperties() {
         return BlockBehaviour.Properties.of().noCollission().noOcclusion().strength(0.2F).sound(SoundType.WOOD)
                 .pushReaction(PushReaction.DESTROY);
+    }
+
+    private static void addBuildingShapes(String name, DeferredBlock<Block> base) {
+        BLOCKS.put(name, base);
+        BLOCKS.put(name + "_slab", BlockRegister.registerBlockWithItem(name + "_slab", () ->
+                new SlabBlock(BlockBehaviour.Properties.ofFullCopy(base.get()))));
+        // 原版楼梯继承硬度和声音，但不继承基础方块的亮度；台阶仍保留七级光照。
+        BLOCKS.put(name + "_stairs", BlockRegister.registerBlockWithItem(name + "_stairs", () ->
+                new StairBlock(base.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(base.get()).lightLevel(state -> 0))));
     }
 
     public static Collection<DeferredBlock<?>> entries() {

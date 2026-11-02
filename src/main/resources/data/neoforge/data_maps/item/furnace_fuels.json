@@ -2,6 +2,24 @@
   "values": {
     "tconstruct:wooden_hopper": {
       "burn_time": 300
+    },
+    "tconstruct:firewood": {
+      "burn_time": 300
+    },
+    "tconstruct:lavawood": {
+      "burn_time": 300
+    },
+    "tconstruct:firewood_slab": {
+      "burn_time": 300
+    },
+    "tconstruct:firewood_stairs": {
+      "burn_time": 300
+    },
+    "tconstruct:lavawood_slab": {
+      "burn_time": 300
+    },
+    "tconstruct:lavawood_stairs": {
+      "burn_time": 300
     }
   }
 }

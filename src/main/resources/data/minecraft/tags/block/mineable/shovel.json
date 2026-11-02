@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
-    "tconstruct:grout"
+    "tconstruct:grout",
+    "tconstruct:mud_bricks",
+    "tconstruct:mud_bricks_slab",
+    "tconstruct:mud_bricks_stairs"
   ]
 }

@@ -346,5 +346,12 @@
   "tooltip.tconstruct.punji": "非常尖锐！也可以贴在墙上。",
   "block.tconstruct.wood_rail": "木质轨道",
   "block.tconstruct.wood_rail_trapdoor": "带活板门的木质轨道",
-  "tooltip.tconstruct.wood_rail_trapdoor": "漏斗矿车可以向轨道下方的方块输入物品。"
+  "tooltip.tconstruct.wood_rail_trapdoor": "漏斗矿车可以向轨道下方的方块输入物品。",
+  "block.tconstruct.firewood": "烈焰木",
+  "block.tconstruct.firewood_slab": "烈焰木台阶",
+  "block.tconstruct.firewood_stairs": "烈焰木楼梯",
+  "block.tconstruct.lavawood_slab": "熔岩木台阶",
+  "block.tconstruct.lavawood_stairs": "熔岩木楼梯",
+  "block.tconstruct.mud_bricks_slab": "泥砖台阶",
+  "block.tconstruct.mud_bricks_stairs": "泥砖楼梯"
 }

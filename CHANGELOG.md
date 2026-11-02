@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Complete Firewood, Lavawood, and Mud Bricks building families, recipes, slab
+  drops, native shape behavior, original lighting/fuel, and mining-tool tags.
+- Convert Antique's blast-resistance values to modern units; restore seared
+  metal sounds, casting stone sounds, and common-metal mining/beacon behavior.
 - Port Wooden Rails and trapdoor rails, native curves/slopes, hopper-minecart
   unloading, inventory rejection/rollback handling, recipes, and original textures.
 - Port Punji Sticks with six-face placement, connected models, support removal,

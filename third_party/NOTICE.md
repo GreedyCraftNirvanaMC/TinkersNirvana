@@ -43,4 +43,7 @@ under LGPL-3.0-only. Source areas include `gadgets/TinkerGadgets.java`,
 `gadgets/WoodenHopperGUIDrawEvent.java`,
 `gadgets/block/BlockPunji.java` and its original core/connector models,
 `gadgets/block/BlockWoodRail.java`, `BlockWoodRailDropper.java`,
+`shared/block/BlockFirewood.java`, `BlockFirewoodSlab.java`, `BlockDecoGround.java`,
+`BlockDecoGroundSlab.java`, `BlockMetal.java`, `BlockCommonMetal.java`,
+and the firewood/lavawood/mud-brick shape recipes,
 and the corresponding original block textures, models, recipes, and translations.

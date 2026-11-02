@@ -63,8 +63,9 @@ public final class SmelteryModule {
     public static final DeferredBlock<SmelteryBlock> TABLE = block("casting_table", SmelteryBlock.Kind.TABLE);
     public static final DeferredBlock<SmelteryBlock> BASIN = block("casting_basin", SmelteryBlock.Kind.BASIN);
     public static final DeferredBlock<Block> GROUT = BlockRegister.registerBlockWithItem("grout", () -> new Block(BlockBehaviour.Properties.of().strength(0.5F).sound(SoundType.GRAVEL)));
-    public static final DeferredBlock<Block> MUD_BRICKS = BlockRegister.registerBlockWithItem("mud_bricks", () -> new Block(BlockBehaviour.Properties.of().strength(1.0F).sound(SoundType.STONE)));
-    public static final DeferredBlock<Block> LAVAWOOD = BlockRegister.registerBlockWithItem("lavawood", () -> new Block(BlockBehaviour.Properties.of().strength(1.5F).sound(SoundType.WOOD)));
+    public static final DeferredBlock<Block> MUD_BRICKS = BlockRegister.registerBlockWithItem("mud_bricks", () -> new Block(BlockBehaviour.Properties.of().strength(2.0F).sound(SoundType.GRAVEL)));
+    public static final DeferredBlock<Block> LAVAWOOD = BlockRegister.registerBlockWithItem("lavawood", () ->
+            new Block(BlockBehaviour.Properties.of().strength(2.0F, 4.2F).sound(SoundType.WOOD).lightLevel(state -> 7)));
     public static final DeferredBlock<com.gctn.tconstruct.smeltery.block.ClearGlassBlock> CLEAR_GLASS = BlockRegister.registerBlockWithItem("clear_glass",
             () -> new com.gctn.tconstruct.smeltery.block.ClearGlassBlock(BlockBehaviour.Properties.of().strength(0.3F).sound(SoundType.GLASS).noOcclusion()));
 
@@ -91,7 +92,9 @@ public final class SmelteryModule {
                 String name = metal + "_" + form;
                 ITEMS.put(name, ItemRegister.ITEMS.register(name, () -> new Item(new Item.Properties())));
             }
-            MATERIAL_BLOCKS.add(BlockRegister.registerBlockWithItem(metal + "_block", () -> new Block(BlockBehaviour.Properties.of().strength(5, 10).sound(SoundType.METAL))));
+            // 原版金属块要求镐但没有等级门槛，信标基座资格由数据标签提供。
+            MATERIAL_BLOCKS.add(BlockRegister.registerBlockWithItem(metal + "_block", () ->
+                    new Block(BlockBehaviour.Properties.of().strength(5).sound(SoundType.METAL).requiresCorrectToolForDrops())));
         }
     }
 
@@ -139,8 +142,9 @@ public final class SmelteryModule {
 
     private static DeferredBlock<SmelteryBlock> block(String name, SmelteryBlock.Kind kind) {
         DeferredBlock<SmelteryBlock> block = BlockRegister.registerBlockWithItem(name,
-                () -> createBlock(kind, BlockBehaviour.Properties.of().strength(3.0F, 20.0F).requiresCorrectToolForDrops()
-                        .sound(kind == SmelteryBlock.Kind.TINKER_TANK || kind == SmelteryBlock.Kind.FURNACE ? SoundType.METAL : SoundType.STONE).noOcclusion()
+                // 旧版 setResistance(20) 先乘三再除五，现代属性直接保存最终抗爆值 12。
+                () -> createBlock(kind, BlockBehaviour.Properties.of().strength(3.0F, 12.0F).requiresCorrectToolForDrops()
+                        .sound(kind == SmelteryBlock.Kind.TABLE || kind == SmelteryBlock.Kind.BASIN ? SoundType.STONE : SoundType.METAL).noOcclusion()
                         // 流道等专用方块没有激活属性，先判断控制器种类再读取状态。
                         .lightLevel(state -> (kind == SmelteryBlock.Kind.FURNACE || kind == SmelteryBlock.Kind.CONTROLLER)
                                 && state.getValue(SmelteryBlock.ACTIVE) ? kind == SmelteryBlock.Kind.FURNACE ? 15 : 13 : 0)));

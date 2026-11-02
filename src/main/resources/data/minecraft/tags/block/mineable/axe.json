@@ -1,5 +1,11 @@
 {
   "values": [
-    "tconstruct:wooden_hopper"
+    "tconstruct:wooden_hopper",
+    "tconstruct:firewood",
+    "tconstruct:lavawood",
+    "tconstruct:firewood_slab",
+    "tconstruct:firewood_stairs",
+    "tconstruct:lavawood_slab",
+    "tconstruct:lavawood_stairs"
   ]
 }

@@ -1,6 +1,6 @@
 # Gadgets
 
-The Gadgets creative tab contains the ported stone utilities and brownstone.
+The Gadgets creative tab contains the ported utilities and decorative blocks.
 All added item names and tooltips support English and Simplified Chinese.
 
 Craft a Wooden Hopper from five planks surrounding a wooden chest in the normal
@@ -24,6 +24,17 @@ Trapdoor. While a hopper minecart is on a trapdoor rail, it can unload one item
 per tick into the inventory below, respecting that inventory's top-side item
 handler. Plain rails and chest minecarts do not perform this unloading. Full or
 unavailable inventories keep the cargo in the cart.
+
+Firewood, Lavawood, and Mud Bricks each have full blocks, slabs, and stairs.
+Craft Firewood from Lavawood and two blaze powders. Three full blocks make six
+slabs; the stair-shaped recipe using six blocks makes four stairs. Two Mud Bricks
+(items) can also make one Mud Bricks Slab. Double slabs drop two slabs.
+
+Firewood and Lavawood blocks and slabs emit light level 7; their stairs retain
+Antique's unlit stair behavior. All six wood variants burn for 300 ticks. Axes
+work on the wood families, while shovels work on Mud Bricks. The ported metal
+storage blocks require a pickaxe of any tier and can form beacon bases. Full
+copper blocks retain beacon support through oxidation and waxing.
 
 Two stone or cobblestone blocks in a vertical crafting column make four Stone
 Rods. A rod below coal or charcoal makes four Stone Torches. Torches can stand on

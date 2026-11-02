@@ -359,5 +359,12 @@
   "tooltip.tconstruct.punji": "Pointy! Also sticks to walls.",
   "block.tconstruct.wood_rail": "Wooden Rail",
   "block.tconstruct.wood_rail_trapdoor": "Wooden Rail with a Trapdoor",
-  "tooltip.tconstruct.wood_rail_trapdoor": "Hopper minecarts can insert into the block below."
+  "tooltip.tconstruct.wood_rail_trapdoor": "Hopper minecarts can insert into the block below.",
+  "block.tconstruct.firewood": "Firewood",
+  "block.tconstruct.firewood_slab": "Firewood Slab",
+  "block.tconstruct.firewood_stairs": "Firewood Stairs",
+  "block.tconstruct.lavawood_slab": "Lavawood Slab",
+  "block.tconstruct.lavawood_stairs": "Lavawood Stairs",
+  "block.tconstruct.mud_bricks_slab": "Mud Bricks Slab",
+  "block.tconstruct.mud_bricks_stairs": "Mud Bricks Stairs"
 }
