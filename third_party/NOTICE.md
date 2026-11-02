@@ -71,3 +71,10 @@ original model, texture, crafting, and translation assets under LGPL-3.0-only.
 Common ore additions adapt `shared/block/BlockCommonOre.java`, its registration
 in `shared/TinkerCommons.java`, and original copper/tin/aluminum ore textures
 and names under LGPL-3.0-only.
+
+Colored slime mobs adapt `world/entity/EntityBlueSlime.java`,
+`EntityPurpleSlime.java`, entity/egg registration in `world/TinkerWorld.java`,
+`library/client/renderer/RenderTinkerSlime.java`,
+`library/client/particle/EntitySlimeFx.java`, the original gray slime texture,
+colored entity loot tables, entity-melting configuration, and translations
+under LGPL-3.0-only.

@@ -424,5 +424,9 @@
   "tooltip.tconstruct.glowball": "Not suited for consumption.",
   "block.tconstruct.copper_ore": "Copper Ore",
   "block.tconstruct.tin_ore": "Tin Ore",
-  "block.tconstruct.aluminum_ore": "Aluminum Ore"
+  "block.tconstruct.aluminum_ore": "Aluminum Ore",
+  "entity.tconstruct.blueslime": "Sky Slime",
+  "item.tconstruct.blueslime_spawn_egg": "Sky Slime Spawn Egg",
+  "entity.tconstruct.purpleslime": "Squire Slime",
+  "item.tconstruct.purpleslime_spawn_egg": "Squire Slime Spawn Egg"
 }

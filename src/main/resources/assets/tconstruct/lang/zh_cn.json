@@ -411,5 +411,9 @@
   "tooltip.tconstruct.glowball": "不宜食用。",
   "block.tconstruct.copper_ore": "铜矿石",
   "block.tconstruct.tin_ore": "锡矿石",
-  "block.tconstruct.aluminum_ore": "铝矿石"
+  "block.tconstruct.aluminum_ore": "铝矿石",
+  "entity.tconstruct.blueslime": "碧空史莱姆",
+  "item.tconstruct.blueslime_spawn_egg": "碧空史莱姆刷怪蛋",
+  "entity.tconstruct.purpleslime": "扈从史莱姆",
+  "item.tconstruct.purpleslime_spawn_egg": "扈从史莱姆刷怪蛋"
 }

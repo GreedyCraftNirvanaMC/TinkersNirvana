@@ -66,6 +66,8 @@ public final class SlimeModule {
                     BALLS.values().forEach(item -> output.accept(item.get()));
                     com.gctn.tconstruct.common.soil.SoilModule.BLOCKS.values().forEach(block -> output.accept(block.get()));
                     com.gctn.tconstruct.common.soil.SoilModule.CRYSTALS.values().forEach(item -> output.accept(item.get()));
+                    output.accept(SlimeMobModule.BLUE_EGG.get());
+                    output.accept(SlimeMobModule.PURPLE_EGG.get());
                 }).build());
     }
 

@@ -1,4 +1,4 @@
-# Slime blocks and slimeballs
+# Slime blocks, items, and mobs
 
 The Slime creative tab contains blue, purple, blood, and magma slime blocks,
 five congealed slime colors, and five edible slimeballs. Vanilla supplies the
@@ -57,3 +57,26 @@ not receive invented fluid equivalents.
 For integration, colored balls use `c:slime_balls/<color>` and `c:slime_balls`;
 full blocks use `c:storage_blocks/slime/<color>` and
 `c:storage_blocks/slime`. Packing recipes accept the matching color tags.
+
+The Slime tab also includes the original blue and purple slime spawn eggs.
+Their English entity names remain Antique's **Sky Slime** and **Squire Slime**.
+Both retain size-dependent native slime health, movement, damage, splitting,
+and AI, with Antique's 0.63 jump power, 10–19 tick jump delay, 0.8 squish damping,
+and fall-damage immunity. Jump Boost does not increase their fixed jump power.
+The body uses the original gray texture and ARGB tints `FF67F0F5` and `EFD236FF`,
+including the purple gel's original alpha. Landing particles use the matching
+colored slimeball item texture.
+
+Only size-one mobs drop slimeballs: zero to two of the matching color, plus the
+original random Looting bonus. Splitting creates mobs of the same color and
+retains the parent's custom name, persistence, and AI flag. Native entity data
+stores their type, size, health, and other state. In the Smeltery, either colored
+mob produces 25 mB of its matching slime fluid per heart of melting damage.
+
+Spawn predicates recognize their own source or flowing slime fluid and the
+block tags `tconstruct:slime_spawnable/blue` and
+`tconstruct:slime_spawnable/purple`. These tags are empty until slime grass is
+ported or supplied by a pack. Blue's tag corresponds to non-purple slime grass;
+purple's tag corresponds to purple slime grass. Natural population and slime
+island generation remain part of the world-module port. Spawn eggs and summon
+commands are available immediately.

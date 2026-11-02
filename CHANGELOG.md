@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Port blue/purple slime mobs and spawn eggs, original jumping/squish/fall rules,
+  colored particles and loot, same-color splitting, source tints and texture,
+  spawn predicates, and type-specific Smeltery fluids.
 - Port copper, tin, and aluminum ore blocks, original physical/rendering values,
   stone-pickaxe self drops, integration tags, and existing Smeltery ore yields.
 - Port Glowballs and six-face light patches, native projectile synchronization

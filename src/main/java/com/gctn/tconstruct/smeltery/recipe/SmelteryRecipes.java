@@ -59,6 +59,9 @@ public final class SmelteryRecipes {
                 || entity instanceof net.minecraft.world.entity.animal.horse.SkeletonHorse, fluid("notmilk", 20)));
         ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.monster.Silverfish, fluid("stone", 25)));
         ENTITY_MELTING.add(new EntityMelting(entity -> entity.getType() == net.minecraft.world.entity.EntityType.SLIME, fluid("greenslime", 25)));
+        // 原版配置按实体类型区分彩色史莱姆，每次造成一颗心伤害产生二十五毫桶。
+        ENTITY_MELTING.add(new EntityMelting(entity -> entity.getType() == com.gctn.tconstruct.common.slime.SlimeMobModule.BLUE.get(), fluid("blueslime", 25)));
+        ENTITY_MELTING.add(new EntityMelting(entity -> entity.getType() == com.gctn.tconstruct.common.slime.SlimeMobModule.PURPLE.get(), fluid("purpleslime", 25)));
         ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.animal.SnowGolem, new FluidStack(Fluids.WATER, 100)));
         ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.monster.Spider, fluid("venom", 20)));
         ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.npc.Villager
