@@ -421,5 +421,8 @@
   "item.tconstruct.glowball": "Glowball",
   "entity.tconstruct.glowball": "Glowball",
   "block.tconstruct.glow": "Glow",
-  "tooltip.tconstruct.glowball": "Not suited for consumption."
+  "tooltip.tconstruct.glowball": "Not suited for consumption.",
+  "block.tconstruct.copper_ore": "Copper Ore",
+  "block.tconstruct.tin_ore": "Tin Ore",
+  "block.tconstruct.aluminum_ore": "Aluminum Ore"
 }

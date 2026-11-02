@@ -67,3 +67,7 @@ Glowball and surface-light implementations adapt `gadgets/item/ItemThrowball.jav
 the glow branch of `gadgets/entity/EntityThrowball.java`,
 `shared/block/BlockGlow.java`, `gadgets/client/RenderThrowball.java`, and their
 original model, texture, crafting, and translation assets under LGPL-3.0-only.
+
+Common ore additions adapt `shared/block/BlockCommonOre.java`, its registration
+in `shared/TinkerCommons.java`, and original copper/tin/aluminum ore textures
+and names under LGPL-3.0-only.

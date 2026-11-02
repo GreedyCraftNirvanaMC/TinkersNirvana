@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Port copper, tin, and aluminum ore blocks, original physical/rendering values,
+  stone-pickaxe self drops, integration tags, and existing Smeltery ore yields.
 - Port Glowballs and six-face light patches, native projectile synchronization
   and impact cancellation, original assets, crafting, and bilingual text.
 - Restore Antique's three/twelve-item grout crafting outputs and large-batch recipe.

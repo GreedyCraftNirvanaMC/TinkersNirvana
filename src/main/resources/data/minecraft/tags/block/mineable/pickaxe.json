@@ -113,6 +113,9 @@
     "tconstruct:clear_stained_glass_brown",
     "tconstruct:clear_stained_glass_green",
     "tconstruct:clear_stained_glass_red",
-    "tconstruct:clear_stained_glass_black"
+    "tconstruct:clear_stained_glass_black",
+    "tconstruct:copper_ore",
+    "tconstruct:tin_ore",
+    "tconstruct:aluminum_ore"
   ]
 }

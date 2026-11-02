@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#c:ores/copper",
+    "#c:ores/tin",
+    "#c:ores/aluminum"
+  ]
+}
