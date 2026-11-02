@@ -62,3 +62,8 @@ The `common/soil` implementation and soil/crystal resources adapt Antique's
 `shared/block/BlockSoil.java`, soil and crystal registration in
 `shared/TinkerCommons.java`, smelting registration in `tools/TinkerTools.java`,
 and the original soil recipes, textures, names, and tooltips under the same license.
+
+Glowball and surface-light implementations adapt `gadgets/item/ItemThrowball.java`,
+the glow branch of `gadgets/entity/EntityThrowball.java`,
+`shared/block/BlockGlow.java`, `gadgets/client/RenderThrowball.java`, and their
+original model, texture, crafting, and translation assets under LGPL-3.0-only.

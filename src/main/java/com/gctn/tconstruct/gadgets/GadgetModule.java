@@ -13,6 +13,9 @@ import com.gctn.tconstruct.gadgets.block.WoodenHopperBlock;
 import com.gctn.tconstruct.gadgets.block.PunjiBlock;
 import com.gctn.tconstruct.gadgets.block.WoodenRailBlock;
 import com.gctn.tconstruct.gadgets.block.TrapdoorRailBlock;
+import com.gctn.tconstruct.gadgets.block.GlowBlock;
+import com.gctn.tconstruct.gadgets.entity.GlowballEntity;
+import com.gctn.tconstruct.gadgets.item.GlowballItem;
 import com.gctn.tconstruct.gadgets.block.entity.WoodenHopperBlockEntity;
 import com.gctn.tconstruct.gadgets.menu.WoodenHopperMenu;
 import com.gctn.tconstruct.init.BlockRegister;
@@ -21,6 +24,8 @@ import com.gctn.tconstruct.smeltery.SmelteryModule;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -54,6 +59,15 @@ public final class GadgetModule {
     public static final Map<String, DeferredBlock<?>> BLOCKS = new LinkedHashMap<>();
     private static final DeferredRegister<BlockEntityType<?>> ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, TinkersNirvana.MODID);
     private static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, TinkersNirvana.MODID);
+    private static final DeferredRegister<EntityType<?>> PROJECTILES = DeferredRegister.create(Registries.ENTITY_TYPE, TinkersNirvana.MODID);
+    public static final DeferredBlock<GlowBlock> GLOW = BlockRegister.BLOCKS.register("glow", () ->
+            new GlowBlock(BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().randomTicks()
+                    .sound(SoundType.WOOL).lightLevel(state -> 14).pushReaction(PushReaction.DESTROY)));
+    public static final Supplier<Item> GLOWBALL = ItemRegister.ITEMS.register("glowball", () ->
+            new GlowballItem(new Item.Properties().stacksTo(16)));
+    public static final Supplier<EntityType<GlowballEntity>> GLOWBALL_ENTITY = PROJECTILES.register("glowball", () ->
+            EntityType.Builder.<GlowballEntity>of(GlowballEntity::new, MobCategory.MISC).sized(0.25F, 0.25F)
+                    .clientTrackingRange(4).updateInterval(10).build(TinkersNirvana.MODID + ":glowball"));
     public static final DeferredBlock<WoodenHopperBlock> WOODEN_HOPPER = BlockRegister.registerBlockWithItem("wooden_hopper", () ->
             new WoodenHopperBlock(BlockBehaviour.Properties.of().strength(3, 4.8F).sound(SoundType.WOOD).noOcclusion()));
     public static final DeferredBlock<Block> FIREWOOD = BlockRegister.registerBlockWithItem("firewood", () ->
@@ -115,6 +129,7 @@ public final class GadgetModule {
                     }
                 });
                 output.accept(STONE_ROD.get());
+                output.accept(GLOWBALL.get());
             }).build());
 
     private GadgetModule() {
@@ -148,6 +163,7 @@ public final class GadgetModule {
         TABS.register(bus);
         ENTITIES.register(bus);
         MENUS.register(bus);
+        PROJECTILES.register(bus);
         bus.addListener(GadgetModule::capabilities);
     }
 

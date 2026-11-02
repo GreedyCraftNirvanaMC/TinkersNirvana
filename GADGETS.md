@@ -3,6 +3,17 @@
 The Gadgets creative tab contains the ported utilities and decorative blocks.
 All added item names and tooltips support English and Simplified Chinese.
 
+Eight snowballs surrounding glowstone dust make eight Glowballs. They stack to
+sixteen and throw with Antique's speed, scatter, and snowball sound. A successful
+impact places a thin, noncolliding light patch on the struck face; an entity hit
+tries to place one at the entity's position without dealing damage. The patch
+emits light level 14. It requires a solid supporting face, tries another face if
+the preferred face is unavailable, and cannot replace water or a solid block.
+Removing support removes the patch. It drops nothing; picking it gives a
+Glowball. The projectile uses native impact events, so a cancelled impact does
+not place a patch or consume the flying projectile. Creative use preserves the
+held stack; ordinary use consumes one ball. EFLN remains a separate port.
+
 Craft a Wooden Hopper from five planks surrounding a wooden chest in the normal
 hopper pattern. It holds one stack and transfers items at half the normal hopper
 rate. It collects dropped items and pulls from inventories above, including

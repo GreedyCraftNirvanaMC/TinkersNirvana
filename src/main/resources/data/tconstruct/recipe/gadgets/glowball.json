@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:snowball"
+    },
+    "B": {
+      "tag": "c:dusts/glowstone"
+    }
+  },
+  "result": {
+    "id": "tconstruct:glowball",
+    "count": 8
+  }
+}

@@ -404,5 +404,9 @@
   "tooltip.tconstruct.soil.grout": "我就是渣渣！",
   "tooltip.tconstruct.soil.slimy_mud": "在上面行走会变得缓慢，但是玩家可以跳的更高",
   "tooltip.tconstruct.soil.graveyard": "治愈亡灵类生物",
-  "tooltip.tconstruct.soil.consecrated": "伤害亡灵类生物"
+  "tooltip.tconstruct.soil.consecrated": "伤害亡灵类生物",
+  "item.tconstruct.glowball": "荧光球",
+  "entity.tconstruct.glowball": "荧光球",
+  "block.tconstruct.glow": "辉光",
+  "tooltip.tconstruct.glowball": "不宜食用。"
 }

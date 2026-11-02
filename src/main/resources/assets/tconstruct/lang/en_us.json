@@ -417,5 +417,9 @@
   "tooltip.tconstruct.soil.grout": "I am Grout!",
   "tooltip.tconstruct.soil.slimy_mud": "Slows, but lets you jump even higher",
   "tooltip.tconstruct.soil.graveyard": "Heals undead",
-  "tooltip.tconstruct.soil.consecrated": "Hurts undead"
+  "tooltip.tconstruct.soil.consecrated": "Hurts undead",
+  "item.tconstruct.glowball": "Glowball",
+  "entity.tconstruct.glowball": "Glowball",
+  "block.tconstruct.glow": "Glow",
+  "tooltip.tconstruct.glowball": "Not suited for consumption."
 }

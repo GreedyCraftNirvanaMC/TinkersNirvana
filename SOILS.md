@@ -16,13 +16,15 @@ Crafting recipes:
 
 | Output | Ingredients |
 | --- | --- |
+| 3 Grout | Clay ball, sand, gravel |
+| 12 Grout | Clay block, 4 sand, 4 gravel |
 | Green Slimy Mud | 4 vanilla slimeballs, sand, dirt |
 | Blue Slimy Mud | 4 blue slimeballs, sand, dirt |
 | Green/Blue Slimy Mud | Matching congealed slime block, sand, dirt |
 | Slimy Magma Mud | 2 magma slimeballs, 2 magma cream, soul sand, netherrack |
 | Graveyard Soil | Dirt, rotten flesh, bone meal |
 
-Sand uses `c:sands`. The green/blue recipes accept dirt, coarse dirt, and podzol
+Sand uses `c:sands`, and grout gravel uses `c:gravels`. The green/blue recipes accept dirt, coarse dirt, and podzol
 through `tconstruct:soil_recipe_dirt`, matching the old dirt block's variants.
 The Graveyard Soil recipe requires ordinary dirt.
 

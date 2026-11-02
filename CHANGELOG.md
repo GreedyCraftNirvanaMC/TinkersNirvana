@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Port Glowballs and six-face light patches, native projectile synchronization
+  and impact cancellation, original assets, crafting, and bilingual text.
+- Restore Antique's three/twelve-item grout crafting outputs and large-batch recipe.
 - Port the remaining five soil variants, their walking/undead effects, slime mud
   recipes, three slime crystals and smelting, and original soil physical values.
 - Port colored slime blocks, congealed slime, edible slimeballs, original effects,

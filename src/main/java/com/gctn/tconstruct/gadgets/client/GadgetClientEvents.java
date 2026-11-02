@@ -18,6 +18,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 
 /** 方块、台阶和楼梯统一使用本地化的加速提示。 */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
@@ -31,7 +33,15 @@ public final class GadgetClientEvents {
     }
 
     @SubscribeEvent
+    private static void renderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(GadgetModule.GLOWBALL_ENTITY.get(), ThrownItemRenderer::new);
+    }
+
+    @SubscribeEvent
     private static void tooltip(ItemTooltipEvent event) {
+        if (event.getItemStack().is(GadgetModule.GLOWBALL.get())) {
+            event.getToolTip().add(Component.translatable("tooltip.tconstruct.glowball").withStyle(ChatFormatting.GRAY));
+        }
         if (event.getItemStack().getItem() instanceof BlockItem item
                 && (item.getBlock() instanceof BrownstoneBlock || item.getBlock() instanceof BrownstoneSlabBlock
                 || item.getBlock() instanceof BrownstoneStairBlock)) {
