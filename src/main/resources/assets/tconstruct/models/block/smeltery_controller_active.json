@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "tconstruct:block/smeltery/seared_brick",
+    "up": "tconstruct:block/smeltery/seared_brick",
+    "down": "tconstruct:block/smeltery/seared_brick",
+    "east": "tconstruct:block/smeltery/seared_brick",
+    "west": "tconstruct:block/smeltery/seared_brick",
+    "south": "tconstruct:block/smeltery/drain_back",
+    "north": "tconstruct:block/smeltery/smeltery_active"
+  }
+}

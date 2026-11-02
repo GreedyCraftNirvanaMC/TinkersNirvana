@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconstruct:ardite_ingot"
+    }
+  ],
+  "result": {
+    "id": "tconstruct:ardite_nugget",
+    "count": 9
+  }
+}

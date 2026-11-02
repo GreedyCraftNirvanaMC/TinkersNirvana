@@ -26,6 +26,7 @@ public class TinkersNirvana {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public TinkersNirvana(IEventBus modEventBus, ModContainer modContainer) {
+        com.gctn.tconstruct.smeltery.SmelteryModule.register(modEventBus);
         TinkerTraits.registerTraits();
         TinkerDataComponents.register(modEventBus);
         TableRegistryBus.register(modEventBus);

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconstruct:cobalt_ingot"
+    },
+    {
+      "item": "tconstruct:cobalt_ingot"
+    },
+    {
+      "item": "tconstruct:cobalt_ingot"
+    },
+    {
+      "item": "tconstruct:cobalt_ingot"
+    },
+    {
+      "item": "tconstruct:cobalt_ingot"
+    },
+    {
+      "item": "tconstruct:cobalt_ingot"
+    },
+    {
+      "item": "tconstruct:cobalt_ingot"
+    },
+    {
+      "item": "tconstruct:cobalt_ingot"
+    },
+    {
+      "item": "tconstruct:cobalt_ingot"
+    }
+  ],
+  "result": {
+    "id": "tconstruct:cobalt_block"
+  }
+}

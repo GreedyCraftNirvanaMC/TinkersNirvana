@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AA",
+    "AA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconstruct:seared_brick"
+    }
+  },
+  "result": {
+    "id": "tconstruct:seared_bricks",
+    "count": 1
+  }
+}

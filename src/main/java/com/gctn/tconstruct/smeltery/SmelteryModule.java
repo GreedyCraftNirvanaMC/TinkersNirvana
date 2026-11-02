@@ -1,0 +1,167 @@
+/*
+ * Smeltery behavior and assets adapted from TinkersAntique (Slime Knights and contributors).
+ * SPDX-License-Identifier: LGPL-3.0-only
+ * See third_party/NOTICE.md for source attribution.
+ */
+package com.gctn.tconstruct.smeltery;
+
+import com.gctn.tconstruct.TinkersNirvana;
+import com.gctn.tconstruct.init.BlockRegister;
+import com.gctn.tconstruct.init.ItemRegister;
+import com.gctn.tconstruct.smeltery.block.SmelteryBlock;
+import com.gctn.tconstruct.smeltery.block.ChannelBlock;
+import com.gctn.tconstruct.smeltery.block.SearedGlassBlock;
+import com.gctn.tconstruct.smeltery.block.SearedLadderBlock;
+import com.gctn.tconstruct.smeltery.block.entity.SmelteryBlockEntity;
+import com.gctn.tconstruct.smeltery.block.entity.SmelteryComponentBlockEntity;
+import com.gctn.tconstruct.smeltery.menu.SmelteryMenu;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.network.chat.Component;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Supplier;
+
+public final class SmelteryModule {
+    public static final Map<String, DeferredBlock<SmelteryBlock>> BLOCKS = new LinkedHashMap<>();
+    public static final Map<String, Supplier<Item>> ITEMS = new LinkedHashMap<>();
+    private static final Collection<DeferredBlock<?>> MATERIAL_BLOCKS = new ArrayList<>();
+    public static final DeferredBlock<SmelteryBlock> CONTROLLER = block("smeltery_controller", SmelteryBlock.Kind.CONTROLLER);
+    public static final DeferredBlock<SmelteryBlock> DRAIN = block("smeltery_drain", SmelteryBlock.Kind.DRAIN);
+    public static final DeferredBlock<SmelteryBlock> TANK = block("seared_tank", SmelteryBlock.Kind.TANK);
+    public static final DeferredBlock<SmelteryBlock> GAUGE = block("seared_gauge", SmelteryBlock.Kind.TANK);
+    public static final DeferredBlock<SmelteryBlock> WINDOW = block("seared_window", SmelteryBlock.Kind.TANK);
+    public static final DeferredBlock<SmelteryBlock> GLASS = block("seared_glass", SmelteryBlock.Kind.GLASS);
+    public static final DeferredBlock<SmelteryBlock> LADDER = block("seared_ladder", SmelteryBlock.Kind.LADDER);
+    public static final DeferredBlock<SmelteryBlock> FAUCET = block("faucet", SmelteryBlock.Kind.FAUCET);
+    public static final DeferredBlock<SmelteryBlock> CHANNEL = block("channel", SmelteryBlock.Kind.CHANNEL);
+    public static final DeferredBlock<SmelteryBlock> TABLE = block("casting_table", SmelteryBlock.Kind.TABLE);
+    public static final DeferredBlock<SmelteryBlock> BASIN = block("casting_basin", SmelteryBlock.Kind.BASIN);
+    public static final DeferredBlock<Block> GROUT = BlockRegister.registerBlockWithItem("grout", () -> new Block(BlockBehaviour.Properties.of().strength(0.5F).sound(SoundType.GRAVEL)));
+    public static final DeferredBlock<Block> MUD_BRICKS = BlockRegister.registerBlockWithItem("mud_bricks", () -> new Block(BlockBehaviour.Properties.of().strength(1.0F).sound(SoundType.STONE)));
+    public static final DeferredBlock<Block> LAVAWOOD = BlockRegister.registerBlockWithItem("lavawood", () -> new Block(BlockBehaviour.Properties.of().strength(1.5F).sound(SoundType.WOOD)));
+    public static final DeferredBlock<com.gctn.tconstruct.smeltery.block.ClearGlassBlock> CLEAR_GLASS = BlockRegister.registerBlockWithItem("clear_glass",
+            () -> new com.gctn.tconstruct.smeltery.block.ClearGlassBlock(BlockBehaviour.Properties.of().strength(0.3F).sound(SoundType.GLASS).noOcclusion()));
+
+    static {
+        for (String type : new String[]{"stone", "cobble", "paver", "brick", "brick_cracked", "brick_fancy",
+                "brick_square", "brick_triangle", "brick_small", "road", "tile", "creeper"}) {
+            block(type.equals("brick") ? "seared_bricks" : "seared_" + type, SmelteryBlock.Kind.BRICK);
+        }
+        ITEMS.put("grout", () -> GROUT.get().asItem());
+        MATERIAL_BLOCKS.addAll(java.util.List.of(MUD_BRICKS, LAVAWOOD, CLEAR_GLASS));
+        for (String name : new String[]{"seared_brick", "mud_brick", "cast_blank", "cast_ingot", "cast_nugget",
+                "cast_gem", "cast_plate", "cast_gear", "cast_pickaxe_head", "cast_tool_rod", "cast_binding",
+                "clay_cast_pickaxe_head", "clay_cast_tool_rod", "clay_cast_binding"}) {
+            ITEMS.put(name, ItemRegister.ITEMS.register(name, () -> new Item(new Item.Properties())));
+        }
+        for (String metal : new String[]{"cobalt", "ardite", "manyullyn", "pigiron", "knightslime", "alubrass", "alumite",
+                "bronze", "tin", "aluminum", "steel"}) {
+            for (String form : new String[]{"ingot", "nugget"}) {
+                String name = metal + "_" + form;
+                ITEMS.put(name, ItemRegister.ITEMS.register(name, () -> new Item(new Item.Properties())));
+            }
+            MATERIAL_BLOCKS.add(BlockRegister.registerBlockWithItem(metal + "_block", () -> new Block(BlockBehaviour.Properties.of().strength(5, 10).sound(SoundType.METAL))));
+        }
+    }
+
+    private static final DeferredRegister<BlockEntityType<?>> ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, TinkersNirvana.MODID);
+    private static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, TinkersNirvana.MODID);
+    private static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(Registries.SOUND_EVENT, TinkersNirvana.MODID);
+    private static final DeferredRegister.DataComponents COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, TinkersNirvana.MODID);
+    public static final Supplier<DataComponentType<net.neoforged.neoforge.fluids.SimpleFluidContent>> TANK_FLUID = COMPONENTS.registerComponentType("tank_fluid",
+            builder -> builder.persistent(net.neoforged.neoforge.fluids.SimpleFluidContent.CODEC)
+                    .networkSynchronized(net.neoforged.neoforge.fluids.SimpleFluidContent.STREAM_CODEC));
+    private static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TinkersNirvana.MODID);
+    public static final Supplier<CreativeModeTab> TAB = TABS.register("smeltery", () -> CreativeModeTab.builder()
+            .title(Component.translatable("tab.tconstruct.smeltery")).icon(() -> TANK.get().asItem().getDefaultInstance())
+            .displayItems((parameters, output) -> {
+                BLOCKS.values().forEach(block -> output.accept(block.get()));
+                MATERIAL_BLOCKS.forEach(block -> output.accept(block.get()));
+                ITEMS.values().forEach(item -> output.accept(item.get()));
+                SmelteryFluids.ENTRIES.values().forEach(fluid -> output.accept(fluid.bucket.get()));
+            }).build());
+    public static final Supplier<BlockEntityType<SmelteryBlockEntity>> CONTROLLER_ENTITY = ENTITIES.register("smeltery",
+            () -> BlockEntityType.Builder.of(SmelteryBlockEntity::new, CONTROLLER.get()).build(null));
+    public static final Supplier<BlockEntityType<SmelteryComponentBlockEntity>> COMPONENT_ENTITY = ENTITIES.register("smeltery_component",
+            () -> BlockEntityType.Builder.of(SmelteryComponentBlockEntity::new, BLOCKS.values().stream()
+                    .filter(block -> block != CONTROLLER).map(Supplier::get).toArray(Block[]::new)).build(null));
+    public static final Supplier<MenuType<SmelteryMenu>> MENU = MENUS.register("smeltery", () -> IMenuTypeExtension.create(SmelteryMenu::new));
+    public static final Supplier<SoundEvent> LOOP = sound("smeltery_loop");
+    public static final Supplier<SoundEvent> POUR = sound("faucet_pour");
+    public static final Supplier<SoundEvent> TRIGGER = sound("faucet_trigger");
+    public static final Supplier<SoundEvent> SIZZLE = sound("sizzle");
+
+    private SmelteryModule() {
+    }
+
+    private static Supplier<SoundEvent> sound(String name) {
+        return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(SmelteryFluids.id(name)));
+    }
+
+    private static DeferredBlock<SmelteryBlock> block(String name, SmelteryBlock.Kind kind) {
+        DeferredBlock<SmelteryBlock> block = BlockRegister.registerBlockWithItem(name,
+                () -> createBlock(kind, BlockBehaviour.Properties.of().strength(3.0F, 20.0F).requiresCorrectToolForDrops()
+                        .sound(SoundType.STONE).noOcclusion()
+                        .lightLevel(state -> state.getValue(SmelteryBlock.ACTIVE) ? 13 : 0)));
+        BLOCKS.put(name, block);
+        return block;
+    }
+
+    private static SmelteryBlock createBlock(SmelteryBlock.Kind kind, BlockBehaviour.Properties properties) {
+        return switch (kind) {
+            case CHANNEL -> new ChannelBlock(properties);
+            case GLASS -> new SearedGlassBlock(properties);
+            case LADDER -> new SearedLadderBlock(properties);
+            default -> new SmelteryBlock(kind, properties);
+        };
+    }
+
+    public static Collection<DeferredBlock<?>> entries() {
+        return new ArrayList<>(BLOCKS.values());
+    }
+
+    public static Item item(String name) {
+        return ITEMS.get(name).get();
+    }
+
+    public static void register(IEventBus bus) {
+        ENTITIES.register(bus);
+        MENUS.register(bus);
+        SOUNDS.register(bus);
+        COMPONENTS.register(bus);
+        TABS.register(bus);
+        SmelteryFluids.register(bus);
+        bus.addListener(SmelteryModule::capabilities);
+        bus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event) ->
+                event.enqueueWork(com.gctn.tconstruct.smeltery.recipe.SmelteryRecipes::initialize));
+    }
+
+    private static void capabilities(RegisterCapabilitiesEvent event) {
+        // Only drains expose the shared liquids. Component wrappers resolve their master on every call,
+        // so automation cannot keep operating on an invalid or replaced controller through a cached handle.
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, COMPONENT_ENTITY.get(), (entity, side) -> entity.fluidHandler(side));
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CONTROLLER_ENTITY.get(), (entity, side) -> entity.itemHandler());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, COMPONENT_ENTITY.get(), (entity, side) -> entity.itemHandler(side));
+        event.registerItem(Capabilities.FluidHandler.ITEM, (stack, context) ->
+                new net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack(TANK_FLUID, stack, 4000),
+                TANK.get().asItem(), GAUGE.get().asItem(), WINDOW.get().asItem());
+    }
+}

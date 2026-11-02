@@ -1,0 +1,197 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/center"
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/center_out"
+      }
+    },
+    {
+      "when": {
+        "north": "0"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "north": "3"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side_lever",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "north": "2"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side_in",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "north": "1"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side_out",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "east": "0"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side",
+        "y": 90,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "east": "3"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side_lever",
+        "y": 90,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "east": "2"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side_in",
+        "y": 90,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "east": "1"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side_out",
+        "y": 90,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "0"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side",
+        "y": 180,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "3"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side_lever",
+        "y": 180,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "2"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side_in",
+        "y": 180,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "1"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side_out",
+        "y": 180,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "west": "0"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side",
+        "y": 270,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "west": "3"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side_lever",
+        "y": 270,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "west": "2"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side_in",
+        "y": 270,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "west": "1"
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/side_out",
+        "y": 270,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "north": "3"
+          },
+          {
+            "south": "3"
+          },
+          {
+            "west": "3"
+          },
+          {
+            "east": "3"
+          }
+        ]
+      },
+      "apply": {
+        "model": "tconstruct:block/channel/center_lever"
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "result": {
+    "id": "tconstruct:seared_creeper",
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "item": "tconstruct:seared_tile"
+    }
+  ]
+}

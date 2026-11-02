@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "result": {
+    "id": "tconstruct:seared_brick_small",
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "item": "tconstruct:seared_road"
+    }
+  ]
+}

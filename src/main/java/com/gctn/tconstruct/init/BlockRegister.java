@@ -38,6 +38,7 @@ public class BlockRegister {
         // Calling each category's entries initializes its static registrations.
         Collection<DeferredBlock<?>> entries = new ArrayList<>();
         entries.addAll(TableBlocks.entries());
+        entries.addAll(com.gctn.tconstruct.smeltery.SmelteryModule.entries());
         return entries;
     }
 

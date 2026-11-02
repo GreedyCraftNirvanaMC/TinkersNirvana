@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "tconstruct:block/block_ardite",
+    "top": "tconstruct:block/block_ardite_top",
+    "bottom": "tconstruct:block/block_ardite_top"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconstruct:manyullyn_nugget"
+    },
+    {
+      "item": "tconstruct:manyullyn_nugget"
+    },
+    {
+      "item": "tconstruct:manyullyn_nugget"
+    },
+    {
+      "item": "tconstruct:manyullyn_nugget"
+    },
+    {
+      "item": "tconstruct:manyullyn_nugget"
+    },
+    {
+      "item": "tconstruct:manyullyn_nugget"
+    },
+    {
+      "item": "tconstruct:manyullyn_nugget"
+    },
+    {
+      "item": "tconstruct:manyullyn_nugget"
+    },
+    {
+      "item": "tconstruct:manyullyn_nugget"
+    }
+  ],
+  "result": {
+    "id": "tconstruct:manyullyn_ingot"
+  }
+}

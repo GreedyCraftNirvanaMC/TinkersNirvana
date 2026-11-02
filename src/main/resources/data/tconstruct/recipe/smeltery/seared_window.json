@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AGA",
+    "AGA",
+    "AGA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconstruct:seared_brick"
+    },
+    "G": {
+      "tag": "c:glass_blocks"
+    }
+  },
+  "result": {
+    "id": "tconstruct:seared_window"
+  }
+}
