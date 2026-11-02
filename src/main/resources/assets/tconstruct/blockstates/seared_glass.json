@@ -1,0 +1,196 @@
+{
+  "variants": {
+    "connected_down=false,connected_up=false,connected_north=false,connected_south=false,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/0"
+    },
+    "connected_down=true,connected_up=false,connected_north=false,connected_south=false,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/1"
+    },
+    "connected_down=false,connected_up=true,connected_north=false,connected_south=false,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/2"
+    },
+    "connected_down=true,connected_up=true,connected_north=false,connected_south=false,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/3"
+    },
+    "connected_down=false,connected_up=false,connected_north=true,connected_south=false,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/4"
+    },
+    "connected_down=true,connected_up=false,connected_north=true,connected_south=false,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/5"
+    },
+    "connected_down=false,connected_up=true,connected_north=true,connected_south=false,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/6"
+    },
+    "connected_down=true,connected_up=true,connected_north=true,connected_south=false,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/7"
+    },
+    "connected_down=false,connected_up=false,connected_north=false,connected_south=true,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/8"
+    },
+    "connected_down=true,connected_up=false,connected_north=false,connected_south=true,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/9"
+    },
+    "connected_down=false,connected_up=true,connected_north=false,connected_south=true,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/10"
+    },
+    "connected_down=true,connected_up=true,connected_north=false,connected_south=true,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/11"
+    },
+    "connected_down=false,connected_up=false,connected_north=true,connected_south=true,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/12"
+    },
+    "connected_down=true,connected_up=false,connected_north=true,connected_south=true,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/13"
+    },
+    "connected_down=false,connected_up=true,connected_north=true,connected_south=true,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/14"
+    },
+    "connected_down=true,connected_up=true,connected_north=true,connected_south=true,connected_west=false,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/15"
+    },
+    "connected_down=false,connected_up=false,connected_north=false,connected_south=false,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/16"
+    },
+    "connected_down=true,connected_up=false,connected_north=false,connected_south=false,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/17"
+    },
+    "connected_down=false,connected_up=true,connected_north=false,connected_south=false,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/18"
+    },
+    "connected_down=true,connected_up=true,connected_north=false,connected_south=false,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/19"
+    },
+    "connected_down=false,connected_up=false,connected_north=true,connected_south=false,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/20"
+    },
+    "connected_down=true,connected_up=false,connected_north=true,connected_south=false,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/21"
+    },
+    "connected_down=false,connected_up=true,connected_north=true,connected_south=false,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/22"
+    },
+    "connected_down=true,connected_up=true,connected_north=true,connected_south=false,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/23"
+    },
+    "connected_down=false,connected_up=false,connected_north=false,connected_south=true,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/24"
+    },
+    "connected_down=true,connected_up=false,connected_north=false,connected_south=true,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/25"
+    },
+    "connected_down=false,connected_up=true,connected_north=false,connected_south=true,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/26"
+    },
+    "connected_down=true,connected_up=true,connected_north=false,connected_south=true,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/27"
+    },
+    "connected_down=false,connected_up=false,connected_north=true,connected_south=true,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/28"
+    },
+    "connected_down=true,connected_up=false,connected_north=true,connected_south=true,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/29"
+    },
+    "connected_down=false,connected_up=true,connected_north=true,connected_south=true,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/30"
+    },
+    "connected_down=true,connected_up=true,connected_north=true,connected_south=true,connected_west=true,connected_east=false": {
+      "model": "tconstruct:block/connected_glass/31"
+    },
+    "connected_down=false,connected_up=false,connected_north=false,connected_south=false,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/32"
+    },
+    "connected_down=true,connected_up=false,connected_north=false,connected_south=false,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/33"
+    },
+    "connected_down=false,connected_up=true,connected_north=false,connected_south=false,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/34"
+    },
+    "connected_down=true,connected_up=true,connected_north=false,connected_south=false,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/35"
+    },
+    "connected_down=false,connected_up=false,connected_north=true,connected_south=false,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/36"
+    },
+    "connected_down=true,connected_up=false,connected_north=true,connected_south=false,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/37"
+    },
+    "connected_down=false,connected_up=true,connected_north=true,connected_south=false,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/38"
+    },
+    "connected_down=true,connected_up=true,connected_north=true,connected_south=false,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/39"
+    },
+    "connected_down=false,connected_up=false,connected_north=false,connected_south=true,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/40"
+    },
+    "connected_down=true,connected_up=false,connected_north=false,connected_south=true,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/41"
+    },
+    "connected_down=false,connected_up=true,connected_north=false,connected_south=true,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/42"
+    },
+    "connected_down=true,connected_up=true,connected_north=false,connected_south=true,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/43"
+    },
+    "connected_down=false,connected_up=false,connected_north=true,connected_south=true,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/44"
+    },
+    "connected_down=true,connected_up=false,connected_north=true,connected_south=true,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/45"
+    },
+    "connected_down=false,connected_up=true,connected_north=true,connected_south=true,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/46"
+    },
+    "connected_down=true,connected_up=true,connected_north=true,connected_south=true,connected_west=false,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/47"
+    },
+    "connected_down=false,connected_up=false,connected_north=false,connected_south=false,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/48"
+    },
+    "connected_down=true,connected_up=false,connected_north=false,connected_south=false,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/49"
+    },
+    "connected_down=false,connected_up=true,connected_north=false,connected_south=false,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/50"
+    },
+    "connected_down=true,connected_up=true,connected_north=false,connected_south=false,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/51"
+    },
+    "connected_down=false,connected_up=false,connected_north=true,connected_south=false,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/52"
+    },
+    "connected_down=true,connected_up=false,connected_north=true,connected_south=false,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/53"
+    },
+    "connected_down=false,connected_up=true,connected_north=true,connected_south=false,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/54"
+    },
+    "connected_down=true,connected_up=true,connected_north=true,connected_south=false,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/55"
+    },
+    "connected_down=false,connected_up=false,connected_north=false,connected_south=true,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/56"
+    },
+    "connected_down=true,connected_up=false,connected_north=false,connected_south=true,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/57"
+    },
+    "connected_down=false,connected_up=true,connected_north=false,connected_south=true,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/58"
+    },
+    "connected_down=true,connected_up=true,connected_north=false,connected_south=true,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/59"
+    },
+    "connected_down=false,connected_up=false,connected_north=true,connected_south=true,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/60"
+    },
+    "connected_down=true,connected_up=false,connected_north=true,connected_south=true,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/61"
+    },
+    "connected_down=false,connected_up=true,connected_north=true,connected_south=true,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/62"
+    },
+    "connected_down=true,connected_up=true,connected_north=true,connected_south=true,connected_west=true,connected_east=true": {
+      "model": "tconstruct:block/connected_glass/63"
+    }
+  }
+}

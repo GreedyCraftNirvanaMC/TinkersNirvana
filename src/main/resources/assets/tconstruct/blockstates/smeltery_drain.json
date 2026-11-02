@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "facing=north,active=false": {
+      "model": "tconstruct:block/smeltery_drain",
+      "y": 0
+    },
+    "facing=north,active=true": {
+      "model": "tconstruct:block/smeltery_drain",
+      "y": 0
+    },
+    "facing=east,active=false": {
+      "model": "tconstruct:block/smeltery_drain",
+      "y": 90
+    },
+    "facing=east,active=true": {
+      "model": "tconstruct:block/smeltery_drain",
+      "y": 90
+    },
+    "facing=south,active=false": {
+      "model": "tconstruct:block/smeltery_drain",
+      "y": 180
+    },
+    "facing=south,active=true": {
+      "model": "tconstruct:block/smeltery_drain",
+      "y": 180
+    },
+    "facing=west,active=false": {
+      "model": "tconstruct:block/smeltery_drain",
+      "y": 270
+    },
+    "facing=west,active=true": {
+      "model": "tconstruct:block/smeltery_drain",
+      "y": 270
+    },
+    "facing=up,active=false": {
+      "model": "tconstruct:block/smeltery_drain",
+      "y": 0
+    },
+    "facing=up,active=true": {
+      "model": "tconstruct:block/smeltery_drain",
+      "y": 0
+    },
+    "facing=down,active=false": {
+      "model": "tconstruct:block/smeltery_drain",
+      "y": 0
+    },
+    "facing=down,active=true": {
+      "model": "tconstruct:block/smeltery_drain",
+      "y": 0
+    }
+  }
+}

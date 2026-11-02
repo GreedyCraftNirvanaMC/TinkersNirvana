@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconstruct:alubrass_ingot"
+    },
+    {
+      "item": "tconstruct:alubrass_ingot"
+    },
+    {
+      "item": "tconstruct:alubrass_ingot"
+    },
+    {
+      "item": "tconstruct:alubrass_ingot"
+    },
+    {
+      "item": "tconstruct:alubrass_ingot"
+    },
+    {
+      "item": "tconstruct:alubrass_ingot"
+    },
+    {
+      "item": "tconstruct:alubrass_ingot"
+    },
+    {
+      "item": "tconstruct:alubrass_ingot"
+    },
+    {
+      "item": "tconstruct:alubrass_ingot"
+    }
+  ],
+  "result": {
+    "id": "tconstruct:alubrass_block"
+  }
+}

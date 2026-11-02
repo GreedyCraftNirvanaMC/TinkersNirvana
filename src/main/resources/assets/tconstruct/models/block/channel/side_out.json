@@ -1,0 +1,7 @@
+{
+  "parent": "tconstruct:block/channel/side_in",
+  "textures": {
+    "top": "tconstruct:block/smeltery/channel_out"
+  },
+  "render_type": "minecraft:cutout"
+}

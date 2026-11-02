@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconstruct:ardite_nugget"
+    },
+    {
+      "item": "tconstruct:ardite_nugget"
+    },
+    {
+      "item": "tconstruct:ardite_nugget"
+    },
+    {
+      "item": "tconstruct:ardite_nugget"
+    },
+    {
+      "item": "tconstruct:ardite_nugget"
+    },
+    {
+      "item": "tconstruct:ardite_nugget"
+    },
+    {
+      "item": "tconstruct:ardite_nugget"
+    },
+    {
+      "item": "tconstruct:ardite_nugget"
+    },
+    {
+      "item": "tconstruct:ardite_nugget"
+    }
+  ],
+  "result": {
+    "id": "tconstruct:ardite_ingot"
+  }
+}

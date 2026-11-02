@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconstruct:aluminum_ingot"
+    },
+    {
+      "item": "tconstruct:aluminum_ingot"
+    },
+    {
+      "item": "tconstruct:aluminum_ingot"
+    },
+    {
+      "item": "tconstruct:aluminum_ingot"
+    },
+    {
+      "item": "tconstruct:aluminum_ingot"
+    },
+    {
+      "item": "tconstruct:aluminum_ingot"
+    },
+    {
+      "item": "tconstruct:aluminum_ingot"
+    },
+    {
+      "item": "tconstruct:aluminum_ingot"
+    },
+    {
+      "item": "tconstruct:aluminum_ingot"
+    }
+  ],
+  "result": {
+    "id": "tconstruct:aluminum_block"
+  }
+}

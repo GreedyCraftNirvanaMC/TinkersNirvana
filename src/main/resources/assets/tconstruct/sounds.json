@@ -1,0 +1,23 @@
+{
+  "smeltery_loop": {
+    "sounds": [
+      "tconstruct:smeltery_loop"
+    ]
+  },
+  "faucet_pour": {
+    "sounds": [
+      "tconstruct:faucet_pour_loop"
+    ]
+  },
+  "faucet_trigger": {
+    "sounds": [
+      "tconstruct:faucet_trigger1",
+      "tconstruct:faucet_trigger2"
+    ]
+  },
+  "sizzle": {
+    "sounds": [
+      "tconstruct:sizzle"
+    ]
+  }
+}

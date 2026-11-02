@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconstruct:manyullyn_ingot"
+    }
+  ],
+  "result": {
+    "id": "tconstruct:manyullyn_nugget",
+    "count": 9
+  }
+}

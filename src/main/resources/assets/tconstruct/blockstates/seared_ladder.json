@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "facing=north,bottom=false": {
+      "model": "tconstruct:block/seared_ladder",
+      "y": 0
+    },
+    "facing=north,bottom=true": {
+      "model": "tconstruct:block/seared_ladder_base",
+      "y": 0
+    },
+    "facing=east,bottom=false": {
+      "model": "tconstruct:block/seared_ladder",
+      "y": 90
+    },
+    "facing=east,bottom=true": {
+      "model": "tconstruct:block/seared_ladder_base",
+      "y": 90
+    },
+    "facing=south,bottom=false": {
+      "model": "tconstruct:block/seared_ladder",
+      "y": 180
+    },
+    "facing=south,bottom=true": {
+      "model": "tconstruct:block/seared_ladder_base",
+      "y": 180
+    },
+    "facing=west,bottom=false": {
+      "model": "tconstruct:block/seared_ladder",
+      "y": 270
+    },
+    "facing=west,bottom=true": {
+      "model": "tconstruct:block/seared_ladder_base",
+      "y": 270
+    },
+    "facing=up,bottom=false": {
+      "model": "tconstruct:block/seared_ladder",
+      "y": 0
+    },
+    "facing=up,bottom=true": {
+      "model": "tconstruct:block/seared_ladder_base",
+      "y": 0
+    },
+    "facing=down,bottom=false": {
+      "model": "tconstruct:block/seared_ladder",
+      "y": 0
+    },
+    "facing=down,bottom=true": {
+      "model": "tconstruct:block/seared_ladder_base",
+      "y": 0
+    }
+  }
+}

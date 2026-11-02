@@ -1,0 +1,85 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/liquid"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/liquid_flow"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/liquid_poison"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/liquid_poison_flow"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/liquid_slime"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/liquid_slime_flow"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/liquid_stone"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/liquid_stone_flow"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/milk"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/milk_flow"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/molten_metal"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/molten_metal_flow"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/slime_channel_diagonal"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/slime_channel_still"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "tconstruct:block/fluids/slime_channel_still_diagonal"
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_pickaxe_head",
+      "mask": "tconstruct:item/cast_masks/pickaxe_head",
+      "offset_x": -2,
+      "offset_y": 2
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_tool_rod",
+      "mask": "tconstruct:item/cast_masks/tool_rod",
+      "offset_x": 0,
+      "offset_y": 0
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_binding",
+      "mask": "tconstruct:item/cast_masks/binding",
+      "offset_x": 0,
+      "offset_y": 0
+    }
+  ]
+}

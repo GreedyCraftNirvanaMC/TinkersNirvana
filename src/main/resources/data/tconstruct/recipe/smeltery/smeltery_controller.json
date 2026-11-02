@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "A A",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconstruct:seared_brick"
+    }
+  },
+  "result": {
+    "id": "tconstruct:smeltery_controller",
+    "count": 1
+  }
+}

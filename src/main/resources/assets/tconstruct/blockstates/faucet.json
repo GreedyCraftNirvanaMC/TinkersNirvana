@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "facing=south,active=false": {
+      "model": "tconstruct:block/faucet",
+      "y": 0
+    },
+    "facing=south,active=true": {
+      "model": "tconstruct:block/faucet",
+      "y": 0
+    },
+    "facing=west,active=false": {
+      "model": "tconstruct:block/faucet",
+      "y": 90
+    },
+    "facing=west,active=true": {
+      "model": "tconstruct:block/faucet",
+      "y": 90
+    },
+    "facing=north,active=false": {
+      "model": "tconstruct:block/faucet",
+      "y": 180
+    },
+    "facing=north,active=true": {
+      "model": "tconstruct:block/faucet",
+      "y": 180
+    },
+    "facing=east,active=false": {
+      "model": "tconstruct:block/faucet",
+      "y": 270
+    },
+    "facing=east,active=true": {
+      "model": "tconstruct:block/faucet",
+      "y": 270
+    },
+    "facing=up,active=false": {
+      "model": "tconstruct:block/faucet_top",
+      "y": 0
+    },
+    "facing=up,active=true": {
+      "model": "tconstruct:block/faucet_top",
+      "y": 0
+    },
+    "facing=down,active=false": {
+      "model": "tconstruct:block/faucet_top",
+      "y": 0
+    },
+    "facing=down,active=true": {
+      "model": "tconstruct:block/faucet_top",
+      "y": 0
+    }
+  }
+}

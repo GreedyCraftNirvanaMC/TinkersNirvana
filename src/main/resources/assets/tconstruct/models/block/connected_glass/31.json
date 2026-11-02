@@ -1,0 +1,53 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "north": "tconstruct:block/connected/seared_glass/udr",
+    "south": "tconstruct:block/connected/seared_glass/udl",
+    "west": "tconstruct:block/connected/seared_glass/udlr",
+    "east": "tconstruct:block/connected/seared_glass/udlr",
+    "up": "tconstruct:block/connected/seared_glass/udl",
+    "down": "tconstruct:block/connected/seared_glass/udl",
+    "particle": "tconstruct:block/connected/seared_glass/normal"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#north",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#south",
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#west",
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#east",
+          "cullface": "east"
+        },
+        "up": {
+          "texture": "#up",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#down",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
