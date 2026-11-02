@@ -1,0 +1,64 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "north": "tconstruct:block/connected/clear_stained_glass/ulr",
+    "south": "tconstruct:block/connected/clear_stained_glass/ulr",
+    "west": "tconstruct:block/connected/clear_stained_glass/ur",
+    "east": "tconstruct:block/connected/clear_stained_glass/ul",
+    "up": "tconstruct:block/connected/clear_stained_glass/ulr",
+    "down": "tconstruct:block/connected/clear_stained_glass/ulr",
+    "particle": "tconstruct:block/connected/clear_stained_glass/normal"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#north",
+          "cullface": "north",
+          "rotation": 180,
+          "tintindex": 0
+        },
+        "south": {
+          "texture": "#south",
+          "cullface": "south",
+          "rotation": 180,
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#west",
+          "cullface": "west",
+          "rotation": 180,
+          "tintindex": 0
+        },
+        "east": {
+          "texture": "#east",
+          "cullface": "east",
+          "rotation": 180,
+          "tintindex": 0
+        },
+        "up": {
+          "texture": "#up",
+          "cullface": "up",
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#down",
+          "cullface": "down",
+          "rotation": 180,
+          "tintindex": 0
+        }
+      }
+    }
+  ]
+}

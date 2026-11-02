@@ -129,6 +129,17 @@ public class SmelteryBlock extends BaseEntityBlock {
     }
 
     @Override
+    protected float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
+        return kind == Kind.GLASS || kind == Kind.TANK ? 1.0F : super.getShadeBrightness(state, level, pos);
+    }
+
+    @Override
+    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+        // 玻璃和空储罐不能因完整碰撞箱而削弱天光。
+        return kind == Kind.GLASS || kind == Kind.TANK || super.propagatesSkylightDown(state, level, pos);
+    }
+
+    @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                               Player player, InteractionHand hand, BlockHitResult hit) {
         if (player.isShiftKeyDown()) {

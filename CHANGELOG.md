@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Port all sixteen stained clear glass colors, connected textures, original
+  tint/beacon palette, dye recipes, glass tags, melting, and Silk Touch configuration.
+- Restore standalone glass borders, transparent-block physical properties, and
+  full seared-wall light blocking and redstone conduction.
 - Complete Firewood, Lavawood, and Mud Bricks building families, recipes, slab
   drops, native shape behavior, original lighting/fuel, and mining-tool tags.
 - Convert Antique's blast-resistance values to modern units; restore seared

@@ -30,6 +30,8 @@ Source areas used for this port:
   `client/module/GuiSmelterySideInventory.java`, `tools/common/client/module/GuiSideInventory.java`
 - `library/client/texture/CastTexture.java` and `smeltery/client/*Renderer.java`
 - Original GUI, block, fluid, material-item, cast, sound, crafting, and language assets
+- `shared/block/BlockClearGlass.java`, `BlockClearStainedGlass.java`,
+  the `clearGlassSilkTouch` configuration, and original connected stained-glass assets
 
 The port adapts these behaviors to modern block entities, data components,
 NeoForge capabilities, network payloads, menus, sprite sources, and rendering.

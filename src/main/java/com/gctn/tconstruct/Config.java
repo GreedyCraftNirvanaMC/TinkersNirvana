@@ -30,6 +30,10 @@ public class Config {
     public static final ModConfigSpec.IntValue MIN_FLUID_HEIGHT = BUILDER.defineInRange("smeltery.minFluidHeight", 3, 0, 52);
     public static final ModConfigSpec.IntValue MAX_SMELTERY_ITEM_RENDERS = BUILDER.defineInRange("smeltery.maxSmelteryItemRenders", -1, -1, Integer.MAX_VALUE);
     public static final ModConfigSpec.BooleanValue TEMPERATURE_CELSIUS = BUILDER.define("smeltery.temperatureCelsius", true);
+    // 原版通透玻璃默认需要精准采集，关闭后普通破坏也会掉落玻璃。
+    public static final ModConfigSpec.BooleanValue CLEAR_GLASS_SILK_TOUCH = BUILDER
+            .translation("config.tconstruct.clear_glass.silk_touch")
+            .define("smeltery.clearGlassSilkTouch", true);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> MELTING_IGNORE = BUILDER
             .comment("Items or #item_tags ignored when deriving melting values from crafting ingredients.")
             .defineList("smeltery.oredictMeltingIgnore", List.of("#minecraft:planks", "#c:rods/wooden", "minecraft:stick",

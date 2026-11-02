@@ -116,8 +116,12 @@ public final class SmelteryRecipes {
                     temperature(SmelteryFluids.get(gem), GEM * 2), true));
         }
         MELTING.add(melting(stack -> stack.is(net.minecraft.tags.ItemTags.SAND), SmelteryFluids.get("glass"), 1000));
+        // 保留未加载标签时可查询的基础配方，随后用公共标签覆盖世界内的普通染色玻璃。
         addMelting(Items.GLASS, SmelteryFluids.get("glass"), 1000);
         addMelting(SmelteryModule.CLEAR_GLASS.get().asItem(), SmelteryFluids.get("glass"), 1000);
+        // 现代 cheap 标签对应原版普通及染色玻璃，不包含新增的遮光玻璃。
+        MELTING.add(melting(stack -> stack.is(TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                ResourceLocation.fromNamespaceAndPath("c", "glass_blocks/cheap"))), SmelteryFluids.get("glass"), 1000));
         CASTING.add(new Casting(true, ItemStack::isEmpty, SmelteryFluids.get("glass"), 1000, new ItemStack(SmelteryModule.CLEAR_GLASS.get()), 120, false, false));
         special("glass", Items.GLASS_PANE, 375, "", false, 50);
         special("notmilk", Items.BONE, 144, "", false, 50);

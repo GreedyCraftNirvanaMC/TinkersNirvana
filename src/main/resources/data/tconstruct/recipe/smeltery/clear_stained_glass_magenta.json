@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "tconstruct:stained_clear_glass",
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconstruct:clear_glass"
+    },
+    "B": {
+      "tag": "c:dyes/magenta"
+    }
+  },
+  "result": {
+    "id": "tconstruct:clear_stained_glass_magenta",
+    "count": 8
+  }
+}
