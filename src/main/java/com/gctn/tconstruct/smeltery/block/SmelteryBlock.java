@@ -7,6 +7,7 @@ package com.gctn.tconstruct.smeltery.block;
 
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryBlockEntity;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryComponentBlockEntity;
+import com.gctn.tconstruct.smeltery.block.entity.TinkerTankBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -78,7 +79,11 @@ public class SmelteryBlock extends BaseEntityBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return kind == Kind.CONTROLLER ? new SmelteryBlockEntity(pos, state) : new SmelteryComponentBlockEntity(pos, state);
+        return switch (kind) {
+            case CONTROLLER -> new SmelteryBlockEntity(pos, state);
+            case TINKER_TANK -> new TinkerTankBlockEntity(pos, state);
+            default -> new SmelteryComponentBlockEntity(pos, state);
+        };
     }
 
     @Nullable
@@ -92,6 +97,8 @@ public class SmelteryBlock extends BaseEntityBlock {
                 return;
             }
             if (entity instanceof SmelteryBlockEntity controller) {
+                controller.tick();
+            } else if (entity instanceof TinkerTankBlockEntity controller) {
                 controller.tick();
             } else if (entity instanceof SmelteryComponentBlockEntity component) {
                 component.tick();
@@ -151,6 +158,12 @@ public class SmelteryBlock extends BaseEntityBlock {
             }
             return true;
         }
+        if (level.getBlockEntity(pos) instanceof TinkerTankBlockEntity controller) {
+            if (!level.isClientSide && controller.active()) {
+                player.openMenu(controller, buffer -> buffer.writeBlockPos(pos));
+            }
+            return true;
+        }
         if (level.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity component) {
             if (kind == Kind.FAUCET || kind == Kind.TABLE || kind == Kind.BASIN || kind == Kind.CHANNEL) {
                 if (!level.isClientSide) {
@@ -164,6 +177,9 @@ public class SmelteryBlock extends BaseEntityBlock {
 
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighbor, BlockPos from, boolean moving) {
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof TinkerTankBlockEntity controller) {
+            controller.requestCheck();
+        }
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity component) {
             component.neighborChanged(from);
         }
@@ -197,6 +213,8 @@ public class SmelteryBlock extends BaseEntityBlock {
             if (level.getBlockEntity(pos) instanceof SmelteryBlockEntity controller) {
                 controller.releaseComponents();
                 Containers.dropContents(level, pos, controller);
+            } else if (level.getBlockEntity(pos) instanceof TinkerTankBlockEntity controller) {
+                controller.releaseComponents();
             } else if (level.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity component) {
                 component.onBroken();
             }
@@ -245,7 +263,7 @@ public class SmelteryBlock extends BaseEntityBlock {
     }
 
     public enum Kind {
-        CONTROLLER(false), BRICK(true), DRAIN(true), TANK(true), GLASS(true), LADDER(true),
+        CONTROLLER(false), TINKER_TANK(false), BRICK(true), DRAIN(true), TANK(true), GLASS(true), LADDER(true),
         FAUCET(false), CHANNEL(false), TABLE(false), BASIN(false);
 
         public final boolean structure;

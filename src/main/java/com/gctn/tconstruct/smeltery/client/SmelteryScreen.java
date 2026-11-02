@@ -213,46 +213,7 @@ public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
     }
 
     private void amount(List<Component> text, int amount, FluidStack fluid) {
-        if (!hasShiftDown()) {
-            List<Unit> units = new ArrayList<>();
-            if (fluid.isEmpty()) {
-                units.add(new Unit(144, "ingot"));
-            } else {
-                // Antique derives units from casting recipes instead of assuming all fluids are metals.
-                for (var recipe : SmelteryRecipes.CASTING) {
-                    if (recipe.fluid() != fluid.getFluid()) {
-                        continue;
-                    }
-                    if (recipe.basin() && recipe.cast().test(net.minecraft.world.item.ItemStack.EMPTY)) {
-                        units.add(new Unit(recipe.amount(), "block"));
-                    } else if (!recipe.basin()) {
-                        for (String cast : new String[]{"ingot", "nugget", "gem"}) {
-                            if (recipe.cast().test(new net.minecraft.world.item.ItemStack(com.gctn.tconstruct.smeltery.SmelteryModule.item("cast_" + cast)))) {
-                                units.add(new Unit(recipe.amount(), cast));
-                            }
-                        }
-                    }
-                }
-            }
-            units = units.stream().distinct().sorted(java.util.Comparator.comparingInt(Unit::amount).reversed()).toList();
-            for (Unit unit : units) {
-                amount = appendAmount(text, amount, unit.amount, unit.key);
-            }
-        }
-        amount = appendAmount(text, amount, 1_000_000, "kilobucket");
-        amount = appendAmount(text, amount, 1000, "bucket");
-        appendAmount(text, amount, 1, "millibucket");
-    }
-
-    private int appendAmount(List<Component> text, int amount, int size, String unit) {
-        if (amount >= size) {
-            text.add(Component.literal(amount / size + " ").append(Component.translatable("gui.smeltery.liquid." + unit))
-                    .withStyle(net.minecraft.ChatFormatting.GRAY));
-        }
-        return amount % size;
-    }
-
-    private record Unit(int amount, String key) {
+        FluidTankTooltip.amount(text, amount, fluid, hasShiftDown());
     }
 
     @Override

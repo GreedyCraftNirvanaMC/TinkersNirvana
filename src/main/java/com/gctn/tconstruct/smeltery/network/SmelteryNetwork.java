@@ -8,6 +8,7 @@ package com.gctn.tconstruct.smeltery.network;
 import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.smeltery.SmelteryFluids;
 import com.gctn.tconstruct.smeltery.menu.SmelteryMenu;
+import com.gctn.tconstruct.smeltery.menu.TinkerTankMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -32,6 +33,10 @@ public final class SmelteryNetwork {
             // A packet carries the menu ID, not a world position that could target an arbitrary tank.
             if (context.player().containerMenu instanceof SmelteryMenu menu && menu.containerId == packet.menuId
                     && menu.stillValid(context.player())) {
+                menu.controller.liquids.moveToBottom(packet.fluidIndex);
+            } else if (context.player().containerMenu instanceof TinkerTankMenu menu && menu.containerId == packet.menuId
+                    && menu.stillValid(context.player())) {
+                // 储罐沿用同一选液协议，仍须核对当前菜单及玩家距离。
                 menu.controller.liquids.moveToBottom(packet.fluidIndex);
             }
         });

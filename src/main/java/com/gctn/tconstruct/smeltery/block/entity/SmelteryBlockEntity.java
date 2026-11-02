@@ -38,7 +38,7 @@ import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import java.util.Arrays;
 import java.util.List;
 
-public class SmelteryBlockEntity extends BaseContainerBlockEntity {
+public class SmelteryBlockEntity extends BaseContainerBlockEntity implements SmelteryMaster {
     public static final int CAPACITY_PER_BLOCK = 144 * 8;
     private NonNullList<ItemStack> items = NonNullList.create();
     private int[] heat = new int[0];
@@ -197,6 +197,11 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity {
 
     public void requestCheck() {
         needsCheck = true;
+    }
+
+    @Override
+    public SmelteryTank liquids() {
+        return liquids;
     }
 
     public boolean contains(BlockPos pos) {

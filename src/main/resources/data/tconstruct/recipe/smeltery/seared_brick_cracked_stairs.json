@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "tconstruct:seared_stairs",
+  "pattern": [
+    "A  ",
+    "AA ",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconstruct:seared_brick_cracked"
+    }
+  },
+  "result": {
+    "id": "tconstruct:seared_brick_cracked_stairs",
+    "count": 4
+  }
+}

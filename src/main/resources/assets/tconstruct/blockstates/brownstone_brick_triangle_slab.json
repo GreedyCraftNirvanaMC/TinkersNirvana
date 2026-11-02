@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconstruct:block/brownstone_brick_triangle_slab"
+    },
+    "type=double": {
+      "model": "tconstruct:block/brownstone_brick_triangle"
+    },
+    "type=top": {
+      "model": "tconstruct:block/brownstone_brick_triangle_slab_top"
+    }
+  }
+}

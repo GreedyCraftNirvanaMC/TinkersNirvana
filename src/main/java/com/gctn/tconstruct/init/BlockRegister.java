@@ -39,6 +39,7 @@ public class BlockRegister {
         Collection<DeferredBlock<?>> entries = new ArrayList<>();
         entries.addAll(TableBlocks.entries());
         entries.addAll(com.gctn.tconstruct.smeltery.SmelteryModule.entries());
+        entries.addAll(com.gctn.tconstruct.gadgets.GadgetModule.entries());
         return entries;
     }
 

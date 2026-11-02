@@ -45,7 +45,8 @@ public record SmelteryStructure(BlockPos min, BlockPos max, List<BlockPos> block
         for (int x = west + 1; x < east; x++) {
             for (int z = north + 1; z < south; z++) {
                 BlockPos pos = new BlockPos(x, center.getY() - 1, z);
-                if (!valid(level, pos, controller) || ((SmelteryBlock) level.getBlockState(pos).getBlock()).kind != SmelteryBlock.Kind.BRICK) {
+                if (!valid(level, pos, controller) || !TinkerTankStructure.fullSearedSlab(level.getBlockState(pos))
+                        && ((SmelteryBlock) level.getBlockState(pos).getBlock()).kind != SmelteryBlock.Kind.BRICK) {
                     return null;
                 }
                 blocks.add(pos);
@@ -74,7 +75,7 @@ public record SmelteryStructure(BlockPos min, BlockPos max, List<BlockPos> block
             }
             blocks.addAll(layer);
             for (BlockPos pos : layer) {
-                if (((SmelteryBlock) level.getBlockState(pos).getBlock()).kind == SmelteryBlock.Kind.TANK) {
+                if (level.getBlockState(pos).getBlock() instanceof SmelteryBlock block && block.kind == SmelteryBlock.Kind.TANK) {
                     tanks.add(pos);
                 }
             }
@@ -104,7 +105,9 @@ public record SmelteryStructure(BlockPos min, BlockPos max, List<BlockPos> block
         if (pos.equals(controller)) {
             return true;
         }
-        if (!(level.getBlockState(pos).getBlock() instanceof SmelteryBlock block) || !block.kind.structure) {
+        // 原版合并台阶会变成完整焦黑方块；现代双台阶沿用同一结构规则。
+        if (!TinkerTankStructure.fullSearedSlab(level.getBlockState(pos))
+                && (!(level.getBlockState(pos).getBlock() instanceof SmelteryBlock block) || !block.kind.structure)) {
             return false;
         }
         // A valid servant cannot belong to two controllers, including two touching structures.

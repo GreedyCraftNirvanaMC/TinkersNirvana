@@ -14,7 +14,11 @@ import com.gctn.tconstruct.smeltery.block.SearedGlassBlock;
 import com.gctn.tconstruct.smeltery.block.SearedLadderBlock;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryBlockEntity;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryComponentBlockEntity;
+import com.gctn.tconstruct.smeltery.block.entity.TinkerTankBlockEntity;
+import com.gctn.tconstruct.smeltery.block.SearedSlabBlock;
+import com.gctn.tconstruct.smeltery.block.SearedStairBlock;
 import com.gctn.tconstruct.smeltery.menu.SmelteryMenu;
+import com.gctn.tconstruct.smeltery.menu.TinkerTankMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
@@ -43,7 +47,9 @@ public final class SmelteryModule {
     public static final Map<String, DeferredBlock<SmelteryBlock>> BLOCKS = new LinkedHashMap<>();
     public static final Map<String, Supplier<Item>> ITEMS = new LinkedHashMap<>();
     private static final Collection<DeferredBlock<?>> MATERIAL_BLOCKS = new ArrayList<>();
+    public static final Map<String, DeferredBlock<?>> SEARED_SHAPES = new LinkedHashMap<>();
     public static final DeferredBlock<SmelteryBlock> CONTROLLER = block("smeltery_controller", SmelteryBlock.Kind.CONTROLLER);
+    public static final DeferredBlock<SmelteryBlock> TINKER_TANK = block("tinker_tank_controller", SmelteryBlock.Kind.TINKER_TANK);
     public static final DeferredBlock<SmelteryBlock> DRAIN = block("smeltery_drain", SmelteryBlock.Kind.DRAIN);
     public static final DeferredBlock<SmelteryBlock> TANK = block("seared_tank", SmelteryBlock.Kind.TANK);
     public static final DeferredBlock<SmelteryBlock> GAUGE = block("seared_gauge", SmelteryBlock.Kind.TANK);
@@ -63,7 +69,12 @@ public final class SmelteryModule {
     static {
         for (String type : new String[]{"stone", "cobble", "paver", "brick", "brick_cracked", "brick_fancy",
                 "brick_square", "brick_triangle", "brick_small", "road", "tile", "creeper"}) {
-            block(type.equals("brick") ? "seared_bricks" : "seared_" + type, SmelteryBlock.Kind.BRICK);
+            String name = type.equals("brick") ? "seared_bricks" : "seared_" + type;
+            var base = block(name, SmelteryBlock.Kind.BRICK);
+            SEARED_SHAPES.put(name + "_slab", BlockRegister.registerBlockWithItem(name + "_slab", () ->
+                    new SearedSlabBlock(BlockBehaviour.Properties.ofFullCopy(base.get()))));
+            SEARED_SHAPES.put(name + "_stairs", BlockRegister.registerBlockWithItem(name + "_stairs", () ->
+                    new SearedStairBlock(base.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(base.get()))));
         }
         ITEMS.put("grout", () -> GROUT.get().asItem());
         MATERIAL_BLOCKS.addAll(java.util.List.of(MUD_BRICKS, LAVAWOOD, CLEAR_GLASS));
@@ -94,16 +105,21 @@ public final class SmelteryModule {
             .title(Component.translatable("tab.tconstruct.smeltery")).icon(() -> TANK.get().asItem().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 BLOCKS.values().forEach(block -> output.accept(block.get()));
+                SEARED_SHAPES.values().forEach(block -> output.accept(block.get()));
                 MATERIAL_BLOCKS.forEach(block -> output.accept(block.get()));
                 ITEMS.values().forEach(item -> output.accept(item.get()));
                 SmelteryFluids.ENTRIES.values().forEach(fluid -> output.accept(fluid.bucket.get()));
             }).build());
     public static final Supplier<BlockEntityType<SmelteryBlockEntity>> CONTROLLER_ENTITY = ENTITIES.register("smeltery",
             () -> BlockEntityType.Builder.of(SmelteryBlockEntity::new, CONTROLLER.get()).build(null));
+    public static final Supplier<BlockEntityType<TinkerTankBlockEntity>> TINKER_TANK_ENTITY = ENTITIES.register("tinker_tank",
+            () -> BlockEntityType.Builder.of(TinkerTankBlockEntity::new, TINKER_TANK.get()).build(null));
     public static final Supplier<BlockEntityType<SmelteryComponentBlockEntity>> COMPONENT_ENTITY = ENTITIES.register("smeltery_component",
-            () -> BlockEntityType.Builder.of(SmelteryComponentBlockEntity::new, BLOCKS.values().stream()
-                    .filter(block -> block != CONTROLLER).map(Supplier::get).toArray(Block[]::new)).build(null));
+            () -> BlockEntityType.Builder.of(SmelteryComponentBlockEntity::new, java.util.stream.Stream.concat(
+                    BLOCKS.values().stream().filter(block -> block != CONTROLLER && block != TINKER_TANK),
+                    SEARED_SHAPES.values().stream()).map(Supplier::get).toArray(Block[]::new)).build(null));
     public static final Supplier<MenuType<SmelteryMenu>> MENU = MENUS.register("smeltery", () -> IMenuTypeExtension.create(SmelteryMenu::new));
+    public static final Supplier<MenuType<TinkerTankMenu>> TINKER_TANK_MENU = MENUS.register("tinker_tank", () -> IMenuTypeExtension.create(TinkerTankMenu::new));
     public static final Supplier<SoundEvent> LOOP = sound("smeltery_loop");
     public static final Supplier<SoundEvent> POUR = sound("faucet_pour");
     public static final Supplier<SoundEvent> TRIGGER = sound("faucet_trigger");
@@ -119,8 +135,8 @@ public final class SmelteryModule {
     private static DeferredBlock<SmelteryBlock> block(String name, SmelteryBlock.Kind kind) {
         DeferredBlock<SmelteryBlock> block = BlockRegister.registerBlockWithItem(name,
                 () -> createBlock(kind, BlockBehaviour.Properties.of().strength(3.0F, 20.0F).requiresCorrectToolForDrops()
-                        .sound(SoundType.STONE).noOcclusion()
-                        .lightLevel(state -> state.getValue(SmelteryBlock.ACTIVE) ? 13 : 0)));
+                        .sound(kind == SmelteryBlock.Kind.TINKER_TANK ? SoundType.METAL : SoundType.STONE).noOcclusion()
+                        .lightLevel(state -> kind == SmelteryBlock.Kind.CONTROLLER && state.getValue(SmelteryBlock.ACTIVE) ? 13 : 0)));
         BLOCKS.put(name, block);
         return block;
     }
@@ -135,7 +151,9 @@ public final class SmelteryModule {
     }
 
     public static Collection<DeferredBlock<?>> entries() {
-        return new ArrayList<>(BLOCKS.values());
+        Collection<DeferredBlock<?>> entries = new ArrayList<>(BLOCKS.values());
+        entries.addAll(SEARED_SHAPES.values());
+        return entries;
     }
 
     public static Item item(String name) {

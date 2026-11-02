@@ -12,6 +12,11 @@ Reference project: https://github.com/Elite-Modding-Team/TinkersAntique
 Source areas used for this port:
 
 - `smeltery/multiblock/MultiblockCuboid.java`, `MultiblockSmeltery.java`
+- `smeltery/multiblock/MultiblockTinkerTank.java`, `MultiblockTinker.java`
+- `smeltery/tileentity/TileTinkerTank.java`, `TileMultiblock.java`,
+  `smeltery/inventory/ContainerTinkerTank.java`, and `smeltery/client/GuiTinkerTank.java`
+- `smeltery/block/BlockSearedSlab.java`, `BlockSearedSlab2.java`, `BlockSearedStairs.java`,
+  and the original Tinker Tank controller models, GUI texture, and crafting recipe
 - `smeltery/tileentity/TileSmeltery.java`, `TileHeatingStructure.java`,
   `TileHeatingStructureFuelTank.java`, `TileFaucet.java`, `TileCasting.java`,
   `TileChannel.java`, and `TileTank.java`
@@ -23,3 +28,10 @@ Source areas used for this port:
 
 The port adapts these behaviors to modern block entities, data components,
 NeoForge capabilities, network payloads, menus, sprite sources, and rendering.
+
+The implementation in `src/main/java/com/gctn/tconstruct/gadgets` and its
+accompanying brownstone/stone utility assets are also adapted from TinkersAntique
+under LGPL-3.0-only. Source areas include `gadgets/TinkerGadgets.java`,
+`gadgets/block/BlockBrownstone.java`, `BlockBrownstoneSlab.java`,
+`BlockBrownstoneSlab2.java`, `BlockStoneTorch.java`, `BlockStoneLadder.java`,
+and the corresponding original block textures, models, recipes, and translations.
