@@ -118,7 +118,7 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
     public IFluidHandler fluidHandler(@Nullable Direction side) {
         return switch (kind()) {
             case TANK -> tank;
-            case DRAIN -> master() == null ? null : side == null ? extractOnlyHandler : drainHandler;
+            case DRAIN -> !(master() instanceof FluidSmelteryMaster) ? null : side == null ? extractOnlyHandler : drainHandler;
             case TABLE, BASIN -> castingHandler;
             case CHANNEL -> side == null || connections[side.ordinal()] == 2 ? channelHandler : null;
             default -> null;
@@ -456,9 +456,10 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
             return inventory.getStackInSlot(1).isEmpty() ? 0 : 15;
         }
         if (kind() == SmelteryBlock.Kind.DRAIN) {
-            SmelteryMaster controller = master();
-            return controller == null || controller.liquids().amount() == 0 ? 0
-                    : Math.min(15, 1 + (int) (14L * controller.liquids().amount() / Math.max(1, controller.liquids().capacity())));
+            if (!(master() instanceof FluidSmelteryMaster controller) || controller.liquids().amount() == 0) {
+                return 0;
+            }
+            return Math.min(15, 1 + (int) (14L * controller.liquids().amount() / Math.max(1, controller.liquids().capacity())));
         }
         return tank.isEmpty() ? 0 : 1 + 14 * tank.getFluidAmount() / Math.max(1, tank.getCapacity());
     }
@@ -480,8 +481,7 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
 
     private final IFluidHandler drainHandler = new IFluidHandler() {
         private IFluidHandler target() {
-            SmelteryMaster controller = master();
-            return controller == null ? null : controller.liquids();
+            return master() instanceof FluidSmelteryMaster controller ? controller.liquids() : null;
         }
 
         public int getTanks() { return target() == null ? 1 : target().getTanks(); }

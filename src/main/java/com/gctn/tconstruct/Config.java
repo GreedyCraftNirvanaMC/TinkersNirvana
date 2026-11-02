@@ -14,6 +14,10 @@ public class Config {
     // Preserve Antique's defaults while allowing the same Smeltery tuning on NeoForge.
     public static final ModConfigSpec.IntValue SMELTERY_HEAT_TICK_RATE = BUILDER
             .defineInRange("smeltery.heatItemsTickrateSmeltery", 4, 1, 20);
+    // 焦黑熔炉保持原版独立的加热间隔，避免与冶炼炉的配置互相影响。
+    public static final ModConfigSpec.IntValue SEARED_FURNACE_HEAT_TICK_RATE = BUILDER
+            .translation("config.tconstruct.seared_furnace.heat_tick_rate")
+            .defineInRange("smeltery.heatItemsTickrateSearedFurnace", 4, 1, 20);
     public static final ModConfigSpec.IntValue LIQUID_TRANSFER_RATE = BUILDER
             .defineInRange("smeltery.liquidTransferRate", 6, 1, 144);
     public static final ModConfigSpec.DoubleValue ORE_TO_INGOT_RATIO = BUILDER

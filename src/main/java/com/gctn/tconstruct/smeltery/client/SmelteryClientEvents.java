@@ -26,6 +26,7 @@ public final class SmelteryClientEvents {
     @SubscribeEvent
     private static void screens(RegisterMenuScreensEvent event) {
         event.register(SmelteryModule.MENU.get(), SmelteryScreen::new);
+        event.register(SmelteryModule.FURNACE_MENU.get(), SmelteryScreen::new);
         event.register(SmelteryModule.TINKER_TANK_MENU.get(), TinkerTankScreen::new);
     }
 
@@ -37,6 +38,7 @@ public final class SmelteryClientEvents {
     @SubscribeEvent
     private static void renderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(SmelteryModule.CONTROLLER_ENTITY.get(), SmelteryRenderer::new);
+        event.registerBlockEntityRenderer(SmelteryModule.FURNACE_ENTITY.get(), SmelteryRenderer::new);
         event.registerBlockEntityRenderer(SmelteryModule.TINKER_TANK_ENTITY.get(), TinkerTankRenderer::new);
         event.registerBlockEntityRenderer(SmelteryModule.COMPONENT_ENTITY.get(), SmelteryRenderer::new);
     }

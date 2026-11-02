@@ -3,6 +3,28 @@
 The Gadgets creative tab contains the ported stone utilities and brownstone.
 All added item names and tooltips support English and Simplified Chinese.
 
+Craft a Wooden Hopper from five planks surrounding a wooden chest in the normal
+hopper pattern. It holds one stack and transfers items at half the normal hopper
+rate. It collects dropped items and pulls from inventories above, including
+sided inventories, and outputs downward or horizontally. Redstone does not lock
+it. Its screen keeps Antique's centered single slot and original texture. A
+comparator reads the stored stack, breaking it drops its contents, and it can be
+used as furnace fuel for 300 ticks.
+
+Five sugar canes in an X-shaped recipe make three Punji Sticks. Attach them to
+any solid face, including walls and ceilings. Living entities touching them take
+damage and briefly receive Slowness II; falling contact is more dangerous. Nearby
+sticks on the same face connect visually, including diagonal neighbors. Removing
+the supporting face drops the sticks as items.
+
+Wooden Rails use the normal rail shape, speed, curves, and slopes, with wooden
+sounds and lower hardness. Six planks around a wooden rod make four rails.
+Replace the rod with a wooden trapdoor to craft four Wooden Rails with a
+Trapdoor. While a hopper minecart is on a trapdoor rail, it can unload one item
+per tick into the inventory below, respecting that inventory's top-side item
+handler. Plain rails and chest minecarts do not perform this unloading. Full or
+unavailable inventories keep the cargo in the cart.
+
 Two stone or cobblestone blocks in a vertical crafting column make four Stone
 Rods. A rod below coal or charcoal makes four Stone Torches. Torches can stand on
 the ground or attach to a wall and produce light level 14 with normal flame

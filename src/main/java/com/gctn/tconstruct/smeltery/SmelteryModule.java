@@ -15,6 +15,7 @@ import com.gctn.tconstruct.smeltery.block.SearedLadderBlock;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryBlockEntity;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryComponentBlockEntity;
 import com.gctn.tconstruct.smeltery.block.entity.TinkerTankBlockEntity;
+import com.gctn.tconstruct.smeltery.block.entity.SearedFurnaceBlockEntity;
 import com.gctn.tconstruct.smeltery.block.SearedSlabBlock;
 import com.gctn.tconstruct.smeltery.block.SearedStairBlock;
 import com.gctn.tconstruct.smeltery.menu.SmelteryMenu;
@@ -50,6 +51,7 @@ public final class SmelteryModule {
     public static final Map<String, DeferredBlock<?>> SEARED_SHAPES = new LinkedHashMap<>();
     public static final DeferredBlock<SmelteryBlock> CONTROLLER = block("smeltery_controller", SmelteryBlock.Kind.CONTROLLER);
     public static final DeferredBlock<SmelteryBlock> TINKER_TANK = block("tinker_tank_controller", SmelteryBlock.Kind.TINKER_TANK);
+    public static final DeferredBlock<SmelteryBlock> FURNACE = block("seared_furnace_controller", SmelteryBlock.Kind.FURNACE);
     public static final DeferredBlock<SmelteryBlock> DRAIN = block("smeltery_drain", SmelteryBlock.Kind.DRAIN);
     public static final DeferredBlock<SmelteryBlock> TANK = block("seared_tank", SmelteryBlock.Kind.TANK);
     public static final DeferredBlock<SmelteryBlock> GAUGE = block("seared_gauge", SmelteryBlock.Kind.TANK);
@@ -114,11 +116,14 @@ public final class SmelteryModule {
             () -> BlockEntityType.Builder.of(SmelteryBlockEntity::new, CONTROLLER.get()).build(null));
     public static final Supplier<BlockEntityType<TinkerTankBlockEntity>> TINKER_TANK_ENTITY = ENTITIES.register("tinker_tank",
             () -> BlockEntityType.Builder.of(TinkerTankBlockEntity::new, TINKER_TANK.get()).build(null));
+    public static final Supplier<BlockEntityType<SearedFurnaceBlockEntity>> FURNACE_ENTITY = ENTITIES.register("seared_furnace",
+            () -> BlockEntityType.Builder.of(SearedFurnaceBlockEntity::new, FURNACE.get()).build(null));
     public static final Supplier<BlockEntityType<SmelteryComponentBlockEntity>> COMPONENT_ENTITY = ENTITIES.register("smeltery_component",
             () -> BlockEntityType.Builder.of(SmelteryComponentBlockEntity::new, java.util.stream.Stream.concat(
-                    BLOCKS.values().stream().filter(block -> block != CONTROLLER && block != TINKER_TANK),
+                    BLOCKS.values().stream().filter(block -> block != CONTROLLER && block != TINKER_TANK && block != FURNACE),
                     SEARED_SHAPES.values().stream()).map(Supplier::get).toArray(Block[]::new)).build(null));
     public static final Supplier<MenuType<SmelteryMenu>> MENU = MENUS.register("smeltery", () -> IMenuTypeExtension.create(SmelteryMenu::new));
+    public static final Supplier<MenuType<SmelteryMenu>> FURNACE_MENU = MENUS.register("seared_furnace", () -> IMenuTypeExtension.create(SmelteryMenu::furnace));
     public static final Supplier<MenuType<TinkerTankMenu>> TINKER_TANK_MENU = MENUS.register("tinker_tank", () -> IMenuTypeExtension.create(TinkerTankMenu::new));
     public static final Supplier<SoundEvent> LOOP = sound("smeltery_loop");
     public static final Supplier<SoundEvent> POUR = sound("faucet_pour");
@@ -135,8 +140,10 @@ public final class SmelteryModule {
     private static DeferredBlock<SmelteryBlock> block(String name, SmelteryBlock.Kind kind) {
         DeferredBlock<SmelteryBlock> block = BlockRegister.registerBlockWithItem(name,
                 () -> createBlock(kind, BlockBehaviour.Properties.of().strength(3.0F, 20.0F).requiresCorrectToolForDrops()
-                        .sound(kind == SmelteryBlock.Kind.TINKER_TANK ? SoundType.METAL : SoundType.STONE).noOcclusion()
-                        .lightLevel(state -> kind == SmelteryBlock.Kind.CONTROLLER && state.getValue(SmelteryBlock.ACTIVE) ? 13 : 0)));
+                        .sound(kind == SmelteryBlock.Kind.TINKER_TANK || kind == SmelteryBlock.Kind.FURNACE ? SoundType.METAL : SoundType.STONE).noOcclusion()
+                        // 流道等专用方块没有激活属性，先判断控制器种类再读取状态。
+                        .lightLevel(state -> (kind == SmelteryBlock.Kind.FURNACE || kind == SmelteryBlock.Kind.CONTROLLER)
+                                && state.getValue(SmelteryBlock.ACTIVE) ? kind == SmelteryBlock.Kind.FURNACE ? 15 : 13 : 0)));
         BLOCKS.put(name, block);
         return block;
     }
@@ -177,6 +184,7 @@ public final class SmelteryModule {
         // so automation cannot keep operating on an invalid or replaced controller through a cached handle.
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, COMPONENT_ENTITY.get(), (entity, side) -> entity.fluidHandler(side));
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CONTROLLER_ENTITY.get(), (entity, side) -> entity.itemHandler());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, FURNACE_ENTITY.get(), (entity, side) -> entity.itemHandler());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, COMPONENT_ENTITY.get(), (entity, side) -> entity.itemHandler(side));
         event.registerItem(Capabilities.FluidHandler.ITEM, (stack, context) ->
                 new net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack(TANK_FLUID, stack, 4000),

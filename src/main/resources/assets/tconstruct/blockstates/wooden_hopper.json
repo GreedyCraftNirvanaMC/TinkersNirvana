@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "tconstruct:block/hopper_down"
+    },
+    "facing=north": {
+      "model": "tconstruct:block/hopper_side"
+    },
+    "facing=south": {
+      "model": "tconstruct:block/hopper_side",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "tconstruct:block/hopper_side",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "tconstruct:block/hopper_side",
+      "y": 90
+    }
+  }
+}

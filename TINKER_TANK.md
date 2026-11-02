@@ -35,6 +35,6 @@ remain in the controller and become accessible after repairing the structure.
 Shrinking the tank retains excess fluid and prevents further filling until space
 is available. Removing the controller permanently removes its stored fluids.
 
-Integrations can implement `SmelteryMaster` for controller ownership, revalidation,
-and shared fluid access. Drains resolve their master on every operation, so a
+Integrations can implement `SmelteryMaster` for controller ownership/revalidation
+and `FluidSmelteryMaster` for shared fluid access. Drains resolve their master on every operation, so a
 cached capability cannot keep accessing a dismantled or replaced controller.

@@ -8,6 +8,7 @@ package com.gctn.tconstruct.smeltery.block;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryBlockEntity;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryComponentBlockEntity;
 import com.gctn.tconstruct.smeltery.block.entity.TinkerTankBlockEntity;
+import com.gctn.tconstruct.smeltery.block.entity.SearedFurnaceBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -82,6 +83,7 @@ public class SmelteryBlock extends BaseEntityBlock {
         return switch (kind) {
             case CONTROLLER -> new SmelteryBlockEntity(pos, state);
             case TINKER_TANK -> new TinkerTankBlockEntity(pos, state);
+            case FURNACE -> new SearedFurnaceBlockEntity(pos, state);
             default -> new SmelteryComponentBlockEntity(pos, state);
         };
     }
@@ -99,6 +101,8 @@ public class SmelteryBlock extends BaseEntityBlock {
             if (entity instanceof SmelteryBlockEntity controller) {
                 controller.tick();
             } else if (entity instanceof TinkerTankBlockEntity controller) {
+                controller.tick();
+            } else if (entity instanceof SearedFurnaceBlockEntity controller) {
                 controller.tick();
             } else if (entity instanceof SmelteryComponentBlockEntity component) {
                 component.tick();
@@ -164,6 +168,15 @@ public class SmelteryBlock extends BaseEntityBlock {
             }
             return true;
         }
+        if (level.getBlockEntity(pos) instanceof SearedFurnaceBlockEntity controller) {
+            if (!level.isClientSide && controller.active()) {
+                player.openMenu(controller, buffer -> {
+                    buffer.writeBlockPos(pos);
+                    buffer.writeVarInt(controller.getContainerSize());
+                });
+            }
+            return true;
+        }
         if (level.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity component) {
             if (kind == Kind.FAUCET || kind == Kind.TABLE || kind == Kind.BASIN || kind == Kind.CHANNEL) {
                 if (!level.isClientSide) {
@@ -178,6 +191,9 @@ public class SmelteryBlock extends BaseEntityBlock {
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighbor, BlockPos from, boolean moving) {
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof TinkerTankBlockEntity controller) {
+            controller.requestCheck();
+        }
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof SearedFurnaceBlockEntity controller) {
             controller.requestCheck();
         }
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity component) {
@@ -215,6 +231,9 @@ public class SmelteryBlock extends BaseEntityBlock {
                 Containers.dropContents(level, pos, controller);
             } else if (level.getBlockEntity(pos) instanceof TinkerTankBlockEntity controller) {
                 controller.releaseComponents();
+            } else if (level.getBlockEntity(pos) instanceof SearedFurnaceBlockEntity controller) {
+                controller.releaseComponents();
+                Containers.dropContents(level, pos, controller);
             } else if (level.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity component) {
                 component.onBroken();
             }
@@ -262,8 +281,22 @@ public class SmelteryBlock extends BaseEntityBlock {
         return Shapes.block();
     }
 
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (kind == Kind.FURNACE && state.getValue(ACTIVE)) {
+            // 成形时沿控制器正面播放原版的烟雾和火焰粒子。
+            Direction facing = state.getValue(FACING);
+            double side = random.nextDouble() * 0.4 - 0.2;
+            double x = pos.getX() + 0.5 + facing.getStepX() * 0.52 + (facing.getAxis() == Direction.Axis.Z ? side : 0);
+            double y = pos.getY() + 0.375 + random.nextFloat() * 0.5;
+            double z = pos.getZ() + 0.5 + facing.getStepZ() * 0.52 + (facing.getAxis() == Direction.Axis.X ? side : 0);
+            level.addParticle(net.minecraft.core.particles.ParticleTypes.SMOKE, x, y, z, 0, 0, 0);
+            level.addParticle(net.minecraft.core.particles.ParticleTypes.FLAME, x, y, z, 0, 0, 0);
+        }
+    }
+
     public enum Kind {
-        CONTROLLER(false), TINKER_TANK(false), BRICK(true), DRAIN(true), TANK(true), GLASS(true), LADDER(true),
+        CONTROLLER(false), TINKER_TANK(false), FURNACE(false), BRICK(true), DRAIN(true), TANK(true), GLASS(true), LADDER(true),
         FAUCET(false), CHANNEL(false), TABLE(false), BASIN(false);
 
         public final boolean structure;

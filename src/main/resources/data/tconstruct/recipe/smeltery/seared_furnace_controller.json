@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconstruct:seared_brick"
+    },
+    "B": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "result": {
+    "id": "tconstruct:seared_furnace_controller",
+    "count": 1
+  }
+}

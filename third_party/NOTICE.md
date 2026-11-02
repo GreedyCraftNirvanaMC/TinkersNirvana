@@ -15,6 +15,11 @@ Source areas used for this port:
 - `smeltery/multiblock/MultiblockTinkerTank.java`, `MultiblockTinker.java`
 - `smeltery/tileentity/TileTinkerTank.java`, `TileMultiblock.java`,
   `smeltery/inventory/ContainerTinkerTank.java`, and `smeltery/client/GuiTinkerTank.java`
+- `smeltery/multiblock/MultiblockSearedFurnace.java`,
+  `smeltery/tileentity/TileSearedFurnace.java`, `TileHeatingStructure.java`,
+  `TileHeatingStructureFuelTank.java`, `smeltery/inventory/ContainerSearedFurnace.java`,
+  `ContainerSearedFurnaceSideInventory.java`, `smeltery/client/GuiSearedFurnace.java`,
+  and `smeltery/client/module/GuiSearedFurnaceSideInventory.java`
 - `smeltery/block/BlockSearedSlab.java`, `BlockSearedSlab2.java`, `BlockSearedStairs.java`,
   and the original Tinker Tank controller models, GUI texture, and crafting recipe
 - `smeltery/tileentity/TileSmeltery.java`, `TileHeatingStructure.java`,
@@ -30,8 +35,12 @@ The port adapts these behaviors to modern block entities, data components,
 NeoForge capabilities, network payloads, menus, sprite sources, and rendering.
 
 The implementation in `src/main/java/com/gctn/tconstruct/gadgets` and its
-accompanying brownstone/stone utility assets are also adapted from TinkersAntique
+accompanying gadget assets are also adapted from TinkersAntique
 under LGPL-3.0-only. Source areas include `gadgets/TinkerGadgets.java`,
 `gadgets/block/BlockBrownstone.java`, `BlockBrownstoneSlab.java`,
 `BlockBrownstoneSlab2.java`, `BlockStoneTorch.java`, `BlockStoneLadder.java`,
+`BlockWoodenHopper.java`, `gadgets/tileentity/TileWoodenHopper.java`,
+`gadgets/WoodenHopperGUIDrawEvent.java`,
+`gadgets/block/BlockPunji.java` and its original core/connector models,
+`gadgets/block/BlockWoodRail.java`, `BlockWoodRailDropper.java`,
 and the corresponding original block textures, models, recipes, and translations.

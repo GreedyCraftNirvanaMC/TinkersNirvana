@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- Port Wooden Rails and trapdoor rails, native curves/slopes, hopper-minecart
+  unloading, inventory rejection/rollback handling, recipes, and original textures.
+- Port Punji Sticks with six-face placement, connected models, support removal,
+  contact/falling damage, Slowness II, crafting, and Chinese/English text.
+- Complete missing Chinese names for existing materials, tools, parts, tabs,
+  tool-station controls, and stat tooltips.
+- Port the single-slot Wooden Hopper, slower native transfers, redstone-independent
+  operation, original centered-slot screen, crafting, fuel value, and translations.
+- Port the Seared Furnace multiblock, shared liquid fuel, sixteen-item batches,
+  retained cooked outputs, original screen/status bars, automation, and configuration.
+- Save multiblock inventory indices as integers, retaining compatibility with
+  older byte indices and preventing collisions above slot 255.
+- Page very large heating inventories within vanilla network slot limits while
+  preserving full-inventory shift transfers and double-click collection.
+- Restore component ownership when replacing walls or drains without changing
+  a formed structure's dimensions.
 - Port brownstone's twelve styles, slabs, stairs, walking boost, decoration cycles,
   and smelting recipes, plus stone rods, floor/wall torches, and ladders.
 - Add a Gadgets creative tab and Chinese/English names and tooltips for the new items.

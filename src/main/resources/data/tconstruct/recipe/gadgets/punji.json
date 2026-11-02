@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "A A",
+    " A ",
+    "A A"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:sugar_cane"
+    }
+  },
+  "result": {
+    "id": "tconstruct:punji",
+    "count": 3
+  }
+}

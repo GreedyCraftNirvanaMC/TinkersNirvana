@@ -8,6 +8,7 @@ package com.gctn.tconstruct.smeltery.client;
 import com.gctn.tconstruct.smeltery.block.SmelteryBlock;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryBlockEntity;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryComponentBlockEntity;
+import com.gctn.tconstruct.smeltery.block.entity.SearedFurnaceBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -34,6 +35,9 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
 
     @Override
     public void render(T entity, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
+        if (entity instanceof SearedFurnaceBlockEntity furnace) {
+            SmelterySounds.ensure(furnace);
+        }
         if (entity instanceof SmelteryBlockEntity controller && controller.active() && controller.min() != null && controller.max() != null) {
             SmelterySounds.ensure(controller);
             BlockPos min = controller.min().subtract(controller.getBlockPos());

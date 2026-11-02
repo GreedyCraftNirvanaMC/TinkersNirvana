@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "W W",
+    "WCW",
+    " W "
+  ],
+  "key": {
+    "W": {
+      "tag": "minecraft:planks"
+    },
+    "C": {
+      "tag": "c:chests/wooden"
+    }
+  },
+  "result": {
+    "id": "tconstruct:wooden_hopper",
+    "count": 1
+  }
+}

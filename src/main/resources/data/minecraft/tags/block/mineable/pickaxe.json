@@ -95,6 +95,7 @@
     "tconstruct:brownstone_brick_small_stairs",
     "tconstruct:brownstone_tile",
     "tconstruct:brownstone_tile_slab",
-    "tconstruct:brownstone_tile_stairs"
+    "tconstruct:brownstone_tile_stairs",
+    "tconstruct:seared_furnace_controller"
   ]
 }

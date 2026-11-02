@@ -5,10 +5,12 @@
  */
 package com.gctn.tconstruct.smeltery.block.entity;
 
-import com.gctn.tconstruct.smeltery.SmelteryTank;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
-/** 冶炼炉和工匠储罐共用归属检查，排液口只访问仍然有效的控制器。 */
+import java.util.List;
+
+/** 焦黑多方块共用归属检查，组成方块只通知仍然有效的控制器。 */
 public interface SmelteryMaster {
     BlockPos getBlockPos();
 
@@ -16,5 +18,12 @@ public interface SmelteryMaster {
 
     void requestCheck();
 
-    SmelteryTank liquids();
+    default void assignComponents(Level level, List<BlockPos> blocks) {
+        // 尺寸不变也可能更换了排液口或顶板，必须为新创建的组成方块恢复归属。
+        for (BlockPos pos : blocks) {
+            if (level.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity component) {
+                component.assign(getBlockPos());
+            }
+        }
+    }
 }

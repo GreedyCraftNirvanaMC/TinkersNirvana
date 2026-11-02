@@ -343,5 +343,21 @@
   "block.tconstruct.brownstone_tile": "Brownstone Tiles",
   "block.tconstruct.brownstone_tile_slab": "Brownstone Tiles Slab",
   "block.tconstruct.brownstone_tile_stairs": "Brownstone Tiles Stairs",
-  "block.tconstruct.stone_wall_torch": "Stone Torch"
+  "block.tconstruct.stone_wall_torch": "Stone Torch",
+  "gui.searedfurnace.name": "Seared Furnace",
+  "gui.searedfurnace.progress.complete": "Item is finished smelting",
+  "gui.searedfurnace.progress.no_recipe": "Item can't be smelted",
+  "gui.searedfurnace.progress.no_fuel": "No valid fuel in seared furnace",
+  "gui.searedfurnace.progress.no_heat": "Not enough heat to smelt this item",
+  "gui.searedfurnace.progress.no_space": "Resulting stack is too large for the slot",
+  "block.tconstruct.seared_furnace_controller": "Seared Furnace Controller",
+  "config.tconstruct.seared_furnace.heat_tick_rate": "Seared Furnace Heating Interval",
+  "config.tconstruct.seared_furnace.heat_tick_rate.tooltip": "Ticks between Seared Furnace heating steps.",
+  "block.tconstruct.wooden_hopper": "Wooden Hopper",
+  "tooltip.tconstruct.wooden_hopper": "Slower, cheaper variant of the hopper",
+  "block.tconstruct.punji": "Punji Sticks",
+  "tooltip.tconstruct.punji": "Pointy! Also sticks to walls.",
+  "block.tconstruct.wood_rail": "Wooden Rail",
+  "block.tconstruct.wood_rail_trapdoor": "Wooden Rail with a Trapdoor",
+  "tooltip.tconstruct.wood_rail_trapdoor": "Hopper minecarts can insert into the block below."
 }

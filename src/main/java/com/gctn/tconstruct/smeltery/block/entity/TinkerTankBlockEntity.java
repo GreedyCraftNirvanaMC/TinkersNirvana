@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /** 仅存储液体；不运行冶炼炉的燃料、加热、合金或实体熔炼逻辑。 */
-public class TinkerTankBlockEntity extends BlockEntity implements MenuProvider, SmelteryMaster {
+public class TinkerTankBlockEntity extends BlockEntity implements MenuProvider, FluidSmelteryMaster {
     public final SmelteryTank liquids = new SmelteryTank(this::changed);
     private TinkerTankStructure structure;
     private Set<BlockPos> members = Set.of();
@@ -75,6 +75,7 @@ public class TinkerTankBlockEntity extends BlockEntity implements MenuProvider, 
         TinkerTankStructure found = TinkerTankStructure.detect(level, worldPosition,
                 getBlockState().getValue(SmelteryBlock.FACING).getOpposite());
         if (found != null && active() && found.equals(structure)) {
+            assignComponents(level, found.blocks());
             return;
         }
         if (found == null && !active && structure == null) {
@@ -89,11 +90,7 @@ public class TinkerTankBlockEntity extends BlockEntity implements MenuProvider, 
         // 原版失效时使用空尺寸计算占位容量，但排液口必须停止访问这些储液。
         liquids.setCapacity(found == null ? 32000 : found.capacity());
         if (found != null) {
-            for (BlockPos pos : found.blocks()) {
-                if (level.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity component) {
-                    component.assign(worldPosition);
-                }
-            }
+            assignComponents(level, found.blocks());
         }
         level.setBlock(worldPosition, getBlockState().setValue(SmelteryBlock.ACTIVE, active), 3);
         changed();
