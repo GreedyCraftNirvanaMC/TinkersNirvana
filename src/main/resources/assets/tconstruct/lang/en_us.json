@@ -405,5 +405,17 @@
   "tooltip.tconstruct.slime_congealed": "Lets you jump really high",
   "tab.tconstruct.slime": "Slime",
   "config.tconstruct.slime.match_vanilla": "Mixed slimeballs make pink slime",
-  "config.tconstruct.slime.match_vanilla.tooltip": "Keep uniform slimeball colors separate and turn mixed slimeballs into pink slime blocks."
+  "config.tconstruct.slime.match_vanilla.tooltip": "Keep uniform slimeball colors separate and turn mixed slimeballs into pink slime blocks.",
+  "block.tconstruct.slimy_mud_green": "Green Slimy Mud",
+  "block.tconstruct.slimy_mud_blue": "Blue Slimy Mud",
+  "block.tconstruct.graveyard_soil": "Graveyard Soil",
+  "block.tconstruct.consecrated_soil": "Consecrated Soil",
+  "block.tconstruct.slimy_mud_magma": "Slimy Magma Mud",
+  "item.tconstruct.slimecrystal_green": "Green Slime Crystal",
+  "item.tconstruct.slimecrystal_blue": "Blue Slime Crystal",
+  "item.tconstruct.slimecrystal_magma": "Magma Slime Crystal",
+  "tooltip.tconstruct.soil.grout": "I am Grout!",
+  "tooltip.tconstruct.soil.slimy_mud": "Slows, but lets you jump even higher",
+  "tooltip.tconstruct.soil.graveyard": "Heals undead",
+  "tooltip.tconstruct.soil.consecrated": "Hurts undead"
 }

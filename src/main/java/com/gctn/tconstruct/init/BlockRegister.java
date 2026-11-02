@@ -40,6 +40,7 @@ public class BlockRegister {
         entries.addAll(TableBlocks.entries());
         entries.addAll(com.gctn.tconstruct.smeltery.SmelteryModule.entries());
         entries.addAll(com.gctn.tconstruct.gadgets.GadgetModule.entries());
+        entries.addAll(com.gctn.tconstruct.common.soil.SoilModule.entries());
         return entries;
     }
 

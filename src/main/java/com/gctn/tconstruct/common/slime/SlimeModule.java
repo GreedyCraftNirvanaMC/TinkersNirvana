@@ -64,6 +64,8 @@ public final class SlimeModule {
                     FULL_BLOCKS.forEach((color, block) -> { if (!color.equals("pink")) { output.accept(block.get()); } });
                     CONGEALED.forEach((color, block) -> { if (!color.equals("pink")) { output.accept(block.get()); } });
                     BALLS.values().forEach(item -> output.accept(item.get()));
+                    com.gctn.tconstruct.common.soil.SoilModule.BLOCKS.values().forEach(block -> output.accept(block.get()));
+                    com.gctn.tconstruct.common.soil.SoilModule.CRYSTALS.values().forEach(item -> output.accept(item.get()));
                 }).build());
     }
 

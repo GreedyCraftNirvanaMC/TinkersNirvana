@@ -57,3 +57,8 @@ slime assets are adapted from TinkersAntique's `shared/TinkerCommons.java`,
 and Chinese/English translations. Food tooltip and always-edible behavior
 follow Mantle's `slimeknights.mantle.item.ItemEdible` used by Antique. These ports
 are distributed under LGPL-3.0-only with the other adapted content.
+
+The `common/soil` implementation and soil/crystal resources adapt Antique's
+`shared/block/BlockSoil.java`, soil and crystal registration in
+`shared/TinkerCommons.java`, smelting registration in `tools/TinkerTools.java`,
+and the original soil recipes, textures, names, and tooltips under the same license.

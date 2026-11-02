@@ -4,6 +4,11 @@
     "tconstruct:grout",
     "tconstruct:mud_bricks",
     "tconstruct:mud_bricks_slab",
-    "tconstruct:mud_bricks_stairs"
+    "tconstruct:mud_bricks_stairs",
+    "tconstruct:slimy_mud_green",
+    "tconstruct:slimy_mud_blue",
+    "tconstruct:graveyard_soil",
+    "tconstruct:consecrated_soil",
+    "tconstruct:slimy_mud_magma"
   ]
 }

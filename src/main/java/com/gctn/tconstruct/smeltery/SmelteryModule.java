@@ -69,7 +69,9 @@ public final class SmelteryModule {
     public static final DeferredBlock<SmelteryBlock> CHANNEL = block("channel", SmelteryBlock.Kind.CHANNEL);
     public static final DeferredBlock<SmelteryBlock> TABLE = block("casting_table", SmelteryBlock.Kind.TABLE);
     public static final DeferredBlock<SmelteryBlock> BASIN = block("casting_basin", SmelteryBlock.Kind.BASIN);
-    public static final DeferredBlock<Block> GROUT = BlockRegister.registerBlockWithItem("grout", () -> new Block(BlockBehaviour.Properties.of().strength(0.5F).sound(SoundType.GRAVEL)));
+    public static final DeferredBlock<Block> GROUT = BlockRegister.registerBlockWithItem("grout", () ->
+            new com.gctn.tconstruct.common.soil.AntiqueSoilBlock(com.gctn.tconstruct.common.soil.AntiqueSoilBlock.Kind.GROUT,
+                    com.gctn.tconstruct.common.soil.AntiqueSoilBlock.soilProperties()));
     public static final DeferredBlock<Block> MUD_BRICKS = BlockRegister.registerBlockWithItem("mud_bricks", () -> new Block(BlockBehaviour.Properties.of().strength(2.0F).sound(SoundType.GRAVEL)));
     public static final DeferredBlock<Block> LAVAWOOD = BlockRegister.registerBlockWithItem("lavawood", () ->
             new Block(BlockBehaviour.Properties.of().strength(2.0F, 4.2F).sound(SoundType.WOOD).lightLevel(state -> 7)));

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Port the remaining five soil variants, their walking/undead effects, slime mud
+  recipes, three slime crystals and smelting, and original soil physical values.
 - Port colored slime blocks, congealed slime, edible slimeballs, original effects,
   bounce and support behavior, piston hooks, reversible recipes, mixed-slime
   configuration, fluid recipes, original assets, and Chinese/English text.
