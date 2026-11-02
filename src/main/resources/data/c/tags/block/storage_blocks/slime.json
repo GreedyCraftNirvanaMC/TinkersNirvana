@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "#c:storage_blocks/slime/green",
+    "#c:storage_blocks/slime/blue",
+    "#c:storage_blocks/slime/purple",
+    "#c:storage_blocks/slime/blood",
+    "#c:storage_blocks/slime/magma",
+    "#c:storage_blocks/slime/pink"
+  ]
+}

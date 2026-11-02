@@ -34,6 +34,10 @@ public class Config {
     public static final ModConfigSpec.BooleanValue CLEAR_GLASS_SILK_TOUCH = BUILDER
             .translation("config.tconstruct.clear_glass.silk_touch")
             .define("smeltery.clearGlassSilkTouch", true);
+    // 默认混色得到绿色史莱姆块；开启后保留纯绿色配方，混色改为隐藏的粉色块。
+    public static final ModConfigSpec.BooleanValue MATCH_VANILLA_SLIME_BLOCK = BUILDER
+            .translation("config.tconstruct.slime.match_vanilla")
+            .define("general.matchVanillaSlimeblock", false);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> MELTING_IGNORE = BUILDER
             .comment("Items or #item_tags ignored when deriving melting values from crafting ingredients.")
             .defineList("smeltery.oredictMeltingIgnore", List.of("#minecraft:planks", "#c:rods/wooden", "minecraft:stick",

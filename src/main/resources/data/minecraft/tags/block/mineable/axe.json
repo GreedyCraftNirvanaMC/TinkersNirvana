@@ -7,5 +7,13 @@
     "tconstruct:firewood_stairs",
     "tconstruct:lavawood_slab",
     "tconstruct:lavawood_stairs"
+  ],
+  "remove": [
+    "tconstruct:slime_congealed_green",
+    "tconstruct:slime_congealed_blue",
+    "tconstruct:slime_congealed_purple",
+    "tconstruct:slime_congealed_blood",
+    "tconstruct:slime_congealed_magma",
+    "tconstruct:slime_congealed_pink"
   ]
 }

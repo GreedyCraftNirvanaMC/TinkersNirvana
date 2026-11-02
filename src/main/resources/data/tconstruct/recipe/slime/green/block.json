@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:slime_balls/green"
+    }
+  },
+  "result": {
+    "id": "minecraft:slime_block",
+    "count": 1
+  }
+}

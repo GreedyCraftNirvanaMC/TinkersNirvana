@@ -98,6 +98,27 @@ public final class SmelteryRecipes {
         addMelting(Items.SLIME_BALL, SmelteryFluids.get("greenslime"), 250);
         addMelting(Items.SLIME_BLOCK, SmelteryFluids.get("greenslime"), 2250);
         CASTING.add(new Casting(false, ItemStack::isEmpty, SmelteryFluids.get("greenslime"), 250, new ItemStack(Items.SLIME_BALL), 50, false, false));
+        // 保留原版仅对绿、蓝、紫和血液注册的熔炼与浇铸，不把熔岩或粉色史莱姆误作流体。
+        for (String color : new String[]{"green", "blue", "purple", "blood"}) {
+            String fluidName = switch (color) {
+                case "green" -> "greenslime";
+                case "blue" -> "blueslime";
+                case "purple" -> "purpleslime";
+                default -> "blood";
+            };
+            var fluid = SmelteryFluids.get(fluidName);
+            var congealed = com.gctn.tconstruct.common.slime.SlimeModule.CONGEALED.get(color).get();
+            addMelting(congealed.asItem(), fluid, 1000);
+            CASTING.add(new Casting(true, ItemStack::isEmpty, fluid, 1000, new ItemStack(congealed), 100, false, false));
+            if (!color.equals("green")) {
+                var ball = com.gctn.tconstruct.common.slime.SlimeModule.ball(color);
+                addMelting(ball, fluid, 250);
+                CASTING.add(new Casting(false, ItemStack::isEmpty, fluid, 250, new ItemStack(ball), 50, false, false));
+                if (!color.equals("blood")) {
+                    addMelting(com.gctn.tconstruct.common.slime.SlimeModule.fullBlock(color).asItem(), fluid, 2250);
+                }
+            }
+        }
         special("obsidian", Items.OBSIDIAN, 288, "", true, -1);
         addMelting(Items.CLAY_BALL, SmelteryFluids.get("clay"), 144);
         addMelting(Items.CLAY, SmelteryFluids.get("clay"), 576);

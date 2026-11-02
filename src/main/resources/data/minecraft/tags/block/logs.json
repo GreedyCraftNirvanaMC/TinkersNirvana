@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "tconstruct:slime_congealed_green",
+    "tconstruct:slime_congealed_blue",
+    "tconstruct:slime_congealed_purple",
+    "tconstruct:slime_congealed_blood",
+    "tconstruct:slime_congealed_magma",
+    "tconstruct:slime_congealed_pink"
+  ]
+}

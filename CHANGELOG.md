@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Port colored slime blocks, congealed slime, edible slimeballs, original effects,
+  bounce and support behavior, piston hooks, reversible recipes, mixed-slime
+  configuration, fluid recipes, original assets, and Chinese/English text.
 - Port all sixteen stained clear glass colors, connected textures, original
   tint/beacon palette, dye recipes, glass tags, melting, and Silk Touch configuration.
 - Restore standalone glass borders, transparent-block physical properties, and

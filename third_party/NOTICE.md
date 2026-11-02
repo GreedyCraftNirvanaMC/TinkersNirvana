@@ -49,3 +49,11 @@ under LGPL-3.0-only. Source areas include `gadgets/TinkerGadgets.java`,
 `BlockDecoGroundSlab.java`, `BlockMetal.java`, `BlockCommonMetal.java`,
 and the firewood/lavawood/mud-brick shape recipes,
 and the corresponding original block textures, models, recipes, and translations.
+
+The implementation in `src/main/java/com/gctn/tconstruct/common/slime` and its
+slime assets are adapted from TinkersAntique's `shared/TinkerCommons.java`,
+`shared/block/BlockSlime.java`, `BlockSlimeCongealed.java`, `ShapedFallbackRecipe`,
+`smeltery/TinkerSmeltery.java`, slime block/item textures, models, recipes,
+and Chinese/English translations. Food tooltip and always-edible behavior
+follow Mantle's `slimeknights.mantle.item.ItemEdible` used by Antique. These ports
+are distributed under LGPL-3.0-only with the other adapted content.
