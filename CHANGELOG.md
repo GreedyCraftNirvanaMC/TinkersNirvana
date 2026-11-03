@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Apply the supplied Chinese metal glossary to ingot, nugget, and storage-block
+  names, and add the missing bilingual Cobalt Ore name.
 - Port blue/purple slime mobs and spawn eggs, original jumping/squish/fall rules,
   colored particles and loot, same-color splitting, source tints and texture,
   spawn predicates, and type-specific Smeltery fluids.

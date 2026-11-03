@@ -428,5 +428,6 @@
   "entity.tconstruct.blueslime": "Sky Slime",
   "item.tconstruct.blueslime_spawn_egg": "Sky Slime Spawn Egg",
   "entity.tconstruct.purpleslime": "Squire Slime",
-  "item.tconstruct.purpleslime_spawn_egg": "Squire Slime Spawn Egg"
+  "item.tconstruct.purpleslime_spawn_egg": "Squire Slime Spawn Egg",
+  "block.tconstruct.cobalt_ore": "Cobalt Ore"
 }
