@@ -7,9 +7,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 public class Material {
     public final String identifier;
@@ -26,6 +28,7 @@ public class Material {
     protected boolean castable = false;
 
     private BooleanSupplier availability = () -> true;
+    private Supplier<ItemStack> representativeItem = () -> ItemStack.EMPTY;
 
     // 参数不全的默认初始化
     public Material(String identifier, int color) { this(identifier, color, false); }
@@ -56,6 +59,14 @@ public class Material {
         this.availability = Objects.requireNonNull(availability);
         return this;
     }
+
+    /** Optional display stack, resolved after item registration; callers receive an independent single-item copy. */
+    public Material setRepresentativeItem(Supplier<ItemStack> item) {
+        this.representativeItem = Objects.requireNonNull(item);
+        return this;
+    }
+
+    public ItemStack getRepresentativeItem() { return representativeItem.get().copyWithCount(1); }
 
     /** All required item tags must contain an item, matching Antique's material integration requirements. */
     public Material requireItems(String... tags) {

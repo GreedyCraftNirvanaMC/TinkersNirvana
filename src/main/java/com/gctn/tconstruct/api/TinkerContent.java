@@ -30,6 +30,11 @@ public final class TinkerContent {
         return material;
     }
 
+    public static void representativeItem(Material material, String itemId) {
+        ResourceLocation id = ResourceLocation.parse(itemId);
+        material.setRepresentativeItem(() -> new net.minecraft.world.item.ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(id)));
+    }
+
     public static void head(Material material, int durability, float speed, float attack, int tier) {
         if (durability < 1 || speed <= 0 || !Float.isFinite(speed) || attack < 0 || !Float.isFinite(attack) || tier < 0) {
             throw new IllegalArgumentException("Invalid head stats");

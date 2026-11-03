@@ -28,6 +28,8 @@ StartupEvents.postInit(event => {
 
 注册材料默认可见。可调用 `material.requireItems('c:ingots/my_metal')`，要求对应物品标签非空后才显示于宝典和创造目录；多个参数要求全部标签非空，标签重载后重新打开目录即可读取新状态。Java 扩展也可用 `material.setAvailability(BooleanSupplier)` 提供其它条件。铅、银、琥珀金等内置兼容材料沿用 Antique 的原料存在条件，保留其注册数据供其它模组启用。宝典打开时读取当前材料属性和词条，不另存一份固定数值。
 
+宝典代表图标优先使用匹配原料中的金属锭，其次是一份材料的原料，再回退到其它原料或部件。可用 `TinkerContent.representativeItem(material, 'mymod:my_ingot')` 显式指定；Java 扩展也可用 `material.setRepresentativeItem(() -> new ItemStack(...))` 提供带组件的图标。该设置只用于显示，不加入加工原料。
+
 挖掘等级沿用 `HarvestLevels`：0 木质、1 石质、2 铁质、3 钻石、4 及以上下界合金原版拒绝标签。玩家看到的名称保留 Antique 名称。
 
 弓臂需要 `Bow` 与 `Head`，弩身需要 `Handle` 与 `Extra`。使用弓、弩或弹药特有材料时，提供对应属性后才会生成可用部件。

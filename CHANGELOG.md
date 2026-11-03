@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Prefer ingots for material book icons instead of registry-first storage blocks,
+  and expose explicit representative item overrides for Java and KubeJS addons.
+
 - Restore Antique's ingredient-tag visibility conditions for optional materials,
   expose material availability predicates, provide fallback book icons for addon
   materials, and round book-page clipping outwards at fractional GUI origins.

@@ -118,8 +118,11 @@ public final class BookContents {
         catalog.stream().filter(stack -> ToolModifiers.ingredientValue(definition, stack) > 0).limit(12).forEach(icons::add);
     }
     private static void material(List<Page> pages, Material material, Map<String, String> labels, List<Input> inputs) {
+        ItemStack representative = material.getRepresentativeItem();
+        if (representative.isEmpty()) { representative = inputs.stream().min(Comparator.comparingInt(BookContents::representativePriority)).map(Input::stack).orElse(ItemStack.EMPTY); }
         for (boolean ranged : List.of(false, true)) {
             List<Component> text = new ArrayList<>(); List<ItemStack> icons = new ArrayList<>();
+            if (!representative.isEmpty()) { icons.add(representative); }
             for (String position : List.of("Head", "Handle", "Extra", "Bow", "BowString", "Shaft", "Fletching")) {
                 if (ranged != Set.of("Bow", "BowString", "Shaft", "Fletching").contains(position) || !material.hasStats(position)) { continue; }
                 text.add(Component.translatable("book.tconstruct.group." + position)); AbstractMaterialStats stats = material.stats.get(position);
@@ -137,7 +140,7 @@ public final class BookContents {
             if (labels.containsKey(material.identifier + ".flavour")) { text.addFirst(Component.literal(labels.get(material.identifier + ".flavour"))); }
             if (material.isCraftable()) { text.add(Component.translatable("book.tconstruct.craftable")); }
             if (material.isCastable()) { text.add(Component.translatable("book.tconstruct.castable")); }
-            if (!inputs.isEmpty()) { text.add(Component.translatable("book.tconstruct.ingredients")); for (Input input : inputs) { icons.add(input.stack); String value = java.math.BigDecimal.valueOf(input.value).setScale(3, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString(); text.add(Component.translatable("book.tconstruct.material_value", input.stack.getHoverName(), value)); } }
+            if (!inputs.isEmpty()) { text.add(Component.translatable("book.tconstruct.ingredients")); for (Input input : inputs) { if (!ItemStack.isSameItemSameComponents(input.stack, representative)) { icons.add(input.stack); } String value = java.math.BigDecimal.valueOf(input.value).setScale(3, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString(); text.add(Component.translatable("book.tconstruct.material_value", input.stack.getHoverName(), value)); } }
             if (icons.isEmpty()) {
                 AntiqueParts.entries().values().stream().filter(part -> material.hasStats(part.stat()))
                         .map(part -> part.create(material)).filter(stack -> !stack.isEmpty()).findFirst().ifPresent(icons::add);
@@ -146,6 +149,11 @@ public final class BookContents {
             if (labels.containsKey(material.identifier + ".flavour")) { metadata.addProperty("flavour", labels.get(material.identifier + ".flavour")); }
             pages.add(new Page("material:" + material.identifier + (ranged ? ":ranged" : ""), ranged ? "bowmaterials" : "materials", 0, Component.translatable("material." + material.identifier + ".name").withColor(material.color), List.copyOf(text), List.copyOf(icons), null, null, metadata));
         }
+    }
+    private static int representativePriority(Input input) {
+        boolean ingot = input.stack.getTags().anyMatch(tag -> tag.location().getNamespace().equals("c")
+                && (tag.location().getPath().equals("ingots") || tag.location().getPath().startsWith("ingots/")));
+        return ingot ? 0 : Math.abs(input.value - 1) < 0.00001F ? 1 : 2;
     }
     private static void stat(List<Component> text, String name, Object value) { text.add(Component.translatable("book.tconstruct.stat." + name, value)); }
     static List<Component> text(JsonObject data, String name) {
