@@ -1,0 +1,18 @@
+{
+  "title": "冶炼炉",
+  "image": {
+    "file": "tconstruct:textures/gui/book/smeltery.png",
+    "texture_width": 854,
+    "texture_height": 480,
+    "width": 150,
+    "height": 84
+  },
+  "text": [
+    {
+      "text": "这里有许多冶炼炉。但是这个是我的。而且它熔化东西非常的棒。"
+    }
+  ],
+  "section": "seared_devices",
+  "order": 0,
+  "id": "seared_devices/smeltery_intro"
+}

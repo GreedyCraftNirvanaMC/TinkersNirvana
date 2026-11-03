@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "tconstruct:smeltery"
+    "tconstruct:smeltery",
+    "tconstruct:fiery"
   ]
 }

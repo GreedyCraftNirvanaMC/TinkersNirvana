@@ -40,6 +40,12 @@ public final class ToolGameplayEvents {
     private ToolGameplayEvents() {}
 
     @SubscribeEvent
+    public static void anvil(net.neoforged.neoforge.event.AnvilUpdateEvent event) {
+        if (!com.gctn.tconstruct.Config.REPAIR_TOOLS_ON_ANVILS.get()
+                && (event.getLeft().getItem() instanceof TinkerTools || event.getRight().getItem() instanceof TinkerTools)) { event.setCanceled(true); }
+    }
+
+    @SubscribeEvent
     public static void drops(BlockDropsEvent event) {
         ItemStack tool = event.getTool();
         if (!(tool.getItem() instanceof TinkerTools) || TinkerTools.isBroken(tool)) { return; }
@@ -58,13 +64,32 @@ public final class ToolGameplayEvents {
 
     @SubscribeEvent
     public static void projectileHit(net.neoforged.neoforge.event.entity.living.LivingDamageEvent.Post event) {
-        if (event.getSource().getDirectEntity() instanceof AntiqueProjectile || event.getNewDamage() <= 0
+        if (event.getEntity().level().isClientSide || event.getNewDamage() <= 0
                 || !(event.getSource().getEntity() instanceof LivingEntity attacker)) { return; }
-        ItemStack tool = ToolRanged.traitsFor(event.getSource().getDirectEntity());
-        if (!tool.isEmpty()) {
-            ToolTraits.forEach(tool, (trait, level) -> trait.afterHit(tool, level, event.getEntity(), attacker));
-            ToolModifiers.afterHit(tool, event.getEntity(), attacker);
+        ItemStack projectile = ToolRanged.traitsFor(event.getSource().getDirectEntity());
+        ItemStack tool = projectile;
+        if (tool.isEmpty() && event.getSource().getDirectEntity() == attacker
+                && (event.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK) || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK))) { tool = attacker.getMainHandItem(); }
+        if (tool.getItem() instanceof TinkerTools && !TinkerTools.isBroken(tool)) {
+            ItemStack used = tool;
+            ToolModifiers.afterDamage(used, attacker, event.getNewDamage());
+            ToolTraits.forEach(used, (trait, level) -> trait.afterDamage(used, level, attacker, event));
         }
+        if (!projectile.isEmpty() && !(event.getSource().getDirectEntity() instanceof AntiqueProjectile)) {
+            ItemStack used = projectile;
+            ToolTraits.forEach(used, (trait, level) -> trait.afterHit(used, level, event.getEntity(), attacker));
+            ToolModifiers.afterHit(used, event.getEntity(), attacker);
+        }
+    }
+
+    @SubscribeEvent(priority = net.neoforged.bus.api.EventPriority.LOWEST)
+    public static void fieryIgnition(net.neoforged.neoforge.event.entity.living.LivingDamageEvent.Pre event) {
+        if (event.getEntity().level().isClientSide || event.getNewDamage() <= 0 || !(event.getSource().getEntity() instanceof LivingEntity attacker)) { return; }
+        ItemStack tool = ToolRanged.traitsFor(event.getSource().getDirectEntity());
+        if (tool.isEmpty() && event.getSource().getDirectEntity() == attacker
+                && (event.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK) || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK))) { tool = attacker.getMainHandItem(); }
+        int fire = ToolModifiers.units(tool, "fiery");
+        if (tool.getItem() instanceof TinkerTools && !TinkerTools.isBroken(tool) && fire > 0) { event.getEntity().igniteForSeconds(1 + fire / 8); }
     }
 
     @SubscribeEvent
@@ -127,18 +152,7 @@ public final class ToolGameplayEvents {
             });
             if (!kept.isEmpty()) { player.getPersistentData().put(SOULBOUND, kept); }
         }
-        if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) { return; }
-        ItemStack tool = event.getSource().getDirectEntity() instanceof AntiqueProjectile arrow ? arrow.traitTool() : attacker.getMainHandItem();
-        if (!(tool.getItem() instanceof AntiqueTool item) || TinkerTools.isBroken(tool)) { return; }
-        int level = ToolModifiers.level(tool, "beheading") + (item.definition().action() == ToolDefinition.Action.CLEAVER ? 2 : 0);
-        if (level == 0 || attacker.getRandom().nextFloat() >= level * .1F) { return; }
-        var type = event.getEntity().getType();
-        var head = type == net.minecraft.world.entity.EntityType.ZOMBIE ? Items.ZOMBIE_HEAD
-                : type == net.minecraft.world.entity.EntityType.SKELETON ? Items.SKELETON_SKULL
-                : type == net.minecraft.world.entity.EntityType.WITHER_SKELETON ? Items.WITHER_SKELETON_SKULL
-                : type == net.minecraft.world.entity.EntityType.CREEPER ? Items.CREEPER_HEAD
-                : type == net.minecraft.world.entity.EntityType.PIGLIN ? Items.PIGLIN_HEAD : null;
-        if (head != null) { event.getDrops().add(new ItemEntity(event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), new ItemStack(head))); }
+        HeadDrops.add(event);
     }
 
     @SubscribeEvent

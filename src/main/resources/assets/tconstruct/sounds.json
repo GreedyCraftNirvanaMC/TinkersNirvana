@@ -44,5 +44,10 @@
     "sounds": [
       "tconstruct:crossbow_reload"
     ]
+  },
+  "slimesling": {
+    "sounds": [
+      "tconstruct:slimesling"
+    ]
   }
 }

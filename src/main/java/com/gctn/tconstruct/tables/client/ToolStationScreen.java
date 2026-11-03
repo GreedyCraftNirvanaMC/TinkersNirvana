@@ -38,6 +38,9 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     };
 
     private final List<ModeButton> modeButtons = new ArrayList<>();
+    private final NearbyInventoryPanel nearbyPanel;
+    private net.minecraft.client.gui.components.EditBox nameField;
+    private String observedName;
 
     public ToolStationScreen(ToolStationMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -47,12 +50,20 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
         this.titleLabelY = 6;
         this.inventoryLabelX = 8;
         this.inventoryLabelY = this.imageHeight - 94;
+        nearbyPanel = new NearbyInventoryPanel(menu.nearby());
     }
 
     @Override
     protected void init() {
         super.init();
         this.modeButtons.clear();
+        nearbyPanel.init(leftPos, topPos, menu.containerId, this::addRenderableWidget);
+        nameField = new net.minecraft.client.gui.components.EditBox(font, leftPos + 79, topPos + 18, 88, 12, Component.translatable("gui.tconstruct.tool_name"));
+        nameField.setMaxLength(50); nameField.setBordered(false); nameField.setTextColor(0xffffff);
+        observedName = menu.pendingName(); nameField.setValue(observedName);
+        nameField.setResponder(name -> net.neoforged.neoforge.network.PacketDistributor.sendToServer(new com.gctn.tconstruct.tables.WorkshopNetwork.Rename(menu.containerId, name)));
+        addRenderableWidget(nameField);
+        WorkshopNavigation.add(menu.position(), menu.containerId, leftPos + 8, topPos - 20, this::addRenderableWidget);
         this.addModeButton(Mode.DEFAULT, ICON_TEXTURE, 55, 1, 16, 16, 0);
         this.addModeButton(Mode.DISASSEMBLE, new ItemStack(Items.SHEARS), 1);
         this.addModeButton(Mode.PICKAXE, new ItemStack(Items.WOODEN_PICKAXE), 2);
@@ -69,6 +80,11 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        nameField.visible = !menu.isMode(Mode.DISASSEMBLE);
+        if (!menu.pendingName().equals(observedName) && !nameField.isFocused()) {
+            observedName = menu.pendingName();
+            if (!nameField.getValue().equals(observedName)) { nameField.setValue(observedName); }
+        }
         this.updateModeButtons();
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
@@ -76,6 +92,7 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        nearbyPanel.update(); nearbyPanel.render(guiGraphics, leftPos, topPos);
         guiGraphics.blit(BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         guiGraphics.blit(BACKGROUND_TEXTURE, this.leftPos - 110, this.topPos, 0, 180, 108, 7);
         guiGraphics.blit(BACKGROUND_TEXTURE, this.leftPos - 2, this.topPos, 131, 180, 2, 7);
@@ -158,5 +175,12 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     }
 
     private record DefaultSlotIcon(int x, int y, int u) {
+    }
+    @Override public boolean keyPressed(int key, int scan, int modifiers) {
+        if (nameField.isFocused() && key != 256) { return nameField.keyPressed(key, scan, modifiers) || nameField.canConsumeInput(); }
+        return super.keyPressed(key, scan, modifiers);
+    }
+    @Override protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
+        return !nearbyPanel.contains(mouseX, mouseY, left, top) && super.hasClickedOutside(mouseX, mouseY, left, top, button);
     }
 }

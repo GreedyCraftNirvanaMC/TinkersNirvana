@@ -33,6 +33,7 @@ public class TinkerRegistry {
                         Collection<ItemStack> tempStacks = new ArrayList<>();
                         com.gctn.tconstruct.library.toolparts.AntiqueParts.addCreativeItems(tempStacks);
                         output.accept(com.gctn.tconstruct.tools.PatternItem.PATTERN.get());
+                        output.accept(com.gctn.tconstruct.book.TinkerBook.ITEM.get());
                         for (var item : com.gctn.tconstruct.tools.ToolSupplies.ITEMS.values()) { output.accept(item.get()); }
                         int i = 0;
                         for (ItemStack itemStack : tempStacks) {
@@ -47,19 +48,7 @@ public class TinkerRegistry {
                     .icon(() -> new ItemStack(Items.WOODEN_PICKAXE))
                     .title(Component.translatable("tinker_tools_tab"))
                     .displayItems(((itemDisplayParameters, output) -> {
-                        for (var entry : com.gctn.tconstruct.tools.AntiqueTools.entries().values()) {
-                            java.util.List<com.gctn.tconstruct.library.materials.Material> materials = new java.util.ArrayList<>();
-                            for (var part : entry.definition().parts()) {
-                                materials.add(switch (part.stat()) {
-                                    case "BowString" -> string;
-                                    case "Fletching" -> feather;
-                                    case "Head" -> stone;
-                                    default -> wood;
-                                });
-                            }
-                            ItemStack tool = com.gctn.tconstruct.tools.ToolBuilder.assemble(entry, materials);
-                            if (!tool.isEmpty()) { output.accept(tool); }
-                        }
+                        com.gctn.tconstruct.tools.AntiqueTools.addCreativeItems(output::accept);
                     }))
                     .build());
 
@@ -70,7 +59,7 @@ public class TinkerRegistry {
                     .title(Component.translatable("tinker_blocks_tab"))
                     .displayItems(((itemDisplayParameters, output) -> {
                         for (DeferredBlock<?> block : BlockRegister.entries()) {
-                            output.accept(block.get());
+                            com.gctn.tconstruct.tables.TableMaterial.creative(block.get(), output::accept);
                         }
                         for (DeferredBlock<?> block : BlockRegister.simpleEntries()) {
                             output.accept(block.get());

@@ -1,0 +1,10 @@
+{
+  "type": "tconstruct:drying",
+  "ingredient": {
+    "item": "tconstruct:slimeball_blue"
+  },
+  "result": {
+    "id": "tconstruct:slimedrop_blue"
+  },
+  "time": 6000
+}

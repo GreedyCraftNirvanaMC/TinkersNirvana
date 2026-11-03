@@ -1,0 +1,11 @@
+{
+  "title": "Delbyggare",
+  "text": [
+    {
+      "text": "Text ska vara här"
+    }
+  ],
+  "section": "intro",
+  "order": 6,
+  "id": "intro/partbuilder"
+}

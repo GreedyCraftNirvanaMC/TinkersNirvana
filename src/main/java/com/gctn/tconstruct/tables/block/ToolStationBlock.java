@@ -20,10 +20,26 @@ import net.minecraft.world.phys.BlockHitResult;
 import javax.annotation.Nullable;
 
 public class ToolStationBlock extends BaseEntityBlock {
+    @Override public ItemStack getCloneItemStack(BlockState state, net.minecraft.world.phys.HitResult hit, net.minecraft.world.level.LevelReader level, BlockPos pos, Player player) { return com.gctn.tconstruct.tables.TableMaterial.pick(level, pos, new ItemStack(this)); }
     public static final MapCodec<ToolStationBlock> CODEC = simpleCodec(ToolStationBlock::new);
 
     public ToolStationBlock(BlockBehaviour.Properties properties) {
         super(properties);
+        registerDefaultState(stateDefinition.any().setValue(WorkshopBlock.FACING, net.minecraft.core.Direction.NORTH));
+    }
+    @Override protected void createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) { builder.add(WorkshopBlock.FACING); }
+    @Override public BlockState getStateForPlacement(net.minecraft.world.item.context.BlockPlaceContext context) { return defaultBlockState().setValue(WorkshopBlock.FACING, context.getHorizontalDirection().getOpposite()); }
+    @Override protected BlockState rotate(BlockState state, net.minecraft.world.level.block.Rotation rotation) { return state.setValue(WorkshopBlock.FACING, rotation.rotate(state.getValue(WorkshopBlock.FACING))); }
+    @Override protected BlockState mirror(BlockState state, net.minecraft.world.level.block.Mirror mirror) { return rotate(state, mirror.getRotation(state.getValue(WorkshopBlock.FACING))); }
+    @Override protected net.minecraft.world.phys.shapes.VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos, net.minecraft.world.phys.shapes.CollisionContext context) {
+        return net.minecraft.world.phys.shapes.Shapes.or(box(0, 12, 0, 16, 16, 16), box(0, 0, 0, 4, 12, 4), box(12, 0, 0, 16, 12, 4), box(0, 0, 12, 4, 12, 16), box(12, 0, 12, 16, 12, 16));
+    }
+    @Override protected java.util.List<ItemStack> getDrops(BlockState state, net.minecraft.world.level.storage.loot.LootParams.Builder builder) {
+        var drops = super.getDrops(state, builder);
+        if (builder.getOptionalParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_ENTITY) instanceof ToolStationBlockEntity entity) {
+            for (ItemStack stack : drops) { if (stack.is(asItem())) { entity.material.apply(stack); } }
+        }
+        return drops;
     }
 
     @Override
@@ -70,8 +86,6 @@ public class ToolStationBlock extends BaseEntityBlock {
     }
 
     private void openMenu(Level level, BlockPos pos, Player player) {
-        if (!level.isClientSide && level.getBlockEntity(pos) instanceof ToolStationBlockEntity blockEntity) {
-            player.openMenu(blockEntity);
-        }
+        com.gctn.tconstruct.tables.WorkshopModule.open(player, pos);
     }
 }

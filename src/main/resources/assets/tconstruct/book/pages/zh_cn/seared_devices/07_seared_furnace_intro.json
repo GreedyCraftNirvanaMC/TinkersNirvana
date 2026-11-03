@@ -1,0 +1,18 @@
+{
+  "title": "焦黑熔炉",
+  "image": {
+    "file": "tconstruct:textures/gui/book/seared_furnace.png",
+    "texture_width": 854,
+    "texture_height": 480,
+    "width": 150,
+    "height": 84
+  },
+  "text": [
+    {
+      "text": "焦黑熔炉是熔炉界的大师，一次可以烧制1/4组物品，拿来烧制食物绝对快极了。"
+    }
+  ],
+  "section": "seared_devices",
+  "order": 7,
+  "id": "seared_devices/seared_furnace_intro"
+}

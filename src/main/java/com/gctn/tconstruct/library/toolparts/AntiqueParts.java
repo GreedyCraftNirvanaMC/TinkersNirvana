@@ -89,12 +89,15 @@ public final class AntiqueParts {
                         data.putString("Coating", coating.identifier);
                         core.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
                         output.add(core);
+                        if (!com.gctn.tconstruct.Config.LIST_ALL_PART_MATERIALS.get()) { break; }
                     }
+                    if (!com.gctn.tconstruct.Config.LIST_ALL_PART_MATERIALS.get()) { break; }
                     continue;
                 }
                 if (!material.isHidden() && material.hasStats(part.stat())) {
                     ItemStack stack = part.create(material);
                     if (!stack.isEmpty()) { output.add(stack); }
+                    if (!com.gctn.tconstruct.Config.LIST_ALL_PART_MATERIALS.get()) { break; }
                 }
             }
         }

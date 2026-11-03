@@ -1,0 +1,11 @@
+{
+  "title": "Stencil Table",
+  "text": [
+    {
+      "text": "Text Goes Here"
+    }
+  ],
+  "section": "intro",
+  "order": 4,
+  "id": "intro/stenciltable"
+}

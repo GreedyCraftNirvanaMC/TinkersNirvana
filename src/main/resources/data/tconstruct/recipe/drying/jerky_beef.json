@@ -1,0 +1,10 @@
+{
+  "type": "tconstruct:drying",
+  "ingredient": {
+    "item": "minecraft:beef"
+  },
+  "result": {
+    "id": "tconstruct:jerky_beef"
+  },
+  "time": 6000
+}

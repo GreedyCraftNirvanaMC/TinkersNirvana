@@ -1,0 +1,16 @@
+{
+  "parent": "tconstruct:block/slime_channel/slime_channel_inner",
+  "textures": {
+    "slime": "tconstruct:block/fluids/liquid_flow",
+    "diagonal": "tconstruct:block/fluids/slime_channel_diagonal"
+  },
+  "transform": {
+    "post-rotation": {
+      "z": 90
+    },
+    "rotation": {
+      "x": 90
+    },
+    "origin": "center"
+  }
+}

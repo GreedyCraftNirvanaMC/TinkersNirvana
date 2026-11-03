@@ -1,0 +1,18 @@
+{
+  "image": {
+    "file": "tconstruct:textures/gui/book/inventory_repair.png",
+    "texture_width": 388,
+    "texture_height": 216,
+    "width": 150,
+    "height": 84
+  },
+  "text": [
+    {
+      "text": "För att göra så lägger du helt enkelt ett slipredskap av materialet du behöver i en tillverkningsruta tillsammans med verktyget."
+    }
+  ],
+  "section": "tools",
+  "order": 2,
+  "id": "tools/repairing2",
+  "title": "Reparera"
+}

@@ -32,6 +32,7 @@ public final class GlowballItem extends SnowballItem {
                 SoundSource.NEUTRAL, 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
         if (!level.isClientSide) {
             var projectile = new GlowballEntity(level, player);
+            projectile.setItem(stack.copyWithCount(1));
             projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 2.1F, 0.5F);
             level.addFreshEntity(projectile);
         }
@@ -44,6 +45,7 @@ public final class GlowballItem extends SnowballItem {
     public Projectile asProjectile(Level level, Position pos, ItemStack stack, Direction direction) {
         var projectile = new GlowballEntity(GadgetModule.GLOWBALL_ENTITY.get(), level);
         projectile.setPos(pos.x(), pos.y(), pos.z());
+        projectile.setItem(stack.copyWithCount(1));
         return projectile;
     }
 }

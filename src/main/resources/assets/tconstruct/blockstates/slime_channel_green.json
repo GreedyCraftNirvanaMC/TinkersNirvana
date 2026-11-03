@@ -1,0 +1,988 @@
+{
+  "variants": {
+    "side=down,connected=none,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_none_west_false",
+      "y": 270
+    },
+    "side=down,connected=none,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_none_west_true",
+      "y": 270
+    },
+    "side=down,connected=none,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_none_east_false",
+      "y": 90
+    },
+    "side=down,connected=none,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_none_east_true",
+      "y": 90
+    },
+    "side=down,connected=none,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_none_south_false",
+      "y": 180
+    },
+    "side=down,connected=none,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_none_south_true",
+      "y": 180
+    },
+    "side=down,connected=none,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_none_north_false"
+    },
+    "side=down,connected=none,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_none_north_true"
+    },
+    "side=down,connected=none,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_none_southwest_false",
+      "y": 270
+    },
+    "side=down,connected=none,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_none_southwest_true",
+      "y": 270
+    },
+    "side=down,connected=none,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_none_northeast_false",
+      "y": 90
+    },
+    "side=down,connected=none,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_none_northeast_true",
+      "y": 90
+    },
+    "side=down,connected=none,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_none_southeast_false",
+      "y": 180
+    },
+    "side=down,connected=none,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_none_southeast_true",
+      "y": 180
+    },
+    "side=down,connected=none,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_none_northwest_false"
+    },
+    "side=down,connected=none,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_none_northwest_true"
+    },
+    "side=down,connected=inner,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_inner_west_false",
+      "y": 270
+    },
+    "side=down,connected=inner,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_inner_west_true",
+      "y": 270
+    },
+    "side=down,connected=inner,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_inner_east_false",
+      "y": 90
+    },
+    "side=down,connected=inner,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_inner_east_true",
+      "y": 90
+    },
+    "side=down,connected=inner,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_inner_south_false",
+      "y": 180
+    },
+    "side=down,connected=inner,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_inner_south_true",
+      "y": 180
+    },
+    "side=down,connected=inner,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_inner_north_false"
+    },
+    "side=down,connected=inner,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_inner_north_true"
+    },
+    "side=down,connected=inner,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_inner_southwest_false",
+      "y": 270
+    },
+    "side=down,connected=inner,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_inner_southwest_true",
+      "y": 270
+    },
+    "side=down,connected=inner,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_inner_northeast_false",
+      "y": 90
+    },
+    "side=down,connected=inner,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_inner_northeast_true",
+      "y": 90
+    },
+    "side=down,connected=inner,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_inner_southeast_false",
+      "y": 180
+    },
+    "side=down,connected=inner,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_inner_southeast_true",
+      "y": 180
+    },
+    "side=down,connected=inner,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_inner_northwest_false"
+    },
+    "side=down,connected=inner,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_inner_northwest_true"
+    },
+    "side=down,connected=outer,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_outer_west_false",
+      "y": 270
+    },
+    "side=down,connected=outer,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_outer_west_true",
+      "y": 270
+    },
+    "side=down,connected=outer,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_outer_east_false",
+      "y": 90
+    },
+    "side=down,connected=outer,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_outer_east_true",
+      "y": 90
+    },
+    "side=down,connected=outer,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_outer_south_false",
+      "y": 180
+    },
+    "side=down,connected=outer,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_outer_south_true",
+      "y": 180
+    },
+    "side=down,connected=outer,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_outer_north_false"
+    },
+    "side=down,connected=outer,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_outer_north_true"
+    },
+    "side=down,connected=outer,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_outer_southwest_false",
+      "y": 270
+    },
+    "side=down,connected=outer,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_outer_southwest_true",
+      "y": 270
+    },
+    "side=down,connected=outer,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_outer_northeast_false",
+      "y": 90
+    },
+    "side=down,connected=outer,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_outer_northeast_true",
+      "y": 90
+    },
+    "side=down,connected=outer,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_outer_southeast_false",
+      "y": 180
+    },
+    "side=down,connected=outer,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_outer_southeast_true",
+      "y": 180
+    },
+    "side=down,connected=outer,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/down_outer_northwest_false"
+    },
+    "side=down,connected=outer,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/down_outer_northwest_true"
+    },
+    "side=up,connected=none,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_none_west_false",
+      "x": 180,
+      "y": 90
+    },
+    "side=up,connected=none,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_none_west_true",
+      "x": 180,
+      "y": 90
+    },
+    "side=up,connected=none,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_none_east_false",
+      "x": 180,
+      "y": 270
+    },
+    "side=up,connected=none,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_none_east_true",
+      "x": 180,
+      "y": 270
+    },
+    "side=up,connected=none,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_none_south_false",
+      "x": 180
+    },
+    "side=up,connected=none,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_none_south_true",
+      "x": 180
+    },
+    "side=up,connected=none,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_none_north_false",
+      "x": 180,
+      "y": 180
+    },
+    "side=up,connected=none,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_none_north_true",
+      "x": 180,
+      "y": 180
+    },
+    "side=up,connected=none,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_none_northwest_false",
+      "x": 180,
+      "y": 90
+    },
+    "side=up,connected=none,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_none_northwest_true",
+      "x": 180,
+      "y": 90
+    },
+    "side=up,connected=none,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_none_southeast_false",
+      "x": 180,
+      "y": 270
+    },
+    "side=up,connected=none,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_none_southeast_true",
+      "x": 180,
+      "y": 270
+    },
+    "side=up,connected=none,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_none_southwest_false",
+      "x": 180
+    },
+    "side=up,connected=none,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_none_southwest_true",
+      "x": 180
+    },
+    "side=up,connected=none,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_none_northeast_false",
+      "x": 180,
+      "y": 180
+    },
+    "side=up,connected=none,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_none_northeast_true",
+      "x": 180,
+      "y": 180
+    },
+    "side=up,connected=inner,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_inner_west_false",
+      "x": 180,
+      "y": 90
+    },
+    "side=up,connected=inner,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_inner_west_true",
+      "x": 180,
+      "y": 90
+    },
+    "side=up,connected=inner,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_inner_east_false",
+      "x": 180,
+      "y": 270
+    },
+    "side=up,connected=inner,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_inner_east_true",
+      "x": 180,
+      "y": 270
+    },
+    "side=up,connected=inner,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_inner_south_false",
+      "x": 180
+    },
+    "side=up,connected=inner,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_inner_south_true",
+      "x": 180
+    },
+    "side=up,connected=inner,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_inner_north_false",
+      "x": 180,
+      "y": 180
+    },
+    "side=up,connected=inner,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_inner_north_true",
+      "x": 180,
+      "y": 180
+    },
+    "side=up,connected=inner,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_inner_northwest_false",
+      "x": 180,
+      "y": 90
+    },
+    "side=up,connected=inner,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_inner_northwest_true",
+      "x": 180,
+      "y": 90
+    },
+    "side=up,connected=inner,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_inner_southeast_false",
+      "x": 180,
+      "y": 270
+    },
+    "side=up,connected=inner,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_inner_southeast_true",
+      "x": 180,
+      "y": 270
+    },
+    "side=up,connected=inner,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_inner_southwest_false",
+      "x": 180
+    },
+    "side=up,connected=inner,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_inner_southwest_true",
+      "x": 180
+    },
+    "side=up,connected=inner,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_inner_northeast_false",
+      "x": 180,
+      "y": 180
+    },
+    "side=up,connected=inner,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_inner_northeast_true",
+      "x": 180,
+      "y": 180
+    },
+    "side=up,connected=outer,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_outer_west_false",
+      "x": 180,
+      "y": 90
+    },
+    "side=up,connected=outer,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_outer_west_true",
+      "x": 180,
+      "y": 90
+    },
+    "side=up,connected=outer,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_outer_east_false",
+      "x": 180,
+      "y": 270
+    },
+    "side=up,connected=outer,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_outer_east_true",
+      "x": 180,
+      "y": 270
+    },
+    "side=up,connected=outer,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_outer_south_false",
+      "x": 180
+    },
+    "side=up,connected=outer,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_outer_south_true",
+      "x": 180
+    },
+    "side=up,connected=outer,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_outer_north_false",
+      "x": 180,
+      "y": 180
+    },
+    "side=up,connected=outer,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_outer_north_true",
+      "x": 180,
+      "y": 180
+    },
+    "side=up,connected=outer,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_outer_northwest_false",
+      "x": 180,
+      "y": 90
+    },
+    "side=up,connected=outer,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_outer_northwest_true",
+      "x": 180,
+      "y": 90
+    },
+    "side=up,connected=outer,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_outer_southeast_false",
+      "x": 180,
+      "y": 270
+    },
+    "side=up,connected=outer,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_outer_southeast_true",
+      "x": 180,
+      "y": 270
+    },
+    "side=up,connected=outer,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_outer_southwest_false",
+      "x": 180
+    },
+    "side=up,connected=outer,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_outer_southwest_true",
+      "x": 180
+    },
+    "side=up,connected=outer,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/up_outer_northeast_false",
+      "x": 180,
+      "y": 180
+    },
+    "side=up,connected=outer,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/up_outer_northeast_true",
+      "x": 180,
+      "y": 180
+    },
+    "side=north,connected=none,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_none_west_false"
+    },
+    "side=north,connected=none,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_none_west_true"
+    },
+    "side=north,connected=none,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_none_east_false"
+    },
+    "side=north,connected=none,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_none_east_true"
+    },
+    "side=north,connected=none,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_none_south_false"
+    },
+    "side=north,connected=none,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_none_south_true"
+    },
+    "side=north,connected=none,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_none_north_false"
+    },
+    "side=north,connected=none,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_none_north_true"
+    },
+    "side=north,connected=none,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_none_southwest_false"
+    },
+    "side=north,connected=none,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_none_southwest_true"
+    },
+    "side=north,connected=none,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_none_northeast_false"
+    },
+    "side=north,connected=none,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_none_northeast_true"
+    },
+    "side=north,connected=none,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_none_southeast_false"
+    },
+    "side=north,connected=none,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_none_southeast_true"
+    },
+    "side=north,connected=none,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_none_northwest_false"
+    },
+    "side=north,connected=none,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_none_northwest_true"
+    },
+    "side=north,connected=inner,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_inner_west_false"
+    },
+    "side=north,connected=inner,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_inner_west_true"
+    },
+    "side=north,connected=inner,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_inner_east_false"
+    },
+    "side=north,connected=inner,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_inner_east_true"
+    },
+    "side=north,connected=inner,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_inner_south_false"
+    },
+    "side=north,connected=inner,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_inner_south_true"
+    },
+    "side=north,connected=inner,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_inner_north_false"
+    },
+    "side=north,connected=inner,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_inner_north_true"
+    },
+    "side=north,connected=inner,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_inner_southwest_false"
+    },
+    "side=north,connected=inner,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_inner_southwest_true"
+    },
+    "side=north,connected=inner,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_inner_northeast_false"
+    },
+    "side=north,connected=inner,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_inner_northeast_true"
+    },
+    "side=north,connected=inner,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_inner_southeast_false"
+    },
+    "side=north,connected=inner,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_inner_southeast_true"
+    },
+    "side=north,connected=inner,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_inner_northwest_false"
+    },
+    "side=north,connected=inner,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_inner_northwest_true"
+    },
+    "side=north,connected=outer,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_outer_west_false"
+    },
+    "side=north,connected=outer,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_outer_west_true"
+    },
+    "side=north,connected=outer,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_outer_east_false"
+    },
+    "side=north,connected=outer,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_outer_east_true"
+    },
+    "side=north,connected=outer,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_outer_south_false"
+    },
+    "side=north,connected=outer,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_outer_south_true"
+    },
+    "side=north,connected=outer,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_outer_north_false"
+    },
+    "side=north,connected=outer,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_outer_north_true"
+    },
+    "side=north,connected=outer,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_outer_southwest_false"
+    },
+    "side=north,connected=outer,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_outer_southwest_true"
+    },
+    "side=north,connected=outer,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_outer_northeast_false"
+    },
+    "side=north,connected=outer,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_outer_northeast_true"
+    },
+    "side=north,connected=outer,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_outer_southeast_false"
+    },
+    "side=north,connected=outer,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_outer_southeast_true"
+    },
+    "side=north,connected=outer,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/north_outer_northwest_false"
+    },
+    "side=north,connected=outer,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/north_outer_northwest_true"
+    },
+    "side=south,connected=none,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_none_west_false"
+    },
+    "side=south,connected=none,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_none_west_true"
+    },
+    "side=south,connected=none,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_none_east_false"
+    },
+    "side=south,connected=none,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_none_east_true"
+    },
+    "side=south,connected=none,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_none_south_false"
+    },
+    "side=south,connected=none,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_none_south_true"
+    },
+    "side=south,connected=none,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_none_north_false"
+    },
+    "side=south,connected=none,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_none_north_true"
+    },
+    "side=south,connected=none,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_none_southwest_false"
+    },
+    "side=south,connected=none,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_none_southwest_true"
+    },
+    "side=south,connected=none,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_none_northeast_false"
+    },
+    "side=south,connected=none,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_none_northeast_true"
+    },
+    "side=south,connected=none,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_none_southeast_false"
+    },
+    "side=south,connected=none,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_none_southeast_true"
+    },
+    "side=south,connected=none,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_none_northwest_false"
+    },
+    "side=south,connected=none,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_none_northwest_true"
+    },
+    "side=south,connected=inner,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_inner_west_false"
+    },
+    "side=south,connected=inner,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_inner_west_true"
+    },
+    "side=south,connected=inner,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_inner_east_false"
+    },
+    "side=south,connected=inner,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_inner_east_true"
+    },
+    "side=south,connected=inner,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_inner_south_false"
+    },
+    "side=south,connected=inner,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_inner_south_true"
+    },
+    "side=south,connected=inner,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_inner_north_false"
+    },
+    "side=south,connected=inner,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_inner_north_true"
+    },
+    "side=south,connected=inner,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_inner_southwest_false"
+    },
+    "side=south,connected=inner,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_inner_southwest_true"
+    },
+    "side=south,connected=inner,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_inner_northeast_false"
+    },
+    "side=south,connected=inner,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_inner_northeast_true"
+    },
+    "side=south,connected=inner,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_inner_southeast_false"
+    },
+    "side=south,connected=inner,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_inner_southeast_true"
+    },
+    "side=south,connected=inner,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_inner_northwest_false"
+    },
+    "side=south,connected=inner,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_inner_northwest_true"
+    },
+    "side=south,connected=outer,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_outer_west_false"
+    },
+    "side=south,connected=outer,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_outer_west_true"
+    },
+    "side=south,connected=outer,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_outer_east_false"
+    },
+    "side=south,connected=outer,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_outer_east_true"
+    },
+    "side=south,connected=outer,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_outer_south_false"
+    },
+    "side=south,connected=outer,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_outer_south_true"
+    },
+    "side=south,connected=outer,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_outer_north_false"
+    },
+    "side=south,connected=outer,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_outer_north_true"
+    },
+    "side=south,connected=outer,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_outer_southwest_false"
+    },
+    "side=south,connected=outer,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_outer_southwest_true"
+    },
+    "side=south,connected=outer,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_outer_northeast_false"
+    },
+    "side=south,connected=outer,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_outer_northeast_true"
+    },
+    "side=south,connected=outer,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_outer_southeast_false"
+    },
+    "side=south,connected=outer,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_outer_southeast_true"
+    },
+    "side=south,connected=outer,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/south_outer_northwest_false"
+    },
+    "side=south,connected=outer,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/south_outer_northwest_true"
+    },
+    "side=west,connected=none,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_none_west_false"
+    },
+    "side=west,connected=none,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_none_west_true"
+    },
+    "side=west,connected=none,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_none_east_false"
+    },
+    "side=west,connected=none,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_none_east_true"
+    },
+    "side=west,connected=none,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_none_south_false"
+    },
+    "side=west,connected=none,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_none_south_true"
+    },
+    "side=west,connected=none,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_none_north_false"
+    },
+    "side=west,connected=none,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_none_north_true"
+    },
+    "side=west,connected=none,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_none_southwest_false"
+    },
+    "side=west,connected=none,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_none_southwest_true"
+    },
+    "side=west,connected=none,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_none_northeast_false"
+    },
+    "side=west,connected=none,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_none_northeast_true"
+    },
+    "side=west,connected=none,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_none_southeast_false"
+    },
+    "side=west,connected=none,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_none_southeast_true"
+    },
+    "side=west,connected=none,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_none_northwest_false"
+    },
+    "side=west,connected=none,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_none_northwest_true"
+    },
+    "side=west,connected=inner,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_inner_west_false"
+    },
+    "side=west,connected=inner,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_inner_west_true"
+    },
+    "side=west,connected=inner,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_inner_east_false"
+    },
+    "side=west,connected=inner,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_inner_east_true"
+    },
+    "side=west,connected=inner,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_inner_south_false"
+    },
+    "side=west,connected=inner,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_inner_south_true"
+    },
+    "side=west,connected=inner,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_inner_north_false"
+    },
+    "side=west,connected=inner,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_inner_north_true"
+    },
+    "side=west,connected=inner,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_inner_southwest_false"
+    },
+    "side=west,connected=inner,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_inner_southwest_true"
+    },
+    "side=west,connected=inner,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_inner_northeast_false"
+    },
+    "side=west,connected=inner,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_inner_northeast_true"
+    },
+    "side=west,connected=inner,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_inner_southeast_false"
+    },
+    "side=west,connected=inner,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_inner_southeast_true"
+    },
+    "side=west,connected=inner,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_inner_northwest_false"
+    },
+    "side=west,connected=inner,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_inner_northwest_true"
+    },
+    "side=west,connected=outer,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_outer_west_false"
+    },
+    "side=west,connected=outer,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_outer_west_true"
+    },
+    "side=west,connected=outer,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_outer_east_false"
+    },
+    "side=west,connected=outer,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_outer_east_true"
+    },
+    "side=west,connected=outer,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_outer_south_false"
+    },
+    "side=west,connected=outer,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_outer_south_true"
+    },
+    "side=west,connected=outer,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_outer_north_false"
+    },
+    "side=west,connected=outer,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_outer_north_true"
+    },
+    "side=west,connected=outer,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_outer_southwest_false"
+    },
+    "side=west,connected=outer,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_outer_southwest_true"
+    },
+    "side=west,connected=outer,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_outer_northeast_false"
+    },
+    "side=west,connected=outer,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_outer_northeast_true"
+    },
+    "side=west,connected=outer,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_outer_southeast_false"
+    },
+    "side=west,connected=outer,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_outer_southeast_true"
+    },
+    "side=west,connected=outer,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/west_outer_northwest_false"
+    },
+    "side=west,connected=outer,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/west_outer_northwest_true"
+    },
+    "side=east,connected=none,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_none_west_false"
+    },
+    "side=east,connected=none,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_none_west_true"
+    },
+    "side=east,connected=none,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_none_east_false"
+    },
+    "side=east,connected=none,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_none_east_true"
+    },
+    "side=east,connected=none,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_none_south_false"
+    },
+    "side=east,connected=none,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_none_south_true"
+    },
+    "side=east,connected=none,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_none_north_false"
+    },
+    "side=east,connected=none,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_none_north_true"
+    },
+    "side=east,connected=none,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_none_southwest_false"
+    },
+    "side=east,connected=none,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_none_southwest_true"
+    },
+    "side=east,connected=none,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_none_northeast_false"
+    },
+    "side=east,connected=none,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_none_northeast_true"
+    },
+    "side=east,connected=none,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_none_southeast_false"
+    },
+    "side=east,connected=none,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_none_southeast_true"
+    },
+    "side=east,connected=none,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_none_northwest_false"
+    },
+    "side=east,connected=none,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_none_northwest_true"
+    },
+    "side=east,connected=inner,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_inner_west_false"
+    },
+    "side=east,connected=inner,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_inner_west_true"
+    },
+    "side=east,connected=inner,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_inner_east_false"
+    },
+    "side=east,connected=inner,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_inner_east_true"
+    },
+    "side=east,connected=inner,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_inner_south_false"
+    },
+    "side=east,connected=inner,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_inner_south_true"
+    },
+    "side=east,connected=inner,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_inner_north_false"
+    },
+    "side=east,connected=inner,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_inner_north_true"
+    },
+    "side=east,connected=inner,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_inner_southwest_false"
+    },
+    "side=east,connected=inner,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_inner_southwest_true"
+    },
+    "side=east,connected=inner,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_inner_northeast_false"
+    },
+    "side=east,connected=inner,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_inner_northeast_true"
+    },
+    "side=east,connected=inner,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_inner_southeast_false"
+    },
+    "side=east,connected=inner,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_inner_southeast_true"
+    },
+    "side=east,connected=inner,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_inner_northwest_false"
+    },
+    "side=east,connected=inner,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_inner_northwest_true"
+    },
+    "side=east,connected=outer,direction=west,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_outer_west_false"
+    },
+    "side=east,connected=outer,direction=west,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_outer_west_true"
+    },
+    "side=east,connected=outer,direction=east,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_outer_east_false"
+    },
+    "side=east,connected=outer,direction=east,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_outer_east_true"
+    },
+    "side=east,connected=outer,direction=south,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_outer_south_false"
+    },
+    "side=east,connected=outer,direction=south,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_outer_south_true"
+    },
+    "side=east,connected=outer,direction=north,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_outer_north_false"
+    },
+    "side=east,connected=outer,direction=north,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_outer_north_true"
+    },
+    "side=east,connected=outer,direction=southwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_outer_southwest_false"
+    },
+    "side=east,connected=outer,direction=southwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_outer_southwest_true"
+    },
+    "side=east,connected=outer,direction=northeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_outer_northeast_false"
+    },
+    "side=east,connected=outer,direction=northeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_outer_northeast_true"
+    },
+    "side=east,connected=outer,direction=southeast,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_outer_southeast_false"
+    },
+    "side=east,connected=outer,direction=southeast,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_outer_southeast_true"
+    },
+    "side=east,connected=outer,direction=northwest,powered=false": {
+      "model": "tconstruct:block/slime_channel/east_outer_northwest_false"
+    },
+    "side=east,connected=outer,direction=northwest,powered=true": {
+      "model": "tconstruct:block/slime_channel/east_outer_northwest_true"
+    }
+  }
+}

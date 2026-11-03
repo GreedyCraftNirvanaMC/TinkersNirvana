@@ -1,0 +1,18 @@
+{
+  "title": "The Tinker Tank",
+  "image": {
+    "file": "tconstruct:textures/gui/book/tinker_tank.png",
+    "texture_width": 1844,
+    "texture_height": 1186,
+    "width": 150,
+    "height": 96
+  },
+  "text": [
+    {
+      "text": "The Tinker Tank is a giant tank, holding much more liquid than a smeltery, but without heat causing no alloys or smelting."
+    }
+  ],
+  "section": "seared_devices",
+  "order": 10,
+  "id": "seared_devices/tinker_tank_intro"
+}

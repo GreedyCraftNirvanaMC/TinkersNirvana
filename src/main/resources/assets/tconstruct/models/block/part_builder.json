@@ -1,0 +1,11 @@
+{
+  "parent": "tconstruct:block/table",
+  "textures": {
+    "particle": "tconstruct:block/workshop/partbuilder_top",
+    "top": "tconstruct:block/workshop/partbuilder_top",
+    "side": "tconstruct:block/table_side",
+    "bottom": "minecraft:block/oak_log",
+    "leg": "minecraft:block/oak_log",
+    "leg_bottom": "minecraft:block/oak_log"
+  }
+}

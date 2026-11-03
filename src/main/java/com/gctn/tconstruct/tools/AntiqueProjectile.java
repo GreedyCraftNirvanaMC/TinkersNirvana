@@ -16,6 +16,7 @@ import net.minecraft.world.level.Level;
 
 /** 原版箭实体负责碰撞、保护事件、同步和掉落；附带工具数据用于材料词条。 */
 public class AntiqueProjectile extends AbstractArrow implements net.minecraft.world.entity.projectile.ItemSupplier {
+    private int groundedLife;
     private static final net.minecraft.network.syncher.EntityDataAccessor<ItemStack> TOOL =
             net.minecraft.network.syncher.SynchedEntityData.defineId(AntiqueProjectile.class, net.minecraft.network.syncher.EntityDataSerializers.ITEM_STACK);
 
@@ -50,19 +51,28 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
+        tag.putInt("TinkerGroundedLife", groundedLife);
         if (!traitTool().isEmpty()) { tag.put("TinkerTool", traitTool().save(registryAccess())); }
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
+        groundedLife = Math.max(0, tag.contains("TinkerGroundedLife") ? tag.getInt("TinkerGroundedLife") : tag.getShort("life"));
         entityData.set(TOOL, ItemStack.parseOptional(registryAccess(), tag.getCompound("TinkerTool")));
     }
 
     @Override
     public void tick() {
         super.tick();
+        if (!inGround) { groundedLife = 0; }
         if (!inGround) { ToolTraits.forEach(traitTool(), (trait, level) -> trait.onProjectileTick(traitTool(), level, this)); }
+    }
+
+    @Override protected void tickDespawn() {
+        int limit = com.gctn.tconstruct.Config.PROJECTILE_DESPAWN.get();
+        if (ToolModifiers.level(traitTool(), "reinforced") >= 5) { limit = Math.max(1, limit / 10); }
+        if (++groundedLife >= limit) { discard(); }
     }
 
     @Override

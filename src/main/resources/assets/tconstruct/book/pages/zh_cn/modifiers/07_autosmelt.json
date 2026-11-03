@@ -1,0 +1,29 @@
+{
+  "modifier": "mod_autosmelt",
+  "text": [
+    {
+      "text": "将熔岩晶体熔铸到工具末端，即可赋予其熔炉的力量"
+    }
+  ],
+  "effects": [
+    "挖掘方块后自动冶炼",
+    "与精准采集及材料上的自动冶炼冲突",
+    "在武器上不生效",
+    "只能强化一次"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe",
+    "tconstruct:shovel",
+    "tconstruct:hatchet",
+    "tconstruct:kama",
+    "tconstruct:mattock",
+    "tconstruct:hammer",
+    "tconstruct:lumberaxe",
+    "tconstruct:excavator",
+    "tconstruct:scythe"
+  ],
+  "section": "modifiers",
+  "order": 7,
+  "id": "modifiers/autosmelt",
+  "title": ""
+}

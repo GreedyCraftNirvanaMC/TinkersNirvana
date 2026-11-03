@@ -1,0 +1,10 @@
+{
+  "type": "tconstruct:drying",
+  "ingredient": {
+    "item": "minecraft:cod"
+  },
+  "result": {
+    "id": "tconstruct:jerky_fish"
+  },
+  "time": 6000
+}

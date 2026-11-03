@@ -197,6 +197,7 @@ for locale in ["zh_cn", "en_us"]:
         "item.tconstruct.material_part": ["%s%s", "%s %s"],
         "message.tconstruct.pattern_selected": ["已选择：%s", "Selected: %s"],
         "tooltip.tconstruct.pattern_part": ["部件模板：%s", "Part pattern: %s"],
+        "item.tconstruct.pattern.blank": ["空白模具", "Blank Pattern"],
         "tooltip.tconstruct.pattern_usage": ["右键切换部件，潜行右键反向切换；放入工具装配台的修复模式并加入材料。", "Right-click to select a part; sneak to reverse. Use with materials in the Tool Station's repair mode."],
         "tooltip.tconstruct.part_material": ["%s：%s", "%s: %s"],
         "tooltip.tconstruct.modifier": ["%s %s（%s）", "%s %s (%s)"],

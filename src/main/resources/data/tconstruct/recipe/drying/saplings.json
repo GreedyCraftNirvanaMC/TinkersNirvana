@@ -1,0 +1,10 @@
+{
+  "type": "tconstruct:drying",
+  "ingredient": {
+    "tag": "minecraft:saplings"
+  },
+  "result": {
+    "id": "minecraft:dead_bush"
+  },
+  "time": 7200
+}

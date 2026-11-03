@@ -1,4 +1,20 @@
 {
   "replace": false,
-  "values": []
+  "values": [
+    "tconstruct:slime_tall_grass_blue",
+    "tconstruct:slime_fern_blue",
+    "tconstruct:slime_sapling_blue",
+    "tconstruct:slime_tall_grass_purple",
+    "tconstruct:slime_fern_purple",
+    "tconstruct:slime_sapling_purple",
+    "tconstruct:slime_tall_grass_orange",
+    "tconstruct:slime_fern_orange",
+    "tconstruct:slime_sapling_orange",
+    "tconstruct:slime_vine_blue",
+    "tconstruct:slime_vine_blue_mid",
+    "tconstruct:slime_vine_blue_end",
+    "tconstruct:slime_vine_purple",
+    "tconstruct:slime_vine_purple_mid",
+    "tconstruct:slime_vine_purple_end"
+  ]
 }

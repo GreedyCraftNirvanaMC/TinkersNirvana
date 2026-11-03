@@ -38,6 +38,13 @@ public class BlockRegister {
         // Calling each category's entries initializes its static registrations.
         Collection<DeferredBlock<?>> entries = new ArrayList<>();
         entries.addAll(TableBlocks.entries());
+        entries.addAll(com.gctn.tconstruct.tables.WorkshopModule.BLOCKS.values());
+        entries.addAll(com.gctn.tconstruct.world.WorldModule.DIRT.values());
+        entries.addAll(com.gctn.tconstruct.world.WorldModule.GRASS.values());
+        entries.addAll(com.gctn.tconstruct.world.WorldModule.LEAVES.values());
+        entries.addAll(com.gctn.tconstruct.world.WorldModule.PLANTS.values());
+        entries.addAll(com.gctn.tconstruct.world.WorldModule.SAPLINGS.values());
+        entries.addAll(com.gctn.tconstruct.world.WorldModule.VINES.values());
         entries.addAll(com.gctn.tconstruct.smeltery.SmelteryModule.entries());
         entries.addAll(com.gctn.tconstruct.gadgets.GadgetModule.entries());
         entries.addAll(com.gctn.tconstruct.common.soil.SoilModule.entries());

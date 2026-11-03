@@ -1,0 +1,44 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/slime_vine_blue_mid",
+        "y": 0,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/slime_vine_blue_mid",
+        "y": 90,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/slime_vine_blue_mid",
+        "y": 180,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/slime_vine_blue_mid",
+        "y": 270,
+        "uvlock": true
+      }
+    }
+  ]
+}

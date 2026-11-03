@@ -1,0 +1,23 @@
+{
+  "intro": "前書き",
+  "materials": "道具の素材",
+  "bowmaterials": "弓の素材",
+  "tools": "道具",
+  "modifiers": "改造",
+  "seared_devices": "Seared Devices",
+  "repairing": "修理",
+  "offhand": "オフハンド採掘",
+  "smeltery_intro": "Smeltery",
+  "cast_crafting": "Cast Crafting",
+  "bolt_crafting": "ボルトの作り方",
+  "alloying": "Alloying",
+  "entity_melting": "Entity Melting",
+  "seared_furnace_intro": "Seared Furnace",
+  "tinker_tank_intro": "Tinker Tank",
+  "modifier.effect": "効果：",
+  "tool.properties": "特徴：",
+  "material.craft_partbuilder": "部品作成台で作成可能",
+  "material.craft_casting": "%sから鋳造可能",
+  "wood.flavour": "How much wood could a woodchuck chuck if a woodchuck could chuck wood?",
+  "stone.flavour": "Rock solid"
+}

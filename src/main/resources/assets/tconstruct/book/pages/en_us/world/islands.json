@@ -1,0 +1,11 @@
+{
+  "id": "world/islands",
+  "section": "world",
+  "order": 0,
+  "title": "Slime Islands and Plants",
+  "text": [
+    {
+      "text": "Slime islands generate above the Overworld; magma islands may form on Nether lava seas. Find slime dirt, colored grass, leaves, and vines there. Slime saplings require slime soil. Shears or Silk Touch collect leaves; bone meal grows grass and ferns. Underground pools are disabled by default and can be enabled in the configuration."
+    }
+  ]
+}

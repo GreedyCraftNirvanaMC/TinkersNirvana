@@ -34,8 +34,11 @@ public class PatternItem extends Item {
         return part == null ? AntiqueParts.get("pickaxe_head") : part;
     }
 
+    public static boolean isBlank(ItemStack stack) { return AntiqueParts.get(TinkerDataComponents.getMaterialTag(stack).getString("Pattern")) == null; }
+
     @Override
     public Component getName(ItemStack stack) {
+        if (isBlank(stack)) { return Component.translatable("item.tconstruct.pattern.blank"); }
         return Component.translatable("item.tconstruct.pattern",
                 Component.translatable("item.tconstruct." + selected(stack).id() + ".name"));
     }
@@ -59,8 +62,8 @@ public class PatternItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("tooltip.tconstruct.pattern_part",
-                Component.translatable("item.tconstruct." + selected(stack).id() + ".name")));
+        if (!isBlank(stack)) { tooltip.add(Component.translatable("tooltip.tconstruct.pattern_part",
+                Component.translatable("item.tconstruct." + selected(stack).id() + ".name"))); }
         tooltip.add(Component.translatable("tooltip.tconstruct.pattern_usage"));
     }
 }

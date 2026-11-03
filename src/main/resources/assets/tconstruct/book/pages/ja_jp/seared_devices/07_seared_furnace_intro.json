@@ -1,0 +1,18 @@
+{
+  "title": "焼成かまど",
+  "image": {
+    "file": "tconstruct:textures/gui/book/seared_furnace.png",
+    "texture_width": 854,
+    "texture_height": 480,
+    "width": 150,
+    "height": 84
+  },
+  "text": [
+    {
+      "text": "焼成かまどはかまどの王様です。1スタックの1/4の量のアイテムを一度に調理し、食べ物を高速で調理します。"
+    }
+  ],
+  "section": "seared_devices",
+  "order": 7,
+  "id": "seared_devices/seared_furnace_intro"
+}

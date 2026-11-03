@@ -1,0 +1,18 @@
+{
+  "title": "The Smeltery",
+  "image": {
+    "file": "tconstruct:textures/gui/book/smeltery.png",
+    "texture_width": 854,
+    "texture_height": 480,
+    "width": 150,
+    "height": 84
+  },
+  "text": [
+    {
+      "text": "There are many smelteries. But this is mine. And it melts things really well."
+    }
+  ],
+  "section": "seared_devices",
+  "order": 0,
+  "id": "seared_devices/smeltery_intro"
+}

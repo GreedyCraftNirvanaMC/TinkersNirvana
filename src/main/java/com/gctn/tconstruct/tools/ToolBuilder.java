@@ -81,11 +81,13 @@ public final class ToolBuilder {
             rules.add(Tool.Rule.minesAndDrops(tag, stats.miningSpeed));
         }
         tool.set(DataComponents.TOOL, new Tool(rules, 1, 1));
-        tool.set(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
+        var attributes = ItemAttributeModifiers.builder()
                 .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID,
                         Math.max(0, stats.attack), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
                 .add(Attributes.ATTACK_SPEED, new AttributeModifier(Item.BASE_ATTACK_SPEED_ID,
-                        stats.attackSpeed - 4, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND).build());
+                        stats.attackSpeed - 4, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+        for (var entry : stats.attributes()) { attributes.add(entry.attribute(), entry.modifier(), entry.slot()); }
+        tool.set(DataComponents.ATTRIBUTE_MODIFIERS, attributes.build());
         CompoundTag data = TinkerDataComponents.getMaterialTag(tool);
         CompoundTag saved = new CompoundTag();
         saved.putFloat("MiningSpeed", stats.miningSpeed);
@@ -154,6 +156,7 @@ public final class ToolBuilder {
                     .filter(java.util.Objects::nonNull).mapToInt(material -> material.getStats("Extra", ExtraMaterialStats.class).durability).average().orElse(0);
         }
         stats.attackSpeed = definition.attackSpeed();
+        stats.baseAttackSpeed = definition.attackSpeed();
         if (!limbs.isEmpty()) {
             stats.drawSpeed = (float) limbs.stream().mapToDouble(limb -> limb.drawSpeed).average().orElse(1);
             stats.range = (float) limbs.stream().mapToDouble(limb -> limb.range).average().orElse(1);

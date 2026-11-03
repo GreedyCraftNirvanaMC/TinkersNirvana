@@ -1,0 +1,23 @@
+{
+  "tool": "shovel",
+  "text": [
+    {
+      "text": "The Shovel is a precise digging tool. It is effective on dirt, sand, gravel and snow."
+    },
+    {
+      "text": "\n"
+    },
+    {
+      "text": "Right-clicking on grass or soil will create paths."
+    }
+  ],
+  "properties": [
+    "Basic mining tool",
+    "Effective on dirt, sand and gravel",
+    "Can create path"
+  ],
+  "section": "tools",
+  "order": 4,
+  "id": "tools/shovel",
+  "title": ""
+}

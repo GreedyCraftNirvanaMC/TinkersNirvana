@@ -69,6 +69,24 @@ public final class TinkerContent {
     public static void tag(Material material, String tag, float value) { MaterialInputs.tag(material, tag, value); }
     public static <T extends AbstractTraits> T registerTrait(T trait) { return TinkerTraits.registerTrait(trait); }
     public static void registerModifier(ToolModifiers.Definition definition) { ToolModifiers.register(definition); }
+    public static void attribute(com.gctn.tconstruct.tools.ToolStats stats, String modifierId, String attributeId, double amount, String operation, String slot) {
+        var key = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.ATTRIBUTE, ResourceLocation.parse(attributeId));
+        stats.attribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.getHolderOrThrow(key), modifierId, amount,
+                net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.valueOf(operation.toUpperCase(java.util.Locale.ROOT)),
+                net.minecraft.world.entity.EquipmentSlotGroup.valueOf(slot.toUpperCase(java.util.Locale.ROOT)));
+    }
+    public static void modifierItem(String modifier, String item, int value) {
+        ResourceLocation id = ResourceLocation.parse(item);
+        ToolModifiers.ingredient(modifier, stack -> net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(id), value);
+    }
+    public static void modifierTag(String modifier, String tag, int value) {
+        var id = net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM, ResourceLocation.parse(tag));
+        ToolModifiers.ingredient(modifier, stack -> stack.is(id), value);
+    }
+    public static void headDrop(java.util.function.Predicate<net.minecraft.world.entity.LivingEntity> entity,
+                                java.util.function.Function<net.minecraft.world.entity.LivingEntity, net.minecraft.world.item.ItemStack> output) {
+        com.gctn.tconstruct.tools.HeadDrops.register(entity, output);
+    }
 
     /** 将扩展材料关联到已经由本模组或其他模组注册的流体；在启动脚本中调用。 */
     public static void castingMaterial(Material material, String fluidId) {

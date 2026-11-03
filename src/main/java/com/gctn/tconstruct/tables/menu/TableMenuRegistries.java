@@ -14,10 +14,7 @@ public class TableMenuRegistries {
             DeferredRegister.create(Registries.MENU, TinkersNirvana.MODID);
 
     public static final Supplier<MenuType<ToolStationMenu>> TOOL_STATION_MENU =
-            TABLE_MENU_TYPES.register("toolstation", () -> new MenuType<>(
-                    ToolStationMenu::new,
-                    FeatureFlags.DEFAULT_FLAGS
-            ));
+            TABLE_MENU_TYPES.register("toolstation", () -> net.neoforged.neoforge.common.extensions.IMenuTypeExtension.create(ToolStationMenu::new));
 
     public static void register(IEventBus eventBus) {
         TABLE_MENU_TYPES.register(eventBus);

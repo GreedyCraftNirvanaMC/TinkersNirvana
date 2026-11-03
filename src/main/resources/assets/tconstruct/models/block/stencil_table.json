@@ -1,0 +1,11 @@
+{
+  "parent": "tconstruct:block/table",
+  "textures": {
+    "particle": "tconstruct:block/workshop/stenciltable_top",
+    "top": "tconstruct:block/workshop/stenciltable_top",
+    "side": "tconstruct:block/table_side",
+    "bottom": "minecraft:block/oak_planks",
+    "leg": "minecraft:block/oak_planks",
+    "leg_bottom": "minecraft:block/oak_planks"
+  }
+}

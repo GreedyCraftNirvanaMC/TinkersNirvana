@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "tconstruct:slime_congealed_magma"
+  },
+  "result": {
+    "id": "tconstruct:slime_channel_magma",
+    "count": 3
+  },
+  "experience": 0.15,
+  "cookingtime": 200
+}

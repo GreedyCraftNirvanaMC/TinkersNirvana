@@ -1,0 +1,23 @@
+{
+  "tool": "mattock",
+  "text": [
+    {
+      "text": "The Mattock is a precise multi-use tool. It is effective on wood, soil and plants."
+    },
+    {
+      "text": "\n"
+    },
+    {
+      "text": "It can create paths like shovels and deal respectable damage in combat."
+    }
+  ],
+  "properties": [
+    "A shovel and axe combined",
+    "Creates dirt paths",
+    "Effective on wood, soil and plants"
+  ],
+  "section": "tools",
+  "order": 6,
+  "id": "tools/mattock",
+  "title": ""
+}

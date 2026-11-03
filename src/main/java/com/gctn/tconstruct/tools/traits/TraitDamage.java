@@ -19,8 +19,10 @@ public final class TraitDamage {
         var key = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("tconstruct", id));
         DamageSource source = new DamageSource(target.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key), attacker);
         int invulnerability = target.invulnerableTime;
+        var damage = (com.gctn.tconstruct.mixin.LivingEntityDamageAccessor) target;
+        float previous = damage.tconstruct$getLastHurt();
         target.invulnerableTime = 0;
         try { return target.hurt(source, amount); }
-        finally { target.invulnerableTime = invulnerability; }
+        finally { target.invulnerableTime = invulnerability; damage.tconstruct$setLastHurt(previous); }
     }
 }

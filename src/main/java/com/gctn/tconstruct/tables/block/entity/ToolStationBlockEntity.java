@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ToolStationBlockEntity extends BaseContainerBlockEntity {
+    public final com.gctn.tconstruct.tables.TableMaterial material;
     private static final int CONTAINER_SIZE = ToolStationMenu.CONTAINER_SIZE;
     private static final int INPUT_SLOT_COUNT = ToolStationMenu.INPUT_SLOT_COUNT;
     private static final int RESULT_SLOT = ToolStationMenu.RESULT_SLOT_INDEX;
@@ -41,6 +42,13 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     private NonNullList<ItemStack> items = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
     private Mode mode = Mode.DEFAULT;
     private int disassemblyState = DISASSEMBLY_NONE;
+    private String pendingName = "";
+    public String pendingName() { return pendingName; }
+    public void rename(String name) {
+        pendingName = net.minecraft.util.StringUtil.filterText(name).strip();
+        if (pendingName.length() > 50) { pendingName = pendingName.substring(0, 50); }
+        updateResult();
+    }
 
     private final ContainerData menuData = new ContainerData() {
         @Override
@@ -66,6 +74,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
 
     public ToolStationBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(TableEntityRegistries.TOOL_STATION_BLOCK_ENTITY.get(), blockPos, blockState);
+        material = new com.gctn.tconstruct.tables.TableMaterial((isForge() ? net.minecraft.world.level.block.Blocks.IRON_BLOCK : net.minecraft.world.level.block.Blocks.OAK_PLANKS).defaultBlockState());
     }
 
     @Override
@@ -241,8 +250,22 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         if (!result.isEmpty() && result.getItem() instanceof com.gctn.tconstruct.tools.TinkerTools && level != null) {
             com.gctn.tconstruct.tools.ToolModifiers.applyEnchantments(result, level.registryAccess());
         }
+        if (result.isEmpty() && canRenameAlone()) { result = getItem(0).copyWithCount(1); }
+        if (!pendingName.isEmpty() && canRenameItem(result)) {
+            result.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, Component.literal(pendingName));
+        }
         return result;
     }
+
+    private boolean canRenameAlone() {
+        if (mode != Mode.DEFAULT || pendingName.isEmpty() || !canRenameItem(getItem(0))) { return false; }
+        Component current = getItem(0).get(net.minecraft.core.component.DataComponents.CUSTOM_NAME);
+        if (current != null && current.getString().equals(pendingName)) { return false; }
+        for (int i = 1; i < INPUT_SLOT_COUNT; i++) { if (!getItem(i).isEmpty()) { return false; } }
+        return true;
+    }
+
+    private static boolean canRenameItem(ItemStack stack) { return stack.getItem() instanceof com.gctn.tconstruct.tools.TinkerTools || com.gctn.tconstruct.tables.recipe.StationProcessingRecipes.supports(stack); }
 
     private void takeCraftingResult() {
         if (this.createCraftingResult().isEmpty()) {
@@ -251,7 +274,8 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         }
 
         if (this.mode == Mode.DEFAULT) {
-            ToolStationDefaultRecipes.consumeInputs(this);
+            if (canRenameAlone()) { setItem(0, ItemStack.EMPTY); }
+            else { ToolStationDefaultRecipes.consumeInputs(this); }
         } else {
             ToolAssemblyRecipe recipe = ToolStationAssemblyRecipes.get(this.mode);
             if (recipe == null) {
@@ -313,6 +337,9 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         super.loadAdditional(tag, registries);
         this.items = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
         ContainerHelper.loadAllItems(tag, this.items, registries);
+        material.load(tag, registries);
+        requestModelDataUpdate();
+        if (level != null && level.isClientSide) { level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3); }
 
         Mode loadedMode = Mode.byButtonId(tag.getInt(TAG_MODE));
         this.mode = loadedMode == null ? Mode.DEFAULT : loadedMode;
@@ -328,6 +355,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         ContainerHelper.saveAllItems(tag, this.items, registries);
         tag.putInt(TAG_MODE, this.mode.getButtonId());
         tag.putInt(TAG_DISASSEMBLY_STATE, this.disassemblyState);
+        material.save(tag);
     }
 
     @Override
@@ -342,4 +370,16 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     }
 
     public boolean isForge() { return getBlockState().is(com.gctn.tconstruct.tables.block.TableBlocks.TOOL_FORGE.get()); }
+    @Override public net.neoforged.neoforge.client.model.data.ModelData getModelData() { return material.modelData(); }
+    @Override protected void applyImplicitComponents(DataComponentInput input) {
+        super.applyImplicitComponents(input);
+        material.set(input.getOrDefault(com.gctn.tconstruct.init.TinkerDataComponents.TABLE_MATERIAL.get(), material.state()));
+    }
+    @Override protected void collectImplicitComponents(net.minecraft.core.component.DataComponentMap.Builder output) { super.collectImplicitComponents(output); material.collect(output); }
+    @Override public void setChanged() {
+        super.setChanged();
+        if (level != null && !level.isClientSide && !isRemoved()) { level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3); }
+    }
+    @Override public CompoundTag getUpdateTag(HolderLookup.Provider registries) { return saveWithoutMetadata(registries); }
+    @Override public net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket getUpdatePacket() { return net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket.create(this); }
 }

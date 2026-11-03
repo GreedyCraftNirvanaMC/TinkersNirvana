@@ -20,6 +20,7 @@ public final class ToolSounds {
     public static final Supplier<SoundEvent> CHARGED = sound("charged");
     public static final Supplier<SoundEvent> DISCHARGE = sound("discharge");
     public static final Supplier<SoundEvent> CROSSBOW_RELOAD = sound("crossbow_reload");
+    public static final Supplier<SoundEvent> SLIMESLING = sound("slimesling");
     private ToolSounds() {}
     private static Supplier<SoundEvent> sound(String id) {
         return SOUNDS.register(id, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(TinkersNirvana.MODID, id)));

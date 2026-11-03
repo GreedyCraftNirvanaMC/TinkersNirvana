@@ -1,0 +1,18 @@
+{
+  "title": "乾式製錬炉",
+  "image": {
+    "file": "tconstruct:textures/gui/book/smeltery.png",
+    "texture_width": 854,
+    "texture_height": 480,
+    "width": 150,
+    "height": 84
+  },
+  "text": [
+    {
+      "text": "精錬所には色々なものがあります。しかしこれは私のものです。これはアイテムを非常によく溶かします。"
+    }
+  ],
+  "section": "seared_devices",
+  "order": 0,
+  "id": "seared_devices/smeltery_intro"
+}

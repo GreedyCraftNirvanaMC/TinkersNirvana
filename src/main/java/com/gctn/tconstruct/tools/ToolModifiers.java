@@ -41,6 +41,8 @@ import java.util.function.Predicate;
 /** 强化的注册、纯预览及消耗共用同一计划，扩展不依赖 KubeJS 或其他可选模组。 */
 public final class ToolModifiers {
     private static final Map<String, Definition> MODIFIERS = new LinkedHashMap<>();
+    private record IngredientValue(String modifier, Predicate<ItemStack> ingredient, int value) {}
+    private static final java.util.List<IngredientValue> INGREDIENTS = new java.util.ArrayList<>();
     static {
         add("haste", 5, 50, Items.REDSTONE, (stats, units) -> {
             for (int i = 0; i < units; i++) {
@@ -48,7 +50,7 @@ public final class ToolModifiers {
                         : stats.miningSpeed <= 25 ? .1F - .05F * (stats.miningSpeed - 15) / 10 : .05F;
             }
             stats.miningSpeed += units / 50 * .5F;
-            stats.attackSpeed *= 1 + units * .004F;
+            stats.attackSpeed += stats.baseAttackSpeed * units * .004F;
             stats.drawSpeed *= 1 + units * .002F;
         });
         add("sharpness", 5, 72, Items.QUARTZ, (stats, units) -> {
@@ -61,15 +63,15 @@ public final class ToolModifiers {
         add("emerald", 1, 1, Items.EMERALD, (stats, units) -> { stats.durability += stats.baseDurability / 2; if (stats.harvestLevel < 2) { stats.harvestLevel++; } });
         add("luck", 3, 60, Items.LAPIS_LAZULI, (stats, units) -> {});
         add("fiery", 5, 25, Items.BLAZE_POWDER, (stats, units) -> {});
-        add("knockback", 10, 1, Items.PISTON, (stats, units) -> {});
+        add("knockback", 99, 10, Items.PISTON, (stats, units) -> {});
         add("bane_of_arthropods", 5, 24, Items.FERMENTED_SPIDER_EYE, (stats, units) -> {});
         register(new Definition("smite", 5, 24, stack -> stack.is(com.gctn.tconstruct.common.soil.SoilModule.BLOCKS.get("consecrated_soil").get().asItem()), (stats, units) -> {}));
-        add("shulking", 1, 1, Items.POPPED_CHORUS_FRUIT, (stats, units) -> {});
+        add("shulking", 1, 50, Items.POPPED_CHORUS_FRUIT, (stats, units) -> {});
         add("webbed", 3, 1, Items.COBWEB, (stats, units) -> {});
         add("soulbound", 1, 1, Items.NETHER_STAR, (stats, units) -> {});
         add("endearment", 1, 1, Items.DRAGON_HEAD, (stats, units) -> {});
         add("incognito", 1, 1, Items.WET_SPONGE, (stats, units) -> {});
-        add("fins", 1, 1, Items.COD, (stats, units) -> {});
+        add("fins", 1, 2, Items.COD, (stats, units) -> {});
         supply("reinforced", "reinforcement", 5);
         supply("necrotic", "necrotic_bone", 5);
         supply("silktouch", "silky_jewel", 1);
@@ -77,10 +79,15 @@ public final class ToolModifiers {
         supply("mending_moss", "mending_moss", 3);
         supply("harvestwidth", "expander_horizontal", 1);
         supply("harvestheight", "expander_vertical", 1);
-        supply("creative", "creative_modifier", 100);
+        supply("creative", "creative_modifier", Integer.MAX_VALUE);
         register(new Definition("beheading", 10, 1, stack -> stack.is(Items.ENDER_PEARL), (stats, units) -> {}));
         register(new Definition("blasting", 3, 3, stack -> stack.is(Items.TNT), (stats, units) -> {}));
         register(new Definition("glowing", 1, 1, stack -> stack.is(Items.ENDER_EYE), (stats, units) -> {}));
+        ingredient("haste", stack -> stack.is(Items.REDSTONE_BLOCK), 9);
+        ingredient("luck", stack -> stack.is(Items.LAPIS_BLOCK), 9);
+        ingredient("sharpness", stack -> stack.is(Items.QUARTZ_BLOCK), 4);
+        ingredient("knockback", stack -> stack.is(Items.STICKY_PISTON), 1);
+        ingredient("fins", stack -> stack.is(net.minecraft.tags.TagKey.create(Registries.ITEM, net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("c", "foods/raw_fish"))), 1);
     }
 
     public static void tick(ItemStack tool, net.minecraft.world.level.Level level, net.minecraft.world.entity.Entity entity, int slot, boolean selected) {
@@ -113,13 +120,22 @@ public final class ToolModifiers {
     public record Definition(String id, int maxLevel, int unitsPerLevel, Predicate<ItemStack> ingredient,
                              BiConsumer<ToolStats, Integer> modifyStats) {
         public Definition {
-            if (maxLevel < 1 || unitsPerLevel < 1 || ingredient == null || modifyStats == null) { throw new IllegalArgumentException("Invalid modifier: " + id); }
+            if (id == null || net.minecraft.resources.ResourceLocation.tryParse(id) == null || maxLevel < 1 || unitsPerLevel < 1 || (long) maxLevel * unitsPerLevel > Integer.MAX_VALUE || ingredient == null || modifyStats == null) { throw new IllegalArgumentException("Invalid modifier: " + id); }
         }
     }
     public static void register(Definition definition) {
         if (MODIFIERS.putIfAbsent(definition.id(), definition) != null) { throw new IllegalArgumentException("Duplicate modifier: " + definition.id()); }
     }
     public static Map<String, Definition> entries() { return Collections.unmodifiableMap(MODIFIERS); }
+    /** Adds tag/predicate-based equivalents such as one storage block worth nine modifier ingredients. */
+    public static void ingredient(String modifier, Predicate<ItemStack> ingredient, int value) {
+        if (!MODIFIERS.containsKey(modifier) || ingredient == null || value < 1 || value > 1000000) { throw new IllegalArgumentException("Invalid modifier ingredient: " + modifier); }
+        INGREDIENTS.add(new IngredientValue(modifier, ingredient, value));
+    }
+    public static int ingredientValue(Definition definition, ItemStack stack) {
+        for (int i = INGREDIENTS.size() - 1; i >= 0; i--) { var entry = INGREDIENTS.get(i); if (entry.modifier.equals(definition.id()) && entry.ingredient.test(stack)) { return entry.value; } }
+        return definition.ingredient().test(stack) ? 1 : 0;
+    }
     private static void add(String id, int max, int units, Item ingredient, BiConsumer<ToolStats, Integer> effect) {
         register(new Definition(id, max, units, stack -> stack.is(ingredient), effect));
     }
@@ -135,8 +151,8 @@ public final class ToolModifiers {
         return definition == null || units == 0 ? 0 : Math.min(definition.maxLevel(), (units - 1) / definition.unitsPerLevel() + 1);
     }
     public static int usedSlots(ItemStack tool) {
-        return MODIFIERS.keySet().stream().filter(id -> !java.util.Set.of("creative", "endearment", "incognito", "beheading").contains(id))
-                .mapToInt(id -> id.equals("luck") || id.equals("blasting") ? (units(tool, id) > 0 ? 1 : 0) : level(tool, id)).sum();
+        return (int) Math.min(Integer.MAX_VALUE, MODIFIERS.keySet().stream().filter(id -> !java.util.Set.of("creative", "endearment", "incognito", "beheading").contains(id))
+                .mapToLong(id -> id.equals("luck") || id.equals("blasting") ? (units(tool, id) > 0 ? 1 : 0) : level(tool, id)).sum());
     }
 
     public static Plan plan(Container container) {
@@ -158,8 +174,9 @@ public final class ToolModifiers {
                 for (int other = 1; other < 6; other++) { if (container.getItem(other).is(Items.FLINT)) { flint = other; break; } }
                 if (mat == null || flint < 0 || mat.getStats("Head", HeadMaterialStats.class) == null) { return null; }
                 int tier = mat.getStats("Head", HeadMaterialStats.class).harvestLevel;
-                if (tier <= ToolBuilder.savedStats(source).getInt("HarvestLevel")) { return null; }
+                if (item.definition().effectiveBlocks().isEmpty() || mat.identifier.equals(material.getString("FortifiedMaterial"))) { return null; }
                 material.putInt("FortifiedTier", tier);
+                material.putString("FortifiedMaterial", mat.identifier);
                 counts[slot] = 1; counts[flint] = 1; changed = true;
                 for (int other = 1; other < 6; other++) { if (!container.getItem(other).isEmpty() && counts[other] == 0) { return null; } }
                 break;
@@ -169,15 +186,24 @@ public final class ToolModifiers {
             for (int slot = 1; slot < 6; slot++) {
                 ItemStack input = container.getItem(slot);
                 if (input.isEmpty()) { continue; }
-                Definition match = MODIFIERS.values().stream().filter(definition -> definition.ingredient().test(input)).findFirst().orElse(null);
+                Definition match = MODIFIERS.values().stream().filter(definition -> ingredientValue(definition, input) > 0).findFirst().orElse(null);
                 if (match == null) { return null; }
                 int current = modifiers.getInt(match.id());
                 if (match.id().equals("beheading") || match.id().equals("glowing")) { return null; }
                 int capacity = match.id().equals("luck") ? 360 : match.maxLevel() * match.unitsPerLevel();
-                int add = Math.min(input.getCount(), capacity - current);
+                var staged = source.copyWithCount(1); var stagedData = material.copy(); stagedData.put("Modifiers", modifiers.copy()); staged.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(stagedData));
+                int free = item.getTotalModifierSlots(staged) - usedSlots(staged);
+                if (!java.util.Set.of("creative", "endearment", "incognito", "beheading").contains(match.id())) {
+                    if (match.id().equals("luck") || match.id().equals("blasting")) { if (current == 0 && free <= 0) { return null; } }
+                    else { capacity = (int) Math.min(capacity, Math.max(0L, (long) level(staged, match.id()) + free) * match.unitsPerLevel()); }
+                }
+                int value = ingredientValue(match, input);
+                int consumed = (int) Math.min(input.getCount(), ((long) Math.max(0, capacity - current) + value - 1) / value);
+                int add = (int) Math.min(Math.max(0, capacity - current), (long) consumed * value);
                 if (match.id().equals("blasting")) { add -= add % 3; }
+                if (match.id().equals("fins")) { add -= add % 2; }
                 if (add <= 0) { return null; }
-                counts[slot] = add;
+                counts[slot] = (int) (((long) add + value - 1) / value);
                 modifiers.putInt(match.id(), current + add);
                 changed = true;
             }
@@ -226,6 +252,10 @@ public final class ToolModifiers {
             com.gctn.tconstruct.tools.traits.ToolTraits.addTraits(traits, mat.getTraitsForStats(matchingPart.traitStats(item.definition().action())));
             result.set(TinkerDataComponents.TINKER_TRAITS.get(), CustomData.of(traits));
             material.putString("Embossed", mat.identifier);
+            var embossed = new CompoundTag();
+            com.gctn.tconstruct.tools.traits.ToolTraits.addTraits(embossed, mat.getTraitsForStats(matchingPart.traitStats(item.definition().action())));
+            material.put("EmbossedTraits", embossed);
+            material.putString("EmbossedPart", part.id());
             for (int slot : new int[]{partSlot, green, blue, magma, gold}) { counts[slot] = 1; }
         }
         for (int slot = 1; slot < 6; slot++) { if (!container.getItem(slot).isEmpty() && counts[slot] == 0) { return null; } }
@@ -248,7 +278,18 @@ public final class ToolModifiers {
             int units = units(tool, definition.id());
             if (units > 0) { definition.modifyStats().accept(stats, Math.min(units, definition.maxLevel() * definition.unitsPerLevel())); }
         }
-        stats.harvestLevel = Math.max(stats.harvestLevel, TinkerDataComponents.getMaterialTag(tool).getInt("FortifiedTier"));
+        var material = TinkerDataComponents.getMaterialTag(tool);
+        if (material.contains("FortifiedTier")) { stats.harvestLevel = material.getInt("FortifiedTier"); }
+    }
+
+    public static boolean isCompatible(ItemStack tool) {
+        if (!(tool.getItem() instanceof AntiqueTool item)) { return false; }
+        var modifiers = data(tool);
+        if (modifiers.getInt("silktouch") > 0 && modifiers.getInt("luck") > 0) { return false; }
+        if (AntiqueTraits.has(tool, "squeaky") && (modifiers.getInt("luck") > 0 || modifiers.getInt("silktouch") > 0 || modifiers.getInt("blasting") > 0)) { return false; }
+        if (modifiers.getInt("blasting") > 0 && (item.definition().effectiveBlocks().isEmpty() || modifiers.getInt("luck") > 0 || modifiers.getInt("silktouch") > 0)) { return false; }
+        if (modifiers.getInt("fins") > 0 && !item.isAmmo()) { return false; }
+        return item.getTotalModifierSlots(tool) >= usedSlots(tool);
     }
 
     /** 原版附魔参与掉落表和其他模组事件，避免自行仿造时运与精准采集。 */
@@ -256,6 +297,7 @@ public final class ToolModifiers {
         var lookup = registries.lookupOrThrow(Registries.ENCHANTMENT);
         var builder = new net.minecraft.world.item.enchantment.ItemEnchantments.Mutable(
                 tool.getOrDefault(DataComponents.ENCHANTMENTS, net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY));
+        builder.removeIf(enchantment -> enchantment.is(Enchantments.FORTUNE) || enchantment.is(Enchantments.LOOTING) || enchantment.is(Enchantments.SILK_TOUCH));
         int luck = level(tool, "luck");
         if (luck > 0) {
             builder.upgrade(lookup.getOrThrow(Enchantments.FORTUNE), luck);
@@ -268,31 +310,48 @@ public final class ToolModifiers {
     public static float modifyAttack(ItemStack tool, LivingEntity attacker, LivingEntity target, float damage) {
         if (target.getType().is(EntityTypeTags.UNDEAD)) { damage += units(tool, "smite") / 24F * 2.5F; }
         if (target.getType().is(EntityTypeTags.ARTHROPOD)) { damage += units(tool, "bane_of_arthropods") / 24F * 2.5F; }
-        if (!target.fireImmune()) { damage += units(tool, "fiery") / 15F; }
         return AntiqueTraits.has(tool, "squeaky") ? 0 : damage;
     }
 
     public static void afterHit(ItemStack tool, LivingEntity target, LivingEntity attacker) {
         int fire = units(tool, "fiery");
-        if (fire > 0) { target.igniteForSeconds(1 + fire / 8); }
-        if (level(tool, "knockback") > 0) { target.knockback(level(tool, "knockback") * .5, attacker.getX() - target.getX(), attacker.getZ() - target.getZ()); }
-        if (level(tool, "necrotic") > 0) { attacker.heal(ToolBuilder.savedStats(tool).getFloat("Attack") * level(tool, "necrotic") * .05F); }
-        if (level(tool, "shulking") > 0) { target.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 60)); }
-        if (level(tool, "webbed") > 0) { target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, level(tool, "webbed") - 1)); }
+        if (fire > 0) { target.igniteForSeconds(1 + fire / 8); com.gctn.tconstruct.tools.traits.TraitDamage.hurt(target, attacker, "fiery", fire / 15F); }
+        if (units(tool, "knockback") > 0) { target.knockback(units(tool, "knockback") * .1, attacker.getX() - target.getX(), attacker.getZ() - target.getZ()); }
+        if (units(tool, "shulking") > 0) { target.addEffect(new MobEffectInstance(MobEffects.LEVITATION, units(tool, "shulking") / 2 + 10)); }
+        if (level(tool, "webbed") > 0) { target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, level(tool, "webbed") * 60, 1)); }
+    }
+
+    public static void afterDamage(ItemStack tool, LivingEntity attacker, float actualDamage) {
+        int necrotic = level(tool, "necrotic");
+        if (necrotic > 0 && actualDamage > 0) { attacker.heal(actualDamage * necrotic * .05F); }
     }
 
     public static void smeltDrops(BlockDropsEvent event) {
+        if (!event.getTool().isCorrectToolForDrops(event.getState())) { return; }
+        var extra = new java.util.ArrayList<net.minecraft.world.entity.item.ItemEntity>();
         for (var entity : event.getDrops()) {
             ItemStack input = entity.getItem();
             var recipe = event.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(input), event.getLevel());
             if (recipe.isPresent()) {
                 ItemStack result = recipe.get().value().assemble(new SingleRecipeInput(input), event.getLevel().registryAccess());
                 if (!result.isEmpty()) {
-                    result.setCount(Math.min(result.getMaxStackSize(), input.getCount() * result.getCount()));
-                    entity.setItem(result);
+                    int count = Math.multiplyExact(input.getCount(), result.getCount());
+                    int fortune = ToolModifiers.level(event.getTool(), "luck");
+                    if (com.gctn.tconstruct.Config.AUTOSMELT_FORTUNE.get() && fortune > 0) { count = count * event.getLevel().random.nextInt(fortune + 1) + 1; }
+                    entity.setItem(result.copyWithCount(Math.min(result.getMaxStackSize(), count)));
+                    for (int remaining = count - entity.getItem().getCount(); remaining > 0;) {
+                        int batch = Math.min(result.getMaxStackSize(), remaining); remaining -= batch;
+                        var drop = new net.minecraft.world.entity.item.ItemEntity(event.getLevel(), entity.getX(), entity.getY(), entity.getZ(), result.copyWithCount(batch));
+                        drop.setDefaultPickUpDelay(); extra.add(drop);
+                    }
+                    float experience = recipe.get().value().getExperience() * input.getCount();
+                    int whole = net.minecraft.util.Mth.floor(experience);
+                    if (event.getLevel().random.nextFloat() < experience - whole) { whole++; }
+                    event.setDroppedExperience(event.getDroppedExperience() + whole);
                 }
             }
         }
+        event.getDrops().addAll(extra);
     }
 
     public record Plan(ItemStack result, int[] counts) {

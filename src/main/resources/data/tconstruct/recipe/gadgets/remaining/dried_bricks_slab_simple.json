@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconstruct:dried_brick"
+    }
+  },
+  "result": {
+    "id": "tconstruct:dried_clay_bricks_slab",
+    "count": 1
+  }
+}

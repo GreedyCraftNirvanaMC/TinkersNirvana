@@ -1,0 +1,18 @@
+{
+  "title": "Tinkertanken",
+  "image": {
+    "file": "tconstruct:textures/gui/book/tinker_tank.png",
+    "texture_width": 1844,
+    "texture_height": 1186,
+    "width": 150,
+    "height": 96
+  },
+  "text": [
+    {
+      "text": "Tinkertanken är en enorm tank som håller mycket mer vätska än ett smältverk, men utan hetta kan man varken göra legeringar eller smälta."
+    }
+  ],
+  "section": "seared_devices",
+  "order": 10,
+  "id": "seared_devices/tinker_tank_intro"
+}

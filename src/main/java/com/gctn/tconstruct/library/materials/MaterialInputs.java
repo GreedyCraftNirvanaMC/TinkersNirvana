@@ -95,10 +95,17 @@ public final class MaterialInputs {
         item(TinkerMaterials.vine, "minecraft:vine", 1);
         item(TinkerMaterials.blaze, "minecraft:blaze_rod", 1);
         item(TinkerMaterials.reed, "minecraft:sugar_cane", 1);
-        item(TinkerMaterials.ice, "minecraft:ice", 1);
+        item(TinkerMaterials.ice, "minecraft:packed_ice", 1);
         item(TinkerMaterials.endrod, "minecraft:end_rod", 1);
         item(TinkerMaterials.feather, "minecraft:feather", 1);
-        tag(TinkerMaterials.leaf, "minecraft:leaves", 1);
+        for (String color : new String[]{"blue", "purple"}) {
+            Material material = color.equals("blue") ? TinkerMaterials.slimevine_blue : TinkerMaterials.slimevine_purple;
+            for (String stage : new String[]{"", "_mid", "_end"}) { item(material, "tconstruct:slime_vine_" + color + stage, 1); }
+        }
+        item(TinkerMaterials.slimeleaf_blue, "tconstruct:slime_leaves_blue", .5f);
+        item(TinkerMaterials.slimeleaf_purple, "tconstruct:slime_leaves_purple", .5f);
+        item(TinkerMaterials.slimeleaf_orange, "tconstruct:slime_leaves_orange", .5f);
+        tag(TinkerMaterials.leaf, "minecraft:leaves", .5f);
     }
 
     private record Entry(Material material, Predicate<ItemStack> ingredient, float value) {}

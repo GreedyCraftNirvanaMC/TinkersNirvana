@@ -21,11 +21,11 @@ def export_png(image, path):
         raise RuntimeError(str(result))
 
 
-def restyle_tools(antique_root, output_root, start=0, end=None):
+def restyle_tools(antique_root, output_root, start=0, end=None, manifest_name="antique_tool_textures.json"):
     root = Path(output_root)
     source_root = Path(antique_root) / "src/main/resources/assets/tconstruct"
     output = root / "src/main/resources/assets/tconstruct"
-    rows = json.loads((root / "scripts/antique_tool_textures.json").read_text(encoding="utf-8"))
+    rows = json.loads((root / "scripts" / manifest_name).read_text(encoding="utf-8"))
     for row in rows[start:end]:
         if row["source"] is None:
             image = Gimp.Image.new(16, 16, Gimp.ImageBaseType.RGB)
@@ -77,6 +77,9 @@ def restyle_tools(antique_root, output_root, start=0, end=None):
             if hashlib.sha256(source.read_bytes()).hexdigest() != row["source_sha256"]:
                 raise ValueError("Source texture changed: " + str(source))
             image = Gimp.file_load(Gimp.RunMode.NONINTERACTIVE, Gio.File.new_for_path(str(source)))
+            if "crop" in row:
+                x, y, width, height = row["crop"]
+                image.crop(width, height, x, y)
             if image.get_base_type() != Gimp.ImageBaseType.RGB:
                 image.convert_rgb()
             layer = image.get_layers()[0]
@@ -93,7 +96,9 @@ def restyle_tools(antique_root, output_root, start=0, end=None):
                     target_x, target_y = x + dx, y + dy
                     if not alpha or not (0 <= target_x < width and 0 <= target_y < height):
                         continue
-                    if row["neutral"]:
+                    if row.get("preserve_pixels"):
+                        pass
+                    elif row["neutral"]:
                         luminance = (red * .2126 + green * .7152 + blue * .0722) / 255
                         # 原版铁工具的窄高光、实色中间调与暗边；不新增抗锯齿或噪点。
                         ramp = [24, 68, 107, 150, 190, 216, 255]

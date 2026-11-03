@@ -61,6 +61,33 @@ public class ToolStationMenu extends AbstractContainerMenu {
     private final Container toolStation;
     private final ContainerData data;
     private final ToolStationBlockEntity blockEntity;
+    private net.minecraft.core.BlockPos stationPos;
+    private NearbyInventory nearby;
+    private Inventory owner;
+    private String receivedName = "", sentName;
+    public String pendingName() { return blockEntity == null ? receivedName : blockEntity.pendingName(); }
+    public void receiveName(String name) { receivedName = name; }
+    public void rename(String name) { if (blockEntity != null) { blockEntity.rename(name); broadcastChanges(); } }
+    @Override public void broadcastChanges() {
+        super.broadcastChanges();
+        if (blockEntity != null && owner.player instanceof net.minecraft.server.level.ServerPlayer player && !pendingName().equals(sentName)) {
+            sentName = pendingName();
+            net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(player, new com.gctn.tconstruct.tables.WorkshopNetwork.Name(containerId, sentName));
+        }
+    }
+
+    public ToolStationMenu(int id, Inventory inventory, net.minecraft.network.RegistryFriendlyByteBuf buffer) {
+        this(id, inventory);
+        this.stationPos = buffer.readBlockPos();
+        attachNearby(inventory, NearbyInventory.read(buffer));
+    }
+
+    public net.minecraft.core.BlockPos position() { return blockEntity == null ? stationPos : blockEntity.getBlockPos(); }
+    public NearbyInventory nearby() { return nearby; }
+    private void attachNearby(Inventory inventory, NearbyInventory.Source source) {
+        nearby = new NearbyInventory(inventory.player, source, 182);
+        nearby.addSlots(this::addSlot); addDataSlots(nearby.data());
+    }
 
     public ToolStationMenu(int containerId, Inventory playerInventory) {
         this(containerId, playerInventory, new SimpleContainer(CONTAINER_SIZE),
@@ -69,6 +96,7 @@ public class ToolStationMenu extends AbstractContainerMenu {
 
     public ToolStationMenu(int containerId, Inventory playerInventory, ToolStationBlockEntity blockEntity) {
         this(containerId, playerInventory, blockEntity, blockEntity.getMenuData(), blockEntity);
+        attachNearby(playerInventory, NearbyInventory.find(playerInventory.player, blockEntity.getBlockPos(), null));
     }
 
     private ToolStationMenu(int containerId, Inventory playerInventory, Container container,
@@ -79,6 +107,7 @@ public class ToolStationMenu extends AbstractContainerMenu {
         this.toolStation = container;
         this.data = data;
         this.blockEntity = blockEntity;
+        this.owner = playerInventory;
         container.startOpen(playerInventory.player);
 
         this.addToolStationSlots(container);
@@ -92,7 +121,7 @@ public class ToolStationMenu extends AbstractContainerMenu {
             return ItemStack.EMPTY;
         }
         Slot quickMovedSlot = this.slots.get(quickMovedSlotIndex);
-        if (quickMovedSlot == null || !quickMovedSlot.hasItem()) {
+        if (quickMovedSlot == null || !quickMovedSlot.hasItem() || !quickMovedSlot.mayPickup(player)) {
             return ItemStack.EMPTY;
         }
 
@@ -130,11 +159,14 @@ public class ToolStationMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return this.toolStation.stillValid(player);
+        return this.toolStation.stillValid(player) && (nearby == null || nearby.valid());
     }
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
+        if (!stillValid(player)) { return false; }
+        if (nearby != null && nearby.click(id)) { broadcastFullState(); return true; }
+        if (id >= 100 && position() != null) { return stillValid(player) && com.gctn.tconstruct.tables.WorkshopModule.navigate(player, position(), id); }
         Mode selectedMode = Mode.byButtonId(id);
         if (selectedMode == null || !this.isModeButtonVisible(selectedMode) || this.blockEntity == null) {
             return false;
@@ -236,9 +268,15 @@ public class ToolStationMenu extends AbstractContainerMenu {
         }
     }
 
-    public void resultSlotTaken(Mode actionMode) {
+    public void resultSlotTaken(Mode actionMode, Player player, ItemStack crafted) {
         if (this.blockEntity != null) {
+            var inputs = new net.minecraft.world.SimpleContainer(INPUT_SLOT_COUNT);
+            for (int slot = 0; slot < INPUT_SLOT_COUNT; slot++) { inputs.setItem(slot, toolStation.getItem(slot).copy()); }
             this.blockEntity.resultTaken(actionMode);
+            if (actionMode != Mode.DISASSEMBLE && !crafted.isEmpty()) {
+                crafted.onCraftedBy(player.level(), player, crafted.getCount());
+                net.neoforged.neoforge.event.EventHooks.firePlayerCraftingEvent(player, crafted, inputs);
+            }
         }
     }
 
@@ -296,6 +334,7 @@ public class ToolStationMenu extends AbstractContainerMenu {
         if (this.moveItemStackTo(stack, INPUT_MENU_SLOT_START, TOOL_STATION_SLOT_COUNT, false)) {
             return true;
         }
+        if (this.moveItemStackTo(stack, HOTBAR_END, slots.size(), false)) { return true; }
         return quickMovedSlotIndex < PLAYER_INVENTORY_END
                 ? this.moveItemStackTo(stack, HOTBAR_START, HOTBAR_END, false)
                 : this.moveItemStackTo(stack, PLAYER_INVENTORY_START, PLAYER_INVENTORY_END, false);

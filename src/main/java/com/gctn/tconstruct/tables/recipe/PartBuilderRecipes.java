@@ -15,7 +15,15 @@ public final class PartBuilderRecipes {
     private PartBuilderRecipes() {}
 
     public static Plan plan(Container container) {
-        if (!(container.getItem(0).getItem() instanceof PatternItem)) { return null; }
+        return plan(container, false);
+    }
+
+    public static Plan planWithRemainder(Container container) {
+        return plan(container, true);
+    }
+
+    private static Plan plan(Container container, boolean returnShards) {
+        if (!(container.getItem(0).getItem() instanceof PatternItem) || PatternItem.isBlank(container.getItem(0))) { return null; }
         var part = PatternItem.selected(container.getItem(0));
         if (part.id().equals("bolt_core")) { return null; }
         com.gctn.tconstruct.library.materials.Material material = null;
@@ -35,6 +43,20 @@ public final class PartBuilderRecipes {
         }
         // 不接受无法完整分配的高价值原料，避免悄悄吞掉多余材料。
         if (material == null) { return null; }
+        if (returnShards) {
+            if (value + .0001F < part.cost()) { return null; }
+            float surplus = value - part.cost();
+            int shards = Math.round(surplus * 2);
+            if (shards > 64 || Math.abs(surplus - shards * .5F) > .001F) { return null; }
+            ItemStack remainder = ItemStack.EMPTY;
+            if (shards > 0) {
+                remainder = com.gctn.tconstruct.library.toolparts.AntiqueParts.get("shard").create(material);
+                remainder.setCount(shards);
+                ItemStack existing = container.getItem(6);
+                if (!existing.isEmpty() && (!ItemStack.isSameItemSameComponents(existing, remainder) || existing.getCount() + shards > existing.getMaxStackSize())) { return null; }
+            }
+            return new Plan(part.create(material), counts, remainder);
+        }
         int outputCount = Math.round(value / part.cost());
         if (outputCount < 1 || outputCount > 64 || Math.abs(value - part.cost() * outputCount) > 0.001F) { return null; }
         ItemStack result = part.create(material);
@@ -53,5 +75,16 @@ public final class PartBuilderRecipes {
             for (int slot = 1; slot < 6; slot++) { container.removeItem(slot, plan.counts()[slot]); }
         }
     }
-    public record Plan(ItemStack result, int[] counts) {}
+    public record Plan(ItemStack result, int[] counts, ItemStack remainder) {
+        public Plan(ItemStack result, int[] counts) { this(result, counts, ItemStack.EMPTY); }
+        public void consume(Container container) {
+            for (int slot = 1; slot < 6; slot++) { container.removeItem(slot, counts[slot]); }
+            if (!remainder.isEmpty()) {
+                ItemStack existing = container.getItem(6);
+                ItemStack output = remainder.copy();
+                if (!existing.isEmpty()) { output.grow(existing.getCount()); }
+                container.setItem(6, output);
+            }
+        }
+    }
 }

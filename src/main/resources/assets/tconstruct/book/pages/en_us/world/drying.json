@@ -1,0 +1,11 @@
+{
+  "id": "world/drying",
+  "section": "world",
+  "order": 2,
+  "title": "Drying and Storage",
+  "text": [
+    {
+      "text": "Put meat, slimeballs, or clay on a drying rack and wait for processing. Unfinished ingredients can be removed by hand; automation extracts finished products. Comparators signal completed output. Item racks display items. Pattern chests store patterns or casts; part chests store material-specific parts."
+    }
+  ]
+}

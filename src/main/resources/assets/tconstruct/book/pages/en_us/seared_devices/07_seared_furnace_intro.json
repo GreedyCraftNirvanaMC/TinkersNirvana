@@ -1,0 +1,18 @@
+{
+  "title": "The Seared Furnace",
+  "image": {
+    "file": "tconstruct:textures/gui/book/seared_furnace.png",
+    "texture_width": 854,
+    "texture_height": 480,
+    "width": 150,
+    "height": 84
+  },
+  "text": [
+    {
+      "text": "The Seared Furnace is a master to all furnaces, cooking quarter stacks at once and cooking food with greater speed."
+    }
+  ],
+  "section": "seared_devices",
+  "order": 7,
+  "id": "seared_devices/seared_furnace_intro"
+}

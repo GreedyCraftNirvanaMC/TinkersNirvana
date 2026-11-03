@@ -3,6 +3,7 @@ Installation information
 =======
 
 工具制作、装配和强化使用方式见 [TOOLS.md](TOOLS.md)，材料与 KubeJS 扩展接口见 [TOOL_API.md](TOOL_API.md)。
+世界与村庄设置见 [WORLD.md](WORLD.md)，宝典操作和资源包扩展见 [BOOK.md](BOOK.md)，装置使用见 [GADGETS.md](GADGETS.md)。
 
 This template repository can be directly cloned to get you started with a new
 mod. Simply create a new repository cloned from this one, by following the

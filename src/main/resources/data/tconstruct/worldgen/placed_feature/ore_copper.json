@@ -1,0 +1,12 @@
+{
+  "feature": "tconstruct:ore_copper",
+  "placement": [
+    {
+      "type": "tconstruct:antique_height",
+      "setting": "copper"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

@@ -46,7 +46,7 @@ public class Material {
     }
 
     public boolean isCraftable() {
-        return craftable;
+        return craftable || (castable && com.gctn.tconstruct.Config.CRAFT_CASTABLE_MATERIALS.get());
     }
 
     public boolean isCastable() {

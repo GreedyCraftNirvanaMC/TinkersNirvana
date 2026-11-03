@@ -86,6 +86,22 @@ public final class AntiqueTools {
 
     public static Map<String, Entry> entries() { return Collections.unmodifiableMap(TOOLS); }
     public static Entry get(String id) { return TOOLS.get(id); }
+    public static void addCreativeItems(java.util.function.Consumer<net.minecraft.world.item.ItemStack> output) {
+        for (Entry entry : TOOLS.values()) { for (var material : com.gctn.tconstruct.library.TinkerMaterials.materials) {
+            if (material.isHidden()) { continue; }
+            var materials = new java.util.ArrayList<com.gctn.tconstruct.library.materials.Material>();
+            for (var part : entry.definition.parts()) {
+                materials.add(switch (part.stat()) {
+                    case "BowString" -> com.gctn.tconstruct.library.TinkerMaterials.string;
+                    case "Fletching" -> com.gctn.tconstruct.library.TinkerMaterials.feather;
+                    case "Shaft" -> com.gctn.tconstruct.library.TinkerMaterials.wood;
+                    default -> material;
+                });
+            }
+            var stack = ToolBuilder.assemble(entry, materials);
+            if (!stack.isEmpty()) { output.accept(stack); if (!com.gctn.tconstruct.Config.LIST_ALL_TOOL_MATERIALS.get()) { break; } }
+        } }
+    }
     public static void init() {}
     public record Entry(ToolDefinition definition, Supplier<? extends Item> item) {}
 }

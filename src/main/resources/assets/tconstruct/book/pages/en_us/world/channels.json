@@ -1,0 +1,11 @@
+{
+  "id": "world/channels",
+  "section": "world",
+  "order": 3,
+  "title": "Slime Channels",
+  "text": [
+    {
+      "text": "Smelt congealed slime to make slime channels. Placement position selects flow direction; sneak to reverse it. Channels work on floors, walls, ceilings, and corners, carrying entities and dropped items. Redstone stops the flow. Items inside channels are protected from expiration."
+    }
+  ]
+}

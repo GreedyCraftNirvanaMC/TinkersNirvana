@@ -15,7 +15,7 @@ public final class ToolStationDisassemblyRecipes {
     }
 
     public static PartList createParts(ItemStack stack) {
-        if (!isFullDurabilityTool(stack)) {
+        if (!com.gctn.tconstruct.Config.DECONSTRUCT_TOOLS.get() || !isFullDurabilityTool(stack)) {
             return PartList.EMPTY;
         }
 

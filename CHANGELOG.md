@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- Add the Stencil Table, Part Builder, persistent Crafting Station, pattern/part
+  chests, shared workshop navigation, adjacent inventory access, material variants,
+  tool naming and part replacement, crafting-grid kit repair, and offhand harvesting.
+- Port slime islands, underground pools, trees and plants, configurable ore
+  generation, and workshops/smelteries for all five native village styles.
+- Add drying racks, jerky and slime foods, slime boots and slings, piggyback packs,
+  six-face slime channels, seven fancy frames, EFLN, and the spaghetti progression.
+- Restore the illustrated guidebook with searchable translated pages, live material
+  and modifier catalogs, resource-pack pages, and rotatable layered multiblocks.
+- Expose native drying recipes, station processing, weighted modifier ingredients,
+  native equipment attributes, configurable beheading drops, and entity melting.
+- Align modifier units, fortification, necrotic healing, secondary fiery damage,
+  ingredient remainders, and creative-only modifier limits with native mechanics.
+- Restore blank-pattern naming and validation, mattock/kama right-click roles,
+  gravel-to-flint crafting, optional native anvil/breaking rules, projectile expiry,
+  adjacent-inventory exclusions, and autosmelt experience with complete stack output.
+- Restyle the added workshop, world, gadget, gear, and book artwork through GIMP
+  while retaining Antique silhouettes and adapting models to modern block states.
 - Format tool pattern names with their selected part instead of displaying an
   untranslated `%s` placeholder.
 - Drop the Tool Station item when its block is broken in survival.

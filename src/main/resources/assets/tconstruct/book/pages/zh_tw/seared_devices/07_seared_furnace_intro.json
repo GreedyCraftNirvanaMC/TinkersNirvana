@@ -1,0 +1,18 @@
+{
+  "title": "焦黑熔爐",
+  "image": {
+    "file": "tconstruct:textures/gui/book/seared_furnace.png",
+    "texture_width": 854,
+    "texture_height": 480,
+    "width": 150,
+    "height": 84
+  },
+  "text": [
+    {
+      "text": "焦黑熔爐是熔爐之王，它能夠一次燒至四分之一組的物品，而且能夠以很快的速度烹煮食物。"
+    }
+  ],
+  "section": "seared_devices",
+  "order": 7,
+  "id": "seared_devices/seared_furnace_intro"
+}

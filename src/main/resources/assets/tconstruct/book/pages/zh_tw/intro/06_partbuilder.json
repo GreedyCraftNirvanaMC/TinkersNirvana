@@ -1,0 +1,11 @@
+{
+  "title": "部件製作台",
+  "text": [
+    {
+      "text": "Text Goes Here"
+    }
+  ],
+  "section": "intro",
+  "order": 6,
+  "id": "intro/partbuilder"
+}

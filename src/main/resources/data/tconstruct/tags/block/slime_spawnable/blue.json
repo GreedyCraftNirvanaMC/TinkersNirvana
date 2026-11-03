@@ -1,4 +1,17 @@
 {
   "replace": false,
-  "values": []
+  "values": [
+    "tconstruct:slime_grass_blue_vanilla",
+    "tconstruct:slime_grass_blue_green",
+    "tconstruct:slime_grass_blue_blue",
+    "tconstruct:slime_grass_blue_magma",
+    "tconstruct:slime_grass_purple_vanilla",
+    "tconstruct:slime_grass_purple_green",
+    "tconstruct:slime_grass_purple_blue",
+    "tconstruct:slime_grass_purple_magma",
+    "tconstruct:slime_grass_orange_vanilla",
+    "tconstruct:slime_grass_orange_green",
+    "tconstruct:slime_grass_orange_blue",
+    "tconstruct:slime_grass_orange_magma"
+  ]
 }

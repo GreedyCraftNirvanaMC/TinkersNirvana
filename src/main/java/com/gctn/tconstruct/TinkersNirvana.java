@@ -26,6 +26,7 @@ public class TinkersNirvana {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public TinkersNirvana(IEventBus modEventBus, ModContainer modContainer) {
+        com.gctn.tconstruct.book.TinkerBook.init();
         com.gctn.tconstruct.smeltery.SmelteryModule.register(modEventBus);
         com.gctn.tconstruct.gadgets.GadgetModule.register(modEventBus);
         com.gctn.tconstruct.common.slime.SlimeModule.register(modEventBus);
@@ -33,6 +34,8 @@ public class TinkersNirvana {
         com.gctn.tconstruct.tools.ToolRanged.register(modEventBus);
         com.gctn.tconstruct.tools.ToolSounds.register(modEventBus);
         com.gctn.tconstruct.tools.traits.TinkerEffects.register(modEventBus);
+        com.gctn.tconstruct.tables.WorkshopModule.register(modEventBus);
+        com.gctn.tconstruct.world.WorldModule.register(modEventBus);
         com.gctn.tconstruct.tools.PatternItem.init();
         com.gctn.tconstruct.tools.ToolSupplies.init();
         TinkerTraits.registerTraits();

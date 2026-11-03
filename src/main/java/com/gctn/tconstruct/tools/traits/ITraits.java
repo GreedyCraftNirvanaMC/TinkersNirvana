@@ -53,4 +53,6 @@ public interface ITraits {
                                  LivingEntity entity, boolean effective) {}
 
     default void afterHit(ItemStack tool, int level, LivingEntity target, LivingEntity attacker) {}
+    /** Successful native damage, including armor/absorption reductions; fired once for melee and projectiles. */
+    default void afterDamage(ItemStack tool, int level, LivingEntity attacker, net.neoforged.neoforge.event.entity.living.LivingDamageEvent.Post event) {}
 }

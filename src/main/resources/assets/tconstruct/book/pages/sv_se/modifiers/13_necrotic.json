@@ -1,0 +1,22 @@
+{
+  "modifier": "necrotic",
+  "text": [
+    {
+      "text": "När ett ben från ett witherskelett placeras på ett verktyg kommer det få otäcka livstjälande krafter."
+    }
+  ],
+  "effects": [
+    "Läker när skada utdelas",
+    "Lägg till fler ben för att öka läkandet",
+    "Flera nivåer"
+  ],
+  "demoTool": [
+    "tconstruct:broadsword",
+    "tconstruct:cleaver",
+    "tconstruct:arrow"
+  ],
+  "section": "modifiers",
+  "order": 13,
+  "id": "modifiers/necrotic",
+  "title": ""
+}

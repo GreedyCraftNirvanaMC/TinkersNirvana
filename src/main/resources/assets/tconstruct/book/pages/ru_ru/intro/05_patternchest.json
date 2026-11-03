@@ -1,0 +1,11 @@
+{
+  "title": "Ящик для шаблонов",
+  "text": [
+    {
+      "text": "Text Goes Here"
+    }
+  ],
+  "section": "intro",
+  "order": 5,
+  "id": "intro/patternchest"
+}

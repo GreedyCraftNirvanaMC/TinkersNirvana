@@ -1,0 +1,119 @@
+[
+  {
+    "source": "textures/blocks/slime/slimedirt_green.png",
+    "output": "textures/block/world/slimedirt_green.png",
+    "source_sha256": "30f7eacec57f9e5e614000ddf0c52484b8de6d62d0d7d6711fb4b44e6bd8a9b2",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/slime/slimedirt_blue.png",
+    "output": "textures/block/world/slimedirt_blue.png",
+    "source_sha256": "5af092b43ffc6aa7e38b83232ff2344541e857214510d230d4e851e16afc52f8",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/slime/slimedirt_purple.png",
+    "output": "textures/block/world/slimedirt_purple.png",
+    "source_sha256": "43bf59b46ed2680935e33a401ed131993d2b055b974c5f8a5794eab62854260d",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/slime/slimedirt_magma.png",
+    "output": "textures/block/world/slimedirt_magma.png",
+    "source_sha256": "c507db800a6e77bd6637ae01801a8f43f076fe2f72f86976583eebcebb1b0035",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/slime/slimegrass_top.png",
+    "output": "textures/block/world/slimegrass_top.png",
+    "source_sha256": "7accebfcf7accee864e33e2c4110e22c020fbe615dd73293df6bc9159f44828a",
+    "neutral": true
+  },
+  {
+    "source": "textures/blocks/slime/slimegrass_overlay.png",
+    "output": "textures/block/world/slimegrass_overlay.png",
+    "source_sha256": "12d27d9180b0e8f58b38db7ceabfaabe4c6d88e14ce73e751532fc2ee9ece06e",
+    "neutral": true
+  },
+  {
+    "source": "textures/blocks/slime/slimesnow_overlay.png",
+    "output": "textures/block/world/slimesnow_overlay.png",
+    "source_sha256": "cae8bc0e8fbbb88ae60e88c5b48930f23edd8c2852286e8c309e00a0c5b26d53",
+    "neutral": true
+  },
+  {
+    "source": "textures/blocks/slime/slimeleaves.png",
+    "output": "textures/block/world/slimeleaves.png",
+    "source_sha256": "f9107f5e043c050d7197ef97c2f31d97011ceb72e85d4913cf169b48e40dc532",
+    "neutral": true
+  },
+  {
+    "source": "textures/blocks/slime/slimegrass_tall.png",
+    "output": "textures/block/world/slimegrass_tall.png",
+    "source_sha256": "3fe7dceb0595cfb98b8bf38566ff7fef76d3fbd43b0d6084fd393bea438113af",
+    "neutral": true
+  },
+  {
+    "source": "textures/blocks/slime/slimegrass_fern.png",
+    "output": "textures/block/world/slimegrass_fern.png",
+    "source_sha256": "ab6a2bf8e9495b8db7bd0b0184ee984762b60daa6d65ed506f52d0353ee9a35e",
+    "neutral": true
+  },
+  {
+    "source": "textures/blocks/slime/slimesapling_blue.png",
+    "output": "textures/block/world/slimesapling_blue.png",
+    "source_sha256": "ed64d7829f911471acbda3533816a1b6a219023157a702187ce2d7f5911b91ca",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/slime/slimesapling_purple.png",
+    "output": "textures/block/world/slimesapling_purple.png",
+    "source_sha256": "304bff4e25ca0d8ec614b0b9abb3ee3fe32befb7c288f672fb213e09a0d18d5f",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/slime/slimesapling_orange.png",
+    "output": "textures/block/world/slimesapling_orange.png",
+    "source_sha256": "315aefb77879b963f9f844db416d1e46f72bfff4e6defb5e0f751a1eb3e46b8a",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/slime/slimevine.png",
+    "output": "textures/block/world/slimevine.png",
+    "source_sha256": "31d8b6835e192018880512e044854ab250655db21a9348d4fcc798a9cc8d8637",
+    "neutral": true
+  },
+  {
+    "source": "textures/blocks/slime/slimevine_mid.png",
+    "output": "textures/block/world/slimevine_mid.png",
+    "source_sha256": "66b1fdc1b5eb3a6b951d976b8c51cc907dd632f4e7bb26aca027ee2bf5e766a8",
+    "neutral": true
+  },
+  {
+    "source": "textures/blocks/slime/slimevine_end.png",
+    "output": "textures/block/world/slimevine_end.png",
+    "source_sha256": "38f54a03e1bd6c72cf6461869257bda4b19ea257895bf54a94fd07bb7303fbbe",
+    "neutral": true
+  },
+  {
+    "source": "textures/colormap/slimegrasscolor.png",
+    "output": "textures/colormap/slimegrasscolor.png",
+    "source_sha256": "1ee6692c8e24d90358731c70e16cd4509e3623fdaa4f3c5304668e1ea7b376b6",
+    "neutral": false,
+    "preserve_pixels": true
+  },
+  {
+    "source": "textures/colormap/purplegrasscolor.png",
+    "output": "textures/colormap/purplegrasscolor.png",
+    "source_sha256": "3a74f9e7beb8c163f373543a45b9a8ca61310825d53b3b0bddc2939ef59169cb",
+    "neutral": false,
+    "preserve_pixels": true
+  },
+  {
+    "source": "textures/colormap/orangegrasscolor.png",
+    "output": "textures/colormap/orangegrasscolor.png",
+    "source_sha256": "89e12c6f5a654eaa743dbeca5efbb8084a794a1edbb679c810677c589739cb3d",
+    "neutral": false,
+    "preserve_pixels": true
+  }
+]

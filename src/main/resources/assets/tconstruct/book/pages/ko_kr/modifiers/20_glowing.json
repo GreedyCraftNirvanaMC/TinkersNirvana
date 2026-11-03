@@ -1,0 +1,21 @@
+{
+  "modifier": "glowing",
+  "text": [
+    {
+      "text": "Some glowstone and a magical ender eye. Obviously this sees the light level."
+    }
+  ],
+  "effects": [
+    "Places a lightsource on low light level",
+    "Costs durability"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe",
+    "tconstruct:hammer",
+    "tconstruct:broadsword"
+  ],
+  "section": "modifiers",
+  "order": 20,
+  "id": "modifiers/glowing",
+  "title": ""
+}

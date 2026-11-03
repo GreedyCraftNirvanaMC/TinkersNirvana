@@ -1,4 +1,4 @@
-# Smeltery attribution
+# Antique content attribution
 
 The Smeltery implementation in `src/main/java/com/gctn/tconstruct/smeltery`
 (excluding the pre-existing `Debug.java`) and the accompanying Smeltery assets
@@ -43,6 +43,14 @@ Source areas used for this port:
 
 The port adapts these behaviors to modern block entities, data components,
 NeoForge capabilities, network payloads, menus, sprite sources, and rendering.
+
+The workshops, drying racks, slime gear and channels, decorative frames, EFLN,
+spaghetti, world generation, village layouts, and guidebook are also adapted
+from the corresponding Antique `tools/common`, `gadgets`, `world`, and
+`library/book` sources and assets under the same license. The translated book
+text retains its original contributors' attribution. Village structures use
+native modern biome palettes; Antique texture adaptations are recorded in the
+`scripts/antique_*_textures.json` manifests and exported through GIMP.
 
 The implementation in `src/main/java/com/gctn/tconstruct/gadgets` and its
 accompanying gadget assets are also adapted from TinkersAntique

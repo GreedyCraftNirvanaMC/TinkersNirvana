@@ -1,0 +1,22 @@
+{
+  "modifier": "necrotic",
+  "text": [
+    {
+      "text": "Помещение кости Cкелета-иссушителя на инструменте, даёт ему подлую возможность высасывать жизнь из врагов."
+    }
+  ],
+  "effects": [
+    "Лечение при атаках",
+    "Добавление больше костей увеличивает исцеление",
+    "Несколько уровней"
+  ],
+  "demoTool": [
+    "tconstruct:broadsword",
+    "tconstruct:cleaver",
+    "tconstruct:arrow"
+  ],
+  "section": "modifiers",
+  "order": 13,
+  "id": "modifiers/necrotic",
+  "title": ""
+}

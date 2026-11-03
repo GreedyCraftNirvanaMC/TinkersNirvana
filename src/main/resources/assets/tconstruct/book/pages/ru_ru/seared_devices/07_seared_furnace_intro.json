@@ -1,0 +1,18 @@
+{
+  "title": "Печь",
+  "image": {
+    "file": "tconstruct:textures/gui/book/seared_furnace.png",
+    "texture_width": 854,
+    "texture_height": 480,
+    "width": 150,
+    "height": 84
+  },
+  "text": [
+    {
+      "text": "Печь - мастер всех печей, приготавливающая по несколько стаков одновременно и приготавливающая пищу с большей скоростью."
+    }
+  ],
+  "section": "seared_devices",
+  "order": 7,
+  "id": "seared_devices/seared_furnace_intro"
+}

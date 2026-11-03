@@ -84,18 +84,24 @@ def png(path):
     return width, height, rgba, chunks
 
 
-manifest = json.loads((root / "scripts/antique_tool_textures.json").read_text(encoding="utf-8"))
+manifest = []
+for manifest_file in sorted((root / "scripts").glob("antique_*_textures.json")):
+    manifest.extend(json.loads(manifest_file.read_text(encoding="utf-8")))
 changed = 0
 for entry in manifest:
     path = assets / entry["output"]
     width, height, pixels, chunks = png(path)
-    assert (width, height) == (16, 16), (path, width, height)
+    assert 0 < width <= 4096 and 0 < height <= 4096, (path, width, height)
     assert any(pixel[3] for pixel in pixels), (path, "empty image")
     assert not ({b"eXIf", b"iCCP", b"tEXt", b"iTXt", b"zTXt", b"tIME"} & chunks.keys()), (path, "unexpected metadata")
     if entry["source"]:
         original = source / entry["source"]
         assert hashlib.sha256(original.read_bytes()).hexdigest() == entry["source_sha256"], original
         sw, sh, before, _ = png(original)
+        if "crop" in entry:
+            cx, cy, cw, ch = entry["crop"]
+            before = [before[(cy + y) * sw + cx + x] for y in range(ch) for x in range(cw)]
+            sw, sh = cw, ch
         assert (sw, sh) == (width, height), original
         dx, dy = entry.get("offset", [0, 0])
         alpha = [0] * (width * height)
@@ -115,6 +121,8 @@ for path, content in parsed.items():
     if "atlases" in path.parts:
         virtual.update(row["sprite"] for row in content.get("sources", []) if "sprite" in row)
 for path, content in parsed.items():
+    if "book" in path.parts and "pages" in path.parts:
+        assert content.get("title") or content.get("tool") or content.get("modifier"), (path, "missing book title")
     if "models" not in path.parts:
         continue
     parent = content.get("parent", "")

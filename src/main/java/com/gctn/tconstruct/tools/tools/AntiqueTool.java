@@ -36,6 +36,7 @@ public class AntiqueTool extends TinkerTools {
     private final ToolDefinition definition;
     public AntiqueTool(ToolDefinition definition) { this.definition = definition; }
     public ToolDefinition definition() { return definition; }
+    @Override public net.minecraft.network.chat.Component getName(ItemStack stack) { return net.minecraft.network.chat.Component.translatable("item.tconstruct." + definition.id() + ".name"); }
     public boolean isLauncher() {
         return switch (definition.action()) { case SHORTBOW, LONGBOW, CROSSBOW -> true; default -> false; };
     }
@@ -50,8 +51,9 @@ public class AntiqueTool extends TinkerTools {
             case PICKAXE, HAMMER -> ItemAbilities.DEFAULT_PICKAXE_ACTIONS.contains(ability);
             case SHOVEL, EXCAVATOR -> ItemAbilities.DEFAULT_SHOVEL_ACTIONS.contains(ability);
             case AXE, LUMBERAXE -> ItemAbilities.DEFAULT_AXE_ACTIONS.contains(ability);
-            case MATTOCK -> ItemAbilities.DEFAULT_AXE_ACTIONS.contains(ability) || ItemAbilities.DEFAULT_HOE_ACTIONS.contains(ability);
-            case KAMA, SCYTHE -> ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(ability);
+            case MATTOCK -> ItemAbilities.DEFAULT_AXE_ACTIONS.contains(ability) || ability == (com.gctn.tconstruct.Config.OLD_MATTOCK_AND_KAMA.get() ? ItemAbilities.HOE_TILL : ItemAbilities.SHOVEL_FLATTEN);
+            case KAMA -> ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(ability) || ability == ItemAbilities.HOE_TILL && !com.gctn.tconstruct.Config.OLD_MATTOCK_AND_KAMA.get();
+            case SCYTHE -> ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(ability);
             case BROADSWORD -> ItemAbilities.DEFAULT_SWORD_ACTIONS.contains(ability);
             case BATTLESIGN -> ability == ItemAbilities.SHIELD_BLOCK;
             default -> false;
@@ -70,6 +72,7 @@ public class AntiqueTool extends TinkerTools {
         for (ItemAbility ability : new ItemAbility[]{ItemAbilities.AXE_STRIP, ItemAbilities.AXE_SCRAPE,
                 ItemAbilities.AXE_WAX_OFF, ItemAbilities.SHOVEL_FLATTEN, ItemAbilities.HOE_TILL}) {
             if (!canPerformAction(stack, ability)) { continue; }
+            if ((ability == ItemAbilities.HOE_TILL || ability == ItemAbilities.SHOVEL_FLATTEN) && context.getClickedFace() == net.minecraft.core.Direction.DOWN) { continue; }
             if (ability == ItemAbilities.SHOVEL_FLATTEN && !context.getLevel().isEmptyBlock(context.getClickedPos().above())) { continue; }
             BlockState result = state.getToolModifiedState(context, ability, false);
             if (result == null) { continue; }

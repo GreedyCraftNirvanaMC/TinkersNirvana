@@ -35,6 +35,9 @@ public final class GlowballEntity extends ThrowableItemProjectile {
     protected void onHit(HitResult hit) {
         super.onHit(hit);
         if (!level().isClientSide) {
+            if (getItem().is(GadgetModule.EFLN.get()) && level() instanceof net.minecraft.server.level.ServerLevel server) {
+                com.gctn.tconstruct.gadgets.EflnBlast.start(server, this); discard(); return;
+            }
             BlockPos pos = null;
             Direction facing = Direction.DOWN;
             if (hit instanceof BlockHitResult blockHit) {

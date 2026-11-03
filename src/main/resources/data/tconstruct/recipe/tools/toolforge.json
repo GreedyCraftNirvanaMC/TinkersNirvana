@@ -1,5 +1,6 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "tconstruct:table",
+  "group": "tconstruct:tool_forge",
   "pattern": [
     "BBB",
     "MTM",
@@ -10,14 +11,16 @@
       "item": "tconstruct:seared_bricks"
     },
     "M": {
-      "item": "minecraft:iron_block"
+      "tag": "c:storage_blocks/iron"
     },
     "T": {
       "item": "tconstruct:blockitem/toolstation"
     }
   },
+  "material": {
+    "tag": "c:storage_blocks/iron"
+  },
   "result": {
-    "id": "tconstruct:toolforge",
-    "count": 1
+    "id": "tconstruct:toolforge"
   }
 }

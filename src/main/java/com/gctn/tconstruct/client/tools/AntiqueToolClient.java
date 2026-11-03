@@ -112,6 +112,12 @@ public final class AntiqueToolClient {
             }
         }
         if (stack.getItem() instanceof AntiqueTool) {
+            var materialData = TinkerDataComponents.getMaterialTag(stack);
+            if (materialData.contains("FortifiedTier")) {
+                Component tier = com.gctn.tconstruct.library.utils.HarvestLevels.getHarvestLevelName(materialData.getInt("FortifiedTier"));
+                String material = materialData.getString("FortifiedMaterial");
+                event.getToolTip().add(material.isEmpty() ? tier : Component.translatable("tooltip.tconstruct.fortified", Component.translatable("material." + material + ".name"), tier));
+            }
             for (String id : ToolModifiers.entries().keySet()) {
                 int units = ToolModifiers.units(stack, id);
                 if (units > 0) { event.getToolTip().add(Component.translatable("tooltip.tconstruct.modifier",

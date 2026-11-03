@@ -42,7 +42,7 @@ public abstract class TinkerTools extends Item {
     }
 
     public final int getTotalModifierSlots(ItemStack stack) {
-        return getBaseModifierSlots(stack) + getMaterialModifierSlotAdjustment(stack);
+        return (int) Math.clamp((long) getBaseModifierSlots(stack) + getMaterialModifierSlotAdjustment(stack), 0, Integer.MAX_VALUE);
     }
 
     /** Override for tool types whose base modifier slot count is not 3. */
@@ -52,7 +52,7 @@ public abstract class TinkerTools extends Item {
 
     /** Hook for modifier slots added or removed by material traits. */
     protected int getMaterialModifierSlotAdjustment(ItemStack stack) {
-        return com.gctn.tconstruct.tools.traits.AntiqueTraits.level(stack, "writable") + ToolModifiers.level(stack, "endearment") + ToolModifiers.units(stack, "creative");
+        return (int) Math.min(Integer.MAX_VALUE, (long) com.gctn.tconstruct.tools.traits.AntiqueTraits.level(stack, "writable") + ToolModifiers.level(stack, "endearment") + ToolModifiers.units(stack, "creative"));
     }
 
     /** Hook for the number of slots consumed by applied modifiers. */
@@ -77,6 +77,7 @@ public abstract class TinkerTools extends Item {
     }
 
     protected final void damageTool(ItemStack stack, int amount, LivingEntity entity, EquipmentSlot slot) {
+        if (slot == EquipmentSlot.MAINHAND && entity instanceof net.minecraft.world.entity.player.Player player && com.gctn.tconstruct.tools.DualToolHarvest.active(player)) { slot = EquipmentSlot.OFFHAND; }
         if (entity.level().isClientSide || amount <= 0 || isBroken(stack)) {
             return;
         }
@@ -89,7 +90,7 @@ public abstract class TinkerTools extends Item {
         int originalCount = stack.getCount();
         int maxDamage = stack.getMaxDamage();
         stack.hurtAndBreak(amount, entity, slot);
-        if (stack.isEmpty()) {
+        if (stack.isEmpty() && !com.gctn.tconstruct.Config.VANILLA_TOOL_BREAKING.get()) {
             stack.setCount(originalCount);
             stack.setDamageValue(maxDamage);
         }

@@ -1,0 +1,12 @@
+{
+  "type": "tconstruct:slime_tree",
+  "config": {
+    "trunk": {
+      "Name": "tconstruct:slime_congealed_green"
+    },
+    "leaves": {
+      "Name": "tconstruct:slime_leaves_purple"
+    },
+    "seek_height": false
+  }
+}

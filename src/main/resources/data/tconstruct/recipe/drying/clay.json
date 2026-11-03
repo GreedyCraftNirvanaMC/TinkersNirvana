@@ -1,0 +1,10 @@
+{
+  "type": "tconstruct:drying",
+  "ingredient": {
+    "item": "minecraft:clay"
+  },
+  "result": {
+    "id": "tconstruct:dried_clay"
+  },
+  "time": 7200
+}

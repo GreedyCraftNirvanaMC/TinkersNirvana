@@ -1,0 +1,10 @@
+{
+  "type": "tconstruct:drying",
+  "ingredient": {
+    "item": "minecraft:salmon"
+  },
+  "result": {
+    "id": "tconstruct:jerky_salmon"
+  },
+  "time": 6000
+}

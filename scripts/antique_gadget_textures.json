@@ -1,0 +1,110 @@
+[
+  {
+    "source": "textures/blocks/dried_clay.png",
+    "output": "textures/block/gadgets/dried_clay.png",
+    "source_sha256": "410a725fdedb6465f2c682587070a0cf89c9535b42889c922f338abb16927905",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/dried_clay_bricks.png",
+    "output": "textures/block/gadgets/dried_clay_bricks.png",
+    "source_sha256": "acfb9576632fe8c0a177405b0ac8e3f5675461c4496a862d6599201b363c5a23",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/materials/dried_brick.png",
+    "output": "textures/item/gadgets/dried_brick.png",
+    "source_sha256": "9223d083d95d4167ad115e6b40e10664be7f3623ce8bf6ba88778d44fb4e80cd",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/jerky_monster.png",
+    "output": "textures/item/gadgets/jerky_monster.png",
+    "source_sha256": "80beae0ebffce0769cab23f5a6f8ad53347c37dd524b62965c24f447c49b6e20",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/jerky_beef.png",
+    "output": "textures/item/gadgets/jerky_beef.png",
+    "source_sha256": "faedf584762418cb58e71cc2ad7cff9324cb3ee9939a48894738b1e95db701cc",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/jerky_chicken.png",
+    "output": "textures/item/gadgets/jerky_chicken.png",
+    "source_sha256": "d9e3121b3786777dc0e3fe023c2c16786a5c45659914ef14233a8c7eee30ca46",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/jerky_pork.png",
+    "output": "textures/item/gadgets/jerky_pork.png",
+    "source_sha256": "05009a49bc756e809998484da9ff3f313d244ab1a4f861450930d58bb372889c",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/jerky_mutton.png",
+    "output": "textures/item/gadgets/jerky_mutton.png",
+    "source_sha256": "79667a04560fe059024689392d0358b8fe455129e9500ac689091b87fb6010b8",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/jerky_rabbit.png",
+    "output": "textures/item/gadgets/jerky_rabbit.png",
+    "source_sha256": "8575970893a7530c005dc19c5c83effea157ce04d5c6187ce85af3a2bda521a8",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/jerky_fish.png",
+    "output": "textures/item/gadgets/jerky_fish.png",
+    "source_sha256": "3f9530a1c099aa59113f4e2b88a7cdcba35d5a8af0b4b77327613db15aa4e918",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/jerky_salmon.png",
+    "output": "textures/item/gadgets/jerky_salmon.png",
+    "source_sha256": "6ca2b9a2c433cecef483edf967783228174668edfadce4200efadf40476524a2",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/jerky_clownfish.png",
+    "output": "textures/item/gadgets/jerky_clownfish.png",
+    "source_sha256": "10a5f0f3725dfcaa03f6d71b3553b47f2c2bb4f3968b7906f13a2bba994cb8bb",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/jerky_pufferfish.png",
+    "output": "textures/item/gadgets/jerky_pufferfish.png",
+    "source_sha256": "b6615fdc9b449856390a743f13b2e72db82d6b9777c7cc8a5061ff8d80db6647",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/slimedrop_green.png",
+    "output": "textures/item/gadgets/slimedrop_green.png",
+    "source_sha256": "15e9aa35da5f0c91656f47d2a5085d0fd3bebad8e4d9182d695d9a103be8e48a",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/slimedrop_blue.png",
+    "output": "textures/item/gadgets/slimedrop_blue.png",
+    "source_sha256": "fe2000a0975f2939fe770f96d043b7853907358aca9f42dd4d8413ff6dec5e9b",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/slimedrop_purple.png",
+    "output": "textures/item/gadgets/slimedrop_purple.png",
+    "source_sha256": "2eadb060a39110becd43e27ea986d6abe0cb41db90f70fd94fb68816d9a28fef",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/slimedrop_blood.png",
+    "output": "textures/item/gadgets/slimedrop_blood.png",
+    "source_sha256": "047cdf0990c7727fe244800f741f6df8b5a64e12bacf996f0571e769b6684ea1",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/slimedrop_magma.png",
+    "output": "textures/item/gadgets/slimedrop_magma.png",
+    "source_sha256": "b3cac9b50d26209fba01a6c3eb42f0ee692bb39b936613a464c006e87ae79634",
+    "neutral": false
+  }
+]

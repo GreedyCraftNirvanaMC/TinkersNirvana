@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "tconstruct:slime_dirt_green",
+    "tconstruct:slime_dirt_blue",
+    "tconstruct:slime_dirt_purple",
+    "tconstruct:slime_dirt_magma",
+    "tconstruct:slime_grass_blue_vanilla",
+    "tconstruct:slime_grass_blue_green",
+    "tconstruct:slime_grass_blue_blue",
+    "tconstruct:slime_grass_blue_purple",
+    "tconstruct:slime_grass_blue_magma",
+    "tconstruct:slime_grass_purple_vanilla",
+    "tconstruct:slime_grass_purple_green",
+    "tconstruct:slime_grass_purple_blue",
+    "tconstruct:slime_grass_purple_purple",
+    "tconstruct:slime_grass_purple_magma",
+    "tconstruct:slime_grass_orange_vanilla",
+    "tconstruct:slime_grass_orange_green",
+    "tconstruct:slime_grass_orange_blue",
+    "tconstruct:slime_grass_orange_purple",
+    "tconstruct:slime_grass_orange_magma"
+  ]
+}

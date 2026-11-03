@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "tconstruct:block/part_builder",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "tconstruct:block/part_builder",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "tconstruct:block/part_builder",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "tconstruct:block/part_builder",
+      "y": 270
+    }
+  }
+}

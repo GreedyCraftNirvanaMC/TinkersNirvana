@@ -1,0 +1,11 @@
+{
+  "title": "Tillverkningsstation",
+  "text": [
+    {
+      "text": "Text ska vara här"
+    }
+  ],
+  "section": "intro",
+  "order": 3,
+  "id": "intro/craftingstation"
+}
