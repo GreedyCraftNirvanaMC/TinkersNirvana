@@ -123,8 +123,9 @@ texture("tconstruct:blocks/toolforge_top", "block/toolforge_top", neutral=False)
 write(dest / "models/block/toolforge.json", forge)
 write(dest / "blockstates/toolforge.json", {"variants": {"": {"model": "tconstruct:block/toolforge"}}})
 write(dest / "models/item/toolforge.json", {"parent": "tconstruct:block/toolforge"})
-write(resources / "data/tconstruct/loot_table/blocks/toolforge.json", {"type": "minecraft:block", "pools": [{"rolls": 1,
-      "entries": [{"type": "minecraft:item", "name": "tconstruct:toolforge"}], "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+for block, item in [("toolstation", "blockitem/toolstation"), ("toolforge", "toolforge")]:
+    write(resources / f"data/tconstruct/loot_table/blocks/{block}.json", {"type": "minecraft:block", "pools": [{"rolls": 1,
+          "entries": [{"type": "minecraft:item", "name": "tconstruct:" + item}], "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
 pickaxe_tag = resources / "data/minecraft/tags/block/mineable/pickaxe.json"
 tag = json.loads(pickaxe_tag.read_text())
 if "tconstruct:toolforge" not in tag["values"]:

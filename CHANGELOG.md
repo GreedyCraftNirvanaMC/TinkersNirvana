@@ -4,6 +4,7 @@
 
 - Format tool pattern names with their selected part instead of displaying an
   untranslated `%s` placeholder.
+- Drop the Tool Station item when its block is broken in survival.
 - Port Antique's complete registered tool catalog: harvesting tools, six melee
   weapons, bows/crossbows, arrows/bolts, and shurikens, with shared part definitions,
   native tool actions, damage, repair, ammunition, and material components.
