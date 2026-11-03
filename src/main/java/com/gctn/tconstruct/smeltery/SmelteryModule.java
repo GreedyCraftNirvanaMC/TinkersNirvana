@@ -14,15 +14,25 @@ import com.gctn.tconstruct.smeltery.block.SearedGlassBlock;
 import com.gctn.tconstruct.smeltery.block.SearedLadderBlock;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryBlockEntity;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryComponentBlockEntity;
+import com.gctn.tconstruct.smeltery.block.entity.TinkerTankBlockEntity;
+import com.gctn.tconstruct.smeltery.block.entity.SearedFurnaceBlockEntity;
+import com.gctn.tconstruct.smeltery.block.SearedSlabBlock;
+import com.gctn.tconstruct.smeltery.block.SearedStairBlock;
+import com.gctn.tconstruct.smeltery.block.ClearStainedGlassBlock;
+import com.gctn.tconstruct.smeltery.loot.ClearGlassWithoutSilk;
 import com.gctn.tconstruct.smeltery.menu.SmelteryMenu;
+import com.gctn.tconstruct.smeltery.menu.TinkerTankMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -37,13 +47,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.EnumMap;
 import java.util.function.Supplier;
 
 public final class SmelteryModule {
     public static final Map<String, DeferredBlock<SmelteryBlock>> BLOCKS = new LinkedHashMap<>();
     public static final Map<String, Supplier<Item>> ITEMS = new LinkedHashMap<>();
     private static final Collection<DeferredBlock<?>> MATERIAL_BLOCKS = new ArrayList<>();
+    public static final Map<String, DeferredBlock<?>> SEARED_SHAPES = new LinkedHashMap<>();
+    public static final Map<DyeColor, DeferredBlock<ClearStainedGlassBlock>> STAINED_GLASS = new EnumMap<>(DyeColor.class);
     public static final DeferredBlock<SmelteryBlock> CONTROLLER = block("smeltery_controller", SmelteryBlock.Kind.CONTROLLER);
+    public static final DeferredBlock<SmelteryBlock> TINKER_TANK = block("tinker_tank_controller", SmelteryBlock.Kind.TINKER_TANK);
+    public static final DeferredBlock<SmelteryBlock> FURNACE = block("seared_furnace_controller", SmelteryBlock.Kind.FURNACE);
     public static final DeferredBlock<SmelteryBlock> DRAIN = block("smeltery_drain", SmelteryBlock.Kind.DRAIN);
     public static final DeferredBlock<SmelteryBlock> TANK = block("seared_tank", SmelteryBlock.Kind.TANK);
     public static final DeferredBlock<SmelteryBlock> GAUGE = block("seared_gauge", SmelteryBlock.Kind.TANK);
@@ -54,19 +69,33 @@ public final class SmelteryModule {
     public static final DeferredBlock<SmelteryBlock> CHANNEL = block("channel", SmelteryBlock.Kind.CHANNEL);
     public static final DeferredBlock<SmelteryBlock> TABLE = block("casting_table", SmelteryBlock.Kind.TABLE);
     public static final DeferredBlock<SmelteryBlock> BASIN = block("casting_basin", SmelteryBlock.Kind.BASIN);
-    public static final DeferredBlock<Block> GROUT = BlockRegister.registerBlockWithItem("grout", () -> new Block(BlockBehaviour.Properties.of().strength(0.5F).sound(SoundType.GRAVEL)));
-    public static final DeferredBlock<Block> MUD_BRICKS = BlockRegister.registerBlockWithItem("mud_bricks", () -> new Block(BlockBehaviour.Properties.of().strength(1.0F).sound(SoundType.STONE)));
-    public static final DeferredBlock<Block> LAVAWOOD = BlockRegister.registerBlockWithItem("lavawood", () -> new Block(BlockBehaviour.Properties.of().strength(1.5F).sound(SoundType.WOOD)));
+    public static final DeferredBlock<Block> GROUT = BlockRegister.registerBlockWithItem("grout", () ->
+            new com.gctn.tconstruct.common.soil.AntiqueSoilBlock(com.gctn.tconstruct.common.soil.AntiqueSoilBlock.Kind.GROUT,
+                    com.gctn.tconstruct.common.soil.AntiqueSoilBlock.soilProperties()));
+    public static final DeferredBlock<Block> MUD_BRICKS = BlockRegister.registerBlockWithItem("mud_bricks", () -> new Block(BlockBehaviour.Properties.of().strength(2.0F).sound(SoundType.GRAVEL)));
+    public static final DeferredBlock<Block> LAVAWOOD = BlockRegister.registerBlockWithItem("lavawood", () ->
+            new Block(BlockBehaviour.Properties.of().strength(2.0F, 4.2F).sound(SoundType.WOOD).lightLevel(state -> 7)));
     public static final DeferredBlock<com.gctn.tconstruct.smeltery.block.ClearGlassBlock> CLEAR_GLASS = BlockRegister.registerBlockWithItem("clear_glass",
-            () -> new com.gctn.tconstruct.smeltery.block.ClearGlassBlock(BlockBehaviour.Properties.of().strength(0.3F).sound(SoundType.GLASS).noOcclusion()));
+            () -> new com.gctn.tconstruct.smeltery.block.ClearGlassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)));
 
     static {
         for (String type : new String[]{"stone", "cobble", "paver", "brick", "brick_cracked", "brick_fancy",
                 "brick_square", "brick_triangle", "brick_small", "road", "tile", "creeper"}) {
-            block(type.equals("brick") ? "seared_bricks" : "seared_" + type, SmelteryBlock.Kind.BRICK);
+            String name = type.equals("brick") ? "seared_bricks" : "seared_" + type;
+            var base = block(name, SmelteryBlock.Kind.BRICK);
+            SEARED_SHAPES.put(name + "_slab", BlockRegister.registerBlockWithItem(name + "_slab", () ->
+                    new SearedSlabBlock(BlockBehaviour.Properties.ofFullCopy(base.get()))));
+            SEARED_SHAPES.put(name + "_stairs", BlockRegister.registerBlockWithItem(name + "_stairs", () ->
+                    new SearedStairBlock(base.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(base.get()))));
         }
         ITEMS.put("grout", () -> GROUT.get().asItem());
         MATERIAL_BLOCKS.addAll(java.util.List.of(MUD_BRICKS, LAVAWOOD, CLEAR_GLASS));
+        for (DyeColor color : DyeColor.values()) {
+            var glass = BlockRegister.registerBlockWithItem("clear_stained_glass_" + color.getName(), () ->
+                    new ClearStainedGlassBlock(color, BlockBehaviour.Properties.ofFullCopy(CLEAR_GLASS.get()).mapColor(color.getMapColor())));
+            STAINED_GLASS.put(color, glass);
+            MATERIAL_BLOCKS.add(glass);
+        }
         for (String name : new String[]{"seared_brick", "mud_brick", "cast_blank", "cast_ingot", "cast_nugget",
                 "cast_gem", "cast_plate", "cast_gear", "cast_pickaxe_head", "cast_tool_rod", "cast_binding",
                 "clay_cast_pickaxe_head", "clay_cast_tool_rod", "clay_cast_binding"}) {
@@ -78,12 +107,17 @@ public final class SmelteryModule {
                 String name = metal + "_" + form;
                 ITEMS.put(name, ItemRegister.ITEMS.register(name, () -> new Item(new Item.Properties())));
             }
-            MATERIAL_BLOCKS.add(BlockRegister.registerBlockWithItem(metal + "_block", () -> new Block(BlockBehaviour.Properties.of().strength(5, 10).sound(SoundType.METAL))));
+            // 原版金属块要求镐但没有等级门槛，信标基座资格由数据标签提供。
+            MATERIAL_BLOCKS.add(BlockRegister.registerBlockWithItem(metal + "_block", () ->
+                    new Block(BlockBehaviour.Properties.of().strength(5).sound(SoundType.METAL).requiresCorrectToolForDrops())));
         }
     }
 
     private static final DeferredRegister<BlockEntityType<?>> ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, TinkersNirvana.MODID);
     private static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, TinkersNirvana.MODID);
+    private static final DeferredRegister<LootItemConditionType> LOOT_CONDITIONS = DeferredRegister.create(Registries.LOOT_CONDITION_TYPE, TinkersNirvana.MODID);
+    public static final Supplier<LootItemConditionType> CLEAR_GLASS_WITHOUT_SILK = LOOT_CONDITIONS.register("clear_glass_without_silk", () ->
+            new LootItemConditionType(ClearGlassWithoutSilk.CODEC));
     private static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(Registries.SOUND_EVENT, TinkersNirvana.MODID);
     private static final DeferredRegister.DataComponents COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, TinkersNirvana.MODID);
     public static final Supplier<DataComponentType<net.neoforged.neoforge.fluids.SimpleFluidContent>> TANK_FLUID = COMPONENTS.registerComponentType("tank_fluid",
@@ -94,16 +128,24 @@ public final class SmelteryModule {
             .title(Component.translatable("tab.tconstruct.smeltery")).icon(() -> TANK.get().asItem().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 BLOCKS.values().forEach(block -> output.accept(block.get()));
+                SEARED_SHAPES.values().forEach(block -> output.accept(block.get()));
                 MATERIAL_BLOCKS.forEach(block -> output.accept(block.get()));
                 ITEMS.values().forEach(item -> output.accept(item.get()));
                 SmelteryFluids.ENTRIES.values().forEach(fluid -> output.accept(fluid.bucket.get()));
             }).build());
     public static final Supplier<BlockEntityType<SmelteryBlockEntity>> CONTROLLER_ENTITY = ENTITIES.register("smeltery",
             () -> BlockEntityType.Builder.of(SmelteryBlockEntity::new, CONTROLLER.get()).build(null));
+    public static final Supplier<BlockEntityType<TinkerTankBlockEntity>> TINKER_TANK_ENTITY = ENTITIES.register("tinker_tank",
+            () -> BlockEntityType.Builder.of(TinkerTankBlockEntity::new, TINKER_TANK.get()).build(null));
+    public static final Supplier<BlockEntityType<SearedFurnaceBlockEntity>> FURNACE_ENTITY = ENTITIES.register("seared_furnace",
+            () -> BlockEntityType.Builder.of(SearedFurnaceBlockEntity::new, FURNACE.get()).build(null));
     public static final Supplier<BlockEntityType<SmelteryComponentBlockEntity>> COMPONENT_ENTITY = ENTITIES.register("smeltery_component",
-            () -> BlockEntityType.Builder.of(SmelteryComponentBlockEntity::new, BLOCKS.values().stream()
-                    .filter(block -> block != CONTROLLER).map(Supplier::get).toArray(Block[]::new)).build(null));
+            () -> BlockEntityType.Builder.of(SmelteryComponentBlockEntity::new, java.util.stream.Stream.concat(
+                    BLOCKS.values().stream().filter(block -> block != CONTROLLER && block != TINKER_TANK && block != FURNACE),
+                    SEARED_SHAPES.values().stream()).map(Supplier::get).toArray(Block[]::new)).build(null));
     public static final Supplier<MenuType<SmelteryMenu>> MENU = MENUS.register("smeltery", () -> IMenuTypeExtension.create(SmelteryMenu::new));
+    public static final Supplier<MenuType<SmelteryMenu>> FURNACE_MENU = MENUS.register("seared_furnace", () -> IMenuTypeExtension.create(SmelteryMenu::furnace));
+    public static final Supplier<MenuType<TinkerTankMenu>> TINKER_TANK_MENU = MENUS.register("tinker_tank", () -> IMenuTypeExtension.create(TinkerTankMenu::new));
     public static final Supplier<SoundEvent> LOOP = sound("smeltery_loop");
     public static final Supplier<SoundEvent> POUR = sound("faucet_pour");
     public static final Supplier<SoundEvent> TRIGGER = sound("faucet_trigger");
@@ -118,14 +160,25 @@ public final class SmelteryModule {
 
     private static DeferredBlock<SmelteryBlock> block(String name, SmelteryBlock.Kind kind) {
         DeferredBlock<SmelteryBlock> block = BlockRegister.registerBlockWithItem(name,
-                () -> createBlock(kind, BlockBehaviour.Properties.of().strength(3.0F, 20.0F).requiresCorrectToolForDrops()
-                        .sound(SoundType.STONE).noOcclusion()
-                        .lightLevel(state -> state.getValue(SmelteryBlock.ACTIVE) ? 13 : 0)));
+                // 旧版 setResistance(20) 先乘三再除五，现代属性直接保存最终抗爆值 12。
+                () -> createBlock(kind, BlockBehaviour.Properties.of().strength(3.0F, 12.0F).requiresCorrectToolForDrops()
+                        .sound(kind == SmelteryBlock.Kind.TABLE || kind == SmelteryBlock.Kind.BASIN ? SoundType.STONE : SoundType.METAL)
+                        // 流道等专用方块没有激活属性，先判断控制器种类再读取状态。
+                        .lightLevel(state -> (kind == SmelteryBlock.Kind.FURNACE || kind == SmelteryBlock.Kind.CONTROLLER)
+                                && state.getValue(SmelteryBlock.ACTIVE) ? kind == SmelteryBlock.Kind.FURNACE ? 15 : 13 : 0)));
         BLOCKS.put(name, block);
         return block;
     }
 
     private static SmelteryBlock createBlock(SmelteryBlock.Kind kind, BlockBehaviour.Properties properties) {
+        // 完整焦黑墙壁应遮光；透明玻璃、储罐和非完整模型保留各自的物理行为。
+        switch (kind) {
+            case GLASS, TANK -> properties.noOcclusion().isValidSpawn((state, level, pos, type) -> false)
+                    .isRedstoneConductor((state, level, pos) -> false).isSuffocating((state, level, pos) -> false)
+                    .isViewBlocking((state, level, pos) -> false);
+            case TABLE, BASIN, FAUCET, CHANNEL, LADDER -> properties.noOcclusion().isValidSpawn((state, level, pos, type) -> false);
+            default -> { }
+        }
         return switch (kind) {
             case CHANNEL -> new ChannelBlock(properties);
             case GLASS -> new SearedGlassBlock(properties);
@@ -135,7 +188,9 @@ public final class SmelteryModule {
     }
 
     public static Collection<DeferredBlock<?>> entries() {
-        return new ArrayList<>(BLOCKS.values());
+        Collection<DeferredBlock<?>> entries = new ArrayList<>(BLOCKS.values());
+        entries.addAll(SEARED_SHAPES.values());
+        return entries;
     }
 
     public static Item item(String name) {
@@ -145,6 +200,7 @@ public final class SmelteryModule {
     public static void register(IEventBus bus) {
         ENTITIES.register(bus);
         MENUS.register(bus);
+        LOOT_CONDITIONS.register(bus);
         SOUNDS.register(bus);
         COMPONENTS.register(bus);
         TABS.register(bus);
@@ -159,6 +215,7 @@ public final class SmelteryModule {
         // so automation cannot keep operating on an invalid or replaced controller through a cached handle.
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, COMPONENT_ENTITY.get(), (entity, side) -> entity.fluidHandler(side));
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CONTROLLER_ENTITY.get(), (entity, side) -> entity.itemHandler());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, FURNACE_ENTITY.get(), (entity, side) -> entity.itemHandler());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, COMPONENT_ENTITY.get(), (entity, side) -> entity.itemHandler(side));
         event.registerItem(Capabilities.FluidHandler.ITEM, (stack, context) ->
                 new net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack(TANK_FLUID, stack, 4000),

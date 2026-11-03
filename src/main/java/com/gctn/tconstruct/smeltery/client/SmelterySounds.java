@@ -8,6 +8,7 @@ package com.gctn.tconstruct.smeltery.client;
 import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.smeltery.SmelteryModule;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryBlockEntity;
+import com.gctn.tconstruct.smeltery.block.entity.HeatingContainer;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryComponentBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
@@ -32,13 +33,13 @@ public final class SmelterySounds {
 
     private static boolean active(BlockEntity entity) {
         return !entity.isRemoved() && entity.getLevel() == Minecraft.getInstance().level
-                && (entity instanceof SmelteryBlockEntity controller ? controller.heating()
+                && (entity instanceof HeatingContainer controller ? controller.heating()
                 : entity instanceof SmelteryComponentBlockEntity faucet && faucet.pouring);
     }
 
     public static void ensure(BlockEntity entity) {
         if (active(entity) && !PLAYING.containsKey(entity)) {
-            boolean controller = entity instanceof SmelteryBlockEntity;
+            boolean controller = entity instanceof HeatingContainer;
             Loop loop = new Loop(entity, controller ? SmelteryModule.LOOP.get() : SmelteryModule.POUR.get(), controller ? 0.8F : 1.0F);
             PLAYING.put(entity, loop);
             Minecraft.getInstance().getSoundManager().play(loop);

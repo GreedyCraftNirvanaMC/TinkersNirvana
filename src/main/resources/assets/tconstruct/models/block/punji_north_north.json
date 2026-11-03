@@ -1,0 +1,85 @@
+{
+  "textures": {
+    "all": "tconstruct:block/punji",
+    "particle": "tconstruct:block/punji"
+  },
+  "elements": [
+    {
+      "from": [
+        -1,
+        7,
+        0
+      ],
+      "to": [
+        1,
+        9,
+        6
+      ],
+      "faces": {
+        "south": {
+          "uv": [
+            0,
+            0,
+            2,
+            2
+          ],
+          "texture": "#all",
+          "rotation": 270
+        },
+        "north": {
+          "uv": [
+            2,
+            0,
+            4,
+            2
+          ],
+          "texture": "#all",
+          "cullface": "north",
+          "rotation": 270
+        },
+        "west": {
+          "uv": [
+            0,
+            2,
+            2,
+            8
+          ],
+          "texture": "#all",
+          "rotation": 90
+        },
+        "east": {
+          "uv": [
+            2,
+            2,
+            4,
+            8
+          ],
+          "texture": "#all",
+          "rotation": 270
+        },
+        "down": {
+          "uv": [
+            4,
+            2,
+            6,
+            8
+          ],
+          "texture": "#all",
+          "rotation": 0
+        },
+        "up": {
+          "uv": [
+            6,
+            2,
+            8,
+            8
+          ],
+          "texture": "#all",
+          "rotation": 180
+        }
+      }
+    }
+  ],
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout"
+}

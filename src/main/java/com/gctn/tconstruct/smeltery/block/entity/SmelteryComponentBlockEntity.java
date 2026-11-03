@@ -86,15 +86,16 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
     }
 
     public SmelteryBlock.Kind kind() {
-        return ((SmelteryBlock) getBlockState().getBlock()).kind;
+        // 台阶和楼梯也是组成方块，但没有独立的储液或物品交互。
+        return getBlockState().getBlock() instanceof SmelteryBlock block ? block.kind : SmelteryBlock.Kind.BRICK;
     }
 
     @Nullable
-    public SmelteryBlockEntity master() {
+    public SmelteryMaster master() {
         if (masterPos == null || level == null || !level.hasChunkAt(masterPos)) {
             return null;
         }
-        return level.getBlockEntity(masterPos) instanceof SmelteryBlockEntity controller && controller.contains(worldPosition) ? controller : null;
+        return level.getBlockEntity(masterPos) instanceof SmelteryMaster controller && controller.contains(worldPosition) ? controller : null;
     }
 
     public void assign(BlockPos pos) {
@@ -117,7 +118,7 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
     public IFluidHandler fluidHandler(@Nullable Direction side) {
         return switch (kind()) {
             case TANK -> tank;
-            case DRAIN -> master() == null ? null : side == null ? extractOnlyHandler : drainHandler;
+            case DRAIN -> !(master() instanceof FluidSmelteryMaster) ? null : side == null ? extractOnlyHandler : drainHandler;
             case TABLE, BASIN -> castingHandler;
             case CHANNEL -> side == null || connections[side.ordinal()] == 2 ? channelHandler : null;
             default -> null;
@@ -395,7 +396,7 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
     }
 
     public void neighborChanged(BlockPos from) {
-        SmelteryBlockEntity controller = master();
+        SmelteryMaster controller = master();
         if (controller != null) {
             controller.requestCheck();
         }
@@ -455,15 +456,16 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
             return inventory.getStackInSlot(1).isEmpty() ? 0 : 15;
         }
         if (kind() == SmelteryBlock.Kind.DRAIN) {
-            SmelteryBlockEntity controller = master();
-            return controller == null || controller.liquids.amount() == 0 ? 0
-                    : Math.min(15, 1 + (int) (14L * controller.liquids.amount() / Math.max(1, controller.liquids.capacity())));
+            if (!(master() instanceof FluidSmelteryMaster controller) || controller.liquids().amount() == 0) {
+                return 0;
+            }
+            return Math.min(15, 1 + (int) (14L * controller.liquids().amount() / Math.max(1, controller.liquids().capacity())));
         }
         return tank.isEmpty() ? 0 : 1 + 14 * tank.getFluidAmount() / Math.max(1, tank.getCapacity());
     }
 
     public void onBroken() {
-        SmelteryBlockEntity controller = master();
+        SmelteryMaster controller = master();
         if (controller != null) {
             controller.requestCheck();
         }
@@ -479,8 +481,7 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
 
     private final IFluidHandler drainHandler = new IFluidHandler() {
         private IFluidHandler target() {
-            SmelteryBlockEntity controller = master();
-            return controller == null ? null : controller.liquids;
+            return master() instanceof FluidSmelteryMaster controller ? controller.liquids() : null;
         }
 
         public int getTanks() { return target() == null ? 1 : target().getTanks(); }

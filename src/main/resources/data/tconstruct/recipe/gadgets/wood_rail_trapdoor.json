@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "A A",
+    "ABA",
+    "A A"
+  ],
+  "key": {
+    "A": {
+      "tag": "minecraft:planks"
+    },
+    "B": {
+      "tag": "minecraft:wooden_trapdoors"
+    }
+  },
+  "result": {
+    "id": "tconstruct:wood_rail_trapdoor",
+    "count": 4
+  }
+}

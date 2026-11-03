@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconstruct:block/brownstone_road_slab"
+    },
+    "type=double": {
+      "model": "tconstruct:block/brownstone_road"
+    },
+    "type=top": {
+      "model": "tconstruct:block/brownstone_road_slab_top"
+    }
+  }
+}

@@ -20,6 +20,12 @@ public class SearedGlassBlock extends SmelteryBlock {
 
     public SearedGlassBlock(Properties properties) {
         super(Kind.GLASS, properties);
+        // 命令放置和结构生成同样需要正确的独立玻璃边框，不能依赖玩家放置回调。
+        BlockState state = defaultBlockState();
+        for (var connection : CONNECTIONS) {
+            state = state.setValue(connection, false);
+        }
+        registerDefaultState(state);
     }
 
     @Override

@@ -5,6 +5,7 @@
 package com.gctn.tconstruct.smeltery.block;
 
 import net.minecraft.core.BlockPos;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.LevelAccessor;
@@ -15,8 +16,20 @@ import net.minecraft.world.level.block.state.StateDefinition;
 
 /** Casting glass has connected textures but is not a valid Smeltery wall material. */
 public class ClearGlassBlock extends TransparentBlock {
+    public static final MapCodec<ClearGlassBlock> CODEC = simpleCodec(ClearGlassBlock::new);
     public ClearGlassBlock(Properties properties) {
         super(properties);
+        // 布尔属性默认从 true 开始；独立玻璃必须显式使用无连接状态。
+        BlockState state = defaultBlockState();
+        for (var connection : SearedGlassBlock.CONNECTIONS) {
+            state = state.setValue(connection, false);
+        }
+        registerDefaultState(state);
+    }
+
+    @Override
+    protected MapCodec<? extends TransparentBlock> codec() {
+        return CODEC;
     }
 
     @Override

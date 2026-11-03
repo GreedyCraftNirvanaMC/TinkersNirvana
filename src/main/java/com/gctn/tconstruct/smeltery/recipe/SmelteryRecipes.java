@@ -59,6 +59,9 @@ public final class SmelteryRecipes {
                 || entity instanceof net.minecraft.world.entity.animal.horse.SkeletonHorse, fluid("notmilk", 20)));
         ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.monster.Silverfish, fluid("stone", 25)));
         ENTITY_MELTING.add(new EntityMelting(entity -> entity.getType() == net.minecraft.world.entity.EntityType.SLIME, fluid("greenslime", 25)));
+        // 原版配置按实体类型区分彩色史莱姆，每次造成一颗心伤害产生二十五毫桶。
+        ENTITY_MELTING.add(new EntityMelting(entity -> entity.getType() == com.gctn.tconstruct.common.slime.SlimeMobModule.BLUE.get(), fluid("blueslime", 25)));
+        ENTITY_MELTING.add(new EntityMelting(entity -> entity.getType() == com.gctn.tconstruct.common.slime.SlimeMobModule.PURPLE.get(), fluid("purpleslime", 25)));
         ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.animal.SnowGolem, new FluidStack(Fluids.WATER, 100)));
         ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.monster.Spider, fluid("venom", 20)));
         ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.npc.Villager
@@ -98,6 +101,27 @@ public final class SmelteryRecipes {
         addMelting(Items.SLIME_BALL, SmelteryFluids.get("greenslime"), 250);
         addMelting(Items.SLIME_BLOCK, SmelteryFluids.get("greenslime"), 2250);
         CASTING.add(new Casting(false, ItemStack::isEmpty, SmelteryFluids.get("greenslime"), 250, new ItemStack(Items.SLIME_BALL), 50, false, false));
+        // 保留原版仅对绿、蓝、紫和血液注册的熔炼与浇铸，不把熔岩或粉色史莱姆误作流体。
+        for (String color : new String[]{"green", "blue", "purple", "blood"}) {
+            String fluidName = switch (color) {
+                case "green" -> "greenslime";
+                case "blue" -> "blueslime";
+                case "purple" -> "purpleslime";
+                default -> "blood";
+            };
+            var fluid = SmelteryFluids.get(fluidName);
+            var congealed = com.gctn.tconstruct.common.slime.SlimeModule.CONGEALED.get(color).get();
+            addMelting(congealed.asItem(), fluid, 1000);
+            CASTING.add(new Casting(true, ItemStack::isEmpty, fluid, 1000, new ItemStack(congealed), 100, false, false));
+            if (!color.equals("green")) {
+                var ball = com.gctn.tconstruct.common.slime.SlimeModule.ball(color);
+                addMelting(ball, fluid, 250);
+                CASTING.add(new Casting(false, ItemStack::isEmpty, fluid, 250, new ItemStack(ball), 50, false, false));
+                if (!color.equals("blood")) {
+                    addMelting(com.gctn.tconstruct.common.slime.SlimeModule.fullBlock(color).asItem(), fluid, 2250);
+                }
+            }
+        }
         special("obsidian", Items.OBSIDIAN, 288, "", true, -1);
         addMelting(Items.CLAY_BALL, SmelteryFluids.get("clay"), 144);
         addMelting(Items.CLAY, SmelteryFluids.get("clay"), 576);
@@ -116,8 +140,12 @@ public final class SmelteryRecipes {
                     temperature(SmelteryFluids.get(gem), GEM * 2), true));
         }
         MELTING.add(melting(stack -> stack.is(net.minecraft.tags.ItemTags.SAND), SmelteryFluids.get("glass"), 1000));
+        // 保留未加载标签时可查询的基础配方，随后用公共标签覆盖世界内的普通染色玻璃。
         addMelting(Items.GLASS, SmelteryFluids.get("glass"), 1000);
         addMelting(SmelteryModule.CLEAR_GLASS.get().asItem(), SmelteryFluids.get("glass"), 1000);
+        // 现代 cheap 标签对应原版普通及染色玻璃，不包含新增的遮光玻璃。
+        MELTING.add(melting(stack -> stack.is(TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                ResourceLocation.fromNamespaceAndPath("c", "glass_blocks/cheap"))), SmelteryFluids.get("glass"), 1000));
         CASTING.add(new Casting(true, ItemStack::isEmpty, SmelteryFluids.get("glass"), 1000, new ItemStack(SmelteryModule.CLEAR_GLASS.get()), 120, false, false));
         special("glass", Items.GLASS_PANE, 375, "", false, 50);
         special("notmilk", Items.BONE, 144, "", false, 50);

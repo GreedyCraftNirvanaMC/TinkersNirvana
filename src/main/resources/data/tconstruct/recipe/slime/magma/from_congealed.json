@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "A"
+  ],
+  "key": {
+    "A": {
+      "item": "tconstruct:slime_congealed_magma"
+    }
+  },
+  "result": {
+    "id": "tconstruct:slimeball_magma",
+    "count": 4
+  }
+}

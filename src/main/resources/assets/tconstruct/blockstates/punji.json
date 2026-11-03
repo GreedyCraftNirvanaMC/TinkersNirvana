@@ -1,0 +1,268 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "down"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_down"
+      }
+    },
+    {
+      "when": {
+        "facing": "down",
+        "north": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_down_north"
+      }
+    },
+    {
+      "when": {
+        "facing": "down",
+        "east": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_down_east"
+      }
+    },
+    {
+      "when": {
+        "facing": "down",
+        "northeast": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_down_northeast"
+      }
+    },
+    {
+      "when": {
+        "facing": "down",
+        "northwest": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_down_northwest"
+      }
+    },
+    {
+      "when": {
+        "facing": "up"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_up"
+      }
+    },
+    {
+      "when": {
+        "facing": "up",
+        "north": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_up_north"
+      }
+    },
+    {
+      "when": {
+        "facing": "up",
+        "east": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_up_east"
+      }
+    },
+    {
+      "when": {
+        "facing": "up",
+        "northeast": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_up_northeast"
+      }
+    },
+    {
+      "when": {
+        "facing": "up",
+        "northwest": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_up_northwest"
+      }
+    },
+    {
+      "when": {
+        "facing": "north"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_north"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "north": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_north_north"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "east": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_north_east"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "northeast": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_north_northeast"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "northwest": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_north_northwest"
+      }
+    },
+    {
+      "when": {
+        "facing": "south"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_south"
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "north": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_south_north"
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "east": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_south_east"
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "northeast": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_south_northeast"
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "northwest": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_south_northwest"
+      }
+    },
+    {
+      "when": {
+        "facing": "west"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_west"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "north": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_west_north"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "east": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_west_east"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "northeast": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_west_northeast"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "northwest": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_west_northwest"
+      }
+    },
+    {
+      "when": {
+        "facing": "east"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_east"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "north": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_east_north"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "east": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_east_east"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "northeast": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_east_northeast"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "northwest": "true"
+      },
+      "apply": {
+        "model": "tconstruct:block/punji_east_northwest"
+      }
+    }
+  ]
+}

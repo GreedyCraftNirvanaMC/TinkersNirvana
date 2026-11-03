@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": {
+    "item": "tconstruct:slimy_mud_green"
+  },
+  "result": {
+    "id": "tconstruct:slimecrystal_green"
+  },
+  "experience": 0.75,
+  "cookingtime": 200
+}

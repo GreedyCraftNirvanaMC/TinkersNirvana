@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconstruct:block/brownstone_smooth_slab"
+    },
+    "type=double": {
+      "model": "tconstruct:block/brownstone_smooth"
+    },
+    "type=top": {
+      "model": "tconstruct:block/brownstone_smooth_slab_top"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconstruct:block/firewood_slab"
+    },
+    "type=double": {
+      "model": "tconstruct:block/firewood"
+    },
+    "type=top": {
+      "model": "tconstruct:block/firewood_slab_top"
+    }
+  }
+}

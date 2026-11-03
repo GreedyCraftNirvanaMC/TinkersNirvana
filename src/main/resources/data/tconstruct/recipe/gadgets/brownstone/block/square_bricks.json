@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "tconstruct:brownstone_brick_square",
+    "count": 1
+  },
+  "group": "tconstruct:brownstone",
+  "ingredients": [
+    {
+      "item": "tconstruct:brownstone_brick_fancy"
+    }
+  ]
+}

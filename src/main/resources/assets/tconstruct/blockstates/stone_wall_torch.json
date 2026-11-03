@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "tconstruct:block/stone_wall_torch"
+    },
+    "facing=north": {
+      "model": "tconstruct:block/stone_wall_torch",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "tconstruct:block/stone_wall_torch",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "tconstruct:block/stone_wall_torch",
+      "y": 180
+    }
+  }
+}

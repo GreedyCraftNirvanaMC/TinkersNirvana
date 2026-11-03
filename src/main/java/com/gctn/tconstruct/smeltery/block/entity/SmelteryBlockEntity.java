@@ -38,7 +38,7 @@ import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import java.util.Arrays;
 import java.util.List;
 
-public class SmelteryBlockEntity extends BaseContainerBlockEntity {
+public class SmelteryBlockEntity extends BaseContainerBlockEntity implements HeatingContainer, FluidSmelteryMaster {
     public static final int CAPACITY_PER_BLOCK = 144 * 8;
     private NonNullList<ItemStack> items = NonNullList.create();
     private int[] heat = new int[0];
@@ -109,6 +109,7 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity {
             return;
         }
         if (found.equals(structure) && active) {
+            assignComponents(level, found.blocks());
             return;
         }
         releaseComponents();
@@ -118,11 +119,7 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity {
         active = true;
         resize(found.size());
         liquids.setCapacity(found.size() * CAPACITY_PER_BLOCK);
-        for (BlockPos pos : found.blocks()) {
-            if (level.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity component) {
-                component.assign(worldPosition);
-            }
-        }
+        assignComponents(level, found.blocks());
         level.setBlock(worldPosition, getBlockState().setValue(SmelteryBlock.ACTIVE, true), 3);
         level.invalidateCapabilities(worldPosition);
         changed();
@@ -197,6 +194,11 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity {
 
     public void requestCheck() {
         needsCheck = true;
+    }
+
+    @Override
+    public SmelteryTank liquids() {
+        return liquids;
     }
 
     public boolean contains(BlockPos pos) {
@@ -371,33 +373,17 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity {
         return fuel;
     }
 
+    @Override
+    public int fuelQuality() {
+        return fuelQuality;
+    }
+
     public int temperature() {
         return temperature;
     }
 
     public FuelDisplay fuelDisplay() {
-        FluidStack display = fuel > 0 && !currentFuel.isEmpty() ? currentFuel.copyWithAmount(1) : FluidStack.EMPTY;
-        int capacity = fuel > 0 ? currentFuel.getAmount() : 0;
-        int amount = 0;
-        List<BlockPos> tanks = structure != null ? structure.tanks() : clientTanks;
-        for (BlockPos pos : tanks) {
-            if (level != null && level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity component) {
-                FluidStack fluid = component.tank.getFluid();
-                if (!fluid.isEmpty()) {
-                    if (display.isEmpty()) {
-                        display = fluid.copyWithAmount(1);
-                    }
-                    if (FluidStack.isSameFluidSameComponents(display, fluid)) {
-                        amount += fluid.getAmount();
-                        capacity += component.tank.getCapacity();
-                    }
-                }
-            }
-        }
-        return new FuelDisplay(display, amount, capacity, display.isEmpty() ? 0 : display.getFluidType().getTemperature(display));
-    }
-
-    public record FuelDisplay(FluidStack fluid, int amount, int capacity, int temperature) {
+        return FuelDisplay.of(level, structure == null ? clientTanks : structure.tanks(), currentFuel, fuel);
     }
 
     public void changed() {
@@ -464,7 +450,7 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        net.minecraft.world.ContainerHelper.saveAllItems(tag, items, registries);
+        com.gctn.tconstruct.smeltery.SmelteryInventory.save(tag, items, registries);
         tag.putInt("Size", items.size());
         tag.putIntArray("Heat", heat);
         tag.putIntArray("Required", required);
@@ -497,7 +483,7 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity {
         if (tag.contains("Size")) {
             int size = Math.clamp(tag.getInt("Size"), 0, 81 * 4096);
             items = NonNullList.withSize(size, ItemStack.EMPTY);
-            net.minecraft.world.ContainerHelper.loadAllItems(tag, items, registries);
+            com.gctn.tconstruct.smeltery.SmelteryInventory.load(tag, items, registries);
             heat = Arrays.copyOf(tag.getIntArray("Heat"), size);
             required = Arrays.copyOf(tag.getIntArray("Required"), size);
         }

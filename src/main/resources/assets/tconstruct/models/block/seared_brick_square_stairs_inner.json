@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "tconstruct:block/smeltery/seared_brick_square",
+    "top": "tconstruct:block/smeltery/seared_brick_square",
+    "side": "tconstruct:block/smeltery/seared_brick_square"
+  }
+}

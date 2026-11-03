@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "tconstruct:slimeball_blue",
+    "tconstruct:slimeball_purple",
+    "tconstruct:slimeball_blood",
+    "tconstruct:slimeball_magma",
+    "tconstruct:slimeball_pink"
+  ]
+}

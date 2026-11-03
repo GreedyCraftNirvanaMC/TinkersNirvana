@@ -5,14 +5,14 @@
       "item": "minecraft:clay_ball"
     },
     {
-      "tag": "minecraft:sand"
+      "tag": "c:sands"
     },
     {
-      "item": "minecraft:gravel"
+      "tag": "c:gravels"
     }
   ],
   "result": {
     "id": "tconstruct:grout",
-    "count": 2
+    "count": 3
   }
 }

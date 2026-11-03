@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "tconstruct:brownstone_road_stairs",
+    "count": 4
+  },
+  "group": "tconstruct:brownstone_stairs",
+  "pattern": [
+    "A  ",
+    "AA ",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconstruct:brownstone_road"
+    }
+  }
+}

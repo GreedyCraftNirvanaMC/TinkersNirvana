@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "tconstruct:stone_ladder",
+    "count": 3
+  },
+  "pattern": [
+    "A A",
+    "AAA",
+    "A A"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:rods/stone"
+    }
+  }
+}

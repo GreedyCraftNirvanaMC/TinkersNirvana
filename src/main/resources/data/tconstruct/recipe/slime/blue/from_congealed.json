@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "A"
+  ],
+  "key": {
+    "A": {
+      "item": "tconstruct:slime_congealed_blue"
+    }
+  },
+  "result": {
+    "id": "tconstruct:slimeball_blue",
+    "count": 4
+  }
+}

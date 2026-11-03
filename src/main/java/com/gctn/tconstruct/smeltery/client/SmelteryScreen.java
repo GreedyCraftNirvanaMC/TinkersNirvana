@@ -6,6 +6,8 @@
 package com.gctn.tconstruct.smeltery.client;
 
 import com.gctn.tconstruct.smeltery.SmelteryFluids;
+import com.gctn.tconstruct.smeltery.SmelteryTank;
+import com.gctn.tconstruct.smeltery.block.entity.FluidSmelteryMaster;
 import com.gctn.tconstruct.smeltery.menu.SmelteryMenu;
 import com.gctn.tconstruct.smeltery.network.SmelteryNetwork;
 import com.gctn.tconstruct.smeltery.recipe.SmelteryRecipes;
@@ -23,12 +25,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
-    private static final ResourceLocation BACKGROUND = SmelteryFluids.id("textures/gui/smeltery.png");
+    private final ResourceLocation background;
     private static final ResourceLocation GENERIC = SmelteryFluids.id("textures/gui/generic.png");
     private boolean dragging;
 
     public SmelteryScreen(SmelteryMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
+        background = SmelteryFluids.id("textures/gui/" + (menu.furnace ? "seared_furnace" : "smeltery") + ".png");
         imageWidth = 176;
         imageHeight = 166;
         inventoryLabelY = 72;
@@ -55,20 +58,27 @@ public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         // The original 256px texture and all source rectangles are retained at 1:1 GUI scale.
-        graphics.blit(BACKGROUND, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        graphics.blit(background, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         drawSideInventory(graphics, mouseX, mouseY);
         if (menu.controller != null) {
             int[] heights = layerHeights();
             int bottom = topPos + 68;
             for (int i = 0; i < heights.length; i++) {
                 bottom -= heights[i];
-                SmelteryRendering.fluid(graphics, menu.controller.liquids.fluids().get(i), leftPos + 8, bottom, 52, heights[i]);
+                SmelteryRendering.fluid(graphics, liquids().fluids().get(i), leftPos + 8, bottom, 52, heights[i]);
             }
             var fuel = menu.controller.fuelDisplay();
             int height = fuel.capacity() <= 0 ? 0 : 52 * fuel.amount() / fuel.capacity();
             SmelteryRendering.fluid(graphics, fuel.fluid(), leftPos + 71, topPos + 68 - height, 12, height);
         }
-        graphics.blit(BACKGROUND, leftPos + 8, topPos + 16, 176, 76, 52, 52);
+        if (menu.furnace) {
+            if (menu.fuel() > 0 && menu.fuelQuality() > 0) {
+                int height = 1 + Math.round(Math.clamp((float) menu.fuel() / menu.fuelQuality(), 0, 1) * 27);
+                graphics.blit(background, leftPos + 26, topPos + 69 - height, 176, 104 - height, 28, height);
+            }
+        } else {
+            graphics.blit(background, leftPos + 8, topPos + 16, 176, 76, 52, 52);
+        }
     }
 
     private void drawSideInventory(GuiGraphics graphics, int mouseX, int mouseY) {
@@ -87,16 +97,16 @@ public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
         for (int row = 0; row < menu.visibleRows; row++) {
             for (int col = 0; col < 3; col++) {
                 int slot = (menu.firstRow() + row) * 3 + col;
-                graphics.blit(BACKGROUND, x + 7 + col * 22, y + 7 + row * 18,
+                graphics.blit(background, x + 7 + col * 22, y + 7 + row * 18,
                         slot < menu.count ? 0 : 22, 166, 22, 18);
             }
         }
         for (int i = menu.firstRow() * 3; i < Math.min(menu.count, (menu.firstRow() + menu.visibleRows) * 3); i++) {
-            Slot slot = menu.slots.get(i);
+            Slot slot = menu.visibleSlot(i);
             if (slot.hasItem()) {
                 Bar bar = bar(i);
                 int height = 1 + Math.round(Math.clamp(bar.progress, 0, 1) * 15);
-                graphics.blit(BACKGROUND, leftPos + slot.x - 4, topPos + slot.y + 16 - height,
+                graphics.blit(background, leftPos + slot.x - 4, topPos + slot.y + 16 - height,
                         bar.u, 150 + 16 - height, 3, height);
             }
         }
@@ -125,29 +135,43 @@ public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
 
     private Bar bar(int slot) {
         int required = menu.required(slot);
+        if (menu.furnace && required == 0) {
+            // 原版用正、负无穷表示完成和产量过大，这里沿用相同颜色与提示。
+            if (menu.heat(slot) > 0) {
+                return new Bar(188, 1, "gui.searedfurnace.progress.complete");
+            }
+            if (menu.heat(slot) < 0) {
+                return new Bar(182, 1, "gui.searedfurnace.progress.no_space");
+            }
+        }
+        String prefix = menu.furnace ? "gui.searedfurnace.progress." : "gui.smeltery.progress.";
         if (required == 0) {
-            return new Bar(185, 1, "gui.smeltery.progress.no_recipe");
+            return new Bar(185, 1, prefix + "no_recipe");
         }
         float progress = (float) menu.heat(slot) / required;
         if (menu.fuel() == 0) {
-            return new Bar(179, Math.clamp(progress, 0, 1), "gui.smeltery.progress.no_fuel");
+            return new Bar(179, Math.clamp(progress, 0, 1), prefix + "no_fuel");
         }
         if (menu.temperature() < required / 8) {
-            return new Bar(179, 1, "gui.smeltery.progress.no_heat");
+            return new Bar(179, 1, prefix + "no_heat");
         }
         if (progress > 2) {
-            return new Bar(182, 1, "gui.smeltery.progress.no_space");
+            return new Bar(182, 1, prefix + "no_space");
         }
         return new Bar(176, Math.min(1, progress), "");
     }
 
+    private SmelteryTank liquids() {
+        return menu.controller instanceof FluidSmelteryMaster controller ? controller.liquids() : null;
+    }
+
     private int[] layerHeights() {
-        return menu.controller == null ? new int[0] : SmelteryRendering.heights(menu.controller.liquids.fluids(),
-                Math.max(menu.controller.liquids.amount(), menu.controller.liquids.capacity()), 52, com.gctn.tconstruct.Config.MIN_FLUID_HEIGHT.get());
+        return liquids() == null ? new int[0] : SmelteryRendering.heights(liquids().fluids(),
+                Math.max(liquids().amount(), liquids().capacity()), 52, com.gctn.tconstruct.Config.MIN_FLUID_HEIGHT.get());
     }
 
     private int hoveredFluid(int x, int y) {
-        if (x < 8 || x >= 60 || y < 16 || y >= 68) {
+        if (liquids() == null || x < 8 || x >= 60 || y < 16 || y >= 68) {
             return -1;
         }
         int bottom = 68;
@@ -166,19 +190,19 @@ public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
         if (menu.controller == null) {
             return text;
         }
-        if (x >= 8 && x < 60 && y >= 16 && y < 68) {
+        if (liquids() != null && x >= 8 && x < 60 && y >= 16 && y < 68) {
             int index = hoveredFluid(x, y);
             if (index >= 0) {
-                FluidStack fluid = menu.controller.liquids.fluids().get(index);
+                FluidStack fluid = liquids().fluids().get(index);
                 text.add(fluid.getHoverName());
                 amount(text, fluid.getAmount(), fluid);
             } else {
                 text.add(Component.translatable("gui.smeltery.capacity"));
-                amount(text, menu.controller.liquids.capacity(), FluidStack.EMPTY);
+                amount(text, liquids().capacity(), FluidStack.EMPTY);
                 text.add(Component.translatable("gui.smeltery.capacity_available"));
-                amount(text, menu.controller.liquids.capacity() - menu.controller.liquids.amount(), FluidStack.EMPTY);
+                amount(text, liquids().capacity() - liquids().amount(), FluidStack.EMPTY);
                 text.add(Component.translatable("gui.smeltery.capacity_used"));
-                amount(text, menu.controller.liquids.amount(), FluidStack.EMPTY);
+                amount(text, liquids().amount(), FluidStack.EMPTY);
                 if (!hasShiftDown()) {
                     text.add(Component.empty());
                     text.add(Component.translatable("tooltip.tank.holdShift"));
@@ -200,7 +224,7 @@ public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
             }
         } else {
             for (int i = menu.firstRow() * 3; i < Math.min(menu.count, (menu.firstRow() + menu.visibleRows) * 3); i++) {
-                Slot slot = menu.slots.get(i);
+                Slot slot = menu.visibleSlot(i);
                 if (slot.hasItem() && x >= slot.x - 4 && x < slot.x - 1 && y >= slot.y && y < slot.y + 16) {
                     Bar bar = bar(i);
                     if (!bar.tooltip.isEmpty()) {
@@ -213,46 +237,7 @@ public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
     }
 
     private void amount(List<Component> text, int amount, FluidStack fluid) {
-        if (!hasShiftDown()) {
-            List<Unit> units = new ArrayList<>();
-            if (fluid.isEmpty()) {
-                units.add(new Unit(144, "ingot"));
-            } else {
-                // Antique derives units from casting recipes instead of assuming all fluids are metals.
-                for (var recipe : SmelteryRecipes.CASTING) {
-                    if (recipe.fluid() != fluid.getFluid()) {
-                        continue;
-                    }
-                    if (recipe.basin() && recipe.cast().test(net.minecraft.world.item.ItemStack.EMPTY)) {
-                        units.add(new Unit(recipe.amount(), "block"));
-                    } else if (!recipe.basin()) {
-                        for (String cast : new String[]{"ingot", "nugget", "gem"}) {
-                            if (recipe.cast().test(new net.minecraft.world.item.ItemStack(com.gctn.tconstruct.smeltery.SmelteryModule.item("cast_" + cast)))) {
-                                units.add(new Unit(recipe.amount(), cast));
-                            }
-                        }
-                    }
-                }
-            }
-            units = units.stream().distinct().sorted(java.util.Comparator.comparingInt(Unit::amount).reversed()).toList();
-            for (Unit unit : units) {
-                amount = appendAmount(text, amount, unit.amount, unit.key);
-            }
-        }
-        amount = appendAmount(text, amount, 1_000_000, "kilobucket");
-        amount = appendAmount(text, amount, 1000, "bucket");
-        appendAmount(text, amount, 1, "millibucket");
-    }
-
-    private int appendAmount(List<Component> text, int amount, int size, String unit) {
-        if (amount >= size) {
-            text.add(Component.literal(amount / size + " ").append(Component.translatable("gui.smeltery.liquid." + unit))
-                    .withStyle(net.minecraft.ChatFormatting.GRAY));
-        }
-        return amount % size;
-    }
-
-    private record Unit(int amount, String key) {
+        FluidTankTooltip.amount(text, amount, fluid, hasShiftDown());
     }
 
     @Override

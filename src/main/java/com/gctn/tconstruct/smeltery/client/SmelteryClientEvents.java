@@ -26,6 +26,8 @@ public final class SmelteryClientEvents {
     @SubscribeEvent
     private static void screens(RegisterMenuScreensEvent event) {
         event.register(SmelteryModule.MENU.get(), SmelteryScreen::new);
+        event.register(SmelteryModule.FURNACE_MENU.get(), SmelteryScreen::new);
+        event.register(SmelteryModule.TINKER_TANK_MENU.get(), TinkerTankScreen::new);
     }
 
     @SubscribeEvent
@@ -36,6 +38,8 @@ public final class SmelteryClientEvents {
     @SubscribeEvent
     private static void renderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(SmelteryModule.CONTROLLER_ENTITY.get(), SmelteryRenderer::new);
+        event.registerBlockEntityRenderer(SmelteryModule.FURNACE_ENTITY.get(), SmelteryRenderer::new);
+        event.registerBlockEntityRenderer(SmelteryModule.TINKER_TANK_ENTITY.get(), TinkerTankRenderer::new);
         event.registerBlockEntityRenderer(SmelteryModule.COMPONENT_ENTITY.get(), SmelteryRenderer::new);
     }
 
@@ -84,6 +88,19 @@ public final class SmelteryClientEvents {
     private static void buckets(RegisterColorHandlersEvent.Item event) {
         for (SmelteryFluids.Entry fluid : SmelteryFluids.ENTRIES.values()) {
             event.register((stack, tint) -> tint == 1 ? 0xff000000 | fluid.color : -1, fluid.bucket.get());
+        }
+        // 模型和物品使用同一原版玻璃调色板，避免信标与玻璃显示不同颜色。
+        for (var entry : SmelteryModule.STAINED_GLASS.values()) {
+            var glass = entry.get();
+            event.register((stack, tint) -> tint == 0 ? glass.argb() : -1, glass.asItem());
+        }
+    }
+
+    @SubscribeEvent
+    private static void glassColors(RegisterColorHandlersEvent.Block event) {
+        for (var entry : SmelteryModule.STAINED_GLASS.values()) {
+            var glass = entry.get();
+            event.register((state, level, pos, tint) -> tint == 0 ? glass.argb() : -1, glass);
         }
     }
 }

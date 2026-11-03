@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconstruct:block/seared_tile_slab"
+    },
+    "type=double": {
+      "model": "tconstruct:block/seared_tile"
+    },
+    "type=top": {
+      "model": "tconstruct:block/seared_tile_slab_top"
+    }
+  }
+}

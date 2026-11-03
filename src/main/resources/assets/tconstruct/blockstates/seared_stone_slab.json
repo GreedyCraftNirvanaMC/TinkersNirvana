@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconstruct:block/seared_stone_slab"
+    },
+    "type=double": {
+      "model": "tconstruct:block/seared_stone"
+    },
+    "type=top": {
+      "model": "tconstruct:block/seared_stone_slab_top"
+    }
+  }
+}

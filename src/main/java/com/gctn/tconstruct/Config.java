@@ -14,6 +14,10 @@ public class Config {
     // Preserve Antique's defaults while allowing the same Smeltery tuning on NeoForge.
     public static final ModConfigSpec.IntValue SMELTERY_HEAT_TICK_RATE = BUILDER
             .defineInRange("smeltery.heatItemsTickrateSmeltery", 4, 1, 20);
+    // 焦黑熔炉保持原版独立的加热间隔，避免与冶炼炉的配置互相影响。
+    public static final ModConfigSpec.IntValue SEARED_FURNACE_HEAT_TICK_RATE = BUILDER
+            .translation("config.tconstruct.seared_furnace.heat_tick_rate")
+            .defineInRange("smeltery.heatItemsTickrateSearedFurnace", 4, 1, 20);
     public static final ModConfigSpec.IntValue LIQUID_TRANSFER_RATE = BUILDER
             .defineInRange("smeltery.liquidTransferRate", 6, 1, 144);
     public static final ModConfigSpec.DoubleValue ORE_TO_INGOT_RATIO = BUILDER
@@ -26,6 +30,14 @@ public class Config {
     public static final ModConfigSpec.IntValue MIN_FLUID_HEIGHT = BUILDER.defineInRange("smeltery.minFluidHeight", 3, 0, 52);
     public static final ModConfigSpec.IntValue MAX_SMELTERY_ITEM_RENDERS = BUILDER.defineInRange("smeltery.maxSmelteryItemRenders", -1, -1, Integer.MAX_VALUE);
     public static final ModConfigSpec.BooleanValue TEMPERATURE_CELSIUS = BUILDER.define("smeltery.temperatureCelsius", true);
+    // 原版通透玻璃默认需要精准采集，关闭后普通破坏也会掉落玻璃。
+    public static final ModConfigSpec.BooleanValue CLEAR_GLASS_SILK_TOUCH = BUILDER
+            .translation("config.tconstruct.clear_glass.silk_touch")
+            .define("smeltery.clearGlassSilkTouch", true);
+    // 默认混色得到绿色史莱姆块；开启后保留纯绿色配方，混色改为隐藏的粉色块。
+    public static final ModConfigSpec.BooleanValue MATCH_VANILLA_SLIME_BLOCK = BUILDER
+            .translation("config.tconstruct.slime.match_vanilla")
+            .define("general.matchVanillaSlimeblock", false);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> MELTING_IGNORE = BUILDER
             .comment("Items or #item_tags ignored when deriving melting values from crafting ingredients.")
             .defineList("smeltery.oredictMeltingIgnore", List.of("#minecraft:planks", "#c:rods/wooden", "minecraft:stick",
