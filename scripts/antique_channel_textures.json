@@ -1,0 +1,26 @@
+[
+  {
+    "source": "textures/blocks/fluids/liquid_flow.png",
+    "output": "textures/block/fluids/liquid_flow.png",
+    "source_sha256": "de794fcd40a5956e4b51aaa45d7584119c8d7ba95278f67be8779bdff85cca82",
+    "neutral": true
+  },
+  {
+    "source": "textures/blocks/fluids/slime_channel_diagonal.png",
+    "output": "textures/block/fluids/slime_channel_diagonal.png",
+    "source_sha256": "170a7d05b014e64efaef5cef7a52bab98e5f66040f04f836351036de0aafe763",
+    "neutral": true
+  },
+  {
+    "source": "textures/blocks/fluids/slime_channel_still.png",
+    "output": "textures/block/fluids/slime_channel_still.png",
+    "source_sha256": "b14f953ed16c6db60153e63d0193f9f0e94350a79dd9ce18c81b64041c2680e8",
+    "neutral": true
+  },
+  {
+    "source": "textures/blocks/fluids/slime_channel_still_diagonal.png",
+    "output": "textures/block/fluids/slime_channel_still_diagonal.png",
+    "source_sha256": "9e132a916a614c97b9f3b2f15278dd3f2a4ef8b8d939a59d7df2d83620390835",
+    "neutral": true
+  }
+]

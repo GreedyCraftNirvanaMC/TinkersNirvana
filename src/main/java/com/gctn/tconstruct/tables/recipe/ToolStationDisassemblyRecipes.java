@@ -3,10 +3,6 @@ package com.gctn.tconstruct.tables.recipe;
 import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.Material;
-import com.gctn.tconstruct.library.toolparts.Binding;
-import com.gctn.tconstruct.library.toolparts.PickaxeHead;
-import com.gctn.tconstruct.library.toolparts.ToolRod;
-import com.gctn.tconstruct.tools.tools.Pickaxe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
@@ -19,34 +15,36 @@ public final class ToolStationDisassemblyRecipes {
     }
 
     public static PartList createParts(ItemStack stack) {
-        if (!isFullDurabilityTool(stack)) {
+        if (!com.gctn.tconstruct.Config.DECONSTRUCT_TOOLS.get() || !isFullDurabilityTool(stack)) {
             return PartList.EMPTY;
         }
 
-        return switch (stack.getItem()) {
-            case net.minecraft.world.item.Item item when item == Pickaxe.PICKAXE.get() -> createPickaxeParts(stack);
-            default -> PartList.EMPTY;
-        };
+        if (!(stack.getItem() instanceof com.gctn.tconstruct.tools.tools.AntiqueTool item)) { return PartList.EMPTY; }
+        CompoundTag materials = TinkerDataComponents.getMaterialTag(stack);
+        if (item.definition().action() == com.gctn.tconstruct.tools.ToolDefinition.Action.BOLT) {
+            Material shaft = getMaterial(materials, "Shaft", "Shaft");
+            Material head = getMaterial(materials, "Head", "Head");
+            Material fletching = getMaterial(materials, "Fletching", "Fletching");
+            if (shaft == null || head == null || fletching == null) { return PartList.EMPTY; }
+            ItemStack core = com.gctn.tconstruct.library.toolparts.AntiqueParts.get("bolt_core").create(shaft);
+            var data = TinkerDataComponents.getMaterialTag(core);
+            data.putString("Coating", head.identifier);
+            core.set(TinkerDataComponents.TINKER_MATERIAL.get(), net.minecraft.world.item.component.CustomData.of(data));
+            return new PartList(new ItemStack[]{core, com.gctn.tconstruct.library.toolparts.AntiqueParts.get("fletching").create(fletching)});
+        }
+        java.util.List<ItemStack> parts = new java.util.ArrayList<>();
+        for (var part : item.definition().parts()) {
+            Material material = getMaterial(materials, part.key(), part.stat());
+            if (material == null) { return PartList.EMPTY; }
+            ItemStack result = part.definition().create(material);
+            if (result.isEmpty()) { return PartList.EMPTY; }
+            parts.add(result);
+        }
+        return new PartList(parts.toArray(ItemStack[]::new));
     }
 
     private static boolean isFullDurabilityTool(ItemStack stack) {
         return stack.isDamageableItem() && stack.getDamageValue() == 0;
-    }
-
-    private static PartList createPickaxeParts(ItemStack stack) {
-        CompoundTag materials = TinkerDataComponents.getMaterialTag(stack);
-        Material handle = getMaterial(materials, "Handle", "Handle");
-        Material head = getMaterial(materials, "Head", "Head");
-        Material binding = getMaterial(materials, "Binding", "Extra");
-        if (handle == null || head == null || binding == null) {
-            return PartList.EMPTY;
-        }
-
-        return new PartList(new ItemStack[] {
-                ToolRod.getPart(handle),
-                PickaxeHead.getColoredPart(head),
-                Binding.getColoredPart(binding)
-        });
     }
 
     private static Material getMaterial(CompoundTag materials, String materialKey, String requiredStat) {

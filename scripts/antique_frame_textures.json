@@ -1,0 +1,14 @@
+[
+  {
+    "source": "textures/blocks/itemframe_background.png",
+    "output": "textures/block/gadgets/frame_background.png",
+    "source_sha256": "f6b2b3ff82f7a5995761020a368c35a84d8621f5fffa4e5dcebf321f2f6e33e9",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/block_silky_jewel.png",
+    "output": "textures/block/gadgets/frame_jewel.png",
+    "source_sha256": "d51b79505e12595640d82176a99fae7d072b7b9154ec7c0f2439f4e751890343",
+    "neutral": false
+  }
+]

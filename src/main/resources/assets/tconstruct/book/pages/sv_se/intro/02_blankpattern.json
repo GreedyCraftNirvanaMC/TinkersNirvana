@@ -1,0 +1,11 @@
+{
+  "title": "Blankt mönster",
+  "text": [
+    {
+      "text": "Text ska vara här"
+    }
+  ],
+  "section": "intro",
+  "order": 2,
+  "id": "intro/blankpattern"
+}

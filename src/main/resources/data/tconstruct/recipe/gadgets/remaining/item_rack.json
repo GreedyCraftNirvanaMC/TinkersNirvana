@@ -1,0 +1,33 @@
+{
+  "type": "tconstruct:table",
+  "pattern": [
+    "AA"
+  ],
+  "key": {
+    "A": [
+      {
+        "tag": "minecraft:wooden_slabs"
+      },
+      {
+        "item": "tconstruct:lavawood_slab"
+      },
+      {
+        "item": "tconstruct:firewood_slab"
+      }
+    ]
+  },
+  "material": [
+    {
+      "tag": "minecraft:wooden_slabs"
+    },
+    {
+      "item": "tconstruct:lavawood_slab"
+    },
+    {
+      "item": "tconstruct:firewood_slab"
+    }
+  ],
+  "result": {
+    "id": "tconstruct:item_rack"
+  }
+}

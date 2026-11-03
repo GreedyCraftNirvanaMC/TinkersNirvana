@@ -117,6 +117,13 @@
     "tconstruct:copper_ore",
     "tconstruct:tin_ore",
     "tconstruct:aluminum_ore",
-    "tconstruct:ardite_ore"
+    "tconstruct:ardite_ore",
+    "tconstruct:toolforge",
+    "tconstruct:dried_clay",
+    "tconstruct:dried_clay_slab",
+    "tconstruct:dried_clay_stairs",
+    "tconstruct:dried_clay_bricks",
+    "tconstruct:dried_clay_bricks_slab",
+    "tconstruct:dried_clay_bricks_stairs"
   ]
 }

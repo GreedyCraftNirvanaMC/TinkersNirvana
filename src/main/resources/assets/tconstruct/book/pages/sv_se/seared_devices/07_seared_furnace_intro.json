@@ -1,0 +1,20 @@
+{
+  "title": "Den brända ugnen",
+  "image": {
+    "file": "tconstruct:textures/gui/book/seared_furnace.png",
+    "texture_width": 854,
+    "texture_height": 480
+  },
+  "text": [
+    {
+      "text": "Den brända ugnen är ugnarnas mästare, som kan smälta en fjärdedels föremålsgrupp samtidigt och tillagar mat snabbare."
+    }
+  ],
+  "section": "seared_devices",
+  "order": 7,
+  "id": "seared_devices/seared_furnace_intro",
+  "layout": "image with text below",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "Seared Furnace"
+}

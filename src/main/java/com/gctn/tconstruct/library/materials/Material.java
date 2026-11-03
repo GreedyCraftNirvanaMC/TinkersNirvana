@@ -2,8 +2,16 @@ package com.gctn.tconstruct.library.materials;
 
 import com.gctn.tconstruct.library.stats.AbstractMaterialStats;
 import com.gctn.tconstruct.tools.traits.AbstractTraits;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 public class Material {
     public final String identifier;
@@ -19,7 +27,8 @@ public class Material {
     // 是否可以使用浇筑方式合成(默认false)
     protected boolean castable = false;
 
-    private boolean isHidden;
+    private BooleanSupplier availability = () -> true;
+    private Supplier<ItemStack> representativeItem = () -> ItemStack.EMPTY;
 
     // 参数不全的默认初始化
     public Material(String identifier, int color) { this(identifier, color, false); }
@@ -42,11 +51,37 @@ public class Material {
     }
 
     public boolean isHidden() {
-        return hidden;
+        return hidden || !availability.getAsBoolean();
+    }
+
+    /** Shared by the book and creative catalogs; evaluate against the current item tags after reload. */
+    public Material setAvailability(BooleanSupplier availability) {
+        this.availability = Objects.requireNonNull(availability);
+        return this;
+    }
+
+    /** Optional display stack, resolved after item registration; callers receive an independent single-item copy. */
+    public Material setRepresentativeItem(Supplier<ItemStack> item) {
+        this.representativeItem = Objects.requireNonNull(item);
+        return this;
+    }
+
+    public ItemStack getRepresentativeItem() { return representativeItem.get().copyWithCount(1); }
+
+    /** All required item tags must contain an item, matching Antique's material integration requirements. */
+    public Material requireItems(String... tags) {
+        List<TagKey<Item>> requirements = Arrays.stream(tags).map(id -> TagKey.create(Registries.ITEM, ResourceLocation.parse(id))).toList();
+        return setAvailability(() -> {
+            for (var tag : requirements) {
+                // Registry named sets may retain removed tags; holder membership reflects the latest binding.
+                if (BuiltInRegistries.ITEM.getTag(tag).filter(items -> items.stream().anyMatch(item -> item.is(tag))).isEmpty()) { return false; }
+            }
+            return true;
+        });
     }
 
     public boolean isCraftable() {
-        return craftable;
+        return craftable || (castable && com.gctn.tconstruct.Config.CRAFT_CASTABLE_MATERIALS.get());
     }
 
     public boolean isCastable() {
@@ -91,6 +126,13 @@ public class Material {
     public List<AbstractTraits.TraitEntry> getTraits(String pos) {
         // null 位置表示默认配置；指定位置的配置整体替换默认配置，而不是追加。
         return List.copyOf(traits.getOrDefault(pos, traits.getOrDefault(null, List.of())));
+    }
+
+    /** 多属性部件只合并显式部位词条；全部缺失时才采用默认列表。 */
+    public List<AbstractTraits.TraitEntry> getTraitsForStats(List<String> positions) {
+        List<AbstractTraits.TraitEntry> result = new ArrayList<>();
+        for (String position : positions) { result.addAll(traits.getOrDefault(position, List.of())); }
+        return result.isEmpty() ? List.copyOf(traits.getOrDefault(null, List.of())) : List.copyOf(result);
     }
 
     public int getColor() { return color; }

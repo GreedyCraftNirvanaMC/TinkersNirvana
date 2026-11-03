@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/vine",
+  "textures": {
+    "vine": "tconstruct:block/world/slimevine_mid",
+    "particle": "tconstruct:block/world/slimevine_mid"
+  }
+}

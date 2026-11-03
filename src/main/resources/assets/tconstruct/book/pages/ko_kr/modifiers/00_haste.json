@@ -1,0 +1,34 @@
+{
+  "modifier": "haste",
+  "text": [
+    {
+      "text": "Adding redstone to a tool seems to increase its speed. Redstones mining speed effect is more potent on slower tools."
+    },
+    {
+      "text": "\n"
+    },
+    {
+      "text": "Redstone. Crazy stuff, amiright?"
+    }
+  ],
+  "effects": [
+    "Each redstone dust increases mining speed by a small amount",
+    "Increases attack speed",
+    "Multiple levels"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe",
+    "tconstruct:broadsword",
+    "tconstruct:shortbow"
+  ],
+  "section": "modifiers",
+  "order": 0,
+  "id": "modifiers/haste",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "효과:",
+  "title_color": 9502720
+}

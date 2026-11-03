@@ -1,0 +1,20 @@
+[
+  {
+    "source": "textures/items/materials/venomous_bone.png",
+    "output": "textures/item/gadgets/venomous_bone.png",
+    "source_sha256": "13ca7a3575e685959ee8446d58318db017de25cda2acfc230eb0b57fcf420758",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/materials/blazing_bone.png",
+    "output": "textures/item/gadgets/blazing_bone.png",
+    "source_sha256": "6cf97d28256dd8184212dc77dbbc16611c882bcd2fb107a6aa32a7d3abd8cac4",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/gadgets/efln.png",
+    "output": "textures/item/gadgets/efln.png",
+    "source_sha256": "49b0a766abc1ae829680fa6e0c1ba8d075259fbcc2e71d9f67e534fb3ff78083",
+    "neutral": false
+  }
+]

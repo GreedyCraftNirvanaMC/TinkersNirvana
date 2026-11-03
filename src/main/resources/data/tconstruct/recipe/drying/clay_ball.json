@@ -1,0 +1,10 @@
+{
+  "type": "tconstruct:drying",
+  "ingredient": {
+    "item": "minecraft:clay_ball"
+  },
+  "result": {
+    "id": "tconstruct:dried_brick"
+  },
+  "time": 2400
+}

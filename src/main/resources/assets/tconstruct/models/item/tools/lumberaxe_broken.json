@@ -1,0 +1,9 @@
+{
+  "parent": "tconstruct:item/tools/lumberaxe",
+  "textures": {
+    "layer0": "tconstruct:item/antique/lumberaxe/handle",
+    "layer1": "tconstruct:item/antique/lumberaxe/broken_head",
+    "layer2": "tconstruct:item/antique/lumberaxe/shield",
+    "layer3": "tconstruct:item/antique/lumberaxe/binding"
+  }
+}

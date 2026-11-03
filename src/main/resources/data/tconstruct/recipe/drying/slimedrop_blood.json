@@ -1,0 +1,10 @@
+{
+  "type": "tconstruct:drying",
+  "ingredient": {
+    "item": "tconstruct:slimeball_blood"
+  },
+  "result": {
+    "id": "tconstruct:slimedrop_blood"
+  },
+  "time": 6000
+}

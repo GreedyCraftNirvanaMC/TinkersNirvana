@@ -1,0 +1,16 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconstruct:item/antique/arrow/shaft",
+    "layer1": "tconstruct:item/antique/arrow/head",
+    "layer2": "tconstruct:item/antique/arrow/fletching"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconstruct:broken": 1
+      },
+      "model": "tconstruct:item/tools/arrow_broken"
+    }
+  ]
+}

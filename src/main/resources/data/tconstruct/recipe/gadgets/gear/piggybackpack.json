@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "B B",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:rods/wooden"
+    },
+    "B": {
+      "tag": "c:leathers"
+    }
+  },
+  "result": {
+    "id": "tconstruct:piggybackpack"
+  }
+}

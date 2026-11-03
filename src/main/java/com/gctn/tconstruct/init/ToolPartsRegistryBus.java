@@ -10,6 +10,7 @@ public class ToolPartsRegistryBus {
     public static void register(IEventBus eventBus) {
         // All tool parts share ToolPart.ITEMS. Initialize every built-in entry
         // before registering that DeferredRegister exactly once.
+        com.gctn.tconstruct.library.toolparts.AntiqueParts.init();
         Binding.init();
         PickaxeHead.init();
         ToolRod.init();

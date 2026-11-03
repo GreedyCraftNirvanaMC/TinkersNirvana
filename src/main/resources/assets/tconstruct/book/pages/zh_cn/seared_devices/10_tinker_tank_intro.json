@@ -1,0 +1,20 @@
+{
+  "title": "工匠储罐",
+  "image": {
+    "file": "tconstruct:textures/gui/book/tinker_tank.png",
+    "texture_width": 1844,
+    "texture_height": 1186
+  },
+  "text": [
+    {
+      "text": "工匠储罐是个巨大的液体储罐，容量比冶炼炉还大，但是不能熔化金属或者制作合金"
+    }
+  ],
+  "section": "seared_devices",
+  "order": 10,
+  "id": "seared_devices/tinker_tank_intro",
+  "layout": "image with text below",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "工匠储罐"
+}

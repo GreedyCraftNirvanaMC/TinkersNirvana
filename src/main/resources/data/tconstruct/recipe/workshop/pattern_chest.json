@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "P",
+    "C"
+  ],
+  "key": {
+    "P": {
+      "item": "tconstruct:pattern"
+    },
+    "C": {
+      "tag": "c:chests/wooden"
+    }
+  },
+  "result": {
+    "id": "tconstruct:pattern_chest"
+  }
+}

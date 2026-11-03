@@ -1,0 +1,31 @@
+{
+  "modifier": "soulbound",
+  "text": [
+    {
+      "text": "完璧な一致。あなたは道具を愛しています。たとえ死んでも離れ離れにはなりません。"
+    }
+  ],
+  "effects": [
+    "死亡時にインベントリに道具が残る",
+    "単一レベル",
+    "改造スロット不要"
+  ],
+  "demoTool": [
+    "tconstruct:broadsword",
+    "tconstruct:cleaver",
+    "tconstruct:pickaxe",
+    "tconstruct:hammer",
+    "tconstruct:shortbow",
+    "tconstruct:arrow"
+  ],
+  "section": "modifiers",
+  "order": 15,
+  "id": "modifiers/soulbound",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "効果：",
+  "title_color": 16120748
+}

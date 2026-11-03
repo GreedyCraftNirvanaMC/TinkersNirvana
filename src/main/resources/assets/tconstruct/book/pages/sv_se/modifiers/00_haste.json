@@ -1,0 +1,34 @@
+{
+  "modifier": "haste",
+  "text": [
+    {
+      "text": "När redstone läggs till på ett verktyg verkar det öka hastigheten. Den ökade grävhastigheten som redstone ger är mer potent på långsammare verktyg."
+    },
+    {
+      "text": "\n"
+    },
+    {
+      "text": "Redstone. Galet, eller hur?"
+    }
+  ],
+  "effects": [
+    "Varje redstonedamm ökar grävhastigheten lite grann",
+    "Ökar attackhastighet",
+    "Flera nivåer"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe",
+    "tconstruct:broadsword",
+    "tconstruct:shortbow"
+  ],
+  "section": "modifiers",
+  "order": 0,
+  "id": "modifiers/haste",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effekter:",
+  "title_color": 9502720
+}

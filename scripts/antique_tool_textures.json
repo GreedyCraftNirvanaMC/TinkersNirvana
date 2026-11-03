@@ -1,0 +1,1740 @@
+[
+  {
+    "source": "textures/items/parts/arrow_head.png",
+    "source_sha256": "220ba3deb78cfa65cc2d0bd383c46887893428b639029cf550ca5c7e3790f73b",
+    "output": "textures/item/parts/arrow_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/arrow/shaft.png",
+    "source_sha256": "b7820fd7d6a0f697f41d6b1d0881246bb4f1552a81cea870dbed6cb4b2551d16",
+    "output": "textures/item/parts/arrow_shaft.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/hatchet/head.png",
+    "source_sha256": "a1215c1535b1be31d87b137203227e13dc4de2a3ca6ef197b087794f1abb9760",
+    "output": "textures/item/parts/axe_head.png",
+    "offset": [
+      -2,
+      4
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/binding.png",
+    "source_sha256": "9dff2c9d7eafee212c1f8a3e281a4741fe2b99a69276f3fb45e27d9af560d420",
+    "output": "textures/item/parts/binding.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shortbow/limb_bottom.png",
+    "source_sha256": "cc5a78467a94f6d1932d8254493fc51955c6f179976ce604d622b55a6a83e2ab",
+    "output": "textures/item/parts/bow_limb.png",
+    "offset": [
+      4,
+      -2
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/bowstring.png",
+    "source_sha256": "33a7d369e2c3454cc387fd6056f80bf6850235690ef56f78b217338225038b9c",
+    "output": "textures/item/parts/bow_string.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/lumberaxe/head.png",
+    "source_sha256": "852b09d26818b50908d955af3f8b09af65eacc4299916083d08812bf04d12df0",
+    "output": "textures/item/parts/broad_axe_head.png",
+    "offset": [
+      -3,
+      4
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/rapier/guard.png",
+    "source_sha256": "6c4b0d05ca071396b11a1b971100be619924f1a6192e6058cdf047c4eaf95250",
+    "output": "textures/item/parts/cross_guard.png",
+    "offset": [
+      3,
+      -3
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/excavator/head.png",
+    "source_sha256": "059d74f5889921f52b972dc70536285429ab5bae63d74b7752b67a48a5a152b7",
+    "output": "textures/item/parts/excavator_head.png",
+    "offset": [
+      -3,
+      3
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/fletching.png",
+    "source_sha256": "d9ff6ffa53a824d9bdca51d4665486d123ff10733de9178c95e657b28fa76de8",
+    "output": "textures/item/parts/fletching.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/hammer/head.png",
+    "source_sha256": "7254c321338494d3c9f4871da76fa9f0ae45c1b6d403467c5f906cf931b89015",
+    "output": "textures/item/parts/hammer_head.png",
+    "offset": [
+      -3,
+      3
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longsword/guard.png",
+    "source_sha256": "52542941a556b112bc43da6222c9e3311f41881451cc99abd8a99efdd2818c20",
+    "output": "textures/item/parts/hand_guard.png",
+    "offset": [
+      4,
+      -4
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/kama/head.png",
+    "source_sha256": "3392c8ba1e073edb48efe03db593cb18ec5fcd190bf0402d14540749e2c892da",
+    "output": "textures/item/parts/kama_head.png",
+    "offset": [
+      -2,
+      4
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/knife_blade.png",
+    "source_sha256": "0d48fa80ddc3ba4caf30cb6bf0fe8f1c11a0f661164939da7315d2e14e045174",
+    "output": "textures/item/parts/knife_blade.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/large_plate.png",
+    "source_sha256": "cbf8c9dda9a46da71e0a7650965040ba364a05508bff608d8a39214d1b520c88",
+    "output": "textures/item/parts/large_plate.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/cleaver/head.png",
+    "source_sha256": "f1a36e3113a561bfbf71303fc990fa007e44a1d37127f18dbd054c3387ddf6ab",
+    "output": "textures/item/parts/large_sword_blade.png",
+    "offset": [
+      -1,
+      1
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/frypan/head.png",
+    "source_sha256": "20ca633e21d19e35c919fab837d601a86d31227193e99ff770b580aea7292867",
+    "output": "textures/item/parts/pan_head.png",
+    "offset": [
+      -2,
+      2
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/pickaxe/head.png",
+    "source_sha256": "81a10db5abdc37d8ec8e252404fe5c854a33408ef966216b40376865e05179e4",
+    "output": "textures/item/parts/pickaxe_head.png",
+    "offset": [
+      -2,
+      2
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/scythe/head.png",
+    "source_sha256": "65499edf5ce1c00a5eaadb3e0957099b081e3d1108a1a7ceab3f7e2198b3186e",
+    "output": "textures/item/parts/scythe_head.png",
+    "offset": [
+      -2,
+      5
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/shard.png",
+    "source_sha256": "c8c786da4da598417f5ce59f9f65829c7d05c9329d544f1fe3d6f6c7cd5920ba",
+    "output": "textures/item/parts/shard.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/sharpening_kit.png",
+    "source_sha256": "69567f92f6eb9d69981d0e017e999080bb64bd0743846a898f52d9cce16ad535",
+    "output": "textures/item/parts/sharpening_kit.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shovel/head.png",
+    "source_sha256": "e376986337751d840e08d17c99d5b01581fc2b2579d4906da66f0cc89b1ff951",
+    "output": "textures/item/parts/shovel_head.png",
+    "offset": [
+      -3,
+      3
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/battlesign/head.png",
+    "source_sha256": "66eaff60d3667b6c4523eeba3ced224563fa7e2ae20dd816857581ef02e869c5",
+    "output": "textures/item/parts/sign_head.png",
+    "offset": [
+      0,
+      2
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/sword_blade.png",
+    "source_sha256": "7acd5ff90d50280b703e1d0ed3adfab41df6b686de281a309f7515891c7ae340",
+    "output": "textures/item/parts/sword_blade.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/tool_rod.png",
+    "source_sha256": "18cdc447678fdf29cab6774dad2a8a3b0905174573813c82b663768598a9d0bf",
+    "output": "textures/item/parts/tool_rod.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/tough_binding.png",
+    "source_sha256": "7535b84305754665b3a35f492221a790617716976604f21156e3703977f14270",
+    "output": "textures/item/parts/tough_binding.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/tough_tool_rod.png",
+    "source_sha256": "ab8144dfa1dceeedad6f3c6ccb514f29ba47f9dadc290eefd1777bb92e55044d",
+    "output": "textures/item/parts/tough_tool_rod.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/wide_guard.png",
+    "source_sha256": "b4e87bbcab9b2e3a31da302e15056b49cd347b11038132d7abf2d6928bb5da23",
+    "output": "textures/item/parts/wide_guard.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/bolt/shaft.png",
+    "source_sha256": "6053e744a05d519c76c9e405b44027a60ed5ef8702cd9408572267e4f4e4f5e1",
+    "output": "textures/item/parts/bolt_core.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/bolt/head.png",
+    "source_sha256": "908a35d51b35f219261a0bbb242d0db8542a348fc9384a546257492a22a7b65e",
+    "output": "textures/item/parts/bolt_core_coating.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/pickaxe/handle.png",
+    "source_sha256": "15b686a802e042e0d5fd423b77463ca1af0c58c04e33e7be3281265d02b273b4",
+    "output": "textures/item/antique/pickaxe/handle.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/pickaxe/head.png",
+    "source_sha256": "81a10db5abdc37d8ec8e252404fe5c854a33408ef966216b40376865e05179e4",
+    "output": "textures/item/antique/pickaxe/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/pickaxe/binding.png",
+    "source_sha256": "60c987eec594e3909dad205e120c9d22b799b9dda70640790a60391b1d5bbb3c",
+    "output": "textures/item/antique/pickaxe/binding.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/pickaxe/broken_head.png",
+    "source_sha256": "403433e0c41c11aed6a24cba55e827ca93440b07958b89596df082821baf9bbb",
+    "output": "textures/item/antique/pickaxe/broken_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shovel/handle.png",
+    "source_sha256": "31354fd2f98bfb86edd8d6fc5551f44b6d198d1712beb6c1b840677b8f565ff4",
+    "output": "textures/item/antique/shovel/handle.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shovel/head.png",
+    "source_sha256": "e376986337751d840e08d17c99d5b01581fc2b2579d4906da66f0cc89b1ff951",
+    "output": "textures/item/antique/shovel/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shovel/binding.png",
+    "source_sha256": "8a59a7e4fafea65643e53010c04ce920cd056305853654331006cf9b4e29d016",
+    "output": "textures/item/antique/shovel/binding.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shovel/broken_head.png",
+    "source_sha256": "f17dc605507906afd5ebaf23bcbbad6dd13c3baf2db0adecb56386d955fa0f29",
+    "output": "textures/item/antique/shovel/broken_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/hatchet/head.png",
+    "source_sha256": "a1215c1535b1be31d87b137203227e13dc4de2a3ca6ef197b087794f1abb9760",
+    "output": "textures/item/antique/hatchet/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/hatchet/binding.png",
+    "source_sha256": "881114f8a13e2f25433a913e1e0e8156c43b4087dc4d17d5c151d32f98c84b50",
+    "output": "textures/item/antique/hatchet/binding.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/hatchet/broken_head.png",
+    "source_sha256": "322e0994d204dfd224098a5c4c1ec29cd9f8a0627747865fbfdae85fa115877f",
+    "output": "textures/item/antique/hatchet/broken_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/mattock/handle.png",
+    "source_sha256": "ece8dc2a00b529b9ac19b3e10e8dccafbe4820191f0a295b5ea686cf251a5959",
+    "output": "textures/item/antique/mattock/handle.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/mattock/head.png",
+    "source_sha256": "b32e7f5c959929af26e31890a69b2f175259ac31354a7baf0bd8c80efcaf8242",
+    "output": "textures/item/antique/mattock/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/mattock/back.png",
+    "source_sha256": "3574968f41cd1d6dbf87f9bb078b7af0c2653bcc967f02d09ca41c712e966259",
+    "output": "textures/item/antique/mattock/back.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/mattock/broken_head.png",
+    "source_sha256": "9e1a7b9999236112c7772b954e212572bc567e3562cdb2d76efbeb17acdb4ac8",
+    "output": "textures/item/antique/mattock/broken_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/kama/head.png",
+    "source_sha256": "3392c8ba1e073edb48efe03db593cb18ec5fcd190bf0402d14540749e2c892da",
+    "output": "textures/item/antique/kama/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/kama/binding.png",
+    "source_sha256": "76cce778cd572aead300556992cafdea9a040bd4f06c877b7cb4195474b14c26",
+    "output": "textures/item/antique/kama/binding.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/kama/broken_head.png",
+    "source_sha256": "a742812f819dee1a211c65ed92a76fd3e173c8a75f65188876f1dbe3ff7194fb",
+    "output": "textures/item/antique/kama/broken_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/hammer/handle.png",
+    "source_sha256": "08481711a058b3478919bdf2d75c4ec2dec648c991013a083e863f94469cc6c7",
+    "output": "textures/item/antique/hammer/handle.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/hammer/head.png",
+    "source_sha256": "7254c321338494d3c9f4871da76fa9f0ae45c1b6d403467c5f906cf931b89015",
+    "output": "textures/item/antique/hammer/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/hammer/back.png",
+    "source_sha256": "2c3b6ee6c5f7f4e929b2cf3384b9fb98612acb5445e13ede04fafdbb74a9b778",
+    "output": "textures/item/antique/hammer/back.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/hammer/front.png",
+    "source_sha256": "ad06ab4ab8d12cd8df82fbfb43f6301a97d3fb5cf57a64500ab16a409b225cc8",
+    "output": "textures/item/antique/hammer/front.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/hammer/broken_handle.png",
+    "source_sha256": "d728603955c563f8bc53a6c34fb66525965a70f267746256c876e3eeeb6cc007",
+    "output": "textures/item/antique/hammer/broken_handle.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/excavator/handle.png",
+    "source_sha256": "2ef73b84ecc97357e51aabbd58715da40282f1ddf348eac6191a96e453b7f016",
+    "output": "textures/item/antique/excavator/handle.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/excavator/head.png",
+    "source_sha256": "059d74f5889921f52b972dc70536285429ab5bae63d74b7752b67a48a5a152b7",
+    "output": "textures/item/antique/excavator/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/excavator/binding.png",
+    "source_sha256": "2ebc367383eb654bcd362e5682db5e4af9e45f65ba2ed7fd78c676af815d73bc",
+    "output": "textures/item/antique/excavator/binding.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/excavator/grip.png",
+    "source_sha256": "4e2876417c25611809c08d03a133fea8fc624073897ebb47b0a0cdea56c23067",
+    "output": "textures/item/antique/excavator/grip.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/excavator/broken_head.png",
+    "source_sha256": "066eff3e8a0e5b8e0b9ca767a3699ea730a785177d0bb30846346cf9f7111132",
+    "output": "textures/item/antique/excavator/broken_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/lumberaxe/handle.png",
+    "source_sha256": "7f5bb344cd24a621bdfe874b1cecb80e0842a474ded85e05cc20e2e0b314ff97",
+    "output": "textures/item/antique/lumberaxe/handle.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/lumberaxe/head.png",
+    "source_sha256": "852b09d26818b50908d955af3f8b09af65eacc4299916083d08812bf04d12df0",
+    "output": "textures/item/antique/lumberaxe/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/lumberaxe/shield.png",
+    "source_sha256": "8749535f1b8fdb91486687a55a2768f4ddcac11644ddd71cd7231362416cd74e",
+    "output": "textures/item/antique/lumberaxe/shield.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/lumberaxe/binding.png",
+    "source_sha256": "92f0d2dfb10b52c7c9f43cea0f5355aab6ae3746a31a2655dd1708f4696ce356",
+    "output": "textures/item/antique/lumberaxe/binding.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/lumberaxe/broken_head.png",
+    "source_sha256": "1fa2123d807f0c58ccad007694f474e5229e3eb582acbc9fec6bf397641a68cc",
+    "output": "textures/item/antique/lumberaxe/broken_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/scythe/handle.png",
+    "source_sha256": "cadeed97b75ee0b13ffc4f3fd837e92b33a62957ea12120573151314b1b97454",
+    "output": "textures/item/antique/scythe/handle.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/scythe/head.png",
+    "source_sha256": "65499edf5ce1c00a5eaadb3e0957099b081e3d1108a1a7ceab3f7e2198b3186e",
+    "output": "textures/item/antique/scythe/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/scythe/binding.png",
+    "source_sha256": "bdd0e8c083bf0119c89df80ddcdd6a5af5109041f4d57e6ab2dfd4c1a28a86f0",
+    "output": "textures/item/antique/scythe/binding.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/scythe/accessory.png",
+    "source_sha256": "e6331389c3cdc19b7bbaff3eac402a80c23f2c518bce7fd6e20c6dd2a611d484",
+    "output": "textures/item/antique/scythe/accessory.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/scythe/broken_head.png",
+    "source_sha256": "57a20cf546ad6ab46bc4428f1f6abb8977257fa500f9632692e0e0ae85dcacea",
+    "output": "textures/item/antique/scythe/broken_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/broadsword/handle.png",
+    "source_sha256": "8174f188864834d75a30bb39c1245cc0938e967006ecdd95d9e2efa0fc5bd05f",
+    "output": "textures/item/antique/broadsword/handle.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/broadsword/blade.png",
+    "source_sha256": "cd34f6e5fcdeddc5bb514f99a52090f718f3c97554e386b99248a1786dd08ab0",
+    "output": "textures/item/antique/broadsword/blade.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/broadsword/guard.png",
+    "source_sha256": "fca2015dbc4f130a6f768454c644dc5e4717f96402c52f6f66f258bed5925f59",
+    "output": "textures/item/antique/broadsword/guard.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/broadsword/broken_blade.png",
+    "source_sha256": "0354fa260045b3536c4a1337ccf715594c00132ee9bf47ffc93f7516cb6df701",
+    "output": "textures/item/antique/broadsword/broken_blade.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longsword/blade.png",
+    "source_sha256": "a5c24e6ba0560c2a2f8d21438a1205f2438618bd3e86c8bb5f7faa3ac43ef876",
+    "output": "textures/item/antique/longsword/blade.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longsword/guard.png",
+    "source_sha256": "52542941a556b112bc43da6222c9e3311f41881451cc99abd8a99efdd2818c20",
+    "output": "textures/item/antique/longsword/guard.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longsword/broken_blade.png",
+    "source_sha256": "3511085199e8d23638e3a8323702e494b6b0fc1e1095789308f3457ba0a77e66",
+    "output": "textures/item/antique/longsword/broken_blade.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/rapier/blade.png",
+    "source_sha256": "8ecff77cb8c00e10918cc8362693b726aa25f83610cb481a155b3cb6e7e3691b",
+    "output": "textures/item/antique/rapier/blade.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/rapier/guard.png",
+    "source_sha256": "6c4b0d05ca071396b11a1b971100be619924f1a6192e6058cdf047c4eaf95250",
+    "output": "textures/item/antique/rapier/guard.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/rapier/broken_blade.png",
+    "source_sha256": "c59ea25b35c27ffdfbfb4f4620dce37ed9deaf574de932013323940093a8ce3e",
+    "output": "textures/item/antique/rapier/broken_blade.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/frypan/head.png",
+    "source_sha256": "20ca633e21d19e35c919fab837d601a86d31227193e99ff770b580aea7292867",
+    "output": "textures/item/antique/frypan/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/frypan/broken_head.png",
+    "source_sha256": "136dc4d15af5ba3da94aaa789a88edd53b6eaae8b4d2841601cd2aa03a5ff572",
+    "output": "textures/item/antique/frypan/broken_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/battlesign/handle.png",
+    "source_sha256": "5c47ad47a784cf9e34555876be60165dcc365168710556ed4da983a55a8b61f9",
+    "output": "textures/item/antique/battlesign/handle.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/battlesign/head.png",
+    "source_sha256": "66eaff60d3667b6c4523eeba3ced224563fa7e2ae20dd816857581ef02e869c5",
+    "output": "textures/item/antique/battlesign/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/battlesign/broken_head.png",
+    "source_sha256": "2445d0f98d28bbf8b48a09c77c368359af629dd9e9aca9c189608bf0fb834f25",
+    "output": "textures/item/antique/battlesign/broken_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/cleaver/head.png",
+    "source_sha256": "f1a36e3113a561bfbf71303fc990fa007e44a1d37127f18dbd054c3387ddf6ab",
+    "output": "textures/item/antique/cleaver/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/cleaver/shield.png",
+    "source_sha256": "46f4af81e4fe19d6aaa48461c496bb0c0e5f6c9dc2bc6f372ff60f7dd3244700",
+    "output": "textures/item/antique/cleaver/shield.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/cleaver/guard.png",
+    "source_sha256": "ae33078bc012bd5701cdbd1fedf7f494fc2ae9e15b103e425df4a6f326a2f674",
+    "output": "textures/item/antique/cleaver/guard.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/cleaver/broken_head.png",
+    "source_sha256": "6a5caaadf576196d6dd4bf2b50c8f87f5843f19bdf4216f15133483fde86e0b5",
+    "output": "textures/item/antique/cleaver/broken_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shortbow/limb_top.png",
+    "source_sha256": "3247a828fea31bde5e67e8234a981ad551aa91a1865d0e85c329651edc839063",
+    "output": "textures/item/antique/shortbow/limb_top.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shortbow/limb_bottom.png",
+    "source_sha256": "cc5a78467a94f6d1932d8254493fc51955c6f179976ce604d622b55a6a83e2ab",
+    "output": "textures/item/antique/shortbow/limb_bottom.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shortbow/bowstring.png",
+    "source_sha256": "eee7a8b068518196091886c1aa08828d7a4650624bc30dd408d9bc14f42fe642",
+    "output": "textures/item/antique/shortbow/bowstring.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shortbow/bowstring_broken.png",
+    "source_sha256": "19d253c972af32c5e925351c1b8ca86b555e11aa01d53242e70cba804fbaecdd",
+    "output": "textures/item/antique/shortbow/bowstring_broken.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shortbow/bowstring_1.png",
+    "source_sha256": "68d9b30d069016986852490b73bac40ebfa505c51ceb086476721e150fe88db1",
+    "output": "textures/item/antique/shortbow/bowstring_1.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shortbow/limb_top_2.png",
+    "source_sha256": "6883a9d0929c8bbe6cf95ba80c2b3f749aa2dff35664c2aed4116b4594070ab4",
+    "output": "textures/item/antique/shortbow/limb_top_2.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shortbow/limb_bottom_2.png",
+    "source_sha256": "99c7885336f14f50ab81138387f0915db19015b92b35c14c35d7eed10c5a183d",
+    "output": "textures/item/antique/shortbow/limb_bottom_2.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shortbow/bowstring_2.png",
+    "source_sha256": "7a8f9d52f400d7c9d800138c0d216d8f516fcb57295242e656aa480450ebaeea",
+    "output": "textures/item/antique/shortbow/bowstring_2.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shortbow/limb_top_3.png",
+    "source_sha256": "e2fa9b6a2f02468f2543c932281503fb8190a2d90919dac6e9404f09061606ce",
+    "output": "textures/item/antique/shortbow/limb_top_3.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shortbow/limb_bottom_3.png",
+    "source_sha256": "9f953f24b33a644b32610a150c6adc44cfab9573c64bb2a279c14eeda82fd0ea",
+    "output": "textures/item/antique/shortbow/limb_bottom_3.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shortbow/bowstring_3.png",
+    "source_sha256": "98ee6d7f3b4683456b59e04de44766e0b5de4c11ae4153ea81c68f584a890fbb",
+    "output": "textures/item/antique/shortbow/bowstring_3.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longbow/limb_top.png",
+    "source_sha256": "d5827487e9a3b2ec0e4aa722d1f4b8079249e925c5691561b3f5d389aa57de04",
+    "output": "textures/item/antique/longbow/limb_top.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longbow/limb_bottom.png",
+    "source_sha256": "c9dd9fac2c4ea012a90021aa11e8f2489cdf36f35293f2ee65dabbcf3cc50312",
+    "output": "textures/item/antique/longbow/limb_bottom.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longbow/grip.png",
+    "source_sha256": "aa09899d20efe62369819f676ae8b3a9b747486258d268bef385a6953672fbd8",
+    "output": "textures/item/antique/longbow/grip.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longbow/bowstring.png",
+    "source_sha256": "4c176465efc72e8e17bd31f1d1ea0ecf2d057c6512b19e5ff2ed54dc40eb043d",
+    "output": "textures/item/antique/longbow/bowstring.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longbow/bowstring_broken.png",
+    "source_sha256": "81b5a84ccafe37dae7d6488c487989db138f741cd56d628439b7e7e84ce0e567",
+    "output": "textures/item/antique/longbow/bowstring_broken.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longbow/bowstring_1.png",
+    "source_sha256": "11de7e064e4136c304c4b8d3910828b4433ba155ff76c744056696ba7175d33f",
+    "output": "textures/item/antique/longbow/bowstring_1.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longbow/limb_top_2.png",
+    "source_sha256": "eec527713e3ae6fe17ecdd2629a973864d90fde62c0c32c8299e2ec868f13ff6",
+    "output": "textures/item/antique/longbow/limb_top_2.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longbow/limb_bottom_2.png",
+    "source_sha256": "821f58449034832bb4a669ddd011b49ed19c8a82c8515e2b134ee1df170b25ff",
+    "output": "textures/item/antique/longbow/limb_bottom_2.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longbow/bowstring_2.png",
+    "source_sha256": "42fd97cc2370a1c22860bb4ea6d4b9ec39b9f4c85d97bd0c82f8d42ba8fc17c4",
+    "output": "textures/item/antique/longbow/bowstring_2.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longbow/limb_top_3.png",
+    "source_sha256": "ff55c462b061dcdb53636d817063650030157663553cdd2cffb6f86ffc67e4c7",
+    "output": "textures/item/antique/longbow/limb_top_3.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longbow/limb_bottom_3.png",
+    "source_sha256": "684534442eb8c5c0ecbea8006a7957f528a8f66961f671cbf1a6f27fdaa2c2b6",
+    "output": "textures/item/antique/longbow/limb_bottom_3.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longbow/bowstring_3.png",
+    "source_sha256": "d702ef5b83d13e9b8fdf6df5552d2d5e2c572aae179fafb2650088f2e71ef0c2",
+    "output": "textures/item/antique/longbow/bowstring_3.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/crossbow/body.png",
+    "source_sha256": "af668601e4deb072a7bdefb0677d78583843ae826b4010c7cb0864a6faeb1fb7",
+    "output": "textures/item/antique/crossbow/body.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/crossbow/limb.png",
+    "source_sha256": "07b3230b69ddca6b480aa334a7682a8b3b08c0ea6c822f0990b83dc473722b21",
+    "output": "textures/item/antique/crossbow/limb.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/crossbow/binding.png",
+    "source_sha256": "11d0f61e0e5cd8160636f312af3c259ba3532d158c14f6b15504ffa5452ea3e4",
+    "output": "textures/item/antique/crossbow/binding.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/crossbow/bowstring.png",
+    "source_sha256": "ac2737c224320f096dbd0d109603031acbc17e76cdf185e93ba9989a1cd5bc50",
+    "output": "textures/item/antique/crossbow/bowstring.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/crossbow/bowstring_broken.png",
+    "source_sha256": "7d8703909472333ecd1e8d9a3853743a97f32b1aeb57fc4497f2c27d8d617d38",
+    "output": "textures/item/antique/crossbow/bowstring_broken.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/crossbow/bowstring_1.png",
+    "source_sha256": "566cd9bb56a541fdab9dfa91c83656e0161ddf3cdd1d7dad06f75afd9c09ebb2",
+    "output": "textures/item/antique/crossbow/bowstring_1.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/crossbow/limb_2.png",
+    "source_sha256": "34c93500f7ebeee8a1bbed5cf3492ca448a8522cfca6f0eef46af9ddb80926e0",
+    "output": "textures/item/antique/crossbow/limb_2.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/crossbow/bowstring_2.png",
+    "source_sha256": "86d508df06267f6d79fd49349ad5fed15bd3a0666e98d80a1f636bf7cec41cb9",
+    "output": "textures/item/antique/crossbow/bowstring_2.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/crossbow/limb_3.png",
+    "source_sha256": "2dda54544443156541d0667381d0f156d58578dc14fd2990aab1676031bb4eae",
+    "output": "textures/item/antique/crossbow/limb_3.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/crossbow/bowstring_3.png",
+    "source_sha256": "767d3e98a3fe7993d81137569b8250940accaf739ac31854cb8c85fdc6ba1127",
+    "output": "textures/item/antique/crossbow/bowstring_3.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/arrow/shaft.png",
+    "source_sha256": "b7820fd7d6a0f697f41d6b1d0881246bb4f1552a81cea870dbed6cb4b2551d16",
+    "output": "textures/item/antique/arrow/shaft.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/arrow/head.png",
+    "source_sha256": "ae00602a179b464b4f970a5ff923e6d68a53f71e95229b0338ede647343f0397",
+    "output": "textures/item/antique/arrow/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/arrow/fletching.png",
+    "source_sha256": "0b8bae2a8c7c21251fd26bd0cd489ebcafead387b7af1ec52ff7993c4c3682c6",
+    "output": "textures/item/antique/arrow/fletching.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/arrow/shaft_broken.png",
+    "source_sha256": "7b8f5882696ce7f459f5ce3cde837d567d772a235e1f5f91933e7cccca1b3aa6",
+    "output": "textures/item/antique/arrow/shaft_broken.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/bolt/shaft.png",
+    "source_sha256": "6053e744a05d519c76c9e405b44027a60ed5ef8702cd9408572267e4f4e4f5e1",
+    "output": "textures/item/antique/bolt/shaft.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/bolt/head.png",
+    "source_sha256": "908a35d51b35f219261a0bbb242d0db8542a348fc9384a546257492a22a7b65e",
+    "output": "textures/item/antique/bolt/head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/bolt/fletching.png",
+    "source_sha256": "318a65f8938d065f96f54d10b82074eb296a26af89e5b785aed1147faf9ce57b",
+    "output": "textures/item/antique/bolt/fletching.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shuriken/shuriken.png",
+    "source_sha256": "012b7aef43bf4d622d25ce7a071f3b3eb3a8f8a5f3a65d51cfce6dbb46dc4c5c",
+    "output": "textures/item/antique/shuriken/shuriken.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shuriken/shuriken2.png",
+    "source_sha256": "acab62138c4a4616dab532389f0c11e842ce03a02bc58cb39545a53b22527b68",
+    "output": "textures/item/antique/shuriken/shuriken2.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shuriken/shuriken3.png",
+    "source_sha256": "7237aeb4b002d8d7b40ca3cd1642528dabf59c22497097dcefdad5b62b11943d",
+    "output": "textures/item/antique/shuriken/shuriken3.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shuriken/shuriken4.png",
+    "source_sha256": "c6f5fe0bd4dcf8b464f35bcbf4e03dfd290b621b5d1a8efb4aff419028a449ed",
+    "output": "textures/item/antique/shuriken/shuriken4.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/arrow_head.png",
+    "source_sha256": "220ba3deb78cfa65cc2d0bd383c46887893428b639029cf550ca5c7e3790f73b",
+    "output": "textures/item/cast_masks/arrow_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/hatchet/head.png",
+    "source_sha256": "a1215c1535b1be31d87b137203227e13dc4de2a3ca6ef197b087794f1abb9760",
+    "output": "textures/item/cast_masks/axe_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/binding.png",
+    "source_sha256": "9dff2c9d7eafee212c1f8a3e281a4741fe2b99a69276f3fb45e27d9af560d420",
+    "output": "textures/item/cast_masks/binding.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shortbow/limb_bottom.png",
+    "source_sha256": "cc5a78467a94f6d1932d8254493fc51955c6f179976ce604d622b55a6a83e2ab",
+    "output": "textures/item/cast_masks/bow_limb.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/lumberaxe/head.png",
+    "source_sha256": "852b09d26818b50908d955af3f8b09af65eacc4299916083d08812bf04d12df0",
+    "output": "textures/item/cast_masks/broad_axe_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/rapier/guard.png",
+    "source_sha256": "6c4b0d05ca071396b11a1b971100be619924f1a6192e6058cdf047c4eaf95250",
+    "output": "textures/item/cast_masks/cross_guard.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/excavator/head.png",
+    "source_sha256": "059d74f5889921f52b972dc70536285429ab5bae63d74b7752b67a48a5a152b7",
+    "output": "textures/item/cast_masks/excavator_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/hammer/head.png",
+    "source_sha256": "7254c321338494d3c9f4871da76fa9f0ae45c1b6d403467c5f906cf931b89015",
+    "output": "textures/item/cast_masks/hammer_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/longsword/guard.png",
+    "source_sha256": "52542941a556b112bc43da6222c9e3311f41881451cc99abd8a99efdd2818c20",
+    "output": "textures/item/cast_masks/hand_guard.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/kama/head.png",
+    "source_sha256": "3392c8ba1e073edb48efe03db593cb18ec5fcd190bf0402d14540749e2c892da",
+    "output": "textures/item/cast_masks/kama_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/knife_blade.png",
+    "source_sha256": "0d48fa80ddc3ba4caf30cb6bf0fe8f1c11a0f661164939da7315d2e14e045174",
+    "output": "textures/item/cast_masks/knife_blade.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/large_plate.png",
+    "source_sha256": "cbf8c9dda9a46da71e0a7650965040ba364a05508bff608d8a39214d1b520c88",
+    "output": "textures/item/cast_masks/large_plate.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/cleaver/head.png",
+    "source_sha256": "f1a36e3113a561bfbf71303fc990fa007e44a1d37127f18dbd054c3387ddf6ab",
+    "output": "textures/item/cast_masks/large_sword_blade.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/frypan/head.png",
+    "source_sha256": "20ca633e21d19e35c919fab837d601a86d31227193e99ff770b580aea7292867",
+    "output": "textures/item/cast_masks/pan_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/pickaxe/head.png",
+    "source_sha256": "81a10db5abdc37d8ec8e252404fe5c854a33408ef966216b40376865e05179e4",
+    "output": "textures/item/cast_masks/pickaxe_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/scythe/head.png",
+    "source_sha256": "65499edf5ce1c00a5eaadb3e0957099b081e3d1108a1a7ceab3f7e2198b3186e",
+    "output": "textures/item/cast_masks/scythe_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/shard.png",
+    "source_sha256": "c8c786da4da598417f5ce59f9f65829c7d05c9329d544f1fe3d6f6c7cd5920ba",
+    "output": "textures/item/cast_masks/shard.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/sharpening_kit.png",
+    "source_sha256": "69567f92f6eb9d69981d0e017e999080bb64bd0743846a898f52d9cce16ad535",
+    "output": "textures/item/cast_masks/sharpening_kit.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/shovel/head.png",
+    "source_sha256": "e376986337751d840e08d17c99d5b01581fc2b2579d4906da66f0cc89b1ff951",
+    "output": "textures/item/cast_masks/shovel_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/battlesign/head.png",
+    "source_sha256": "66eaff60d3667b6c4523eeba3ced224563fa7e2ae20dd816857581ef02e869c5",
+    "output": "textures/item/cast_masks/sign_head.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/sword_blade.png",
+    "source_sha256": "7acd5ff90d50280b703e1d0ed3adfab41df6b686de281a309f7515891c7ae340",
+    "output": "textures/item/cast_masks/sword_blade.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/tool_rod.png",
+    "source_sha256": "18cdc447678fdf29cab6774dad2a8a3b0905174573813c82b663768598a9d0bf",
+    "output": "textures/item/cast_masks/tool_rod.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/tough_binding.png",
+    "source_sha256": "7535b84305754665b3a35f492221a790617716976604f21156e3703977f14270",
+    "output": "textures/item/cast_masks/tough_binding.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/tough_tool_rod.png",
+    "source_sha256": "ab8144dfa1dceeedad6f3c6ccb514f29ba47f9dadc290eefd1777bb92e55044d",
+    "output": "textures/item/cast_masks/tough_tool_rod.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/parts/wide_guard.png",
+    "source_sha256": "b4e87bbcab9b2e3a31da302e15056b49cd347b11038132d7abf2d6928bb5da23",
+    "output": "textures/item/cast_masks/wide_guard.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": true
+  },
+  {
+    "source": "textures/items/materials/reinforcement.png",
+    "source_sha256": "146a4fa6e6a4fa534d7707c4d294f7efa16c0c23f4dbf57340545537bac391e0",
+    "output": "textures/item/toolsupplies/reinforcement.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": false
+  },
+  {
+    "source": "textures/items/materials/necrotic_bone.png",
+    "source_sha256": "1d1b655324e8934d34ecf06922f5d6b1028a38f987cc48716a1e046e8f917079",
+    "output": "textures/item/toolsupplies/necrotic_bone.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": false
+  },
+  {
+    "source": "textures/items/materials/silky_jewel.png",
+    "source_sha256": "5b77e4d6bd3965c10055908b41fadb37863a408527914cec3738df7ba435e6c8",
+    "output": "textures/item/toolsupplies/silky_jewel.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": false
+  },
+  {
+    "source": "textures/items/materials/lava_crystal.png",
+    "source_sha256": "a2f8ab69975a8ef4b146c1a2d9fb22d1f3835d8ed36dcb79f6fc16e6a989f3d2",
+    "output": "textures/item/toolsupplies/lava_crystal.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": false
+  },
+  {
+    "source": "textures/items/materials/mending_moss.png",
+    "source_sha256": "f0bb224c09084d382adec804cfb932be3ee53b58ade6280ccad4f26f3894c40a",
+    "output": "textures/item/toolsupplies/mending_moss.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": false
+  },
+  {
+    "source": "textures/items/materials/expander_w.png",
+    "source_sha256": "ce91b1b190c5ea7228f81ce1aeb563a846f8c3dadf5fe2b3a59c3d73ed9da9a0",
+    "output": "textures/item/toolsupplies/expander_horizontal.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": false
+  },
+  {
+    "source": "textures/items/materials/expander_h.png",
+    "source_sha256": "65f60b8a8204a52eac229693181de5bb5a2e78a98c71ecc3c2430e02eb91dc93",
+    "output": "textures/item/toolsupplies/expander_vertical.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": false
+  },
+  {
+    "source": "textures/items/materials/bloody_bone.png",
+    "source_sha256": "25a7c0572eee2e6b7eb4a9b6bc1545d69e46d24f8cef40e8e8de670df86614b0",
+    "output": "textures/item/toolsupplies/bloodbone.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/bacon.png",
+    "source_sha256": "ffe8c5233b0eca7dc737175176c26229b9b7b6f92893234d7eecbcf9685aa8d2",
+    "output": "textures/item/toolsupplies/bacon.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": false
+  },
+  {
+    "source": "textures/items/pattern.png",
+    "source_sha256": "adc2e783b568a5b75b02f4abc0a5e4daf6e55e1a5f2aac3c5c87a4291f831031",
+    "output": "textures/item/toolsupplies/pattern.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": false
+  },
+  {
+    "source": "textures/items/materials/silky_cloth.png",
+    "source_sha256": "b6b1d8b90e5a2aa77e1e2c32a0f0e958a863af08e7d782088577dc5e487e74d7",
+    "output": "textures/item/toolsupplies/silky_cloth.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": false
+  },
+  {
+    "source": "textures/items/materials/moss.png",
+    "source_sha256": "9276eba38362216978a4a3e070431f10b4658e580d04833b38833de61321c884",
+    "output": "textures/item/toolsupplies/moss.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": false
+  },
+  {
+    "source": null,
+    "output": "textures/item/toolsupplies/creative_modifier.png",
+    "neutral": false,
+    "description": "紫色八角创造水晶，金色中心符文，透明背景，16×16 像素"
+  },
+  {
+    "source": null,
+    "output": "textures/mob_effect/momentum.png",
+    "neutral": false,
+    "kind": "momentum",
+    "description": "按效果名称绘制的现代像素状态图标，16×16 透明背景"
+  },
+  {
+    "source": null,
+    "output": "textures/mob_effect/insatiable.png",
+    "neutral": false,
+    "kind": "insatiable",
+    "description": "按效果名称绘制的现代像素状态图标，16×16 透明背景"
+  },
+  {
+    "source": null,
+    "output": "textures/mob_effect/splinter.png",
+    "neutral": false,
+    "kind": "splinter",
+    "description": "按效果名称绘制的现代像素状态图标，16×16 透明背景"
+  },
+  {
+    "source": null,
+    "output": "textures/mob_effect/enderference.png",
+    "neutral": false,
+    "kind": "enderference",
+    "description": "按效果名称绘制的现代像素状态图标，16×16 透明背景"
+  },
+  {
+    "source": null,
+    "output": "textures/mob_effect/bleed.png",
+    "neutral": false,
+    "kind": "bleed",
+    "description": "按效果名称绘制的现代像素状态图标，16×16 透明背景"
+  },
+  {
+    "source": null,
+    "output": "textures/mob_effect/magnetic.png",
+    "neutral": false,
+    "kind": "magnetic",
+    "description": "按效果名称绘制的现代像素状态图标，16×16 透明背景"
+  },
+  {
+    "source": "textures/blocks/toolforge_top.png",
+    "source_sha256": "7c9f8daa4bb532408a7a08a672431c1fa37216c105200dbfb92a3b9284f3b048",
+    "output": "textures/block/toolforge_top.png",
+    "offset": [
+      0,
+      0
+    ],
+    "neutral": false
+  }
+]

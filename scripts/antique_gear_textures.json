@@ -1,0 +1,68 @@
+[
+  {
+    "source": "textures/items/gadgets/slimesling.png",
+    "output": "textures/item/gadgets/slimesling.png",
+    "source_sha256": "54a3f20249fd35e2e026a8e1f109cea63f4226a0522276b0d82569058640ac0e",
+    "neutral": true
+  },
+  {
+    "source": "textures/items/armor/slime_boots.png",
+    "output": "textures/item/gadgets/slime_boots.png",
+    "source_sha256": "59ebc1e6bf4a0094fd72cadd449fb17799ad7f001c1e8750fdbef6adc2cdfea1",
+    "neutral": true
+  },
+  {
+    "source": "textures/items/gadgets/piggybackpack.png",
+    "output": "textures/item/gadgets/piggybackpack.png",
+    "source_sha256": "e68119b252592dadf025fe652a8e9017f85269f348cdcd778682bd966f4fc431",
+    "neutral": false
+  },
+  {
+    "source": "textures/models/armor/slime_layer_1.png",
+    "output": "textures/models/armor/slime_layer_1.png",
+    "source_sha256": "d6ed121ba5d852d3647df7a65e2e6f869900a67bfabe136d0f33b95b12ff5497",
+    "neutral": true
+  },
+  {
+    "source": "textures/models/armor/piggyback_layer_1.png",
+    "output": "textures/models/armor/piggyback_layer_1.png",
+    "source_sha256": "0f596654ee6c49cf44a4877f1a8e7e362f88ab8c78f7dfe32f9a279634edc7a1",
+    "neutral": false
+  },
+  {
+    "source": "textures/gui/icons.png",
+    "output": "textures/mob_effect/carry.png",
+    "source_sha256": "8de2c09f428ccdaffae0ba9822c3e129b24983d2cd4947cdf3271572beda7ddc",
+    "neutral": false,
+    "crop": [
+      234,
+      0,
+      18,
+      18
+    ]
+  },
+  {
+    "source": "textures/gui/icons.png",
+    "output": "textures/mob_effect/carry_2.png",
+    "source_sha256": "8de2c09f428ccdaffae0ba9822c3e129b24983d2cd4947cdf3271572beda7ddc",
+    "neutral": false,
+    "crop": [
+      234,
+      18,
+      18,
+      18
+    ]
+  },
+  {
+    "source": "textures/gui/icons.png",
+    "output": "textures/mob_effect/carry_3.png",
+    "source_sha256": "8de2c09f428ccdaffae0ba9822c3e129b24983d2cd4947cdf3271572beda7ddc",
+    "neutral": false,
+    "crop": [
+      234,
+      36,
+      18,
+      18
+    ]
+  }
+]

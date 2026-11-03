@@ -1,0 +1,28 @@
+{
+  "tool": "pickaxe",
+  "text": [
+    {
+      "text": "Кирка - точный инструмент добычи. Эффективна на камне и рудах."
+    },
+    {
+      "text": "\n"
+    },
+    {
+      "text": "Она ломает блоки, OK?"
+    }
+  ],
+  "properties": [
+    "Базовый инструмент добычи",
+    "Это кирка",
+    "Добывает каменные и похожие на них блоки"
+  ],
+  "section": "tools",
+  "order": 3,
+  "id": "tools/pickaxe",
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Свойства:"
+}

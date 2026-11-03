@@ -1,0 +1,9 @@
+{
+  "feature": "tconstruct:slime_island",
+  "placement": [
+    {
+      "type": "tconstruct:antique_worldgen",
+      "setting": "slime_island"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "modifier": "silktouch",
+  "text": [
+    {
+      "text": "Adding a large glob of gold and a bunch of string seems to give the tool silky-smooth properties."
+    },
+    {
+      "text": "\n"
+    },
+    {
+      "text": "I can't believe it's not butter!"
+    }
+  ],
+  "effects": [
+    "Allows blocks to be harvested directly",
+    "Not compatible with Luck or Autosmelt",
+    "Single use"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe",
+    "tconstruct:hammer"
+  ],
+  "section": "modifiers",
+  "order": 6,
+  "id": "modifiers/silktouch",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "효과:",
+  "title_color": 16507531
+}

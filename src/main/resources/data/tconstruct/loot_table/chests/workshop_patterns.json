@@ -1,0 +1,658 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 5,
+        "max": 30
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "tool_rod"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "pickaxe_head"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "binding"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "shovel_head"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "axe_head"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "sword_blade"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "kama_head"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "arrow_head"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "broad_axe_head"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "large_sword_blade"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "hammer_head"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "excavator_head"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "scythe_head"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "large_plate"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "pan_head"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "sign_head"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "knife_blade"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "tough_tool_rod"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "tough_binding"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "wide_guard"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "hand_guard"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "cross_guard"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "bow_limb"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "bow_string"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "arrow_shaft"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "fletching"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "sharpening_kit"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconstruct:pattern",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            },
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconstruct:tinker_material": {
+                  "Pattern": "shard"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

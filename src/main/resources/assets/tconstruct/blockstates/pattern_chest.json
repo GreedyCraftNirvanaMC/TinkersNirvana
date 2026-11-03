@@ -1,0 +1,36 @@
+{
+  "variants": {
+    "facing=north,casts=false": {
+      "model": "tconstruct:block/pattern_chest",
+      "y": 0
+    },
+    "facing=north,casts=true": {
+      "model": "tconstruct:block/cast_chest",
+      "y": 0
+    },
+    "facing=east,casts=false": {
+      "model": "tconstruct:block/pattern_chest",
+      "y": 90
+    },
+    "facing=east,casts=true": {
+      "model": "tconstruct:block/cast_chest",
+      "y": 90
+    },
+    "facing=south,casts=false": {
+      "model": "tconstruct:block/pattern_chest",
+      "y": 180
+    },
+    "facing=south,casts=true": {
+      "model": "tconstruct:block/cast_chest",
+      "y": 180
+    },
+    "facing=west,casts=false": {
+      "model": "tconstruct:block/pattern_chest",
+      "y": 270
+    },
+    "facing=west,casts=true": {
+      "model": "tconstruct:block/cast_chest",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": "tconstruct:slime_island",
+  "step": "vegetal_decoration"
+}

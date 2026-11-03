@@ -13,9 +13,9 @@ public class TableEntityRegistries {
     public static final DeferredRegister<BlockEntityType<?>> TABLE_ENTITY_TYPES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, TinkersNirvana.MODID);
 
-    public static final Supplier<BlockEntityType<?>> TOOL_STATION_BLOCK_ENTITY =
+    public static final Supplier<BlockEntityType<ToolStationBlockEntity>> TOOL_STATION_BLOCK_ENTITY =
             TABLE_ENTITY_TYPES.register("toolstation_blockentity", () -> BlockEntityType.Builder
-                    .of(ToolStationBlockEntity::new, TableBlocks.TOOL_STATION.get())
+                    .of(ToolStationBlockEntity::new, TableBlocks.TOOL_STATION.get(), TableBlocks.TOOL_FORGE.get())
                     .build(null));
 
     public static void register(IEventBus eventBus) {

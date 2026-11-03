@@ -65,6 +65,7 @@ public final class GadgetModule {
                     .sound(SoundType.WOOL).lightLevel(state -> 14).pushReaction(PushReaction.DESTROY)));
     public static final Supplier<Item> GLOWBALL = ItemRegister.ITEMS.register("glowball", () ->
             new GlowballItem(new Item.Properties().stacksTo(16)));
+    public static final Supplier<Item> EFLN = ItemRegister.ITEMS.register("efln", () -> new GlowballItem(new Item.Properties().stacksTo(16)));
     public static final Supplier<EntityType<GlowballEntity>> GLOWBALL_ENTITY = PROJECTILES.register("glowball", () ->
             EntityType.Builder.<GlowballEntity>of(GlowballEntity::new, MobCategory.MISC).sized(0.25F, 0.25F)
                     .clientTrackingRange(4).updateInterval(10).build(TinkersNirvana.MODID + ":glowball"));
@@ -94,6 +95,9 @@ public final class GadgetModule {
                     .noCollission().noOcclusion().pushReaction(PushReaction.DESTROY)));
 
     static {
+        BLOCKS.put("item_rack", RemainingGadgets.ITEM_RACK);
+        BLOCKS.put("drying_rack", RemainingGadgets.DRYING_RACK);
+        BLOCKS.putAll(RemainingGadgets.BUILDING_BLOCKS);
         BLOCKS.put("wooden_hopper", WOODEN_HOPPER);
         BLOCKS.put("punji", PUNJI);
         BLOCKS.put("wood_rail", WOODEN_RAIL);
@@ -130,6 +134,13 @@ public final class GadgetModule {
                 });
                 output.accept(STONE_ROD.get());
                 output.accept(GLOWBALL.get());
+                output.accept(EFLN.get());
+                RemainingGadgets.ITEMS.values().forEach(item -> output.accept(item.get()));
+                SlimeGear.SLINGS.forEach((color, item) -> { if (!color.equals("pink")) { output.accept(item.get()); } });
+                SlimeGear.BOOTS.forEach((color, item) -> { if (!color.equals("pink")) { output.accept(item.get()); } });
+                output.accept(SlimeGear.PIGGYBACK.get());
+                FancyFrames.ITEMS.values().forEach(item -> output.accept(item.get()));
+                SlimeChannels.BLOCKS.forEach((color, block) -> { if (!color.equals("pink")) { output.accept(block.get()); } });
             }).build());
 
     private GadgetModule() {
@@ -160,6 +171,12 @@ public final class GadgetModule {
     }
 
     public static void register(IEventBus bus) {
+        SlimeChannels.init();
+        Spaghetti.init();
+        EflnBlast.register(bus);
+        RemainingGadgets.register(bus);
+        SlimeGear.register(bus);
+        FancyFrames.register(bus);
         TABS.register(bus);
         ENTITIES.register(bus);
         MENUS.register(bus);

@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconstruct:item/antique/excavator/handle",
+    "layer1": "tconstruct:item/antique/excavator/head",
+    "layer2": "tconstruct:item/antique/excavator/binding",
+    "layer3": "tconstruct:item/antique/excavator/grip"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconstruct:broken": 1
+      },
+      "model": "tconstruct:item/tools/excavator_broken"
+    }
+  ]
+}

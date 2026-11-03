@@ -1,0 +1,26 @@
+{
+  "modifier": "bane_of_arthopods",
+  "text": [
+    {
+      "text": "蜘蛛最害怕的居然是自己的眼睛！还在为这些家伙头疼么，我有一个好主意，杀光它们"
+    }
+  ],
+  "effects": [
+    "对蠹虫和蜘蛛能造成额外的伤害",
+    "多个等级"
+  ],
+  "demoTool": [
+    "tconstruct:broadsword",
+    "tconstruct:hammer"
+  ],
+  "section": "modifiers",
+  "order": 11,
+  "id": "modifiers/bane_of_arthropods",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "特殊效果：",
+  "title_color": 14540253
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "snowy=false": {
+      "model": "tconstruct:block/slime_grass_purple_vanilla"
+    },
+    "snowy=true": {
+      "model": "tconstruct:block/slime_grass_purple_vanilla_snow"
+    }
+  }
+}

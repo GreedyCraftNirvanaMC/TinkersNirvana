@@ -1,0 +1,26 @@
+{
+  "type": "tconstruct:table",
+  "group": "tconstruct:tool_forge",
+  "pattern": [
+    "BBB",
+    "MTM",
+    "M M"
+  ],
+  "key": {
+    "B": {
+      "item": "tconstruct:seared_bricks"
+    },
+    "M": {
+      "tag": "c:storage_blocks/lead"
+    },
+    "T": {
+      "item": "tconstruct:blockitem/toolstation"
+    }
+  },
+  "material": {
+    "tag": "c:storage_blocks/lead"
+  },
+  "result": {
+    "id": "tconstruct:toolforge"
+  }
+}

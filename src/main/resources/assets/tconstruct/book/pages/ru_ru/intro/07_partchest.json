@@ -1,0 +1,11 @@
+{
+  "title": "Ящик для частей",
+  "text": [
+    {
+      "text": "Text Goes Here"
+    }
+  ],
+  "section": "intro",
+  "order": 7,
+  "id": "intro/partchest"
+}

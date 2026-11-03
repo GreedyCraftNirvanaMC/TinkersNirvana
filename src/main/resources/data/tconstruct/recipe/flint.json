@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "tconstruct:flint_recipe_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:gravel"
+    },
+    {
+      "item": "minecraft:gravel"
+    },
+    {
+      "item": "minecraft:gravel"
+    }
+  ],
+  "result": {
+    "id": "minecraft:flint"
+  }
+}

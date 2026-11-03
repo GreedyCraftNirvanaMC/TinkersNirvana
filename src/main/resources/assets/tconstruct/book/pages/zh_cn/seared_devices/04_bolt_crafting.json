@@ -1,0 +1,22 @@
+{
+  "title": "弩箭核心",
+  "text": [
+    {
+      "text": "制作弩箭之前，你需要先做一个弩箭核心。把箭杆放进浇筑台浇铸就可以得到弩箭核心。"
+    }
+  ],
+  "image": {
+    "file": "tconstruct:textures/gui/book/bolt_core.png",
+    "width": 150,
+    "height": 75,
+    "texture_width": 586,
+    "texture_height": 336
+  },
+  "section": "seared_devices",
+  "order": 4,
+  "id": "seared_devices/bolt_crafting",
+  "layout": "imageText2",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "弩箭制作"
+}

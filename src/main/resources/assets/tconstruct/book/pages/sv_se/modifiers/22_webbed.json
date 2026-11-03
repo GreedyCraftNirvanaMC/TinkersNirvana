@@ -1,0 +1,28 @@
+{
+  "modifier": "webbed",
+  "text": [
+    {
+      "text": "Alla dessa klibbiga spindelnät måste vara bra till någonting. Sakta ned dina fiender med dem!"
+    }
+  ],
+  "effects": [
+    "Varje nivå ökar hur länge dina fiender saktas ned",
+    "Ultrarapid",
+    "Flera nivåer"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe",
+    "tconstruct:broadsword",
+    "tconstruct:arrow"
+  ],
+  "section": "modifiers",
+  "order": 22,
+  "id": "modifiers/webbed",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effekter:",
+  "title_color": 16777215
+}

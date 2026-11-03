@@ -1,0 +1,11 @@
+{
+  "id": "world/gadgets",
+  "section": "world",
+  "order": 4,
+  "title": "Gadgets and Decorations",
+  "text": [
+    {
+      "text": "Wooden hoppers provide single-slot transport. Wooden rails, trapdoor rails, punji sticks, and brownstone roads support transport and traps. Fancy frames retain native item rotation and maps. A clear frame hides its border while displaying an item."
+    }
+  ]
+}

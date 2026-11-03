@@ -1,0 +1,31 @@
+{
+  "modifier": "soulbound",
+  "text": [
+    {
+      "text": "A perfect match. You love your tool. Not even death can part you from it."
+    }
+  ],
+  "effects": [
+    "Tool remains in your inventory after death",
+    "Single use",
+    "Does NOT require a modifier"
+  ],
+  "demoTool": [
+    "tconstruct:broadsword",
+    "tconstruct:cleaver",
+    "tconstruct:pickaxe",
+    "tconstruct:hammer",
+    "tconstruct:shortbow",
+    "tconstruct:arrow"
+  ],
+  "section": "modifiers",
+  "order": 15,
+  "id": "modifiers/soulbound",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "효과:",
+  "title_color": 16120748
+}

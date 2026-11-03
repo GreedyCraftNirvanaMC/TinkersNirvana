@@ -1,0 +1,20 @@
+{
+  "title": "Резервуар",
+  "image": {
+    "file": "tconstruct:textures/gui/book/tinker_tank.png",
+    "texture_width": 1844,
+    "texture_height": 1186
+  },
+  "text": [
+    {
+      "text": "Резервуар - это гигантский резервуар, хранящий гораздо больше жидкости, чем плавильня, но не требующая нагрева и не вызывающего сплавов или плавления."
+    }
+  ],
+  "section": "seared_devices",
+  "order": 10,
+  "id": "seared_devices/tinker_tank_intro",
+  "layout": "image with text below",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "Tinker Tank"
+}

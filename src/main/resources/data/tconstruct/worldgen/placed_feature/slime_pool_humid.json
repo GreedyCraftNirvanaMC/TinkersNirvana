@@ -1,0 +1,13 @@
+{
+  "feature": "tconstruct:slime_pool_humid",
+  "placement": [
+    {
+      "type": "tconstruct:antique_worldgen",
+      "setting": "slime_pool_humid"
+    },
+    {
+      "type": "tconstruct:antique_height",
+      "setting": "slime_pool_humid"
+    }
+  ]
+}

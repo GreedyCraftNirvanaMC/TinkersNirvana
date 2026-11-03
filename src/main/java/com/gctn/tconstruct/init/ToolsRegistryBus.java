@@ -6,6 +6,7 @@ import net.neoforged.bus.api.IEventBus;
 
 public class ToolsRegistryBus {
     public static void register(IEventBus eventBus) {
+        com.gctn.tconstruct.tools.AntiqueTools.init();
         Pickaxe.init();
         TinkerTools.register(eventBus);
     }

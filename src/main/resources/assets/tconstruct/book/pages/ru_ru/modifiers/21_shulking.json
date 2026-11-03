@@ -1,0 +1,29 @@
+{
+  "modifier": "shulking",
+  "text": [
+    {
+      "text": "Усильте своё оружие способностью Шалкера. Ударьте врагов, чтобы сделать их бессильными в воздухе."
+    }
+  ],
+  "effects": [
+    "Каждый уровень увеличивает время парения",
+    "Заставляет врагов медленно подниматься в воздухе",
+    "Забавно",
+    "Одноразовое использование"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe",
+    "tconstruct:broadsword",
+    "tconstruct:arrow"
+  ],
+  "section": "modifiers",
+  "order": 21,
+  "id": "modifiers/shulking",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Эффекты:",
+  "title_color": 11193599
+}

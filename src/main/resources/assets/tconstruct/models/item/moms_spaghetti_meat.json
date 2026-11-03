@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tconstruct:item/gadgets/moms_spaghetti",
+    "layer1": "tconstruct:item/gadgets/spaghetti_sauce",
+    "layer2": "tconstruct:item/gadgets/spaghetti_meat"
+  }
+}

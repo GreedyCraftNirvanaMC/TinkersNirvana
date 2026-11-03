@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "tconstruct:slime_vine_blue",
+    "tconstruct:slime_vine_blue_mid",
+    "tconstruct:slime_vine_blue_end",
+    "tconstruct:slime_vine_purple",
+    "tconstruct:slime_vine_purple_mid",
+    "tconstruct:slime_vine_purple_end"
+  ]
+}

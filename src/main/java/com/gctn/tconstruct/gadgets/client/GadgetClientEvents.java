@@ -7,6 +7,7 @@ package com.gctn.tconstruct.gadgets.client;
 
 import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.gadgets.GadgetModule;
+import com.gctn.tconstruct.gadgets.SlimeChannels;
 import com.gctn.tconstruct.gadgets.block.BrownstoneBlock;
 import com.gctn.tconstruct.gadgets.block.BrownstoneSlabBlock;
 import com.gctn.tconstruct.gadgets.block.BrownstoneStairBlock;
@@ -27,6 +28,18 @@ public final class GadgetClientEvents {
     private GadgetClientEvents() {
     }
 
+    @SubscribeEvent private static void channelBlocks(net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.Block event) {
+        SlimeChannels.BLOCKS.values().forEach(block -> event.register((state, level, pos, tint) -> block.get().color, block.get()));
+    }
+    @SubscribeEvent private static void channelItems(net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.Item event) {
+        SlimeChannels.BLOCKS.values().forEach(block -> event.register((stack, tint) -> block.get().color, block.get()));
+    }
+    @SubscribeEvent private static void channelLayers(net.neoforged.fml.event.lifecycle.FMLClientSetupEvent event) {
+        event.enqueueWork(() -> SlimeChannels.BLOCKS.values().forEach(block -> net.minecraft.client.renderer.ItemBlockRenderTypes.setRenderLayer(block.get(), net.minecraft.client.renderer.RenderType.translucent())));
+        event.enqueueWork(() -> net.minecraft.client.renderer.item.ItemProperties.register(com.gctn.tconstruct.gadgets.Spaghetti.MOMS.get(), com.gctn.tconstruct.gadgets.SlimeGear.id("seasoning"),
+                (stack, level, entity, seed) -> com.gctn.tconstruct.gadgets.item.MomsSpaghettiItem.seasoning(stack)));
+    }
+
     @SubscribeEvent
     private static void screens(RegisterMenuScreensEvent event) {
         event.register(GadgetModule.WOODEN_HOPPER_MENU.get(), WoodenHopperScreen::new);
@@ -35,10 +48,15 @@ public final class GadgetClientEvents {
     @SubscribeEvent
     private static void renderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(GadgetModule.GLOWBALL_ENTITY.get(), ThrownItemRenderer::new);
+        event.registerBlockEntityRenderer(com.gctn.tconstruct.gadgets.RemainingGadgets.RACK_ENTITY.get(), context -> new RackItemRenderer());
     }
 
     @SubscribeEvent
     private static void tooltip(ItemTooltipEvent event) {
+        if (event.getItemStack().is(GadgetModule.EFLN.get())) { event.getToolTip().add(Component.translatable("tooltip.tconstruct.efln").withStyle(ChatFormatting.GRAY)); }
+        if (event.getItemStack().getItem() instanceof BlockItem item && item.getBlock() instanceof com.gctn.tconstruct.gadgets.block.SlimeChannelBlock) {
+            event.getToolTip().add(Component.translatable("tooltip.tconstruct.slime_channel").withStyle(ChatFormatting.GRAY));
+        }
         if (event.getItemStack().is(GadgetModule.GLOWBALL.get())) {
             event.getToolTip().add(Component.translatable("tooltip.tconstruct.glowball").withStyle(ChatFormatting.GRAY));
         }

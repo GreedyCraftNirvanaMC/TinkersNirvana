@@ -1,0 +1,11 @@
+{
+  "title": "제작대",
+  "text": [
+    {
+      "text": "여기에 텍스트 입력"
+    }
+  ],
+  "section": "intro",
+  "order": 3,
+  "id": "intro/craftingstation"
+}

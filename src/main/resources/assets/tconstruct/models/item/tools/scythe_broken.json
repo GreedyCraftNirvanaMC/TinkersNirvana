@@ -1,0 +1,9 @@
+{
+  "parent": "tconstruct:item/tools/scythe",
+  "textures": {
+    "layer0": "tconstruct:item/antique/scythe/handle",
+    "layer1": "tconstruct:item/antique/scythe/broken_head",
+    "layer2": "tconstruct:item/antique/scythe/binding",
+    "layer3": "tconstruct:item/antique/scythe/accessory"
+  }
+}

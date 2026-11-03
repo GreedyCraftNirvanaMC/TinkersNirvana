@@ -1,0 +1,12 @@
+{
+  "feature": "tconstruct:ore_cobalt",
+  "placement": [
+    {
+      "type": "tconstruct:antique_height",
+      "setting": "cobalt"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

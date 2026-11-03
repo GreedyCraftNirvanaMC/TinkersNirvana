@@ -1,0 +1,23 @@
+{
+  "intro": "介紹",
+  "materials": "工具材質",
+  "bowmaterials": "弓箭材質",
+  "tools": "工具",
+  "modifiers": "強化",
+  "seared_devices": "Seared Devices",
+  "repairing": "修復",
+  "offhand": "副手採集",
+  "smeltery_intro": "Smeltery",
+  "cast_crafting": "Cast Crafting",
+  "bolt_crafting": "弩矢合成",
+  "alloying": "Alloying",
+  "entity_melting": "Entity Melting",
+  "seared_furnace_intro": "Seared Furnace",
+  "tinker_tank_intro": "Tinker Tank",
+  "modifier.effect": "效果:",
+  "tool.properties": "屬性:",
+  "material.craft_partbuilder": "能在部件加工台被合成",
+  "material.craft_casting": "能從 %s 被鑄造",
+  "wood.flavour": "如果土撥鼠 (woodchuck) 能夠敲木頭 (chuck) ，那土撥鼠能夠敲下多少木頭?",
+  "stone.flavour": "像石頭一樣頑固"
+}

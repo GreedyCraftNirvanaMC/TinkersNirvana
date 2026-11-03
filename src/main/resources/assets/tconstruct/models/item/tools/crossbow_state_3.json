@@ -1,0 +1,45 @@
+{
+  "parent": "tconstruct:item/tools/crossbow",
+  "textures": {
+    "layer0": "tconstruct:item/antique/crossbow/body",
+    "layer1": "tconstruct:item/antique/crossbow/limb_3",
+    "layer2": "tconstruct:item/antique/crossbow/binding",
+    "layer3": "tconstruct:item/antique/crossbow/bowstring_3"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [
+        -90,
+        -5,
+        -45
+      ],
+      "translation": [
+        0,
+        2,
+        0
+      ],
+      "scale": [
+        0.68,
+        0.68,
+        0.68
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        -90,
+        -5,
+        45
+      ],
+      "translation": [
+        0,
+        2,
+        0
+      ],
+      "scale": [
+        0.68,
+        0.68,
+        0.68
+      ]
+    }
+  }
+}

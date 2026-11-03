@@ -1,0 +1,23 @@
+{
+  "intro": "Introduktion",
+  "materials": "Verktygsmaterial",
+  "bowmaterials": "Pilbågsmaterial",
+  "tools": "Verktyg",
+  "modifiers": "Modifierare",
+  "seared_devices": "Seared Devices",
+  "repairing": "Reparera",
+  "offhand": "Skörda m. sekundär h.",
+  "smeltery_intro": "Smeltery",
+  "cast_crafting": "Cast Crafting",
+  "bolt_crafting": "Tillv. armborstspilar",
+  "alloying": "Alloying",
+  "entity_melting": "Entity Melting",
+  "seared_furnace_intro": "Seared Furnace",
+  "tinker_tank_intro": "Tinker Tank",
+  "modifier.effect": "Effekter:",
+  "tool.properties": "Egenskaper:",
+  "material.craft_partbuilder": "Kan tillverkas i delbyggaren",
+  "material.craft_casting": "%s kan gjutas",
+  "wood.flavour": "Om ett träd faller i skogen men ingen hör det, gör det då något ljud?",
+  "stone.flavour": "Stenhårt"
+}

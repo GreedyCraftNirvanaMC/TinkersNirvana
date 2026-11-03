@@ -1,0 +1,10 @@
+{
+  "type": "tconstruct:drying",
+  "ingredient": {
+    "item": "tconstruct:spaghetti_soggy"
+  },
+  "result": {
+    "id": "tconstruct:spaghetti_cold"
+  },
+  "time": 18000
+}

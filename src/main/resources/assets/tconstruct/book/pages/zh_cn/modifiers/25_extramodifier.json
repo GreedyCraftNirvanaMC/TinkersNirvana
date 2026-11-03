@@ -1,0 +1,26 @@
+{
+  "modifier": "extramodifier",
+  "text": [
+    {
+      "text": "你成为了以为传奇冒险家，你抵达了末地并得到了你的鞘翅，增加一个强化槽以彰显你的传奇历程怎么样？"
+    }
+  ],
+  "effects": [
+    "增加一个额外强化槽",
+    "充分利用龙首的价值",
+    "不消耗强化槽（纯属废话）"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe"
+  ],
+  "section": "modifiers",
+  "order": 25,
+  "id": "modifiers/extramodifier",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "特殊效果：",
+  "title_color": 10682572
+}

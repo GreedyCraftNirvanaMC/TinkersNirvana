@@ -51,24 +51,10 @@ public final class SmelteryRecipes {
             return;
         }
         initialized = true;
+        CASTING.add(new Casting(false, stack -> stack.is(com.gctn.tconstruct.gadgets.Spaghetti.HARD.get()), Fluids.WATER, 3000,
+                new ItemStack(com.gctn.tconstruct.gadgets.Spaghetti.SOGGY.get()), 18000, true, false));
         FUELS.add(new Fuel(Fluids.LAVA, 50, 100));
         FUELS.add(new Fuel(SmelteryFluids.get("blazing_blood"), 50, 150));
-        ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.monster.Blaze, fluid("blazing_blood", 20)));
-        ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.monster.Guardian, fluid("stone", 50)));
-        ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.monster.AbstractSkeleton
-                || entity instanceof net.minecraft.world.entity.animal.horse.SkeletonHorse, fluid("notmilk", 20)));
-        ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.monster.Silverfish, fluid("stone", 25)));
-        ENTITY_MELTING.add(new EntityMelting(entity -> entity.getType() == net.minecraft.world.entity.EntityType.SLIME, fluid("greenslime", 25)));
-        // 原版配置按实体类型区分彩色史莱姆，每次造成一颗心伤害产生二十五毫桶。
-        ENTITY_MELTING.add(new EntityMelting(entity -> entity.getType() == com.gctn.tconstruct.common.slime.SlimeMobModule.BLUE.get(), fluid("blueslime", 25)));
-        ENTITY_MELTING.add(new EntityMelting(entity -> entity.getType() == com.gctn.tconstruct.common.slime.SlimeMobModule.PURPLE.get(), fluid("purpleslime", 25)));
-        ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.animal.SnowGolem, new FluidStack(Fluids.WATER, 100)));
-        ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.monster.Spider, fluid("venom", 20)));
-        ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.npc.Villager
-                || entity instanceof net.minecraft.world.entity.monster.Evoker || entity instanceof net.minecraft.world.entity.monster.Illusioner
-                || entity instanceof net.minecraft.world.entity.monster.Vindicator, fluid("emerald", 6)));
-        ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.animal.IronGolem, fluid("iron", 18)));
-        ENTITY_MELTING.add(new EntityMelting(entity -> entity instanceof net.minecraft.world.entity.monster.ZombifiedPiglin, fluid("gold", 10)));
         for (String name : SmelteryFluids.ENTRIES.keySet()) {
             Fluid fluid = SmelteryFluids.get(name);
             if (List.of("blood", "venom", "blazing_blood", "greenslime", "blueslime", "purpleslime", "stone", "dirt", "clay", "notmilk", "obsidian", "glass", "emerald", "diamond").contains(name)) {
@@ -209,37 +195,44 @@ public final class SmelteryRecipes {
         }
         for (var material : TinkerMaterials.materials) {
             String name = material.identifier;
-            if (!SmelteryFluids.ENTRIES.containsKey(name)) {
-                continue;
-            }
-            for (String part : new String[]{"pickaxe_head", "tool_rod", "binding"}) {
-                ItemStack output = switch (part) {
-                    case "pickaxe_head" -> PickaxeHead.getColoredPart(material);
-                    case "tool_rod" -> ToolRod.getPart(material);
-                    default -> Binding.getColoredPart(material);
-                };
-                int cost = part.equals("pickaxe_head") ? 288 : 144;
-                MELTING.add(melting(stack -> stack.is(output.getItem()) && TinkerDataComponents.getMaterialTag(stack)
-                        .getString(Tags.PART_MATERIAL).equals(name), SmelteryFluids.get(name), cost));
-                CASTING.add(casting(false, castPredicate("cast_" + part), SmelteryFluids.get(name), cost, output, false, false));
-                CASTING.add(casting(false, stack -> com.gctn.tconstruct.Config.CLAY_CASTS.get()
-                                && stack.is(SmelteryModule.item("clay_cast_" + part)),
+            if (!material.isCastable() || !SmelteryFluids.ENTRIES.containsKey(name)) { continue; }
+            for (var part : com.gctn.tconstruct.library.toolparts.AntiqueParts.entries().values()) {
+                if (!java.util.Set.of("Head", "Handle", "Extra", "Bow").contains(part.stat()) || !material.hasStats(part.stat())) { continue; }
+                ItemStack output = part.create(material);
+                int cost = Math.round(part.cost() * INGOT);
+                MELTING.add(melting(stack -> stack.is(output.getItem()) && TinkerDataComponents.getMaterialTag(stack).getString(Tags.PART_MATERIAL).equals(name), SmelteryFluids.get(name), cost));
+                CASTING.add(casting(false, castPredicate("cast_" + part.id()), SmelteryFluids.get(name), cost, output, false, false));
+                CASTING.add(casting(false, stack -> com.gctn.tconstruct.Config.CLAY_CASTS.get() && stack.is(SmelteryModule.item("clay_cast_" + part.id())),
                         SmelteryFluids.get(name), cost, output, true, false));
             }
+            // 弩箭核心必须先有箭杆，再包覆可浇筑材料。
+            for (var shaft : TinkerMaterials.materials) {
+                if (!shaft.hasStats("Shaft")) { continue; }
+                ItemStack core = com.gctn.tconstruct.library.toolparts.AntiqueParts.get("bolt_core").create(shaft);
+                var data = TinkerDataComponents.getMaterialTag(core);
+                data.putString("Coating", name);
+                core.set(TinkerDataComponents.TINKER_MATERIAL.get(), net.minecraft.world.item.component.CustomData.of(data));
+                CASTING.add(casting(false, stack -> stack.is(com.gctn.tconstruct.library.toolparts.AntiqueParts.get("arrow_shaft").item().get())
+                                && TinkerDataComponents.getMaterialTag(stack).getString(Tags.PART_MATERIAL).equals(shaft.identifier),
+                        SmelteryFluids.get(name), INGOT * 2, core, true, false));
+            }
         }
-        for (String part : new String[]{"pickaxe_head", "tool_rod", "binding"}) {
-            Item item = switch (part) {
-                case "pickaxe_head" -> PickaxeHead.PICKAXEHEAD.get();
-                case "tool_rod" -> ToolRod.TOOL_ROD.get();
-                default -> Binding.BINDING.get();
-            };
+        for (var part : com.gctn.tconstruct.library.toolparts.AntiqueParts.entries().values()) {
+            if (!java.util.Set.of("Head", "Handle", "Extra", "Bow").contains(part.stat())) { continue; }
+            Item item = part.item().get();
             for (String fluid : new String[]{"gold", "alubrass", "brass"}) {
                 CASTING.add(casting(false, stack -> stack.is(item), SmelteryFluids.get(fluid), fluid.equals("gold") ? 288 : 144,
-                        new ItemStack(SmelteryModule.item("cast_" + part)), true, true));
+                        new ItemStack(SmelteryModule.item("cast_" + part.id())), true, true));
             }
             CASTING.add(casting(false, stack -> com.gctn.tconstruct.Config.CLAY_CASTS.get() && stack.is(item),
-                    SmelteryFluids.get("clay"), 288, new ItemStack(SmelteryModule.item("clay_cast_" + part)), true, true));
+                    SmelteryFluids.get("clay"), 288, new ItemStack(SmelteryModule.item("clay_cast_" + part.id())), true, true));
         }
+        CASTING.add(casting(false, stack -> stack.is(Items.BONE), SmelteryFluids.get("blood"), 250,
+                new ItemStack(com.gctn.tconstruct.tools.ToolSupplies.item("bloodbone")), true, false));
+        CASTING.add(casting(false, stack -> stack.is(Items.BONE), SmelteryFluids.get("venom"), 250,
+                new ItemStack(com.gctn.tconstruct.tools.ToolSupplies.item("venomous_bone")), true, false));
+        CASTING.add(new Casting(false, stack -> stack.is(com.gctn.tconstruct.tools.ToolSupplies.item("necrotic_bone")), SmelteryFluids.get("blazing_blood"), 250,
+                new ItemStack(com.gctn.tconstruct.tools.ToolSupplies.item("blazing_bone")), 12, true, false));
         alloy("obsidian", 36, new FluidStack(Fluids.WATER, 125), new FluidStack(Fluids.LAVA, 125));
         alloy("clay", 144, fluid("stone", 72), fluid("dirt", 144), new FluidStack(Fluids.WATER, 250));
         alloy("pigiron", 144, fluid("iron", 144), fluid("blood", 40), fluid("clay", 72));
@@ -280,6 +273,8 @@ public final class SmelteryRecipes {
                 return ENTITY_MELTING.get(i).output.copy();
             }
         }
+        FluidStack configured = ConfiguredEntityMelting.find(entity);
+        if (!configured.isEmpty()) { return configured; }
         return fluid("blood", 20);
     }
 

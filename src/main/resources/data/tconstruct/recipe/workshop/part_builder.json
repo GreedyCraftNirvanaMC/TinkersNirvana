@@ -1,0 +1,21 @@
+{
+  "type": "tconstruct:table",
+  "pattern": [
+    "P",
+    "W"
+  ],
+  "key": {
+    "P": {
+      "item": "tconstruct:pattern"
+    },
+    "W": {
+      "tag": "minecraft:logs"
+    }
+  },
+  "result": {
+    "id": "tconstruct:part_builder"
+  },
+  "material": {
+    "tag": "minecraft:logs"
+  }
+}

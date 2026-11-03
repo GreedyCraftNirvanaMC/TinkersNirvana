@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " L ",
+    "PSP",
+    " L "
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "S": {
+      "item": "tconstruct:slimeball_purple"
+    }
+  },
+  "result": {
+    "id": "tconstruct:expander_horizontal",
+    "count": 1
+  }
+}

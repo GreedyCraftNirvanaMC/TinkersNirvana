@@ -1,0 +1,50 @@
+[
+  {
+    "source": "textures/items/book.png",
+    "output": "textures/item/book.png",
+    "source_sha256": "823d7bcfea23465bfeabe76c92e5344aef920f2f156272c4ac92adfc8a627276",
+    "neutral": false
+  },
+  {
+    "source": "textures/gui/book/bolt_core.png",
+    "output": "textures/gui/book/bolt_core.png",
+    "source_sha256": "01927798ff4b85d1cccb71ee2fcedc7776c6279d5679fd7fb698b289a2b1a6e1",
+    "neutral": false
+  },
+  {
+    "source": "textures/gui/book/inventory_repair.png",
+    "output": "textures/gui/book/inventory_repair.png",
+    "source_sha256": "534d37623c8c3136717e425e3b51d8a2e72f3cd400d583c6de9318a5af582080",
+    "neutral": false
+  },
+  {
+    "source": "textures/gui/book/modify.png",
+    "output": "textures/gui/book/modify.png",
+    "source_sha256": "6841967a75d93eb04c731ca2ce85cbba5ade2721bb27a068748f1eab65e1ed85",
+    "neutral": false
+  },
+  {
+    "source": "textures/gui/book/offhand.png",
+    "output": "textures/gui/book/offhand.png",
+    "source_sha256": "1723e843be0acbcb30f2a02ca2f4f4188fd6a14d56776f3ee9abe261a2f51218",
+    "neutral": false
+  },
+  {
+    "source": "textures/gui/book/seared_furnace.png",
+    "output": "textures/gui/book/seared_furnace.png",
+    "source_sha256": "08b217238d99c874de8e9662f061e113646a236b84e962fb27c63b37b4417b92",
+    "neutral": false
+  },
+  {
+    "source": "textures/gui/book/smeltery.png",
+    "output": "textures/gui/book/smeltery.png",
+    "source_sha256": "2a6b0909f9c7643d4cc305498e050a20f111ea9566ddc68f1b0d8496ad651d13",
+    "neutral": false
+  },
+  {
+    "source": "textures/gui/book/tinker_tank.png",
+    "output": "textures/gui/book/tinker_tank.png",
+    "source_sha256": "14caa20477548d2d96e2de9d44b596641b2df1125657c0424dd6c74bc6c69bb0",
+    "neutral": false
+  }
+]

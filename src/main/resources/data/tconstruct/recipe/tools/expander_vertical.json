@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " P ",
+    "LSL",
+    " P "
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "S": {
+      "item": "tconstruct:slimeball_purple"
+    }
+  },
+  "result": {
+    "id": "tconstruct:expander_vertical",
+    "count": 1
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "world/gear",
+  "section": "world",
+  "order": 1,
+  "title": "Slings, Boots, and Piggybackpacks",
+  "text": [
+    {
+      "text": "Charge a slimesling on the ground while aiming at a block, then release to launch backwards. Slime boots bounce on landing; sneak to stop bouncing and reduce fall damage. Right-click a creature with a piggybackpack to carry it; removing the pack releases its passengers."
+    }
+  ]
+}

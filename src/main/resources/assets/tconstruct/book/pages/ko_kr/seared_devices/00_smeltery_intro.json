@@ -1,0 +1,20 @@
+{
+  "title": "제련소",
+  "image": {
+    "file": "tconstruct:textures/gui/book/smeltery.png",
+    "texture_width": 854,
+    "texture_height": 480
+  },
+  "text": [
+    {
+      "text": "다양한 것들을 융해할 수 있는 건축물입니다."
+    }
+  ],
+  "section": "seared_devices",
+  "order": 0,
+  "id": "seared_devices/smeltery_intro",
+  "layout": "image with text below",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "Smeltery"
+}

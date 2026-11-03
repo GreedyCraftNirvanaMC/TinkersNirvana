@@ -11,13 +11,13 @@
 
 ## 添加词条
 
-1. 继承 `AbstractTraits`，在 `TinkerTraits` 中创建一个定义对象，注册该对象，
+1. 继承 `AbstractTraits`，创建一个定义对象，通过 `TinkerContent.registerTrait` 注册该对象，
    并按需公开 `TraitEntry` 初始配置。不同材料的初始等级复用同一个定义对象。
 2. 在 `TinkerMaterials.registerToolMaterialTraits()` 中指定材料配置。
    `null` 位置代表所有部位的默认词条；指定部位的列表整体替换默认列表。
    同一部位不能重复配置相同 identifier。
 3. 普通词条通过 `addLevel(currentLevel, amount)` 取最高等级，不重复叠加。
-   `mergeLevel(currentLevel, incomingLevel)` 默认沿用该规则，目前没有单独的强化合并流程。
+   `mergeLevel(currentLevel, incomingLevel)` 默认沿用该规则，部件压印同样经由 `ToolTraits.addTraits` 合并。
    需要叠加时继承 `LeveledTraits`：默认不同初始强度各贡献一次，
    例如 1+1=1、1+2=3，最终受 `maxLevel` 限制；覆盖 `stacksRepeatedLevels()` 返回 `true`
    可让每个部件都贡献等级，此时 1+1=2。去重信息保存在 `AppliedLevels` 中。
@@ -36,7 +36,7 @@
   同一词条不要递归嵌套写入自己的状态。
 - 背包、耗损、攻击和方块交互效果仅在服务端执行。挖掘速度事件在双端计算，不能修改世界或持久状态。
 - `beforeBlockBreak` 在方块破坏事件中调用，不保证其他订阅者最终不会取消破坏。
-  `afterBlockBreak` 在镐的 `mineBlock` 中、扣耐久之前调用；`afterHit` 在命中后、扣耐久之前调用。
+  `afterBlockBreak` 在通用工具的 `mineBlock` 中、扣耐久之前调用；`afterHit` 在命中后、扣耐久之前调用。
   损坏工具不触发上述挖掘/攻击词条。
 - 材料修复先复制输入工具，按实际恢复量在副本上调用 `onRepair`，结果携带词条状态。
   预览和确认消耗会重复计算，因此 `onToolHeal` 和 `onRepair` 必须确定、不得使用随机数或修改世界、
@@ -44,7 +44,20 @@
   `onRepair` 只应修改副本的词条状态，不应再次改变耐久或材料信息。
   零恢复量不消耗原料，无进展时终止修复循环。
 
-## 已实现词条
+## 工具、强化与扩展
+
+完整材料和工具目录见 [TOOLS.md](TOOLS.md)，公开注册入口与 KubeJS 示例见 [TOOL_API.md](TOOL_API.md)。
+
+- `modifyStats` 调整单次重算的 `ToolStats`；计算必须确定，不能扣库存或修改共享材料。
+- `modifyAttack`、`onBlockDrops`、`onDamageTaken` 接入原生攻击、掉落和防御事件。
+- `onProjectileLaunch` 处理发射参数；`onProjectileTick` 处理自定义工具投射物更新。
+- 弓臂合并 Bow/Head、弩身合并 Handle/Extra、箭头合并 Head/Projectile 的显式词条。
+  这些部位全部没有显式列表时才使用默认列表。
+- 除生态、廉价和吝啬外，内置材料还提供动量、磁力、锐利、中毒、贪婪、异形、
+  干旱、水下、铭刻、石缚、柔和、分裂、悬浮等 Antique 词条。
+- 瞬时充能、冷却、苔藓经验等状态变化不触发反复换手或重置挖掘；材料、强化或损坏状态变化仍会刷新。
+
+## 木石词条基准
 
 - 木材所有部位：生态。每个背包 tick 有 1/400 概率恢复 1 点耐久，
   跳过正在使用的工具，不能复活损坏工具。
@@ -55,7 +68,7 @@
 
 - 新组装全木镐只有一级生态；仅绑定结为木材的镐也有生态。
 - 新组装全木镐最大耐久为 75；新组装全石镐有一级吝啬和一级廉价，
-  最大耐久为本地材料公式结果的 80%，即 350 × 80% = 280。
+  最大耐久为 `(120 + 20) × 0.5 - 50 = 20` 的 80%，即 16。
 - 损伤木镐放入背包会缓慢恢复，满耐久/正在使用/损坏时不会被动修复。
 - 组装台修复受廉价加成影响；重复刷新预览不改变输入工具或消耗材料，领取后才消费。
 - 工具、手柄、头部、绑定结显示对应词条及 Alt 说明；Shift 属性提示仍可用。

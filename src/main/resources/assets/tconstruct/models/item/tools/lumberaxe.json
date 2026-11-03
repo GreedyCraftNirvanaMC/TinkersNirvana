@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconstruct:item/antique/lumberaxe/handle",
+    "layer1": "tconstruct:item/antique/lumberaxe/head",
+    "layer2": "tconstruct:item/antique/lumberaxe/shield",
+    "layer3": "tconstruct:item/antique/lumberaxe/binding"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconstruct:broken": 1
+      },
+      "model": "tconstruct:item/tools/lumberaxe_broken"
+    }
+  ]
+}

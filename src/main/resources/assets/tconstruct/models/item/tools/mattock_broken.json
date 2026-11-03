@@ -1,0 +1,8 @@
+{
+  "parent": "tconstruct:item/tools/mattock",
+  "textures": {
+    "layer0": "tconstruct:item/antique/mattock/handle",
+    "layer1": "tconstruct:item/antique/mattock/broken_head",
+    "layer2": "tconstruct:item/antique/mattock/back"
+  }
+}

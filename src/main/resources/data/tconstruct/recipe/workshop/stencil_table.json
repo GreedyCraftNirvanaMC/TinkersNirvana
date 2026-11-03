@@ -1,0 +1,21 @@
+{
+  "type": "tconstruct:table",
+  "pattern": [
+    "P",
+    "W"
+  ],
+  "key": {
+    "P": {
+      "item": "tconstruct:pattern"
+    },
+    "W": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "id": "tconstruct:stencil_table"
+  },
+  "material": {
+    "tag": "minecraft:planks"
+  }
+}

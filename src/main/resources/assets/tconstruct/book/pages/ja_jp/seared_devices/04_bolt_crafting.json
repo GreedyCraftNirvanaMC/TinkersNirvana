@@ -1,0 +1,22 @@
+{
+  "title": "ボルトの作り方",
+  "text": [
+    {
+      "text": "ボルトを作るには、ボルトコアが必要です。ボルトコアは、矢柄を鋳造台に置き、それにヘッド部の素材を流し込むことで作成されます。"
+    }
+  ],
+  "image": {
+    "file": "tconstruct:textures/gui/book/bolt_core.png",
+    "width": 150,
+    "height": 75,
+    "texture_width": 586,
+    "texture_height": 336
+  },
+  "section": "seared_devices",
+  "order": 4,
+  "id": "seared_devices/bolt_crafting",
+  "layout": "imageText2",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "ボルトの作り方"
+}

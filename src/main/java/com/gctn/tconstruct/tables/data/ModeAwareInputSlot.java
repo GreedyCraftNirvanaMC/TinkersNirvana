@@ -8,26 +8,24 @@ import net.minecraft.world.item.ItemStack;
 
 public class ModeAwareInputSlot extends Slot {
     private final ToolStationMenu menu;
-    private final Mode slotMode;
     private final int slotIndex;
 
-    public ModeAwareInputSlot(ToolStationMenu menu, Container container, int slot, int x, int y, Mode slotMode, int slotIndex) {
+    public ModeAwareInputSlot(ToolStationMenu menu, Container container, int slot, int x, int y, int slotIndex) {
         super(container, slot, x, y);
         this.menu = menu;
-        this.slotMode = slotMode;
         this.slotIndex = slotIndex;
     }
 
     @Override
     public boolean isActive() {
-        return this.menu.isInputSlotAvailable(this.slotMode, this.slotIndex);
+        return this.menu.isInputSlotAvailable(this.menu.getMode(), this.slotIndex);
     }
 
     @Override
     public boolean mayPlace(ItemStack stack) {
         return this.isActive()
                 && super.mayPlace(stack)
-                && this.menu.canPlaceInput(this.slotMode, this.slotIndex, stack);
+                && this.menu.canPlaceInput(this.menu.getMode(), this.slotIndex, stack);
     }
 
     @Override

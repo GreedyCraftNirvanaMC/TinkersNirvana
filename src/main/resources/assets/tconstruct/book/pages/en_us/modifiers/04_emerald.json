@@ -1,0 +1,29 @@
+{
+  "modifier": "emerald",
+  "text": [
+    {
+      "text": "Affixing an emerald to a tool's weakest point makes it especially resilient and fabulous. Villagers may also covet your tool, be wary."
+    }
+  ],
+  "effects": [
+    "50% base durability increase",
+    "Mining level increased to Iron",
+    "Single use",
+    "Outrageous!"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe",
+    "tconstruct:hammer",
+    "tconstruct:cleaver"
+  ],
+  "section": "modifiers",
+  "order": 4,
+  "id": "modifiers/emerald",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effects:",
+  "title_color": 4322180
+}

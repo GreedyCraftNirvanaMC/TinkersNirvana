@@ -6,7 +6,15 @@
     "tconstruct:firewood_slab",
     "tconstruct:firewood_stairs",
     "tconstruct:lavawood_slab",
-    "tconstruct:lavawood_stairs"
+    "tconstruct:lavawood_stairs",
+    "tconstruct:crafting_station",
+    "tconstruct:stencil_table",
+    "tconstruct:part_builder",
+    "tconstruct:pattern_chest",
+    "tconstruct:part_chest",
+    "tconstruct:toolstation",
+    "tconstruct:item_rack",
+    "tconstruct:drying_rack"
   ],
   "remove": [
     "tconstruct:slime_congealed_green",

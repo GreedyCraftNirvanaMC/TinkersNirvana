@@ -1,0 +1,13 @@
+{
+  "feature": "tconstruct:magma_pool",
+  "placement": [
+    {
+      "type": "tconstruct:antique_worldgen",
+      "setting": "magma_pool"
+    },
+    {
+      "type": "tconstruct:antique_height",
+      "setting": "magma_pool"
+    }
+  ]
+}

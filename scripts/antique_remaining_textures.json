@@ -1,0 +1,116 @@
+[
+  {
+    "source": "textures/blocks/craftingstation_top.png",
+    "source_sha256": "83b941d6a0d40ebe91c5547e639c4a4316d1a8f6db72bb2979c5352fc6f03843",
+    "output": "textures/block/workshop/craftingstation_top.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/craftingstation_side.png",
+    "source_sha256": "0539b9d5df2515ee3f1d90a98c64dbf659a723e393eec1735cacfb9ed04c71a9",
+    "output": "textures/block/workshop/craftingstation_side.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/stenciltable_top.png",
+    "source_sha256": "fdb2d4dfbde62cf98a1280714114ee3e0c8d303690b07b2e9e12ec9632f0b7a5",
+    "output": "textures/block/workshop/stenciltable_top.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/partbuilder_top.png",
+    "source_sha256": "f2b311875168893c4628984e44315b14f53f0089feb2ee83ab21ae6882f820d5",
+    "output": "textures/block/workshop/partbuilder_top.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/pattern_side.png",
+    "source_sha256": "83c4f0e0ff6def56b1bc3bf03492741f5e9d0bfedaaf52e5a690e88352574f94",
+    "output": "textures/block/workshop/chest/pattern_side.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/pattern_front.png",
+    "source_sha256": "974b4fd775fc93b3627f2fc049b7f0ca8cc5f8f720fe89c446ce291e281ec0e2",
+    "output": "textures/block/workshop/chest/pattern_front.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/pattern_top.png",
+    "source_sha256": "71ad52ca42128237512b2415d61488ab1d616533f6feeda0def2b8d25e738dbf",
+    "output": "textures/block/workshop/chest/pattern_top.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/pattern_drawer_front.png",
+    "source_sha256": "40e4f72e26b7250e5b8b839d2398f871dcf18f2efb22befd58bf9e396497c915",
+    "output": "textures/block/workshop/chest/pattern_drawer_front.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/pattern_drawer_side.png",
+    "source_sha256": "8b2552cab26465f7c4a7ad29b2dc65e0ee482971c41f69c84fdf340064627325",
+    "output": "textures/block/workshop/chest/pattern_drawer_side.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/part_side.png",
+    "source_sha256": "265820a88c4e1da160ba6b60232a35434cc6cfd0ea60c684de85ba9e3759fba9",
+    "output": "textures/block/workshop/chest/part_side.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/part_front.png",
+    "source_sha256": "27206363bae9618542dbc8e8435a32bfcc8b0b29c94ec31b92a07380f448b60c",
+    "output": "textures/block/workshop/chest/part_front.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/part_top.png",
+    "source_sha256": "2606476048f424a6818e73fb6a1173f46856029c3ea2081e895bbbe30e38927c",
+    "output": "textures/block/workshop/chest/part_top.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/part_drawer_front.png",
+    "source_sha256": "1e0c3dabc987d32b062683bcd286a8eb780de605486cf794065478fa3e1bdb3f",
+    "output": "textures/block/workshop/chest/part_drawer_front.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/part_drawer_side.png",
+    "source_sha256": "9f654036971798433a44aebcc9fd81ba16c71a7e4e20aea4be0768180824d823",
+    "output": "textures/block/workshop/chest/part_drawer_side.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/cast_side.png",
+    "source_sha256": "bcdea401b30c743757155a03b15cbb6dd8c6a3b6ea214bf1afd880d9a731d137",
+    "output": "textures/block/workshop/chest/cast_side.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/cast_front.png",
+    "source_sha256": "06de90bdae2cc4d865ad13b7ebff9ff0edede90a82bf9912818e2c7255b42cc9",
+    "output": "textures/block/workshop/chest/cast_front.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/cast_top.png",
+    "source_sha256": "bcdea401b30c743757155a03b15cbb6dd8c6a3b6ea214bf1afd880d9a731d137",
+    "output": "textures/block/workshop/chest/cast_top.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/cast_drawer_front.png",
+    "source_sha256": "a53d1635be7dc4a70d6d871289f87b11ee71eb5961c2aa126f68940162587176",
+    "output": "textures/block/workshop/chest/cast_drawer_front.png",
+    "neutral": false
+  },
+  {
+    "source": "textures/blocks/chest/cast_drawer_side.png",
+    "source_sha256": "1e6ed1d265e2ac7d132d02fae885435318d8f944d8f014653f2b92165f565d51",
+    "output": "textures/block/workshop/chest/cast_drawer_side.png",
+    "neutral": false
+  }
+]

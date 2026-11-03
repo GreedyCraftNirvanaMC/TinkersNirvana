@@ -1,0 +1,28 @@
+{
+  "tool": "pickaxe",
+  "text": [
+    {
+      "text": "Hackan är ett ensidigt grävverktyg. Den är effektivt på sten och malm."
+    },
+    {
+      "text": "\n"
+    },
+    {
+      "text": "Den bryter block, hajar du?"
+    }
+  ],
+  "properties": [
+    "Enkelt grävverktyg",
+    "Det är en hacka",
+    "Bryter stenblock och dylikt"
+  ],
+  "section": "tools",
+  "order": 3,
+  "id": "tools/pickaxe",
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Egenskaper:"
+}

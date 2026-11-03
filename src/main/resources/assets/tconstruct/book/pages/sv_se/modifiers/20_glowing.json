@@ -1,0 +1,27 @@
+{
+  "modifier": "glowing",
+  "text": [
+    {
+      "text": "Lite glödsten och ett magiskt enderöga. Håller ett öga på ljusnivån."
+    }
+  ],
+  "effects": [
+    "Placerar en ljuskälla vid låga ljusnivåer",
+    "Kostar hållbarhet"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe",
+    "tconstruct:hammer",
+    "tconstruct:broadsword"
+  ],
+  "section": "modifiers",
+  "order": 20,
+  "id": "modifiers/glowing",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effekter:",
+  "title_color": 16777130
+}

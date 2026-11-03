@@ -1,0 +1,11 @@
+{
+  "title": "도구 제작대",
+  "text": [
+    {
+      "text": "여기에 텍스트 입력"
+    }
+  ],
+  "section": "intro",
+  "order": 8,
+  "id": "intro/toolstation"
+}

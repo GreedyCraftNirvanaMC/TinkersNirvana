@@ -1,0 +1,26 @@
+{
+  "type": "tconstruct:table",
+  "group": "tconstruct:tool_forge",
+  "pattern": [
+    "BBB",
+    "MTM",
+    "M M"
+  ],
+  "key": {
+    "B": {
+      "item": "tconstruct:seared_bricks"
+    },
+    "M": {
+      "tag": "c:storage_blocks/pigiron"
+    },
+    "T": {
+      "item": "tconstruct:blockitem/toolstation"
+    }
+  },
+  "material": {
+    "tag": "c:storage_blocks/pigiron"
+  },
+  "result": {
+    "id": "tconstruct:toolforge"
+  }
+}

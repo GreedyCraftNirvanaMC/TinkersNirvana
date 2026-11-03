@@ -1,0 +1,22 @@
+{
+  "title": "弩箭的合成",
+  "text": [
+    {
+      "text": "要製作一個弩箭，你需要一個弩箭核心。弩箭核心被製作的過程是將箭桿放進澆鑄台，並且倒入想作為箭頭的金屬。"
+    }
+  ],
+  "image": {
+    "file": "tconstruct:textures/gui/book/bolt_core.png",
+    "width": 150,
+    "height": 75,
+    "texture_width": 586,
+    "texture_height": 336
+  },
+  "section": "seared_devices",
+  "order": 4,
+  "id": "seared_devices/bolt_crafting",
+  "layout": "imageText2",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "弩矢合成"
+}

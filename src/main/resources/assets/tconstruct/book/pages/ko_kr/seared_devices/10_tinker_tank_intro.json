@@ -1,0 +1,20 @@
+{
+  "title": "Tinker 탱크",
+  "image": {
+    "file": "tconstruct:textures/gui/book/tinker_tank.png",
+    "texture_width": 1844,
+    "texture_height": 1186
+  },
+  "text": [
+    {
+      "text": "Tinker 탱크는 많은 액체를 저장할 수 있는 대용량 액체 탱크입니다."
+    }
+  ],
+  "section": "seared_devices",
+  "order": 10,
+  "id": "seared_devices/tinker_tank_intro",
+  "layout": "image with text below",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "Tinker Tank"
+}

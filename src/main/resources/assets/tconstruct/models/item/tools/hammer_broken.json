@@ -1,0 +1,9 @@
+{
+  "parent": "tconstruct:item/tools/hammer",
+  "textures": {
+    "layer0": "tconstruct:item/antique/hammer/broken_handle",
+    "layer1": "tconstruct:item/antique/hammer/head",
+    "layer2": "tconstruct:item/antique/hammer/back",
+    "layer3": "tconstruct:item/antique/hammer/front"
+  }
+}

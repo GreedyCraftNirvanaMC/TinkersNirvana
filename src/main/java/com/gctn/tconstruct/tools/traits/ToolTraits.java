@@ -20,6 +20,21 @@ import java.util.function.Consumer;
 public final class ToolTraits {
     private ToolTraits() {}
 
+    public static List<AbstractTraits.TraitEntry> entriesFrom(CompoundTag tag) {
+        List<AbstractTraits.TraitEntry> entries = new ArrayList<>();
+        for (String id : tag.getAllKeys()) {
+            AbstractTraits trait = TinkerTraits.getTrait(id);
+            if (trait == null) { continue; }
+            CompoundTag data = tag.getCompound(id);
+            int[] levels = data.getIntArray("AppliedLevels");
+            if (levels.length == 0) { levels = new int[]{data.getInt("Level")}; }
+            for (int level : levels) {
+                if (level > 0) { entries.add(new AbstractTraits.TraitEntry(trait, Math.min(level, trait.maxLevel))); }
+            }
+        }
+        return List.copyOf(entries);
+    }
+
     public static void addTraits(CompoundTag tag, List<AbstractTraits.TraitEntry> traits) {
         for (AbstractTraits.TraitEntry entry : traits) {
             AbstractTraits trait = entry.trait();

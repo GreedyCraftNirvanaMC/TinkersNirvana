@@ -1,0 +1,12 @@
+{
+  "feature": "tconstruct:ore_ardite",
+  "placement": [
+    {
+      "type": "tconstruct:antique_height",
+      "setting": "ardite"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

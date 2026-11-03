@@ -23,6 +23,11 @@ public final class TinkerDataComponents {
             COMPONENTS.registerComponentType("tinker_traits", builder -> builder
                     .persistent(CustomData.CODEC));
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<net.minecraft.world.level.block.state.BlockState>> TABLE_MATERIAL =
+            COMPONENTS.registerComponentType("table_material", builder -> builder
+                    .persistent(net.minecraft.world.level.block.state.BlockState.CODEC)
+                    .networkSynchronized(net.minecraft.network.codec.ByteBufCodecs.idMapper(net.minecraft.world.level.block.Block.BLOCK_STATE_REGISTRY)));
+
     private TinkerDataComponents() {}
 
     /** 返回材料 Tag 的副本；新组件缺失时兼容旧 CUSTOM_DATA，不自动写回。 */

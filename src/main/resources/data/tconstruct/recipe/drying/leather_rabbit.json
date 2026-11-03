@@ -1,0 +1,11 @@
+{
+  "type": "tconstruct:drying",
+  "ingredient": {
+    "item": "minecraft:cooked_rabbit"
+  },
+  "result": {
+    "id": "minecraft:leather"
+  },
+  "time": 10200,
+  "leather": true
+}

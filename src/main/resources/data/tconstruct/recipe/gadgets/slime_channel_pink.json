@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "tconstruct:slime_congealed_pink"
+  },
+  "result": {
+    "id": "tconstruct:slime_channel_pink",
+    "count": 3
+  },
+  "experience": 0.15,
+  "cookingtime": 200
+}

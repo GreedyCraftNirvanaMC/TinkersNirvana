@@ -1,0 +1,8 @@
+{
+  "parent": "tconstruct:item/pickaxe/pickaxe",
+  "textures": {
+    "layer0": "tconstruct:item/antique/pickaxe/handle",
+    "layer1": "tconstruct:item/antique/pickaxe/broken_head",
+    "layer2": "tconstruct:item/antique/pickaxe/binding"
+  }
+}

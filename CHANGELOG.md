@@ -2,6 +2,68 @@
 
 ## Unreleased
 
+- Restore direct main-index entries for the Tinker Tank and Seared Furnace,
+  reusing their existing introduction, construction and animated structure pages
+  without changing saved page IDs or duplicating book content. Use the original
+  image dimensions for pages with text below an illustration.
+
+- Restore the active Antique book definition and Mantle page templates: six
+  chapters, original registration order, one material per leaf, finished-tool
+  sidebars, colored stats and hover descriptions, icon overviews, and ranged
+  material groups of three. Remove added search/detail pages and restore the
+  original title, image, assembly, modifier, and structure-animation placement.
+
+- Prefer ingots for material book icons instead of registry-first storage blocks,
+  and expose explicit representative item overrides for Java and KubeJS addons.
+
+- Restore Antique's ingredient-tag visibility conditions for optional materials,
+  expose material availability predicates, provide fallback book icons for addon
+  materials, and round book-page clipping outwards at fractional GUI origins.
+
+- Fix opening Materials and You crashing while building the embossment page;
+  derive its example parts from the registered pickaxe definition.
+
+- Rebuild Materials and You around Mantle's cover, facing paper pages, icon
+  contents, tool assembly diagrams, material columns, and modifier ingredient
+  layouts; paginate long text, retain inline styles/tooltips, save each book's
+  reading position, and add zoomable animated structure previews without a Mantle dependency.
+
+- Add the Stencil Table, Part Builder, persistent Crafting Station, pattern/part
+  chests, shared workshop navigation, adjacent inventory access, material variants,
+  tool naming and part replacement, crafting-grid kit repair, and offhand harvesting.
+- Port slime islands, underground pools, trees and plants, configurable ore
+  generation, and workshops/smelteries for all five native village styles.
+- Add drying racks, jerky and slime foods, slime boots and slings, piggyback packs,
+  six-face slime channels, seven fancy frames, EFLN, and the spaghetti progression.
+- Restore the illustrated guidebook with searchable translated pages, live material
+  and modifier catalogs, resource-pack pages, and rotatable layered multiblocks.
+- Expose native drying recipes, station processing, weighted modifier ingredients,
+  native equipment attributes, configurable beheading drops, and entity melting.
+- Align modifier units, fortification, necrotic healing, secondary fiery damage,
+  ingredient remainders, and creative-only modifier limits with native mechanics.
+- Restore blank-pattern naming and validation, mattock/kama right-click roles,
+  gravel-to-flint crafting, optional native anvil/breaking rules, projectile expiry,
+  adjacent-inventory exclusions, and autosmelt experience with complete stack output.
+- Restyle the added workshop, world, gadget, gear, and book artwork through GIMP
+  while retaining Antique silhouettes and adapting models to modern block states.
+- Format tool pattern names with their selected part instead of displaying an
+  untranslated `%s` placeholder.
+- Drop the Tool Station item when its block is broken in survival.
+- Port Antique's complete registered tool catalog: harvesting tools, six melee
+  weapons, bows/crossbows, arrows/bolts, and shurikens, with shared part definitions,
+  native tool actions, damage, repair, ammunition, and material components.
+- Add the full part catalog, pattern-based material crafting, complete part casts,
+  coated bolt cores, Tool Forge progression, and survival crafting entries.
+- Restore source material stats and traits, add combat/drop/projectile lifecycle
+  callbacks, tool modifiers, embossing, fortification, moss, and soulbound handling.
+- Keep one set of physical menu slots across tool modes, preserve complete output
+  batches, and avoid reequip/mining resets from transient trait state.
+- Add public Java/KubeJS material, ingredient, stat, trait, modifier, and casting
+  registration APIs without adding a runtime KubeJS dependency.
+- Restyle 169 Antique textures and draw seven new icons in GIMP, retaining source
+  silhouettes, tool layers, damaged states, and bow/crossbow draw stages; include
+  Antique tool sounds and Chinese/English text.
+
 - Add Ardite Ore with Antique-based GIMP artwork, original default hardness and
   harvest tier, block/item tags, self drops, Smeltery integration, and bilingual names.
 - Allow cobalt-tier assembled tools to harvest blocks requiring netherite-tier tools.

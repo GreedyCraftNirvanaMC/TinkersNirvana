@@ -1,0 +1,9 @@
+{
+  "parent": "tconstruct:item/tools/cleaver",
+  "textures": {
+    "layer0": "tconstruct:item/antique/broadsword/handle",
+    "layer1": "tconstruct:item/antique/cleaver/broken_head",
+    "layer2": "tconstruct:item/antique/cleaver/shield",
+    "layer3": "tconstruct:item/antique/cleaver/guard"
+  }
+}

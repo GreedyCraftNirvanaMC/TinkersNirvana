@@ -1,4 +1,13 @@
-# Smeltery attribution
+# Antique content attribution
+
+The guidebook cover, fixed two-page layout, navigation arrows, reading-position
+handling, and structure-preview interactions adapt Mantle's `GuiBook`, `GuiArrow`,
+`BookHelper`, `TextDataRenderer`, and `ElementStructure`. Mantle's book and
+bookfront atlases were restyled and exported through GIMP MCP; provenance is in
+`scripts/antique_book_ui_textures.json`. These source portions and assets retain
+their MIT license and Slime Knights attribution in `Mantle-LICENSE.txt`, packaged
+under `META-INF/licenses`. They are adapted to native Minecraft 1.21.1 and
+NeoForge APIs; Mantle is not a build or runtime dependency.
 
 The Smeltery implementation in `src/main/java/com/gctn/tconstruct/smeltery`
 (excluding the pre-existing `Debug.java`) and the accompanying Smeltery assets
@@ -43,6 +52,14 @@ Source areas used for this port:
 
 The port adapts these behaviors to modern block entities, data components,
 NeoForge capabilities, network payloads, menus, sprite sources, and rendering.
+
+The workshops, drying racks, slime gear and channels, decorative frames, EFLN,
+spaghetti, world generation, village layouts, and guidebook are also adapted
+from the corresponding Antique `tools/common`, `gadgets`, `world`, and
+`library/book` sources and assets under the same license. The translated book
+text retains its original contributors' attribution. Village structures use
+native modern biome palettes; Antique texture adaptations are recorded in the
+`scripts/antique_*_textures.json` manifests and exported through GIMP.
 
 The implementation in `src/main/java/com/gctn/tconstruct/gadgets` and its
 accompanying gadget assets are also adapted from TinkersAntique
@@ -92,3 +109,21 @@ Colored slime mobs adapt `world/entity/EntityBlueSlime.java`,
 `library/client/particle/EntitySlimeFx.java`, the original gray slime texture,
 colored entity loot tables, entity-melting configuration, and translations
 under LGPL-3.0-only.
+
+
+The tool/part/material/trait port, its shared tool-building implementation,
+Tool Forge, modifiers and related resources adapt TinkersAntique's
+`tools/TinkerTools.java`, `TinkerMaterials.java`, `TinkerTraits.java`,
+`TinkerModifiers.java`, `library/tinkering/PartMaterialType.java`,
+`library/tools/ToolNBT.java`, `ProjectileNBT.java`, `ProjectileLauncherNBT.java`,
+`tools/tools`, `tools/melee/item`, `tools/ranged/item`, `tools/traits`,
+`tools/modifiers`, `tools/ToolEvents.java`, and the corresponding models,
+patterns, casts, translations and recipes under LGPL-3.0-only.
+
+The 169 source-derived PNGs listed in `scripts/antique_tool_textures.json`
+were edited and exported through GIMP MCP. Their original silhouettes and
+animation layers remain attributed to Slime Knights and contributors.
+The supplied modern Minecraft iron sword was used as a palette reference.
+The creative-modifier crystal and six status-effect icons are newly drawn
+in GIMP. Tool audio (`frypan_hit`, `toy_squeak`, `charged`, `discharge`,
+`crossbow_reload`) is copied from the corresponding Antique OGG files.

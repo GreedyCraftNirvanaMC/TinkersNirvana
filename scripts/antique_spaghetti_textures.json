@@ -1,0 +1,38 @@
+[
+  {
+    "source": "textures/items/food/spaghetti_hard.png",
+    "output": "textures/item/gadgets/spaghetti_hard.png",
+    "source_sha256": "b41432f2a6ac225d1ea80b555b9c87a8274fdc921745b55d00451e3021b6b75f",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/spaghetti_soggy.png",
+    "output": "textures/item/gadgets/spaghetti_soggy.png",
+    "source_sha256": "cbb14716efdb6c8dbdced5f3a9e03572f0a60ba1617978b1b5ce251f4cfe6cf3",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/spaghetti_cold.png",
+    "output": "textures/item/gadgets/spaghetti_cold.png",
+    "source_sha256": "ea49f1b981f3062553f59d72569e48453c3f41cf6d414ec1c959eaf9a75c312c",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/moms_spaghetti.png",
+    "output": "textures/item/gadgets/moms_spaghetti.png",
+    "source_sha256": "f4bfb2e0840cfdcc689b8b2218b8acd669c998a4cc5eb53ff9d32bc4c2de1825",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/spaghetti_sauce.png",
+    "output": "textures/item/gadgets/spaghetti_sauce.png",
+    "source_sha256": "4463614e610c214499e36d9e0607118548c69931d496dd8a84fe05574de3bb1f",
+    "neutral": false
+  },
+  {
+    "source": "textures/items/food/spaghetti_meat.png",
+    "output": "textures/item/gadgets/spaghetti_meat.png",
+    "source_sha256": "2f51ce121a302b89f1193d0959c4a2b85bbad036e852f52d02db45685c42f9de",
+    "neutral": false
+  }
+]

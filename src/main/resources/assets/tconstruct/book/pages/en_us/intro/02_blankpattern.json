@@ -1,0 +1,11 @@
+{
+  "title": "Blank Pattern",
+  "text": [
+    {
+      "text": "Text Goes Here"
+    }
+  ],
+  "section": "intro",
+  "order": 2,
+  "id": "intro/blankpattern"
+}

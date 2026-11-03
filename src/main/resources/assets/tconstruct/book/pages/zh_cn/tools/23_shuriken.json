@@ -1,0 +1,24 @@
+{
+  "tool": "shuriken",
+  "text": [
+    {
+      "text": "回旋镖是一个短程投掷武器，能够迅速投掷。也能够在副手使用，但是它们的速度很快，需要好好控制。"
+    }
+  ],
+  "properties": [
+    "需要工匠砧制作",
+    "快速的远程武器",
+    "致命的",
+    "忍者",
+    "副手也能投掷"
+  ],
+  "section": "tools",
+  "order": 23,
+  "id": "tools/shuriken",
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "属性："
+}

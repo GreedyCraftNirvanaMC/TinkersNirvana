@@ -1,0 +1,28 @@
+{
+  "modifier": "webbed",
+  "text": [
+    {
+      "text": "Все эти липкие паутины для чего-то, да и полезны. Замедляем ими врагов!"
+    }
+  ],
+  "effects": [
+    "Каждый уровень увеличивает время эффекта",
+    "Медленное движение",
+    "Несколько уровней"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe",
+    "tconstruct:broadsword",
+    "tconstruct:arrow"
+  ],
+  "section": "modifiers",
+  "order": 22,
+  "id": "modifiers/webbed",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Эффекты:",
+  "title_color": 16777215
+}

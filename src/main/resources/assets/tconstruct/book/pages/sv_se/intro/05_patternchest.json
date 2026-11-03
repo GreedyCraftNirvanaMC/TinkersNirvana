@@ -1,0 +1,11 @@
+{
+  "title": "Mönsterkista",
+  "text": [
+    {
+      "text": "Text ska vara här"
+    }
+  ],
+  "section": "intro",
+  "order": 5,
+  "id": "intro/patternchest"
+}

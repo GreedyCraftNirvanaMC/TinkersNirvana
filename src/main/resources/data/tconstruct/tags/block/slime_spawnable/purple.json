@@ -1,4 +1,8 @@
 {
   "replace": false,
-  "values": []
+  "values": [
+    "tconstruct:slime_grass_blue_purple",
+    "tconstruct:slime_grass_purple_purple",
+    "tconstruct:slime_grass_orange_purple"
+  ]
 }

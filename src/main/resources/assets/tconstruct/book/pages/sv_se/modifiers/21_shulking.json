@@ -1,0 +1,29 @@
+{
+  "modifier": "shulking",
+  "text": [
+    {
+      "text": "Ger ditt verktyg förmågan att imitera en shulker. Slå fiender för att göra dem försvarslösa i luften."
+    }
+  ],
+  "effects": [
+    "Varje poäng ökar hur länge fiender svävar",
+    "Får fiender att sväva iväg",
+    "Buskul",
+    "Bara en nivå"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe",
+    "tconstruct:broadsword",
+    "tconstruct:arrow"
+  ],
+  "section": "modifiers",
+  "order": 21,
+  "id": "modifiers/shulking",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effekter:",
+  "title_color": 11193599
+}

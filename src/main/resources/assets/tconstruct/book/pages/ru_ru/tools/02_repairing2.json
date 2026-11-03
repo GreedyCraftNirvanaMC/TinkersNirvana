@@ -1,0 +1,20 @@
+{
+  "image": {
+    "file": "tconstruct:textures/gui/book/inventory_repair.png",
+    "texture_width": 388,
+    "texture_height": 216
+  },
+  "text": [
+    {
+      "text": "Чтобы так делать, просто возьмите с собой Точильный набор материала который Вам нужен, и поместите его в Сетку крафта вместе с инструментом."
+    }
+  ],
+  "section": "tools",
+  "order": 2,
+  "id": "tools/repairing2",
+  "title": "",
+  "layout": "image with text below",
+  "show_in_contents": false,
+  "titleless": true,
+  "listing_title": ""
+}

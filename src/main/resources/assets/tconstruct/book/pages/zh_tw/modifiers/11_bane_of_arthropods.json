@@ -1,0 +1,27 @@
+{
+  "modifier": "bane_of_arthopods",
+  "text": [
+    {
+      "text": "用蜘蛛自己的眼球打擊蜘蛛會讓它因為害怕而退縮。 有害蟲的困擾嗎? 這裡有個辦法，殺死那些蟲!"
+    }
+  ],
+  "effects": [
+    "對蜘蛛和蠹魚造成大量的傷害",
+    "分為多個等級"
+  ],
+  "demoTool": [
+    "tconstruct:broadsword",
+    "tconstruct:hammer",
+    "tconstruct:arrow"
+  ],
+  "section": "modifiers",
+  "order": 11,
+  "id": "modifiers/bane_of_arthropods",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "效果:",
+  "title_color": 14540253
+}

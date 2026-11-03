@@ -1,0 +1,28 @@
+{
+  "modifier": "sharpness",
+  "text": [
+    {
+      "text": "You can use Quartz to sharpen and hone the edge of weapons. The more Quartz is used the better you can sharpen the blade. Works with blunt items as well."
+    }
+  ],
+  "effects": [
+    "Increases attack damage",
+    "Different weapons scale differently",
+    "Multiple levels"
+  ],
+  "demoTool": [
+    "tconstruct:broadsword",
+    "tconstruct:cleaver",
+    "tconstruct:arrow"
+  ],
+  "section": "modifiers",
+  "order": 2,
+  "id": "modifiers/sharpness",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "효과:",
+  "title_color": 16774902
+}

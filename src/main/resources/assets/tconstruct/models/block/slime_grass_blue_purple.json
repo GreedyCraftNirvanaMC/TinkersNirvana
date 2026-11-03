@@ -1,0 +1,10 @@
+{
+  "parent": "minecraft:block/grass_block",
+  "textures": {
+    "particle": "tconstruct:block/world/slimedirt_purple",
+    "bottom": "tconstruct:block/world/slimedirt_purple",
+    "side": "tconstruct:block/world/slimedirt_purple",
+    "top": "tconstruct:block/world/slimegrass_top",
+    "overlay": "tconstruct:block/world/slimegrass_overlay"
+  }
+}

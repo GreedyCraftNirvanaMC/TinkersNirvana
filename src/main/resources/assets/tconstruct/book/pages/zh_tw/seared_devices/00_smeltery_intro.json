@@ -1,0 +1,20 @@
+{
+  "title": "冶煉爐",
+  "image": {
+    "file": "tconstruct:textures/gui/book/smeltery.png",
+    "texture_width": 854,
+    "texture_height": 480
+  },
+  "text": [
+    {
+      "text": "有很多個冶煉爐，但是這是我做的，而且它很善於融化東西。"
+    }
+  ],
+  "section": "seared_devices",
+  "order": 0,
+  "id": "seared_devices/smeltery_intro",
+  "layout": "image with text below",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "Smeltery"
+}

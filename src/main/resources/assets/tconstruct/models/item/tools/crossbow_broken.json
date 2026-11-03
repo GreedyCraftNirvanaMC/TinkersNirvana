@@ -1,0 +1,9 @@
+{
+  "parent": "tconstruct:item/tools/crossbow",
+  "textures": {
+    "layer0": "tconstruct:item/antique/crossbow/body",
+    "layer1": "tconstruct:item/antique/crossbow/limb",
+    "layer2": "tconstruct:item/antique/crossbow/binding",
+    "layer3": "tconstruct:item/antique/crossbow/bowstring_broken"
+  }
+}

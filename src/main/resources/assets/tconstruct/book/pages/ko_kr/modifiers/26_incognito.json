@@ -1,0 +1,26 @@
+{
+  "modifier": "incognito",
+  "text": [
+    {
+      "text": "It's more reality than illusion! For the seasoned tinkerer who aims for ingenious perks but a tidy appearance."
+    }
+  ],
+  "effects": [
+    "Hides all modifiers visually",
+    "Makes good use of wet sponges",
+    "Requires no modifier"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe"
+  ],
+  "section": "modifiers",
+  "order": 26,
+  "id": "modifiers/incognito",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "효과:",
+  "title_color": 5723991
+}

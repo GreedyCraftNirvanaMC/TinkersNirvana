@@ -1,0 +1,8 @@
+{
+  "parent": "tconstruct:item/tools/arrow",
+  "textures": {
+    "layer0": "tconstruct:item/antique/arrow/shaft_broken",
+    "layer1": "tconstruct:item/antique/arrow/head",
+    "layer2": "tconstruct:item/antique/arrow/fletching"
+  }
+}

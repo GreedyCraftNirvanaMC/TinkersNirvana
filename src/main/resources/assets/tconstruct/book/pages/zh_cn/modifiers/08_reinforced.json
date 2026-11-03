@@ -1,0 +1,27 @@
+{
+  "modifier": "reinforced",
+  "text": [
+    {
+      "text": "附上一个耐久强化大板有助于提升工具的耐久，让它变得更坚硬。"
+    }
+  ],
+  "effects": [
+    "使用工具有几率不消耗耐久",
+    "强化等级可以堆叠",
+    "多个等级"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe",
+    "tconstruct:hammer"
+  ],
+  "section": "modifiers",
+  "order": 8,
+  "id": "modifiers/reinforced",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "特殊效果：",
+  "title_color": 5254787
+}

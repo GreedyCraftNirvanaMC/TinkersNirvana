@@ -1,0 +1,20 @@
+{
+  "title": "Smältverk",
+  "image": {
+    "file": "tconstruct:textures/gui/book/smeltery.png",
+    "texture_width": 854,
+    "texture_height": 480
+  },
+  "text": [
+    {
+      "text": "Smältverk kan se ut på olika sätt, men det här är mitt. Och det smälter saker riktigt bra."
+    }
+  ],
+  "section": "seared_devices",
+  "order": 0,
+  "id": "seared_devices/smeltery_intro",
+  "layout": "image with text below",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "Smeltery"
+}

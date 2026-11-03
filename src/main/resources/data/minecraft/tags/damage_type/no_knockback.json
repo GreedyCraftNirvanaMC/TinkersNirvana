@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "tconstruct:prickly",
+    "tconstruct:splinters",
+    "tconstruct:bleed",
+    "tconstruct:fiery"
+  ]
+}

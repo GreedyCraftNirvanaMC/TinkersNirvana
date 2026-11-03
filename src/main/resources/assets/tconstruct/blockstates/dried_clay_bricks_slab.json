@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconstruct:block/dried_clay_bricks_slab"
+    },
+    "type=double": {
+      "model": "tconstruct:block/dried_clay_bricks"
+    },
+    "type=top": {
+      "model": "tconstruct:block/dried_clay_bricks_slab_top"
+    }
+  }
+}

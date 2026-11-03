@@ -1,0 +1,34 @@
+{
+  "modifier": "harvestheight",
+  "text": [
+    {
+      "text": "Har du någonsin önskat att ditt verktyg kunde påverka ett högre område? Nu kan den göra det!"
+    }
+  ],
+  "effects": [
+    "Ökar höjden på det påverkande området",
+    "Påverkar bara block",
+    "Fungerar inte på vapen",
+    "Kan kombineras med Bredd++"
+  ],
+  "demoTool": [
+    "tconstruct:pickaxe",
+    "tconstruct:shovel",
+    "tconstruct:hatchet",
+    "tconstruct:mattock",
+    "tconstruct:hammer",
+    "tconstruct:lumberaxe",
+    "tconstruct:excavator",
+    "tconstruct:scythe"
+  ],
+  "section": "modifiers",
+  "order": 16,
+  "id": "modifiers/harvestheight",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effekter:",
+  "title_color": 13301410
+}

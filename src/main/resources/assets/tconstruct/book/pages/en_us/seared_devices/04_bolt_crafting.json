@@ -1,0 +1,22 @@
+{
+  "title": "Bolt Crafting",
+  "text": [
+    {
+      "text": "To craft bolts, you need a Bolt Core. Bolt Cores are created by putting an Arrow Shaft into a casting table and pouring the head material onto it."
+    }
+  ],
+  "image": {
+    "file": "tconstruct:textures/gui/book/bolt_core.png",
+    "width": 150,
+    "height": 75,
+    "texture_width": 586,
+    "texture_height": 336
+  },
+  "section": "seared_devices",
+  "order": 4,
+  "id": "seared_devices/bolt_crafting",
+  "layout": "imageText2",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "Bolt Crafting"
+}
