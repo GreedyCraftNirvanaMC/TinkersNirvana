@@ -123,7 +123,8 @@ final class BookDocument {
                 case "beheading" -> { inputs.add(List.of(new ItemStack(Items.ENDER_PEARL))); inputs.add(List.of(new ItemStack(Items.OBSIDIAN))); }
                 case "glowing" -> { inputs.add(List.of(new ItemStack(Items.ENDER_EYE))); inputs.add(List.of(new ItemStack(Items.GLOWSTONE_DUST, 2))); }
                 case "embossment" -> {
-                    inputs.add(List.of(AntiqueParts.get("pick_head").create(TinkerMaterials.iron)));
+                    inputs.add(AntiqueTools.PICKAXE.parts().stream().map(com.gctn.tconstruct.tools.ToolDefinition.Part::definition)
+                            .filter(Objects::nonNull).map(part -> part.create(TinkerMaterials.iron)).filter(stack -> !stack.isEmpty()).toList());
                     for (String slime : List.of("green", "blue", "magma")) { inputs.add(List.of(new ItemStack(com.gctn.tconstruct.common.soil.SoilModule.CRYSTALS.get(slime).get()))); }
                     inputs.add(List.of(new ItemStack(Items.GOLD_BLOCK)));
                 }

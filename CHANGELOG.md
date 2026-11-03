@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Fix opening Materials and You crashing while building the embossment page;
+  derive its example parts from the registered pickaxe definition.
+
 - Rebuild Materials and You around Mantle's cover, facing paper pages, icon
   contents, tool assembly diagrams, material columns, and modifier ingredient
   layouts; paginate long text, retain inline styles/tooltips, save each book's
