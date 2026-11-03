@@ -412,9 +412,9 @@
   "block.tconstruct.copper_ore": "铜矿石",
   "block.tconstruct.tin_ore": "锡矿石",
   "block.tconstruct.aluminum_ore": "铝矿石",
-  "entity.tconstruct.blueslime": "碧空史莱姆",
-  "item.tconstruct.blueslime_spawn_egg": "碧空史莱姆刷怪蛋",
-  "entity.tconstruct.purpleslime": "扈从史莱姆",
-  "item.tconstruct.purpleslime_spawn_egg": "扈从史莱姆刷怪蛋",
+  "entity.tconstruct.blueslime": "蓝色史莱姆",
+  "item.tconstruct.blueslime_spawn_egg": "蓝色史莱姆刷怪蛋",
+  "entity.tconstruct.purpleslime": "紫色史莱姆",
+  "item.tconstruct.purpleslime_spawn_egg": "紫色史莱姆刷怪蛋",
   "block.tconstruct.cobalt_ore": "钴矿石"
 }

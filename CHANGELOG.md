@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Use the requested Chinese blue/purple slime names for mobs and spawn eggs.
 - Apply the supplied Chinese tool-part names to parts and their metal/clay casts.
 - Apply the supplied Chinese metal glossary to ingot, nugget, and storage-block
   names, and add the missing bilingual Cobalt Ore name.
