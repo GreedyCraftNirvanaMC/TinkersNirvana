@@ -18,5 +18,11 @@
   "section": "modifiers",
   "order": 13,
   "id": "modifiers/necrotic",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effekter:",
+  "title_color": 6160384
 }

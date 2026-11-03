@@ -55,5 +55,9 @@
   ],
   "section": "seared_devices",
   "order": 6,
-  "id": "seared_devices/entity_melting"
+  "id": "seared_devices/entity_melting",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "Entity Melting"
 }

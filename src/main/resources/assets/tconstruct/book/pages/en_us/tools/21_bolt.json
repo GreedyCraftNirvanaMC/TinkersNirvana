@@ -20,5 +20,10 @@
   "section": "tools",
   "order": 21,
   "id": "tools/bolt",
-  "title": ""
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Properties:"
 }

@@ -21,5 +21,11 @@
   "section": "modifiers",
   "order": 3,
   "id": "modifiers/diamond",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effects:",
+  "title_color": 9237730
 }

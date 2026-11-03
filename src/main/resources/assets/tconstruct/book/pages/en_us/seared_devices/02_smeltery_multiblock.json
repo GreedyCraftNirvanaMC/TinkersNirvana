@@ -119,5 +119,9 @@
       }
     ]
   },
-  "title": "Smeltery · Structure Preview"
+  "title": "",
+  "layout": "structure",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

@@ -1,5 +1,5 @@
 {
-  "title": "Smeltery · Construction",
+  "title": "",
   "text": [
     {
       "text": "Smältverket kan vara i alla storlekar mellan 3x3 och 11x11, samt en valfri höjd på minst 2. Större strukturer ökar både antalet föremålen som kan smältas och vätskekapaciteten. Strukturen kräver ett golv, men behöver inte ett tak eller ram."
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 1,
-  "id": "seared_devices/smeltery_structure"
+  "id": "seared_devices/smeltery_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

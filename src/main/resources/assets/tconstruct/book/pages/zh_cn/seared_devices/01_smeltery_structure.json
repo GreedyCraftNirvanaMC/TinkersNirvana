@@ -1,5 +1,5 @@
 {
-  "title": "冶炼 · 建造说明",
+  "title": "",
   "text": [
     {
       "text": "冶炼炉可以在3×3到11×11之间自定义大小，高度至少为2。越大的冶炼炉可以熔化更多的物品，拥有更大的容积。这个多方块结构需要铺满底部，但是不需要铺满顶部和框架。"
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 1,
-  "id": "seared_devices/smeltery_structure"
+  "id": "seared_devices/smeltery_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

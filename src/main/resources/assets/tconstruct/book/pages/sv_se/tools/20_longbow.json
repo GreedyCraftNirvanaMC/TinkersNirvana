@@ -20,5 +20,10 @@
   "section": "tools",
   "order": 20,
   "id": "tools/longbow",
-  "title": ""
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Egenskaper:"
 }

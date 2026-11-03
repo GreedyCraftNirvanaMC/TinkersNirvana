@@ -1,5 +1,5 @@
 {
-  "title": "Tinker Tank · Construction",
+  "title": "",
   "text": [
     {
       "text": "Tinkertanken kan vara i alla storlekar mellan 3x3 och 11x11, samt en valfri höjd på minst 3. Större strukturer ökar tankstorleken. För att vara en giltig struktur, krävs ett golv och tak tillsammans med en ram runtomkring hela strukturen"
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 11,
-  "id": "seared_devices/tinker_tank_structure"
+  "id": "seared_devices/tinker_tank_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

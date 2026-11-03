@@ -16,5 +16,11 @@
   "section": "modifiers",
   "order": 26,
   "id": "modifiers/incognito",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "効果：",
+  "title_color": 5723991
 }

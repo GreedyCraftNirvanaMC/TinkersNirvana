@@ -19,5 +19,11 @@
   "section": "modifiers",
   "order": 8,
   "id": "modifiers/reinforced",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effects:",
+  "title_color": 5254787
 }

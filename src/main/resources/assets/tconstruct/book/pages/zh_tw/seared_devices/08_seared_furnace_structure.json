@@ -1,5 +1,5 @@
 {
-  "title": "Seared Furnace · Construction",
+  "title": "",
   "text": [
     {
       "text": "焦黑熔爐的大小長寬可以介於3x3到11x11之間，而高度則可以是高於3的任意高度。較大的結構可以增加較多的每次燒製數量。為了使這個結構能夠運作，它需要一個地板和天花板並且有邊框圍繞在周圍。(環繞在地板與天花板的邊框是可以不放的)"
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 8,
-  "id": "seared_devices/seared_furnace_structure"
+  "id": "seared_devices/seared_furnace_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

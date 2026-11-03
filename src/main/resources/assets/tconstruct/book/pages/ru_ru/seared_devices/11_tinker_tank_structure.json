@@ -1,5 +1,5 @@
 {
-  "title": "Tinker Tank · Construction",
+  "title": "",
   "text": [
     {
       "text": "Резервуар может быть любых размеров от 3х3 до 11x11 и любой высоты минимум от 3. Более крупные конструкции увеличивают размеры резервуара. Чтобы она была действительной, она требует Пол и Потолок, а также рамы вокруг всей структуры."
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 11,
-  "id": "seared_devices/tinker_tank_structure"
+  "id": "seared_devices/tinker_tank_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

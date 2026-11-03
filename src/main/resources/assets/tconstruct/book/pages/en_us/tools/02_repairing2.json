@@ -14,5 +14,9 @@
   "section": "tools",
   "order": 2,
   "id": "tools/repairing2",
-  "title": "Repairing"
+  "title": "",
+  "layout": "image with text below",
+  "show_in_contents": false,
+  "titleless": true,
+  "listing_title": ""
 }

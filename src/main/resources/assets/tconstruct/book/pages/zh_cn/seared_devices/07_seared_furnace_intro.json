@@ -14,5 +14,9 @@
   ],
   "section": "seared_devices",
   "order": 7,
-  "id": "seared_devices/seared_furnace_intro"
+  "id": "seared_devices/seared_furnace_intro",
+  "layout": "image with text below",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "焦黑熔炉"
 }

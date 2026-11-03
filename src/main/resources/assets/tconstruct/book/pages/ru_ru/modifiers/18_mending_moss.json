@@ -21,5 +21,11 @@
   "section": "modifiers",
   "order": 18,
   "id": "modifiers/mending_moss",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Эффекты:",
+  "title_color": 4434738
 }

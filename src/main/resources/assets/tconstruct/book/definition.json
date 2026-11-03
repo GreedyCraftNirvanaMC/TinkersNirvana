@@ -1,0 +1,104 @@
+{
+  "sections": [
+    {
+      "id": "intro",
+      "icon": "tconstruct:slimeball_blue",
+      "pages": [
+        "intro/blank_0",
+        "intro/tmp"
+      ]
+    },
+    {
+      "id": "tools",
+      "icon": "minecraft:iron_pickaxe",
+      "pages": [
+        "tools/offhand",
+        "tools/repairing",
+        "tools/repairing2",
+        "tools/pickaxe",
+        "tools/shovel",
+        "tools/hatchet",
+        "tools/mattock",
+        "tools/kama",
+        "tools/scythe",
+        "tools/hammer",
+        "tools/excavator",
+        "tools/lumberaxe",
+        "tools/broadsword",
+        "tools/longsword",
+        "tools/rapier",
+        "tools/battlesign",
+        "tools/frypan",
+        "tools/cleaver",
+        "tools/arrow",
+        "tools/shortbow",
+        "tools/longbow",
+        "tools/bolt",
+        "tools/crossbow",
+        "tools/shuriken"
+      ]
+    },
+    {
+      "id": "materials",
+      "icon": "minecraft:iron_ingot",
+      "pages": []
+    },
+    {
+      "id": "bowmaterials",
+      "icon": "minecraft:bow",
+      "pages": []
+    },
+    {
+      "id": "modifiers",
+      "icon": "minecraft:redstone",
+      "pages": [
+        "modifiers/haste",
+        "modifiers/luck",
+        "modifiers/sharpness",
+        "modifiers/diamond",
+        "modifiers/emerald",
+        "modifiers/fortify",
+        "modifiers/silktouch",
+        "modifiers/autosmelt",
+        "modifiers/reinforced",
+        "modifiers/beheading",
+        "modifiers/smite",
+        "modifiers/bane_of_arthropods",
+        "modifiers/fiery",
+        "modifiers/necrotic",
+        "modifiers/knockback",
+        "modifiers/soulbound",
+        "modifiers/harvestheight",
+        "modifiers/harvestwidth",
+        "modifiers/mending_moss",
+        "modifiers/blasting",
+        "modifiers/glowing",
+        "modifiers/shulking",
+        "modifiers/webbed",
+        "modifiers/fins",
+        "modifiers/extratrait",
+        "modifiers/extramodifier",
+        "modifiers/incognito"
+      ]
+    },
+    {
+      "id": "seared_devices",
+      "icon": "tconstruct:smeltery_controller",
+      "pages": [
+        "seared_devices/smeltery_intro",
+        "seared_devices/smeltery_structure",
+        "seared_devices/smeltery_multiblock",
+        "seared_devices/cast_crafting",
+        "seared_devices/bolt_crafting",
+        "seared_devices/alloying",
+        "seared_devices/entity_melting",
+        "seared_devices/seared_furnace_intro",
+        "seared_devices/seared_furnace_structure",
+        "seared_devices/seared_furnace_multiblock",
+        "seared_devices/tinker_tank_intro",
+        "seared_devices/tinker_tank_structure",
+        "seared_devices/tinker_tank_multiblock"
+      ]
+    }
+  ]
+}

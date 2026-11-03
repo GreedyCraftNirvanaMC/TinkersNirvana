@@ -14,5 +14,9 @@
   ],
   "section": "seared_devices",
   "order": 3,
-  "id": "seared_devices/cast_crafting"
+  "id": "seared_devices/cast_crafting",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "Cast Crafting"
 }

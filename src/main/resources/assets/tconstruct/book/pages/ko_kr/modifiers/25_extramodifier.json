@@ -16,5 +16,11 @@
   "section": "modifiers",
   "order": 25,
   "id": "modifiers/extramodifier",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "효과:",
+  "title_color": 10682572
 }

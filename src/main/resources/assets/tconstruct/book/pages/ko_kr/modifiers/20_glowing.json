@@ -17,5 +17,11 @@
   "section": "modifiers",
   "order": 20,
   "id": "modifiers/glowing",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "효과:",
+  "title_color": 16777130
 }

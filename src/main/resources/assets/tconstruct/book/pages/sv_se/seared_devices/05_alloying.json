@@ -79,5 +79,9 @@
   ],
   "section": "seared_devices",
   "order": 5,
-  "id": "seared_devices/alloying"
+  "id": "seared_devices/alloying",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "Alloying"
 }

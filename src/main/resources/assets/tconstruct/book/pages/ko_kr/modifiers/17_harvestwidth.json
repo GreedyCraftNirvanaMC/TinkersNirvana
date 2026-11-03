@@ -24,5 +24,11 @@
   "section": "modifiers",
   "order": 17,
   "id": "modifiers/harvestwidth",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "효과:",
+  "title_color": 13301410
 }

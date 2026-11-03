@@ -1,5 +1,5 @@
 {
-  "title": "Smeltery · Construction",
+  "title": "",
   "text": [
     {
       "text": "The Smeltery can be any size from 3x3 to 11x11, and any height from a minimum of 2. Larger structures increase both the number of items that can smelt and the liquid capacity. The structure requires a floor, but does not require a ceiling or a frame."
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 1,
-  "id": "seared_devices/smeltery_structure"
+  "id": "seared_devices/smeltery_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

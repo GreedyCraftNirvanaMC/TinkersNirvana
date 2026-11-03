@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Restore the active Antique book definition and Mantle page templates: six
+  chapters, original registration order, one material per leaf, finished-tool
+  sidebars, colored stats and hover descriptions, icon overviews, and ranged
+  material groups of three. Remove added search/detail pages and restore the
+  original title, image, assembly, modifier, and structure-animation placement.
+
 - Prefer ingots for material book icons instead of registry-first storage blocks,
   and expose explicit representative item overrides for Java and KubeJS addons.
 

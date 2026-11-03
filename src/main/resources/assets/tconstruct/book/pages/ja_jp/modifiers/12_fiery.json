@@ -17,5 +17,11 @@
   "section": "modifiers",
   "order": 12,
   "id": "modifiers/fiery",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "効果：",
+  "title_color": 15375922
 }

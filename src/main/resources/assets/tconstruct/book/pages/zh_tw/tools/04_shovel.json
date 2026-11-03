@@ -19,5 +19,10 @@
   "section": "tools",
   "order": 4,
   "id": "tools/shovel",
-  "title": ""
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "屬性:"
 }

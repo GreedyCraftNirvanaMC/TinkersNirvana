@@ -18,5 +18,11 @@
   "section": "modifiers",
   "order": 21,
   "id": "modifiers/shulking",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "特殊效果：",
+  "title_color": 11193599
 }

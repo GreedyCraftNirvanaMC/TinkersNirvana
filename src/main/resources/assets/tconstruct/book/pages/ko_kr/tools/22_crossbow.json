@@ -20,5 +20,10 @@
   "section": "tools",
   "order": 22,
   "id": "tools/crossbow",
-  "title": ""
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "특성:"
 }

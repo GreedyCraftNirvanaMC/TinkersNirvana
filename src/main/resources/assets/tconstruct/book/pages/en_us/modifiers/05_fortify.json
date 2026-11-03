@@ -17,5 +17,11 @@
   "section": "modifiers",
   "order": 5,
   "id": "modifiers/fortify",
-  "title": ""
+  "title": "",
+  "layout": "modifier_fortify",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effects:",
+  "title_color": 14540253
 }

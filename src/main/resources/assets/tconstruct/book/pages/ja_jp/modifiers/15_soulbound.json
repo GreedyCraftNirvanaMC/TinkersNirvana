@@ -21,5 +21,11 @@
   "section": "modifiers",
   "order": 15,
   "id": "modifiers/soulbound",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "効果：",
+  "title_color": 16120748
 }

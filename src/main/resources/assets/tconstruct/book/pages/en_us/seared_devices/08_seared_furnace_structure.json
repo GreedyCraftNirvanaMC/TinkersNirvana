@@ -1,5 +1,5 @@
 {
-  "title": "Seared Furnace · Construction",
+  "title": "",
   "text": [
     {
       "text": "The Seared Furnace can be any size from 3x3 to 11x11, and with any height from a minimum of 3. Larger structures increase the amount of items that can smelt at once. In order to be a valid structure, it requires a floor and ceiling, along with a frame around the sides (frames around the ceiling and floor are optional)"
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 8,
-  "id": "seared_devices/seared_furnace_structure"
+  "id": "seared_devices/seared_furnace_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

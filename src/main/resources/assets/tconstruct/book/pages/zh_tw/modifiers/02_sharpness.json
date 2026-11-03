@@ -18,5 +18,11 @@
   "section": "modifiers",
   "order": 2,
   "id": "modifiers/sharpness",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "效果:",
+  "title_color": 16774902
 }

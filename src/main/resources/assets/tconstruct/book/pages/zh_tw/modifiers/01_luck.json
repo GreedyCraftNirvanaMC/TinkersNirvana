@@ -25,5 +25,11 @@
   "section": "modifiers",
   "order": 1,
   "id": "modifiers/luck",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "效果:",
+  "title_color": 2970082
 }

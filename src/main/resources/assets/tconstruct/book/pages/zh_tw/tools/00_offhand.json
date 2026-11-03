@@ -14,5 +14,9 @@
   },
   "section": "tools",
   "order": 0,
-  "id": "tools/offhand"
+  "id": "tools/offhand",
+  "layout": "imageText2",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "副手採集"
 }

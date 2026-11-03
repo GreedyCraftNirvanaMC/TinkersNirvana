@@ -21,5 +21,9 @@
   ],
   "section": "tools",
   "order": 1,
-  "id": "tools/repairing"
+  "id": "tools/repairing",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "Починка"
 }

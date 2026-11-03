@@ -21,5 +21,10 @@
   "section": "tools",
   "order": 16,
   "id": "tools/frypan",
-  "title": ""
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "属性："
 }

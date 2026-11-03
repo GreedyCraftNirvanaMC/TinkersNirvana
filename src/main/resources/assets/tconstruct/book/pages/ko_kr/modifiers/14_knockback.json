@@ -17,5 +17,11 @@
   "section": "modifiers",
   "order": 14,
   "id": "modifiers/knockback",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "효과:",
+  "title_color": 10461087
 }

@@ -1,5 +1,5 @@
 {
-  "title": "Seared Furnace · Construction",
+  "title": "",
   "text": [
     {
       "text": "그을린 화로는 평면 크기가 3x3 부터 11x11까지 설치가 자유롭지만 높이는 최소 3블록 이상이어야 합니다. 큰 구조물일수록 더 많은 양을 구울 수 있습니다. 측면과 바닥, 천장이 빈틈없이 제작되어야 합니다."
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 8,
-  "id": "seared_devices/seared_furnace_structure"
+  "id": "seared_devices/seared_furnace_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

@@ -19,5 +19,10 @@
   "section": "tools",
   "order": 12,
   "id": "tools/broadsword",
-  "title": ""
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Свойства:"
 }

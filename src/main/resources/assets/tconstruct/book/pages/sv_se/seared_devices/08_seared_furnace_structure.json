@@ -1,5 +1,5 @@
 {
-  "title": "Seared Furnace · Construction",
+  "title": "",
   "text": [
     {
       "text": "Den brända ugnen kan vara i alla storlekar mellan 3x3 och 11x11, samt ha en valfri höjd på minst 3. Större strukturer ökar antalet föremål som kan smältas samtidigt. För att det ska vara en giltig struktur krävs ett golv och tak, tillsammans med en runtomkring sidorna (ramar runtomkring taket och golvet är valfritt)"
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 8,
-  "id": "seared_devices/seared_furnace_structure"
+  "id": "seared_devices/seared_furnace_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

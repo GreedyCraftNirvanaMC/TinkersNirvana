@@ -1,5 +1,5 @@
 {
-  "title": "Smeltery · Construction",
+  "title": "",
   "text": [
     {
       "text": "Плавильня может быть любых размеров от 3х3 до 11x11 и любой высоты минимум 2. Более крупные структуры, увеличивают как кол-во предметов, которые могут переплавляться, так и ёмкость жидкости. Конструкция требует пола, но не требует потолка или рамы."
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 1,
-  "id": "seared_devices/smeltery_structure"
+  "id": "seared_devices/smeltery_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

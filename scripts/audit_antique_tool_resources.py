@@ -123,7 +123,7 @@ for path, content in parsed.items():
         virtual.update(row["sprite"] for row in content.get("sources", []) if "sprite" in row)
 for path, content in parsed.items():
     if "book" in path.parts and "pages" in path.parts:
-        assert content.get("title") or content.get("tool") or content.get("modifier"), (path, "missing book title")
+        assert content.get("title") or content.get("tool") or content.get("modifier") or content.get("layout") == "blank" or content.get("titleless") and any(content.get(key) for key in ("text", "image", "structure")), (path, "missing book content")
     if "models" not in path.parts:
         continue
     parent = content.get("parent", "")

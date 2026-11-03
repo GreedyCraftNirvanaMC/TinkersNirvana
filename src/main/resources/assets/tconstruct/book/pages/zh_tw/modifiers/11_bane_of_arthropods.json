@@ -17,5 +17,11 @@
   "section": "modifiers",
   "order": 11,
   "id": "modifiers/bane_of_arthropods",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "效果:",
+  "title_color": 14540253
 }

@@ -31,7 +31,7 @@ import java.util.*;
 
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public final class BookContents {
-    public static final List<String> SECTIONS = List.of("intro", "tools", "materials", "bowmaterials", "traits", "modifiers", "seared_devices", "world");
+    public static final List<String> SECTIONS = List.of("intro", "tools", "materials", "bowmaterials", "modifiers", "seared_devices");
     private static volatile Map<ResourceLocation, JsonObject> resources = Map.of();
     public record Page(String id, String section, int order, Component title, List<Component> text, List<ItemStack> icons, JsonObject image, Structure structure, JsonObject data) {
         public Page(String id, String section, int order, Component title, List<Component> text, List<ItemStack> icons, JsonObject image, Structure structure) { this(id, section, order, title, text, icons, image, structure, new JsonObject()); }
@@ -44,7 +44,7 @@ public final class BookContents {
         event.registerReloadListener(new SimplePreparableReloadListener<Map<ResourceLocation, JsonObject>>() {
             @Override protected Map<ResourceLocation, JsonObject> prepare(ResourceManager manager, ProfilerFiller profiler) {
                 Map<ResourceLocation, JsonObject> result = new TreeMap<>();
-                manager.listResources("book", id -> id.getPath().endsWith(".json") && (id.getPath().startsWith("book/pages/") || id.getPath().startsWith("book/language/"))).forEach((id, resource) -> {
+                manager.listResources("book", id -> id.getPath().endsWith(".json") && (id.getPath().startsWith("book/pages/") || id.getPath().startsWith("book/language/") || id.getPath().equals("book/definition.json"))).forEach((id, resource) -> {
                     try (var reader = resource.openAsReader()) { result.put(id, JsonParser.parseReader(reader).getAsJsonObject()); }
                     catch (Exception error) { TinkersNirvana.LOGGER.error("Cannot load book resource {}", id, error); }
                 });
@@ -64,46 +64,47 @@ public final class BookContents {
                 else if (path.equals("book/language/" + locale + ".json")) { data.entrySet().forEach(value -> labels.put(value.getKey(), value.getValue().getAsString())); }
             });
         }
-        List<Page> pages = new ArrayList<>(); Set<String> toolPages = new HashSet<>(), modifierPages = new HashSet<>();
+        List<Page> pages = new ArrayList<>();
+        var definition = resources.get(ResourceLocation.fromNamespaceAndPath("tconstruct", "book/definition.json"));
+        Set<String> active = new HashSet<>();
+        if (definition != null) { for (var section : definition.getAsJsonArray("sections")) { for (var id : section.getAsJsonObject().getAsJsonArray("pages")) { active.add("tconstruct:" + id.getAsString()); } } }
         List<ItemStack> catalog = BuiltInRegistries.ITEM.stream().filter(item -> item != net.minecraft.world.item.Items.AIR).map(ItemStack::new).toList();
         Map<Material, List<Input>> inputs = new IdentityHashMap<>();
         for (ItemStack stack : catalog) { var match = MaterialInputs.match(stack); if (match != null) { inputs.computeIfAbsent(match.material(), ignored -> new ArrayList<>()).add(new Input(stack, match.value())); } }
         for (var entry : localized.entrySet()) {
+            if (definition != null && entry.getKey().startsWith("tconstruct:") && !active.contains(entry.getKey())) { continue; }
             JsonObject data = entry.getValue().deepCopy(); String section = string(data, "section", "intro"), title = string(data, "title", "");
             List<Component> text = text(data, "text"), iconsText = new ArrayList<>(); List<ItemStack> icons = new ArrayList<>();
             if (data.has("tool")) {
-                String id = data.get("tool").getAsString(); toolPages.add(id); var tool = AntiqueTools.get(id);
+                String id = data.get("tool").getAsString(); var tool = AntiqueTools.get(id);
                 title = title.isBlank() ? Component.translatable("item.tconstruct." + id + ".name").getString() : title;
                 if (tool != null) { addTool(tool, icons, iconsText); }
             }
             if (data.has("modifier")) {
-                String id = data.get("modifier").getAsString(); id = id.equals("extramodifier") ? "creative" : id.equals("extratrait") ? "embossment" : id;
+                String id = data.get("modifier").getAsString(); id = switch (id) { case "extramodifier" -> "creative"; case "extratrait" -> "embossment"; case "mod_autosmelt" -> "autosmelt"; case "bane_of_arthopods" -> "bane_of_arthropods"; default -> id; };
                 data.addProperty("modifier", id);
-                modifierPages.add(id); title = title.isBlank() ? Component.translatable("modifier.tconstruct." + id).getString() : title;
+                title = title.isBlank() ? Component.translatable("modifier.tconstruct." + id).getString() : title;
                 addModifier(id, icons, iconsText, catalog);
             }
             for (String key : List.of("properties", "effects")) {
                 if (data.has(key)) { text.add(Component.literal("")); for (JsonElement row : data.getAsJsonArray(key)) { text.add(Component.literal("• " + row.getAsString())); } }
             }
             text.addAll(iconsText);
-            pages.add(new Page(entry.getKey(), section, data.has("order") ? data.get("order").getAsInt() : 0, Component.literal(title.isBlank() ? labels.getOrDefault(string(data, "id", ""), string(data, "id", "")) : title), List.copyOf(text), List.copyOf(icons), data.has("image") ? data.getAsJsonObject("image") : null, data.has("structure") ? structure(data.getAsJsonObject("structure")) : null, data));
-        }
-        for (var tool : AntiqueTools.entries().values()) {
-            if (!toolPages.contains(tool.definition().id())) { List<ItemStack> icons = new ArrayList<>(); List<Component> text = new ArrayList<>(); addTool(tool, icons, text); pages.add(new Page("tool:" + tool.definition().id(), "tools", 100, Component.translatable("item.tconstruct." + tool.definition().id() + ".name"), text, icons, null, null)); }
-        }
-        for (var modifier : ToolModifiers.entries().values()) {
-            if (!modifierPages.contains(modifier.id())) { List<ItemStack> icons = new ArrayList<>(); List<Component> text = new ArrayList<>(); addModifier(modifier.id(), icons, text, catalog); pages.add(new Page("modifier:" + modifier.id(), "modifiers", 100, Component.translatable("modifier.tconstruct." + modifier.id()), text, icons, null, null)); }
+            var heading = Component.literal(title.isBlank() ? string(data, "listing_title", "") : title);
+            if (data.has("title_color")) { heading.withColor(data.get("title_color").getAsInt()); }
+            pages.add(new Page(entry.getKey(), section, data.has("order") ? data.get("order").getAsInt() : 0, heading, List.copyOf(text), List.copyOf(icons), data.has("image") ? data.getAsJsonObject("image") : null, data.has("structure") ? structure(data.getAsJsonObject("structure")) : null, data));
         }
         for (Material material : TinkerMaterials.materials) { if (!material.isHidden()) { material(pages, material, labels, inputs.getOrDefault(material, List.of())); } }
-        for (var trait : TinkerTraits.getAllTraits()) { pages.add(new Page("trait:" + trait.identifier, "traits", 0, trait.getDisplayName(1), List.of(trait.getDescription()), List.of(), null, null)); }
         pages.sort(Comparator.comparingInt((Page page) -> { int i = SECTIONS.indexOf(page.section); return i < 0 ? SECTIONS.size() : i; }).thenComparing(Page::section).thenComparingInt(Page::order).thenComparing(page -> page.title.getString()));
         return List.copyOf(pages);
     }
     private static void addTool(AntiqueTools.Entry tool, List<ItemStack> icons, List<Component> text) {
         List<Material> materials = new ArrayList<>();
         text.add(Component.translatable("book.tconstruct.parts"));
-        for (var part : tool.definition().parts()) {
-            Material material = TinkerMaterials.materials.stream().filter(value -> !value.isHidden() && value.hasStats(part.stat()) && (!part.stat().equals("Bow") || value.hasStats("Head")) && (!part.stat().equals("Handle") || tool.definition().action() != com.gctn.tconstruct.tools.ToolDefinition.Action.CROSSBOW || value.hasStats("Extra"))).findFirst().orElse(null);
+        for (int index = 0; index < tool.definition().parts().size(); index++) {
+            var part = tool.definition().parts().get(index);
+            Material preferred = switch (part.stat()) { case "BowString" -> TinkerMaterials.string; case "Shaft" -> TinkerMaterials.wood; case "Fletching" -> TinkerMaterials.feather; default -> List.of(TinkerMaterials.wood, TinkerMaterials.iron, TinkerMaterials.cobalt, TinkerMaterials.manyullyn).get(index % 4); };
+            Material material = preferred.hasStats(part.stat()) ? preferred : TinkerMaterials.materials.stream().filter(value -> !value.isHidden() && value.hasStats(part.stat()) && (!part.stat().equals("Bow") || value.hasStats("Head")) && (!part.stat().equals("Handle") || tool.definition().action() != com.gctn.tconstruct.tools.ToolDefinition.Action.CROSSBOW || value.hasStats("Extra"))).findFirst().orElse(null);
             if (material == null) { return; } materials.add(material);
             if (part.definition() != null) { ItemStack icon = part.definition().create(material); if (!icon.isEmpty()) { icons.add(icon); } }
             text.add(Component.literal("• ").append(Component.translatable("item.tconstruct." + part.part() + ".name")));
@@ -121,6 +122,7 @@ public final class BookContents {
         ItemStack representative = material.getRepresentativeItem();
         if (representative.isEmpty()) { representative = inputs.stream().min(Comparator.comparingInt(BookContents::representativePriority)).map(Input::stack).orElse(ItemStack.EMPTY); }
         for (boolean ranged : List.of(false, true)) {
+            if (!ranged && !material.hasStats("Head")) { continue; }
             List<Component> text = new ArrayList<>(); List<ItemStack> icons = new ArrayList<>();
             if (!representative.isEmpty()) { icons.add(representative); }
             for (String position : List.of("Head", "Handle", "Extra", "Bow", "BowString", "Shaft", "Fletching")) {
@@ -147,8 +149,20 @@ public final class BookContents {
             }
             var metadata = new JsonObject(); metadata.addProperty("material", material.identifier); metadata.addProperty("ranged", ranged);
             if (labels.containsKey(material.identifier + ".flavour")) { metadata.addProperty("flavour", labels.get(material.identifier + ".flavour")); }
-            pages.add(new Page("material:" + material.identifier + (ranged ? ":ranged" : ""), ranged ? "bowmaterials" : "materials", 0, Component.translatable("material." + material.identifier + ".name").withColor(material.color), List.copyOf(text), List.copyOf(icons), null, null, metadata));
+            pages.add(new Page("material:" + material.identifier + (ranged ? ":ranged" : ""), ranged ? "bowmaterials" : "materials", TinkerMaterials.materials.indexOf(material), Component.translatable("material." + material.identifier + ".name").withColor(material.color), List.copyOf(text), List.copyOf(icons), null, null, metadata));
         }
+    }
+    static Component paper(Component text) {
+        return text.copy().withStyle(style -> style.withFont(ResourceLocation.withDefaultNamespace("uniform")));
+    }
+    static ItemStack sectionIcon(String section) {
+        var definition = resources.get(ResourceLocation.fromNamespaceAndPath("tconstruct", "book/definition.json"));
+        if (definition != null) { for (var entry : definition.getAsJsonArray("sections")) {
+            var data = entry.getAsJsonObject(); if (!data.get("id").getAsString().equals(section)) { continue; }
+            var id = ResourceLocation.tryParse(data.get("icon").getAsString());
+            if (id != null && BuiltInRegistries.ITEM.containsKey(id)) { return new ItemStack(BuiltInRegistries.ITEM.get(id)); }
+        } }
+        return ItemStack.EMPTY;
     }
     private static int representativePriority(Input input) {
         boolean ingot = input.stack.getTags().anyMatch(tag -> tag.location().getNamespace().equals("c")
@@ -170,7 +184,7 @@ public final class BookContents {
                 }
                 if (object.has("color")) { var color = net.minecraft.network.chat.TextColor.parseColor(object.get("color").getAsString()).result(); if (color.isPresent()) { style = style.withColor(color.get()); } }
                 if (object.has("tooltip")) { var tooltip = new StringBuilder(); for (var part : object.getAsJsonArray("tooltip")) { if (!tooltip.isEmpty()) { tooltip.append('\n'); } tooltip.append(part.getAsString()); } style = style.withHoverEvent(new net.minecraft.network.chat.HoverEvent(net.minecraft.network.chat.HoverEvent.Action.SHOW_TEXT, Component.literal(tooltip.toString()))); }
-                if (object.has("action")) { String action = object.get("action").getAsString(); for (String prefix : List.of("go-to-page-rtn:", "go-to-page:")) { if (action.startsWith(prefix)) { style = style.withClickEvent(new net.minecraft.network.chat.ClickEvent(net.minecraft.network.chat.ClickEvent.Action.CHANGE_PAGE, action.substring(prefix.length()))); break; } } }
+                if (object.has("action")) { String action = object.get("action").getAsString(); for (String prefix : List.of("go-to-page-rtn:", "go-to-page:")) { if (action.startsWith(prefix)) { style = style.withClickEvent(new net.minecraft.network.chat.ClickEvent(net.minecraft.network.chat.ClickEvent.Action.CHANGE_PAGE, action)); break; } } }
                 paragraph.append(line.setStyle(style));
             }
         } }
@@ -187,9 +201,9 @@ public final class BookContents {
             BlockState state = BuiltInRegistries.BLOCK.get(id).defaultBlockState();
             if (row.has("state")) { for (var property : row.getAsJsonObject("state").entrySet()) { state = property(state, property.getKey(), property.getValue().getAsString()); } }
             JsonArray start = row.getAsJsonArray("pos"), end = row.has("endPos") ? row.getAsJsonArray("endPos") : start;
-            for (int x = Math.max(0, start.get(0).getAsInt()); x <= Math.min(size.get(0).getAsInt() - 1, end.get(0).getAsInt()); x++) { for (int y = Math.max(0, start.get(1).getAsInt()); y <= Math.min(size.get(1).getAsInt() - 1, end.get(1).getAsInt()); y++) { for (int z = Math.max(0, start.get(2).getAsInt()); z <= Math.min(size.get(2).getAsInt() - 1, end.get(2).getAsInt()); z++) { blocks.put(new net.minecraft.core.BlockPos(x, y, z), new PlacedBlock(x, y, z, state)); } } }
+            for (int x = Math.max(0, start.get(0).getAsInt()); x <= Math.min(size.get(0).getAsInt() - 1, end.get(0).getAsInt()); x++) { for (int y = Math.max(0, start.get(1).getAsInt()); y <= Math.min(size.get(1).getAsInt() - 1, end.get(1).getAsInt()); y++) { for (int z = Math.max(0, start.get(2).getAsInt()); z <= Math.min(size.get(2).getAsInt() - 1, end.get(2).getAsInt()); z++) { blocks.putIfAbsent(new net.minecraft.core.BlockPos(x, y, z), new PlacedBlock(x, y, z, state)); } } }
         }
-        return new Structure(size.get(0).getAsInt(), size.get(1).getAsInt(), size.get(2).getAsInt(), List.copyOf(blocks.values()));
+        return new Structure(size.get(0).getAsInt(), size.get(1).getAsInt(), size.get(2).getAsInt(), blocks.values().stream().filter(block -> !block.state().isAir()).sorted(Comparator.comparingInt(PlacedBlock::y).thenComparingInt(PlacedBlock::x).thenComparingInt(PlacedBlock::z)).toList());
     }
     private static <T extends Comparable<T>> BlockState property(BlockState state, String name, String value) {
         Property<T> property = (Property<T>) state.getBlock().getStateDefinition().getProperty(name);

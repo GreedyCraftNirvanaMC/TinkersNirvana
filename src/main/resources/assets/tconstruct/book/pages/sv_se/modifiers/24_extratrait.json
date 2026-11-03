@@ -17,5 +17,11 @@
   "section": "modifiers",
   "order": 24,
   "id": "modifiers/extratrait",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effekter:",
+  "title_color": 14540253
 }

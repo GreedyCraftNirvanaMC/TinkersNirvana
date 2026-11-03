@@ -18,5 +18,10 @@
   "section": "tools",
   "order": 6,
   "id": "tools/mattock",
-  "title": ""
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "특성:"
 }

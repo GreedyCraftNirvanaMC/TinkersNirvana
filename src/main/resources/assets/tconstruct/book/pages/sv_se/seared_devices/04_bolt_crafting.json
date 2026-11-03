@@ -14,5 +14,9 @@
   },
   "section": "seared_devices",
   "order": 4,
-  "id": "seared_devices/bolt_crafting"
+  "id": "seared_devices/bolt_crafting",
+  "layout": "imageText2",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "Tillv. armborstspilar"
 }

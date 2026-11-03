@@ -24,5 +24,11 @@
   "section": "modifiers",
   "order": 0,
   "id": "modifiers/haste",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "效果:",
+  "title_color": 9502720
 }

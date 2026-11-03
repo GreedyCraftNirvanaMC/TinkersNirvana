@@ -1,5 +1,5 @@
 {
-  "title": "Seared Furnace · Construction",
+  "title": "",
   "text": [
     {
       "text": "Печь может быть любых размеров от 3х3 до 11x11, а также с любой высотой от минимума 3. Более крупные структуры увеличивают кол-во предметов, которые можно переплавить одновременно. Чтобы структура была праивильной, она должна иметь пол и потолок, а также раму по сторонам (рамы вокруг потолка и пола необязательны."
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 8,
-  "id": "seared_devices/seared_furnace_structure"
+  "id": "seared_devices/seared_furnace_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

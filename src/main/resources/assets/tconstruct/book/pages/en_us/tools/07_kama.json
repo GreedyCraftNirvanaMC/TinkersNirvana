@@ -20,5 +20,10 @@
   "section": "tools",
   "order": 7,
   "id": "tools/kama",
-  "title": ""
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Properties:"
 }

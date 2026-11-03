@@ -1,5 +1,5 @@
 {
-  "title": "焦黑熔炉 · 建造说明",
+  "title": "",
   "text": [
     {
       "text": "焦黑熔炉可以在3×3到11×11之间自定义大小，高度至少为3。越大的焦黑熔炉可以烧制更多的物品。搭建它需要铺满顶部，底部以及框架。（顶部，底部，框架部分都可以自定义）"
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 8,
-  "id": "seared_devices/seared_furnace_structure"
+  "id": "seared_devices/seared_furnace_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

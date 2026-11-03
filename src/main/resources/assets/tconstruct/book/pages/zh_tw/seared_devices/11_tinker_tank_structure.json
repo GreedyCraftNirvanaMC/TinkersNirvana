@@ -1,5 +1,5 @@
 {
-  "title": "Tinker Tank · Construction",
+  "title": "",
   "text": [
     {
       "text": "工匠液體槽的大小長寬可以介於3x3到11x11之間，而高度則可以是高於3的任意高度。越大的結構可以增加越多的液體存量。為了使這個機構能夠運作，它需要一個地板和天花板並且有邊框圍繞在周圍。"
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 11,
-  "id": "seared_devices/tinker_tank_structure"
+  "id": "seared_devices/tinker_tank_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

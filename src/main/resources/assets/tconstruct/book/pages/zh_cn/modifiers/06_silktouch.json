@@ -23,5 +23,11 @@
   "section": "modifiers",
   "order": 6,
   "id": "modifiers/silktouch",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "特殊效果：",
+  "title_color": 16507531
 }

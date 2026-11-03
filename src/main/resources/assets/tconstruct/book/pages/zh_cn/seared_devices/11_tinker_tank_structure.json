@@ -1,5 +1,5 @@
 {
-  "title": "工匠储罐 · 建造说明",
+  "title": "",
   "text": [
     {
       "text": "工匠储罐可以在3×3到11×11之间自定义大小，高度至少为3。越大的匠魂储罐可以容纳更多的液体。搭建它需要铺满顶部，底部以及框架。"
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 11,
-  "id": "seared_devices/tinker_tank_structure"
+  "id": "seared_devices/tinker_tank_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

@@ -19,5 +19,11 @@
   "section": "modifiers",
   "order": 4,
   "id": "modifiers/emerald",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "효과:",
+  "title_color": 4322180
 }

@@ -24,5 +24,11 @@
   "section": "modifiers",
   "order": 16,
   "id": "modifiers/harvestheight",
-  "title": ""
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effekter:",
+  "title_color": 13301410
 }

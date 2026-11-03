@@ -15,5 +15,10 @@
   "section": "tools",
   "order": 23,
   "id": "tools/shuriken",
-  "title": ""
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "特徴："
 }

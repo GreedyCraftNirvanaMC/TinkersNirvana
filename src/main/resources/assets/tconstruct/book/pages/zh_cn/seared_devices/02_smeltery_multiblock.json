@@ -119,5 +119,9 @@
       }
     ]
   },
-  "title": "冶炼 · 结构预览"
+  "title": "",
+  "layout": "structure",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

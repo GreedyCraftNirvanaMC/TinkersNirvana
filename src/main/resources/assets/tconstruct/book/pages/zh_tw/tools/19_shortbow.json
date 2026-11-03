@@ -20,5 +20,10 @@
   "section": "tools",
   "order": 19,
   "id": "tools/shortbow",
-  "title": ""
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "屬性:"
 }

@@ -1,5 +1,5 @@
 {
-  "title": "Tinker Tank · Construction",
+  "title": "",
   "text": [
     {
       "text": "ティンカータンクは縦横が3x3から11x11まで任意のサイズが可能で、高さは3以上であれば任意の高さにできます。構造が大きくなると、タンクの容量が増えます。有効な構造物とするためには、床と天井が必要で、全ての枠部分も存在する必要があります。"
@@ -11,5 +11,9 @@
   ],
   "section": "seared_devices",
   "order": 11,
-  "id": "seared_devices/tinker_tank_structure"
+  "id": "seared_devices/tinker_tank_structure",
+  "layout": "text",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": ""
 }

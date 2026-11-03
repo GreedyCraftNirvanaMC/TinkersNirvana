@@ -14,5 +14,9 @@
   ],
   "section": "seared_devices",
   "order": 10,
-  "id": "seared_devices/tinker_tank_intro"
+  "id": "seared_devices/tinker_tank_intro",
+  "layout": "image with text below",
+  "show_in_contents": true,
+  "titleless": false,
+  "listing_title": "工匠储罐"
 }

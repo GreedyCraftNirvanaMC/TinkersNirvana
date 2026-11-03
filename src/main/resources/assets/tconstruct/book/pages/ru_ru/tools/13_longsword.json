@@ -19,5 +19,10 @@
   "section": "tools",
   "order": 13,
   "id": "tools/longsword",
-  "title": ""
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Свойства:"
 }

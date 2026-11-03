@@ -21,5 +21,10 @@
   "section": "tools",
   "order": 9,
   "id": "tools/hammer",
-  "title": ""
+  "title": "",
+  "layout": "tool",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Свойства:"
 }
