@@ -2,8 +2,14 @@ package com.gctn.tconstruct.library.materials;
 
 import com.gctn.tconstruct.library.stats.AbstractMaterialStats;
 import com.gctn.tconstruct.tools.traits.AbstractTraits;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 
 import java.util.*;
+import java.util.function.BooleanSupplier;
 
 public class Material {
     public final String identifier;
@@ -19,7 +25,7 @@ public class Material {
     // 是否可以使用浇筑方式合成(默认false)
     protected boolean castable = false;
 
-    private boolean isHidden;
+    private BooleanSupplier availability = () -> true;
 
     // 参数不全的默认初始化
     public Material(String identifier, int color) { this(identifier, color, false); }
@@ -42,7 +48,25 @@ public class Material {
     }
 
     public boolean isHidden() {
-        return hidden;
+        return hidden || !availability.getAsBoolean();
+    }
+
+    /** Shared by the book and creative catalogs; evaluate against the current item tags after reload. */
+    public Material setAvailability(BooleanSupplier availability) {
+        this.availability = Objects.requireNonNull(availability);
+        return this;
+    }
+
+    /** All required item tags must contain an item, matching Antique's material integration requirements. */
+    public Material requireItems(String... tags) {
+        List<TagKey<Item>> requirements = Arrays.stream(tags).map(id -> TagKey.create(Registries.ITEM, ResourceLocation.parse(id))).toList();
+        return setAvailability(() -> {
+            for (var tag : requirements) {
+                // Registry named sets may retain removed tags; holder membership reflects the latest binding.
+                if (BuiltInRegistries.ITEM.getTag(tag).filter(items -> items.stream().anyMatch(item -> item.is(tag))).isEmpty()) { return false; }
+            }
+            return true;
+        });
     }
 
     public boolean isCraftable() {

@@ -26,6 +26,8 @@ StartupEvents.postInit(event => {
 
 `item(material, id, value)` 和 `tag(material, id, value)` 的 value 是一件原料提供的材料份数。一份对应现有冶炼系统的 144 mB。标签在匹配时读取，兼容标签重载；部件本身也可作为材料原料，包覆后的弩箭核心除外。
 
+注册材料默认可见。可调用 `material.requireItems('c:ingots/my_metal')`，要求对应物品标签非空后才显示于宝典和创造目录；多个参数要求全部标签非空，标签重载后重新打开目录即可读取新状态。Java 扩展也可用 `material.setAvailability(BooleanSupplier)` 提供其它条件。铅、银、琥珀金等内置兼容材料沿用 Antique 的原料存在条件，保留其注册数据供其它模组启用。宝典打开时读取当前材料属性和词条，不另存一份固定数值。
+
 挖掘等级沿用 `HarvestLevels`：0 木质、1 石质、2 铁质、3 钻石、4 及以上下界合金原版拒绝标签。玩家看到的名称保留 Antique 名称。
 
 弓臂需要 `Bow` 与 `Head`，弩身需要 `Handle` 与 `Extra`。使用弓、弩或弹药特有材料时，提供对应属性后才会生成可用部件。

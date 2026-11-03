@@ -85,7 +85,7 @@ public class TinkerMaterials {
     public static final Material slimeleaf_purple = mat("slimeleaf_purple", 0xffc873c8);
 
     public static Material mat(String name, int color) {
-        // make materials show by default, integration will make them invisible
+        // Built-in integrations below attach item-tag requirements; addon materials are visible by default.
         Material mat = new Material(name, color, false);
         materials.add(mat);
         return mat;
@@ -296,6 +296,11 @@ public class TinkerMaterials {
 
         registerToolMaterialStats();
         registerToolMaterialTraits();
+        for (Material material : List.of(copper, bronze, lead, silver, electrum, steel)) {
+            material.requireItems("c:ingots/" + material.identifier);
+        }
+        alubrass.requireItems("c:ingots/copper", "c:ingots/aluminum");
+        alumite.requireItems("c:ingots/aluminum");
     }
 
     public static Material getMaterial(String materialId) {

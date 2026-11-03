@@ -138,6 +138,10 @@ public final class BookContents {
             if (material.isCraftable()) { text.add(Component.translatable("book.tconstruct.craftable")); }
             if (material.isCastable()) { text.add(Component.translatable("book.tconstruct.castable")); }
             if (!inputs.isEmpty()) { text.add(Component.translatable("book.tconstruct.ingredients")); for (Input input : inputs) { icons.add(input.stack); String value = java.math.BigDecimal.valueOf(input.value).setScale(3, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString(); text.add(Component.translatable("book.tconstruct.material_value", input.stack.getHoverName(), value)); } }
+            if (icons.isEmpty()) {
+                AntiqueParts.entries().values().stream().filter(part -> material.hasStats(part.stat()))
+                        .map(part -> part.create(material)).filter(stack -> !stack.isEmpty()).findFirst().ifPresent(icons::add);
+            }
             var metadata = new JsonObject(); metadata.addProperty("material", material.identifier); metadata.addProperty("ranged", ranged);
             if (labels.containsKey(material.identifier + ".flavour")) { metadata.addProperty("flavour", labels.get(material.identifier + ".flavour")); }
             pages.add(new Page("material:" + material.identifier + (ranged ? ":ranged" : ""), ranged ? "bowmaterials" : "materials", 0, Component.translatable("material." + material.identifier + ".name").withColor(material.color), List.copyOf(text), List.copyOf(icons), null, null, metadata));

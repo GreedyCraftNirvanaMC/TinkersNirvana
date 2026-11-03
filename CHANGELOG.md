@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Restore Antique's ingredient-tag visibility conditions for optional materials,
+  expose material availability predicates, provide fallback book icons for addon
+  materials, and round book-page clipping outwards at fractional GUI origins.
+
 - Fix opening Materials and You crashing while building the embossment page;
   derive its example parts from the registered pickaxe definition.
 

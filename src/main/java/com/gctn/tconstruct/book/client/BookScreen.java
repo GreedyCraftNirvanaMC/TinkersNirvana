@@ -166,7 +166,9 @@ public final class BookScreen extends Screen {
         int x = paperX(side), y = 12; boolean structure = structure(leaf) != null;
         boolean outerStrip = side == 1 && leaf.id().startsWith("material:") && leaf.id().equals(leaf.source());
         drawTitle(graphics, leaf.title(), x, y, structure ? 148 : BookDocument.WIDTH);
-        graphics.enableScissor(px(x), py(y), px(x + BookDocument.WIDTH), py(y + BookDocument.HEIGHT - 13));
+        // The centered book may start on a half GUI pixel. Round the clip outwards to retain edge pixels.
+        graphics.enableScissor((int) Math.floor(left + x * scale), (int) Math.floor(top + y * scale),
+                (int) Math.ceil(left + (x + BookDocument.WIDTH) * scale), (int) Math.ceil(top + (y + BookDocument.HEIGHT - 13) * scale));
         for (var element : leaf.elements()) {
             if (element instanceof BookDocument.Text text) {
                 int tx = x + text.x() - (outerStrip ? 24 : 0), ty = y + text.y(); drawLine(graphics, text.line(), tx, ty);
