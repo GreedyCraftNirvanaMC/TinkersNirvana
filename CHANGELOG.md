@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Restore direct main-index entries for the Tinker Tank and Seared Furnace,
+  reusing their existing introduction, construction and animated structure pages
+  without changing saved page IDs or duplicating book content. Use the original
+  image dimensions for pages with text below an illustration.
+
 - Restore the active Antique book definition and Mantle page templates: six
   chapters, original registration order, one material per leaf, finished-tool
   sidebars, colored stats and hover descriptions, icon overviews, and ranged

@@ -49,9 +49,17 @@ final class BookDocument {
         for (var page : sources) { sourceById.put(page.id(), page); }
         Map<String, List<BookContents.Page>> sections = new LinkedHashMap<>();
         for (var source : sources) { sections.computeIfAbsent(source.section(), ignored -> new ArrayList<>()).add(source); }
-        List<Element> index = new ArrayList<>(); int number = 0;
+        List<Section> indexEntries = new ArrayList<>();
         for (var section : sections.entrySet()) {
-            index.add(new Section(23 + number % 3 * 47, 20 + number / 3 % 3 * 47, Component.translatable("book.tconstruct.section." + section.getKey()), "section:" + section.getKey(), sectionIcon(section.getKey(), section.getValue())));
+            indexEntries.add(new Section(0, 0, Component.translatable("book.tconstruct.section." + section.getKey()), "section:" + section.getKey(), sectionIcon(section.getKey(), section.getValue())));
+        }
+        for (var shortcut : BookContents.shortcuts()) {
+            var page = sourceById.get(shortcut.page());
+            if (page != null) { indexEntries.add(new Section(0, 0, listingTitle(page), page.id(), shortcut.icon())); }
+        }
+        List<Element> index = new ArrayList<>(); int number = 0;
+        for (var entry : indexEntries) {
+            index.add(new Section(23 + number % 3 * 47, 20 + number / 3 % 3 * 47, entry.label(), entry.target(), entry.icon()));
             number++;
             if (number % 9 == 0) { add(new Leaf(number == 9 ? "index" : "index:" + (number / 9 - 1), "index", Component.empty(), List.copyOf(index), "index")); index.clear(); }
         }
@@ -77,11 +85,14 @@ final class BookDocument {
             int count = Math.min(30, entries.size() - start), columns = count * 9 + 20 > HEIGHT - 30 ? 2 : 1;
             for (int row = 0; row < count; row++) {
                 var source = entries.get(start + row); int x = row / 15 * WIDTH / columns, y = 20 + row % 15 * 9;
-                Component label = source.data().has("listing_title") && !source.data().get("listing_title").getAsString().isBlank() ? Component.literal(source.data().get("listing_title").getAsString()) : source.title();
-                links.add(new Link(x, y, WIDTH / columns, label, source.id(), ItemStack.EMPTY));
+                links.add(new Link(x, y, WIDTH / columns, listingTitle(source), source.id(), ItemStack.EMPTY));
             }
             add(new Leaf("section:" + section + (start == 0 ? "" : ":" + start / 30), section, Component.translatable("book.tconstruct.section." + section), links, "section:" + section));
         }
+    }
+    private static Component listingTitle(BookContents.Page page) {
+        String label = page.data().has("listing_title") ? page.data().get("listing_title").getAsString() : "";
+        return label.isBlank() ? page.title() : Component.literal(label);
     }
     private void materialContents(String id, String section, Component title, List<BookContents.Page> entries, float maximumScale) {
         for (int start = 0; start < entries.size(); start += 49) {

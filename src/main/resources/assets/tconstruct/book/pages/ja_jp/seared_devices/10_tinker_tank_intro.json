@@ -3,9 +3,7 @@
   "image": {
     "file": "tconstruct:textures/gui/book/tinker_tank.png",
     "texture_width": 1844,
-    "texture_height": 1186,
-    "width": 150,
-    "height": 96
+    "texture_height": 1186
   },
   "text": [
     {

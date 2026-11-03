@@ -100,5 +100,15 @@
         "seared_devices/tinker_tank_multiblock"
       ]
     }
+  ],
+  "shortcuts": [
+    {
+      "page": "tconstruct:seared_devices/seared_furnace_intro",
+      "icon": "tconstruct:seared_furnace_controller"
+    },
+    {
+      "page": "tconstruct:seared_devices/tinker_tank_intro",
+      "icon": "tconstruct:tinker_tank_controller"
+    }
   ]
 }

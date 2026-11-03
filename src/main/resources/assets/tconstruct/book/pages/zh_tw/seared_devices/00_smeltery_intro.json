@@ -3,9 +3,7 @@
   "image": {
     "file": "tconstruct:textures/gui/book/smeltery.png",
     "texture_width": 854,
-    "texture_height": 480,
-    "width": 150,
-    "height": 84
+    "texture_height": 480
   },
   "text": [
     {

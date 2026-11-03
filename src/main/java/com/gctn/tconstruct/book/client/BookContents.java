@@ -38,6 +38,7 @@ public final class BookContents {
     }
     public record Structure(int width, int height, int depth, List<PlacedBlock> blocks) {}
     public record PlacedBlock(int x, int y, int z, BlockState state) {}
+    record Shortcut(String page, ItemStack icon) {}
     private record Input(ItemStack stack, float value) {}
     private BookContents() {}
     @SubscribeEvent private static void reload(RegisterClientReloadListenersEvent event) {
@@ -159,10 +160,23 @@ public final class BookContents {
         var definition = resources.get(ResourceLocation.fromNamespaceAndPath("tconstruct", "book/definition.json"));
         if (definition != null) { for (var entry : definition.getAsJsonArray("sections")) {
             var data = entry.getAsJsonObject(); if (!data.get("id").getAsString().equals(section)) { continue; }
-            var id = ResourceLocation.tryParse(data.get("icon").getAsString());
-            if (id != null && BuiltInRegistries.ITEM.containsKey(id)) { return new ItemStack(BuiltInRegistries.ITEM.get(id)); }
+            return icon(data.get("icon").getAsString());
         } }
         return ItemStack.EMPTY;
+    }
+    static List<Shortcut> shortcuts() {
+        var definition = resources.get(ResourceLocation.fromNamespaceAndPath("tconstruct", "book/definition.json"));
+        if (definition == null || !definition.has("shortcuts")) { return List.of(); }
+        List<Shortcut> result = new ArrayList<>();
+        for (var entry : definition.getAsJsonArray("shortcuts")) {
+            var data = entry.getAsJsonObject();
+            result.add(new Shortcut(data.get("page").getAsString(), icon(data.get("icon").getAsString())));
+        }
+        return List.copyOf(result);
+    }
+    private static ItemStack icon(String name) {
+        var id = ResourceLocation.tryParse(name);
+        return id != null && BuiltInRegistries.ITEM.containsKey(id) ? new ItemStack(BuiltInRegistries.ITEM.get(id)) : ItemStack.EMPTY;
     }
     private static int representativePriority(Input input) {
         boolean ingot = input.stack.getTags().anyMatch(tag -> tag.location().getNamespace().equals("c")

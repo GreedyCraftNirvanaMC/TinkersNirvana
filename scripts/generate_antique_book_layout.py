@@ -53,6 +53,12 @@ for section in json.loads((original / "book/index.json").read_text()):
                 existing = list((assets / f"book/pages/{locale.name}/{name}").glob(f"{index:02}_*.json"))
                 data = json.loads(existing[0].read_text(encoding="utf-8")) if existing and name != "intro" else dict(raw)
                 data["title"] = raw.get("title", "")
+                if entry["type"] == "image with text below" and "image" in raw and "image" in data:
+                    for dimension in ("width", "height"):
+                        if dimension in raw["image"]:
+                            data["image"][dimension] = raw["image"][dimension]
+                        else:
+                            data["image"].pop(dimension, None)  # Mantle's full-width, 100 px image area
             data.update({"id": ids[index], "section": name, "order": index, "layout": entry["type"], "show_in_contents": entry.get("name") != "hidden", "titleless": not data.get("title")})
             data["listing_title"] = labels.get(entry.get("name", ""), data.get("title", ""))
             if "tool" in data or "modifier" in data:
@@ -61,7 +67,13 @@ for section in json.loads((original / "book/index.json").read_text()):
                 data["title_color"] = modifier_colors.get(data["modifier"], 0xdddddd)
             file_name = Path(entry["data"]).stem if "data" in entry else "blank_" + str(index)
             write(assets / f"book/pages/{locale.name}/{name}/{index:02}_{file_name}.json", data)
-write(assets / "book/definition.json", {"sections": definition})
+# Keep machine chapters directly reachable from the main index while retaining
+# their original page IDs and their position within the seared-device sequence.
+shortcuts = [
+    {"page": f"tconstruct:seared_devices/{machine}_intro", "icon": f"tconstruct:{machine}_controller"}
+    for machine in ("seared_furnace", "tinker_tank")
+]
+write(assets / "book/definition.json", {"sections": definition, "shortcuts": shortcuts})
 
 base = language(original / "lang/en_us.lang")
 keys = [key for key in base if key.startswith("stat.") or key.startswith("material.") and key.endswith(".name")]
@@ -72,8 +84,10 @@ for locale in ("en_us", "zh_cn"):
     current = json.loads(path.read_text(encoding="utf-8-sig"))
     book_labels = language(original / f"book/{locale}/language.lang")
     for section in definition:
-        if section["id"] in book_labels:
-            current["book.tconstruct.section." + section["id"]] = book_labels[section["id"]]
+        name = section["id"]
+        label = "smeltery_intro" if name == "seared_devices" else name
+        if label in book_labels:
+            current["book.tconstruct.section." + name] = book_labels[label]
     appearance = json.loads((original / "book/appearance.json").read_text().replace("0xffce85", str(0xffce85)))
     current["book.tconstruct.cover_title"] = appearance["title"]
     current["book.tconstruct.cover_subtitle"] = appearance["subtitle"]

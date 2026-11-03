@@ -939,7 +939,7 @@
   "book.tconstruct.section.bowmaterials": "弓材料",
   "book.tconstruct.section.traits": "材料词条",
   "book.tconstruct.section.modifiers": "强化",
-  "book.tconstruct.section.seared_devices": "冶炼相关",
+  "book.tconstruct.section.seared_devices": "冶炼",
   "book.tconstruct.section.world": "世界与装置",
   "book.tconstruct.layer.all": "全部层",
   "book.tconstruct.layer": "第 %s 层",

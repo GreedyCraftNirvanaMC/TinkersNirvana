@@ -29,6 +29,8 @@
 
 原版章节为 `intro`、`tools`、`materials`、`bowmaterials`、`modifiers`、`seared_devices`。新增章节时，为 `book.tconstruct.section.<section>` 提供语言键。模组自身的原版页面由 `assets/tconstruct/book/definition.json` 声明；替换该命名空间的章节定义时，同步列出要启用的页面 `id`。其他命名空间的页面自动加入对应章节。
 
+主目录另有“焦黑熔炉”和“工匠储罐”两个独立入口，直接打开相应的介绍页；后面依次为搭建说明和结构模型。资源包可在 `definition.json` 的 `shortcuts` 数组中增加入口，例如 `{"page": "tconstruct:seared_devices/tinker_tank_intro", "icon": "tconstruct:tinker_tank_controller"}`。名称优先读取目标页的 `listing_title`，未设置时使用页标题。目标页不存在时不显示入口，正文也不会重复插入。
+
 `layout` 支持原版的 `blank`、`text`、`image with text below`、`imageText2`、`tool`、`modifier`、`structure`。`image` 支持 `file`、显示尺寸 `width` / `height`、原图尺寸 `texture_width` / `texture_height`；`imageText2` 居中放置图片后紧接正文，`image with text below` 将正文放在图片区域下方。固定页面的内容应控制在 182×176 纸面内。`tool` 或 `modifier` 可引用已注册标识符，自动加入部件或强化材料图标。`show_in_contents: false` 隐藏章节目录项，`listing_title` 单独指定目录名称。
 
 `text` 数组中的片段连续排版，`paragraph: true` 开始新段落，`\n` 换行。片段可设置 `color`、`bold`、`italic`、`underlined`、`strikethrough`、`obfuscated`、字符串数组 `tooltip`，以及 `action: "go-to-page:<namespace>:<page-id>"` 书内链接。也兼容 Antique 的 `go-to-page-rtn:` 和 `section.page` 写法。所有链接都只跳转书内页面。
