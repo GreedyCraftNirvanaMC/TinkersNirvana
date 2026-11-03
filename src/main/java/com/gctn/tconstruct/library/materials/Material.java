@@ -93,6 +93,13 @@ public class Material {
         return List.copyOf(traits.getOrDefault(pos, traits.getOrDefault(null, List.of())));
     }
 
+    /** 多属性部件只合并显式部位词条；全部缺失时才采用默认列表。 */
+    public List<AbstractTraits.TraitEntry> getTraitsForStats(List<String> positions) {
+        List<AbstractTraits.TraitEntry> result = new ArrayList<>();
+        for (String position : positions) { result.addAll(traits.getOrDefault(position, List.of())); }
+        return result.isEmpty() ? List.copyOf(traits.getOrDefault(null, List.of())) : List.copyOf(result);
+    }
+
     public int getColor() { return color; }
 
 }

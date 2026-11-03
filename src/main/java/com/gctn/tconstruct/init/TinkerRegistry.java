@@ -31,9 +31,9 @@ public class TinkerRegistry {
                     .title(Component.translatable("tinker_tool_parts_tab"))
                     .displayItems(((itemDisplayParameters, output) -> {
                         Collection<ItemStack> tempStacks = new ArrayList<>();
-                        ToolRod.getAllParts(tempStacks);
-                        Binding.getAllColoredParts(tempStacks);
-                        PickaxeHead.getAllColoredParts(tempStacks);
+                        com.gctn.tconstruct.library.toolparts.AntiqueParts.addCreativeItems(tempStacks);
+                        output.accept(com.gctn.tconstruct.tools.PatternItem.PATTERN.get());
+                        for (var item : com.gctn.tconstruct.tools.ToolSupplies.ITEMS.values()) { output.accept(item.get()); }
                         int i = 0;
                         for (ItemStack itemStack : tempStacks) {
                             output.accept(itemStack);
@@ -47,7 +47,19 @@ public class TinkerRegistry {
                     .icon(() -> new ItemStack(Items.WOODEN_PICKAXE))
                     .title(Component.translatable("tinker_tools_tab"))
                     .displayItems(((itemDisplayParameters, output) -> {
-                        output.accept(Pickaxe.initPickaxe(wood, stone, wood));
+                        for (var entry : com.gctn.tconstruct.tools.AntiqueTools.entries().values()) {
+                            java.util.List<com.gctn.tconstruct.library.materials.Material> materials = new java.util.ArrayList<>();
+                            for (var part : entry.definition().parts()) {
+                                materials.add(switch (part.stat()) {
+                                    case "BowString" -> string;
+                                    case "Fletching" -> feather;
+                                    case "Head" -> stone;
+                                    default -> wood;
+                                });
+                            }
+                            ItemStack tool = com.gctn.tconstruct.tools.ToolBuilder.assemble(entry, materials);
+                            if (!tool.isEmpty()) { output.accept(tool); }
+                        }
                     }))
                     .build());
 

@@ -18,7 +18,11 @@ public class TableBlocks {
                 .noOcclusion()
         ));
 
+    public static final DeferredBlock<ToolStationBlock> TOOL_FORGE =
+        BlockRegister.registerBlockWithItem("toolforge", () -> new ToolStationBlock(
+            BlockBehaviour.Properties.of().strength(5).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
+
     public static Collection<DeferredBlock<?>> entries() {
-        return List.<DeferredBlock<?>>of(TOOL_STATION);
+        return List.<DeferredBlock<?>>of(TOOL_STATION, TOOL_FORGE);
     }
 }

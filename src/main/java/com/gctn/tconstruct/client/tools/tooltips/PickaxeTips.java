@@ -53,16 +53,17 @@ public class PickaxeTips {
         }
         upperTips.add(Either.left(Component.empty()));
 
+        var assembled = com.gctn.tconstruct.tools.ToolBuilder.savedStats(stack);
         if (Screen.hasShiftDown()) {
             Component durabilityTip = TinkerTools.getDurabilityTip(stack);
             Component miningLevelTip = Component.translatable("tooltip.tconstruct.tool.mininglevel",
-                    HarvestLevels.getHarvestLevelName(headStats.harvestLevel)
+                    HarvestLevels.getHarvestLevelName(assembled.isEmpty() ? headStats.harvestLevel : assembled.getInt("HarvestLevel"))
             ).withColor(0xFFAAAAAA);
             Component miningSpeedTip = Component.translatable("tooltip.tconstruct.tool.miningspeed",
-                    Component.literal(String.valueOf(headStats.miningspeed)).withColor(0xFF78A0CD)
+                    Component.literal(String.valueOf(assembled.isEmpty() ? headStats.miningspeed : assembled.getFloat("MiningSpeed"))).withColor(0xFF78A0CD)
             ).withColor(0xFFAAAAAA);
             Component attackTip = Component.translatable("tooltip.tconstruct.tool.attack",
-                    Component.literal(String.valueOf(headStats.attack)).withColor(0xFFD76464)
+                    Component.literal(String.valueOf(assembled.isEmpty() ? headStats.attack : assembled.getFloat("Attack"))).withColor(0xFFD76464)
             ).withColor(0xFFAAAAAA);
             Component modifiersTip = Component.translatable("tooltip.tconstruct.tool.modifiers",
                     ((TinkerTools) stack.getItem()).getAvailableModifierSlots(stack)

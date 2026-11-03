@@ -92,3 +92,21 @@ Colored slime mobs adapt `world/entity/EntityBlueSlime.java`,
 `library/client/particle/EntitySlimeFx.java`, the original gray slime texture,
 colored entity loot tables, entity-melting configuration, and translations
 under LGPL-3.0-only.
+
+
+The tool/part/material/trait port, its shared tool-building implementation,
+Tool Forge, modifiers and related resources adapt TinkersAntique's
+`tools/TinkerTools.java`, `TinkerMaterials.java`, `TinkerTraits.java`,
+`TinkerModifiers.java`, `library/tinkering/PartMaterialType.java`,
+`library/tools/ToolNBT.java`, `ProjectileNBT.java`, `ProjectileLauncherNBT.java`,
+`tools/tools`, `tools/melee/item`, `tools/ranged/item`, `tools/traits`,
+`tools/modifiers`, `tools/ToolEvents.java`, and the corresponding models,
+patterns, casts, translations and recipes under LGPL-3.0-only.
+
+The 169 source-derived PNGs listed in `scripts/antique_tool_textures.json`
+were edited and exported through GIMP MCP. Their original silhouettes and
+animation layers remain attributed to Slime Knights and contributors.
+The supplied modern Minecraft iron sword was used as a palette reference.
+The creative-modifier crystal and six status-effect icons are newly drawn
+in GIMP. Tool audio (`frypan_hit`, `toy_squeak`, `charged`, `discharge`,
+`crossbow_reload`) is copied from the corresponding Antique OGG files.

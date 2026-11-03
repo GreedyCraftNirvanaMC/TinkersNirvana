@@ -30,6 +30,11 @@ public class TinkersNirvana {
         com.gctn.tconstruct.gadgets.GadgetModule.register(modEventBus);
         com.gctn.tconstruct.common.slime.SlimeModule.register(modEventBus);
         com.gctn.tconstruct.common.slime.SlimeMobModule.register(modEventBus);
+        com.gctn.tconstruct.tools.ToolRanged.register(modEventBus);
+        com.gctn.tconstruct.tools.ToolSounds.register(modEventBus);
+        com.gctn.tconstruct.tools.traits.TinkerEffects.register(modEventBus);
+        com.gctn.tconstruct.tools.PatternItem.init();
+        com.gctn.tconstruct.tools.ToolSupplies.init();
         TinkerTraits.registerTraits();
         TinkerDataComponents.register(modEventBus);
         TableRegistryBus.register(modEventBus);

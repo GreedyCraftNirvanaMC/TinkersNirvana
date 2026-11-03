@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "MMM",
+    "MMM",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "tag": "tconstruct:mossy_stones"
+    }
+  },
+  "result": {
+    "id": "tconstruct:moss",
+    "count": 1
+  }
+}

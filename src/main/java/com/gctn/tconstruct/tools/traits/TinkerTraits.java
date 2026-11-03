@@ -42,6 +42,7 @@ public final class TinkerTraits {
         registerTrait(ECOLOGICAL);
         registerTrait(CHEAP);
         registerTrait(CHEAPSKATE);
+        AntiqueTraits.register();
     }
 
     /** 注册一个词条；同一 identifier 不能注册两次。 */

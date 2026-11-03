@@ -15,7 +15,7 @@ public class TableEntityRegistries {
 
     public static final Supplier<BlockEntityType<?>> TOOL_STATION_BLOCK_ENTITY =
             TABLE_ENTITY_TYPES.register("toolstation_blockentity", () -> BlockEntityType.Builder
-                    .of(ToolStationBlockEntity::new, TableBlocks.TOOL_STATION.get())
+                    .of(ToolStationBlockEntity::new, TableBlocks.TOOL_STATION.get(), TableBlocks.TOOL_FORGE.get())
                     .build(null));
 
     public static void register(IEventBus eventBus) {

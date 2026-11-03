@@ -1,8 +1,16 @@
 {
-  "parent": "item/generated",
+  "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "tconstruct:item/pickaxe/handle",
-    "layer1": "tconstruct:item/pickaxe/head",
-    "layer2": "tconstruct:item/pickaxe/binding"
-  }
+    "layer0": "tconstruct:item/antique/pickaxe/handle",
+    "layer1": "tconstruct:item/antique/pickaxe/head",
+    "layer2": "tconstruct:item/antique/pickaxe/binding"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconstruct:broken": 1
+      },
+      "model": "tconstruct:item/pickaxe/pickaxe_broken"
+    }
+  ]
 }

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BFB",
+    "FWF",
+    "BFB"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:blaze_rod"
+    },
+    "F": {
+      "item": "minecraft:fire_charge"
+    },
+    "W": {
+      "item": "tconstruct:lavawood"
+    }
+  },
+  "result": {
+    "id": "tconstruct:lava_crystal",
+    "count": 1
+  }
+}

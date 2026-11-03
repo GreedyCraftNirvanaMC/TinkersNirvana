@@ -1,7 +1,7 @@
 package com.gctn.tconstruct.library;
 
 import com.gctn.tconstruct.library.materials.Material;
-import com.gctn.tconstruct.library.stats.ExtraMaterialStats;
+import com.gctn.tconstruct.library.stats.*;
 import com.gctn.tconstruct.library.stats.HandleMaterialStats;
 import com.gctn.tconstruct.library.stats.HeadMaterialStats;
 import com.gctn.tconstruct.library.utils.HarvestLevels;
@@ -105,12 +105,126 @@ public class TinkerMaterials {
 
     // 注册材料属性
     public static void registerToolMaterialStats() {
-        wood.addMaterialStats(new HeadMaterialStats(35, HarvestLevels.STONE, 1, 2),
-                new HandleMaterialStats(1, 25),
-                new ExtraMaterialStats(15));
-        stone.addMaterialStats(new HeadMaterialStats(100, HarvestLevels.IRON, 20, 4),
-                new HandleMaterialStats(1, 100),
-                new ExtraMaterialStats(150));
+        wood.addMaterialStats(new HeadMaterialStats(35, HarvestLevels.STONE, 2.00f, 2.00f),
+                new HandleMaterialStats(1.00f, 25), new ExtraMaterialStats(15));
+        stone.addMaterialStats(new HeadMaterialStats(120, HarvestLevels.IRON, 3.00f, 4.00f),
+                new HandleMaterialStats(0.50f, -50), new ExtraMaterialStats(20));
+        flint.addMaterialStats(new HeadMaterialStats(150, HarvestLevels.IRON, 2.90f, 5.00f),
+                new HandleMaterialStats(0.60f, -60), new ExtraMaterialStats(40));
+        cactus.addMaterialStats(new HeadMaterialStats(210, HarvestLevels.IRON, 3.40f, 4.00f),
+                new HandleMaterialStats(0.85f, 20), new ExtraMaterialStats(50));
+        bone.addMaterialStats(new HeadMaterialStats(200, HarvestLevels.IRON, 2.50f, 5.09f),
+                new HandleMaterialStats(1.10f, 50), new ExtraMaterialStats(65));
+        obsidian.addMaterialStats(new HeadMaterialStats(139, HarvestLevels.COBALT, 4.20f, 7.07f),
+                new HandleMaterialStats(0.90f, -100), new ExtraMaterialStats(90));
+        prismarine.addMaterialStats(new HeadMaterialStats(430, HarvestLevels.IRON, 6.20f, 5.50f),
+                new HandleMaterialStats(0.60f, -150), new ExtraMaterialStats(100));
+        endstone.addMaterialStats(new HeadMaterialStats(420, HarvestLevels.OBSIDIAN, 3.23f, 3.23f),
+                new HandleMaterialStats(0.85f, 0), new ExtraMaterialStats(42));
+        paper.addMaterialStats(new HeadMaterialStats(12, HarvestLevels.STONE, 0.05f, 0.51f),
+                new HandleMaterialStats(0.10f, 5), new ExtraMaterialStats(15));
+        sponge.addMaterialStats(new HeadMaterialStats(1050, HarvestLevels.STONE, 0.00f, 3.02f),
+                new HandleMaterialStats(1.20f, 250), new ExtraMaterialStats(250));
+        slime.addMaterialStats(new HeadMaterialStats(1000, HarvestLevels.STONE, 1.80f, 4.24f),
+                new HandleMaterialStats(0.70f, 0), new ExtraMaterialStats(350));
+        blueslime.addMaterialStats(new HeadMaterialStats(780, HarvestLevels.STONE, 1.80f, 4.03f),
+                new HandleMaterialStats(1.30f, -50), new ExtraMaterialStats(200));
+        knightslime.addMaterialStats(new HeadMaterialStats(850, HarvestLevels.OBSIDIAN, 5.10f, 5.8f),
+                new HandleMaterialStats(0.50f, 500), new ExtraMaterialStats(125));
+        magmaslime.addMaterialStats(new HeadMaterialStats(600, HarvestLevels.STONE, 7.00f, 2.1f),
+                new HandleMaterialStats(0.85f, -200), new ExtraMaterialStats(150));
+        netherrack.addMaterialStats(new HeadMaterialStats(270, HarvestLevels.IRON, 3.00f, 4.50f),
+                new HandleMaterialStats(0.85f, -150), new ExtraMaterialStats(75));
+        cobalt.addMaterialStats(new HeadMaterialStats(780, HarvestLevels.COBALT, 4.10f, 12.00f),
+                new HandleMaterialStats(0.90f, 100), new ExtraMaterialStats(300));
+        ardite.addMaterialStats(new HeadMaterialStats(990, HarvestLevels.COBALT, 3.60f, 3.50f),
+                new HandleMaterialStats(1.40f, -200), new ExtraMaterialStats(450));
+        manyullyn.addMaterialStats(new HeadMaterialStats(820, HarvestLevels.COBALT, 8.72f, 7.02f),
+                new HandleMaterialStats(0.50f, 250), new ExtraMaterialStats(50));
+        firewood.addMaterialStats(new HeadMaterialStats(550, HarvestLevels.STONE, 5.50f, 6.00f),
+                new HandleMaterialStats(1.0f, -200), new ExtraMaterialStats(150));
+        bloodbone.addMaterialStats(new HeadMaterialStats(200, HarvestLevels.IRON, 2.50f, 5.09f),
+                new HandleMaterialStats(1.10f, 50), new ExtraMaterialStats(65));
+        iron.addMaterialStats(new HeadMaterialStats(204, HarvestLevels.DIAMOND, 4.00f, 6.00f),
+                new HandleMaterialStats(0.85f, 60), new ExtraMaterialStats(50));
+        pigiron.addMaterialStats(new HeadMaterialStats(380, HarvestLevels.DIAMOND, 4.50f, 6.20f),
+                new HandleMaterialStats(1.20f, 0), new ExtraMaterialStats(170));
+        copper.addMaterialStats(new HeadMaterialStats(210, HarvestLevels.IRON, 3.00f, 5.30f),
+                new HandleMaterialStats(1.05f, 30), new ExtraMaterialStats(100));
+        bronze.addMaterialStats(new HeadMaterialStats(430, HarvestLevels.DIAMOND, 3.50f, 6.80f),
+                new HandleMaterialStats(1.10f, 70), new ExtraMaterialStats(80));
+        lead.addMaterialStats(new HeadMaterialStats(434, HarvestLevels.IRON, 3.50f, 5.25f),
+                new HandleMaterialStats(0.70f, -50), new ExtraMaterialStats(100));
+        silver.addMaterialStats(new HeadMaterialStats(250, HarvestLevels.IRON, 5.00f, 5.00f),
+                new HandleMaterialStats(0.95f, 50), new ExtraMaterialStats(150));
+        electrum.addMaterialStats(new HeadMaterialStats(50, HarvestLevels.IRON, 3.00f, 12.00f),
+                new HandleMaterialStats(1.10f, -25), new ExtraMaterialStats(250));
+        steel.addMaterialStats(new HeadMaterialStats(540, HarvestLevels.OBSIDIAN, 6.00f, 7.00f),
+                new HandleMaterialStats(0.9f, 150), new ExtraMaterialStats(25));
+        alubrass.addMaterialStats(new HeadMaterialStats(450, HarvestLevels.DIAMOND, 3.50f, 7.00f),
+                new HandleMaterialStats(1.10f, 80), new ExtraMaterialStats(90));
+        alumite.addMaterialStats(new HeadMaterialStats(700, HarvestLevels.COBALT, 5.50f, 8.00f),
+                new HandleMaterialStats(1.25f, 150), new ExtraMaterialStats(100));
+        wood.addMaterialStats(new BowMaterialStats(1f, 1f, 0));
+        cactus.addMaterialStats(new BowMaterialStats(1.05f, 0.9f, 0));
+        bone.addMaterialStats(new BowMaterialStats(0.95f, 1.15f, 0));
+        paper.addMaterialStats(new BowMaterialStats(1.5f, 0.4f, -2f));
+        sponge.addMaterialStats(new BowMaterialStats(1.15f, 0.75f, 0));
+        slime.addMaterialStats(new BowMaterialStats(0.85f, 1.3f, 0));
+        blueslime.addMaterialStats(new BowMaterialStats(1.05f, 1f, 0));
+        knightslime.addMaterialStats(new BowMaterialStats(0.4f, 2f, 2f));
+        magmaslime.addMaterialStats(new BowMaterialStats(1.1f, 1.05f, 1f));
+        cobalt.addMaterialStats(new BowMaterialStats(0.75f, 1.3f, 3f));
+        ardite.addMaterialStats(new BowMaterialStats(0.45f, 0.8f, 1f));
+        manyullyn.addMaterialStats(new BowMaterialStats(0.65f, 1.2f, 4f));
+        firewood.addMaterialStats(new BowMaterialStats(1f, 1f, 0f));
+        iron.addMaterialStats(new BowMaterialStats(0.5f, 1.5f, 7f));
+        pigiron.addMaterialStats(new BowMaterialStats(0.6f, 1.4f, 7f));
+        bloodbone.addMaterialStats(new BowMaterialStats(0.95f, 1.15f, 0));
+        copper.addMaterialStats(new BowMaterialStats(0.6f, 1.45f, 5f));
+        bronze.addMaterialStats(new BowMaterialStats(0.55f, 1.5f, 6f));
+        lead.addMaterialStats(new BowMaterialStats(0.4f, 1.3f, 3f));
+        silver.addMaterialStats(new BowMaterialStats(1.2f, 0.8f, 2f));
+        electrum.addMaterialStats(new BowMaterialStats(1.5f, 1f, 4f));
+        steel.addMaterialStats(new BowMaterialStats(0.4f, 2f, 9f));
+        alubrass.addMaterialStats(new BowMaterialStats(0.45f, 1.5f, 6f));
+        alumite.addMaterialStats(new BowMaterialStats(0.4f, 1.5f, 8f));
+        stone.addMaterialStats(new BowMaterialStats(0.2F, 0.4F, -1));
+        flint.addMaterialStats(new BowMaterialStats(0.2F, 0.4F, -1));
+        obsidian.addMaterialStats(new BowMaterialStats(0.2F, 0.4F, -1));
+        prismarine.addMaterialStats(new BowMaterialStats(0.2F, 0.4F, -1));
+        endstone.addMaterialStats(new BowMaterialStats(0.2F, 0.4F, -1));
+        netherrack.addMaterialStats(new BowMaterialStats(0.2F, 0.4F, -1));
+        string.setCraftable(true);
+        string.addMaterialStats(new BowStringMaterialStats(1));
+        vine.setCraftable(true);
+        vine.addMaterialStats(new BowStringMaterialStats(1));
+        slimevine_blue.setCraftable(true);
+        slimevine_blue.addMaterialStats(new BowStringMaterialStats(1));
+        slimevine_purple.setCraftable(true);
+        slimevine_purple.addMaterialStats(new BowStringMaterialStats(1));
+        wood.setCraftable(true);
+        wood.addMaterialStats(new ArrowShaftMaterialStats(1f, 0));
+        bone.setCraftable(true);
+        bone.addMaterialStats(new ArrowShaftMaterialStats(0.9f, 5));
+        blaze.setCraftable(true);
+        blaze.addMaterialStats(new ArrowShaftMaterialStats(0.8f, 3));
+        reed.setCraftable(true);
+        reed.addMaterialStats(new ArrowShaftMaterialStats(1.5f, 20));
+        ice.setCraftable(true);
+        ice.addMaterialStats(new ArrowShaftMaterialStats(0.95f, 0));
+        endrod.setCraftable(true);
+        endrod.addMaterialStats(new ArrowShaftMaterialStats(0.7f, 1));
+        feather.setCraftable(true);
+        feather.addMaterialStats(new FletchingMaterialStats(1.0f, 1f));
+        leaf.setCraftable(true);
+        leaf.addMaterialStats(new FletchingMaterialStats(0.5f, 1.5f));
+        slimeleaf_blue.setCraftable(true);
+        slimeleaf_blue.addMaterialStats(new FletchingMaterialStats(0.8F, 1.25F));
+        slimeleaf_orange.setCraftable(true);
+        slimeleaf_orange.addMaterialStats(new FletchingMaterialStats(0.8F, 1.25F));
+        slimeleaf_purple.setCraftable(true);
+        slimeleaf_purple.addMaterialStats(new FletchingMaterialStats(0.8F, 1.25F));
     }
 
     // 注册材料词条
@@ -118,6 +232,55 @@ public class TinkerMaterials {
         wood.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, TinkerTraits.ECOLOGICAL_1));
         stone.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", TinkerTraits.CHEAPSKATE_1),
                 AbstractTraits.TraitPosPair.of(null, TinkerTraits.CHEAP_1));
+        flint.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("crude", 2)));
+        flint.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("crude", 1)));
+        cactus.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("prickly", 1)));
+        cactus.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("spiky", 1)));
+        obsidian.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("duritos", 1)));
+        prismarine.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("jagged", 1), com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("aquadynamic", 1)));
+        prismarine.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("aquadynamic", 1)));
+        netherrack.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("aridiculous", 1), com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("hellish", 1)));
+        netherrack.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("hellish", 1)));
+        endstone.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("alien", 1)), AbstractTraits.TraitPosPair.of("Projectile", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("enderference", 1)));
+        endstone.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("enderference", 1)));
+        bone.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("splintering", 1)));
+        bone.addMaterialTraits(AbstractTraits.TraitPosPair.of("Shaft", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("splitting", 1)));
+        bone.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("fractured", 1)));
+        paper.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("writable", 2)));
+        paper.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("writable", 1)));
+        sponge.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("squeaky", 1)));
+        firewood.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("autosmelt", 1)));
+        slime.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("slimey_green", 1)));
+        blueslime.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("slimey_blue", 1)));
+        knightslime.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("crumbling", 1)));
+        knightslime.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("unnatural", 1)));
+        magmaslime.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("superheat", 1)));
+        magmaslime.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("flammable", 1)));
+        iron.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("magnetic", 2)));
+        iron.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("magnetic", 1)));
+        pigiron.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("baconlicious", 1), com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("tasty", 1)));
+        pigiron.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("tasty", 1)));
+        cobalt.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("momentum", 1)));
+        cobalt.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("lightweight", 1)));
+        ardite.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("stonebound", 1)));
+        ardite.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("petramor", 1)));
+        manyullyn.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("insatiable", 1)));
+        manyullyn.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("coldblooded", 1)));
+        bloodbone.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("raging", 2), com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("splintering", 1)));
+        bloodbone.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("raging", 1), com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("fractured", 1)));
+        copper.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("established", 1)));
+        bronze.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("dense", 1)));
+        lead.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("poisonous", 1), com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("heavy", 1)));
+        silver.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("holy", 1)));
+        electrum.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("shocking", 1)));
+        steel.addMaterialTraits(AbstractTraits.TraitPosPair.of("Head", com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("sharp", 1)));
+        steel.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("stiff", 1)));
+        alubrass.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("depthdigger", 1)));
+        alumite.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("duritos", 1)));
+        blaze.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("hovering", 1)));
+        reed.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("breakable", 1)));
+        ice.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("freezing", 1)));
+        endrod.addMaterialTraits(AbstractTraits.TraitPosPair.of(null, com.gctn.tconstruct.tools.traits.AntiqueTraits.entry("endspeed", 1)));
     }
 
     static {
@@ -128,8 +291,8 @@ public class TinkerMaterials {
     // 设定合成方式
     static {
         setCraftableMaterials(wood, stone, flint, cactus, bone, obsidian, prismarine, endstone, paper, sponge, firewood,
-                knightslime, slime, blueslime, magmaslime);
-        setCastableMaterials(iron, pigiron);
+                slime, blueslime, magmaslime, knightslime, netherrack, bloodbone);
+        setCastableMaterials(iron, pigiron, knightslime, obsidian, cobalt, ardite, manyullyn, copper, bronze, lead, silver, electrum, steel, alubrass, alumite);
 
         registerToolMaterialStats();
         registerToolMaterialTraits();

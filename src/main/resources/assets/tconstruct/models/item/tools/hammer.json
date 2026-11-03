@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconstruct:item/antique/hammer/handle",
+    "layer1": "tconstruct:item/antique/hammer/head",
+    "layer2": "tconstruct:item/antique/hammer/back",
+    "layer3": "tconstruct:item/antique/hammer/front"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconstruct:broken": 1
+      },
+      "model": "tconstruct:item/tools/hammer_broken"
+    }
+  ]
+}

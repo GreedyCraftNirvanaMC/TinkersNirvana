@@ -1,0 +1,9 @@
+{
+  "parent": "tconstruct:item/tools/longbow",
+  "textures": {
+    "layer0": "tconstruct:item/antique/longbow/limb_top_3",
+    "layer1": "tconstruct:item/antique/longbow/limb_bottom_3",
+    "layer2": "tconstruct:item/antique/longbow/grip",
+    "layer3": "tconstruct:item/antique/longbow/bowstring_3"
+  }
+}

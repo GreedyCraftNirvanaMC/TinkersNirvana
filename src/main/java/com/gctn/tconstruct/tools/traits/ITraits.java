@@ -12,6 +12,20 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 
 /** 生命周期回调默认无效果，具体词条只需覆盖自己关心的触发点。 */
 public interface ITraits {
+    default void onProjectileLaunch(ItemStack tool, int level, net.minecraft.world.entity.projectile.AbstractArrow projectile) {}
+
+    default void onProjectileTick(ItemStack tool, int level, net.minecraft.world.entity.projectile.AbstractArrow projectile) {}
+
+    default void modifyStats(ItemStack tool, int level, com.gctn.tconstruct.tools.ToolStats stats) {}
+
+    default float modifyAttack(ItemStack tool, int level, LivingEntity attacker, LivingEntity target, float original, float damage) {
+        return damage;
+    }
+
+    default void onBlockDrops(ItemStack tool, int level, net.neoforged.neoforge.event.level.BlockDropsEvent event) {}
+
+    default void onDamageTaken(ItemStack tool, int level, net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event) {}
+
     /** 仅服务端调用；traitTag 的修改由分发器写回，不要同时直接替换本词条的组件数据。 */
     default void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId,
                                boolean isSelected, CompoundTag traitTag) {}

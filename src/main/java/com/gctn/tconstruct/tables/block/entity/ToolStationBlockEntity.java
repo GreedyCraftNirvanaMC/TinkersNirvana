@@ -29,7 +29,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
 
     private static final int DATA_MODE = 0;
     private static final int DATA_DISASSEMBLY_STATE = 1;
-    public static final int DATA_COUNT = 2;
+    public static final int DATA_COUNT = 3;
 
     private static final int DISASSEMBLY_NONE = 0;
     private static final int DISASSEMBLY_PREVIEW = 1;
@@ -48,6 +48,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
             return switch (index) {
                 case DATA_MODE -> ToolStationBlockEntity.this.mode.getButtonId();
                 case DATA_DISASSEMBLY_STATE -> ToolStationBlockEntity.this.disassemblyState;
+                case 2 -> ToolStationBlockEntity.this.isForge() ? 1 : 0;
                 default -> 0;
             };
         }
@@ -95,7 +96,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     }
 
     public boolean trySwitchMode(Mode targetMode, Player player) {
-        if (targetMode == null) {
+        if (targetMode == null || (targetMode.requiresForge() && !isForge())) {
             return false;
         }
         if (targetMode == this.mode) {
@@ -229,11 +230,18 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     }
 
     private ItemStack createCraftingResult() {
+        if (this.mode.requiresForge() && !isForge()) { return ItemStack.EMPTY; }
+        ItemStack result;
         if (this.mode == Mode.DEFAULT) {
-            return ToolStationDefaultRecipes.createResult(this);
+            result = ToolStationDefaultRecipes.createResult(this);
+        } else {
+            ToolAssemblyRecipe recipe = ToolStationAssemblyRecipes.get(this.mode);
+            result = recipe == null ? ItemStack.EMPTY : recipe.createResult(this);
         }
-        ToolAssemblyRecipe recipe = ToolStationAssemblyRecipes.get(this.mode);
-        return recipe == null ? ItemStack.EMPTY : recipe.createResult(this);
+        if (!result.isEmpty() && result.getItem() instanceof com.gctn.tconstruct.tools.TinkerTools && level != null) {
+            com.gctn.tconstruct.tools.ToolModifiers.applyEnchantments(result, level.registryAccess());
+        }
+        return result;
     }
 
     private void takeCraftingResult() {
@@ -330,6 +338,8 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("container.tconstruct.toolstation.name");
+        return Component.translatable(isForge() ? "block.tconstruct.toolforge" : "container.tconstruct.toolstation.name");
     }
+
+    public boolean isForge() { return getBlockState().is(com.gctn.tconstruct.tables.block.TableBlocks.TOOL_FORGE.get()); }
 }

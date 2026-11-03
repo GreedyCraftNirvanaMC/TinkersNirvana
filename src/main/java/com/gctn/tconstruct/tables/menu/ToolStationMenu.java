@@ -41,7 +41,7 @@ public class ToolStationMenu extends AbstractContainerMenu {
 
     private static final int RESULT_MENU_SLOT = 0;
     private static final int INPUT_MENU_SLOT_START = 1;
-    private static final int TOOL_STATION_SLOT_COUNT = 1 + Mode.values().length * INPUT_SLOT_COUNT;
+    private static final int TOOL_STATION_SLOT_COUNT = 1 + INPUT_SLOT_COUNT;
 
     private static final int PLAYER_INVENTORY_COLUMNS = 9;
     private static final int PLAYER_INVENTORY_ROWS = 3;
@@ -50,7 +50,7 @@ public class ToolStationMenu extends AbstractContainerMenu {
     private static final int HOTBAR_START = PLAYER_INVENTORY_END;
     private static final int HOTBAR_END = HOTBAR_START + PLAYER_INVENTORY_COLUMNS;
 
-    private static final int MAX_VISIBLE_SPECIAL_MODE_INPUTS = 3;
+    private static final int MAX_VISIBLE_SPECIAL_MODE_INPUTS = 6;
     private static final int RESULT_SLOT_X = 124;
     private static final int RESULT_SLOT_Y = 38;
     private static final int PLAYER_INVENTORY_X = 8;
@@ -117,6 +117,8 @@ public class ToolStationMenu extends AbstractContainerMenu {
         }
 
         quickMovedSlot.onTake(player, rawStack);
+        // 与原版合成结果槽一致：背包只能容纳部分产物时，将该批次余量返还给玩家。
+        if (quickMovedSlotIndex == RESULT_MENU_SLOT && !rawStack.isEmpty()) { player.drop(rawStack, false); }
         return quickMovedStack;
     }
 
@@ -156,9 +158,11 @@ public class ToolStationMenu extends AbstractContainerMenu {
     }
 
     public boolean isModeButtonVisible(Mode mode) {
+        if (mode.requiresForge() && this.data.get(2) == 0) { return false; }
         return mode == Mode.DEFAULT
                 || mode == Mode.DISASSEMBLE
-                || ToolStationSlotPositions.getActiveInputSlotCount(mode) <= MAX_VISIBLE_SPECIAL_MODE_INPUTS;
+                || (ToolStationAssemblyRecipes.get(mode) != null
+                && ToolStationSlotPositions.getActiveInputSlotCount(mode) <= MAX_VISIBLE_SPECIAL_MODE_INPUTS);
     }
 
     public boolean isInputSlotVisible(int inputSlot) {
@@ -252,12 +256,9 @@ public class ToolStationMenu extends AbstractContainerMenu {
     private void addToolStationSlots(Container container) {
         this.addSlot(new ToolStationResultSlot(this, container, RESULT_SLOT_INDEX, RESULT_SLOT_X, RESULT_SLOT_Y));
 
-        for (Mode slotMode : Mode.values()) {
-            for (int slotIndex = 0; slotIndex < INPUT_SLOT_COUNT; slotIndex++) {
-                SlotPosition position = ToolStationSlotPositions.getDisplayInputSlotPosition(slotMode, slotIndex);
-                this.addSlot(new ModeAwareInputSlot(this, container, slotIndex,
-                        position.slotX(), position.slotY(), slotMode, slotIndex));
-            }
+        for (int slotIndex = 0; slotIndex < INPUT_SLOT_COUNT; slotIndex++) {
+            SlotPosition position = ToolStationSlotPositions.getDisplayInputSlotPosition(Mode.DEFAULT, slotIndex);
+            this.addSlot(new ModeAwareInputSlot(this, container, slotIndex, position.slotX(), position.slotY(), slotIndex));
         }
     }
 

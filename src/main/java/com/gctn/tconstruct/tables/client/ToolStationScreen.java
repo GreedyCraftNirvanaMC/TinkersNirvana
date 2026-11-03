@@ -58,7 +58,12 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
         this.addModeButton(Mode.PICKAXE, new ItemStack(Items.WOODEN_PICKAXE), 2);
         this.addModeButton(Mode.SHOVEL, new ItemStack(Items.WOODEN_SHOVEL), 3);
         this.addModeButton(Mode.AXE, new ItemStack(Items.WOODEN_AXE), 4);
-        this.addModeButton(Mode.DEBUG, new ItemStack(Items.DEBUG_STICK), 5);
+        int buttonIndex = 5;
+        for (Mode mode : Mode.values()) {
+            if (mode == Mode.DEFAULT || mode == Mode.DISASSEMBLE || mode == Mode.PICKAXE || mode == Mode.SHOVEL || mode == Mode.AXE || mode == Mode.DEBUG) { continue; }
+            var entry = com.gctn.tconstruct.tools.AntiqueTools.get(mode.name().toLowerCase(java.util.Locale.ROOT));
+            if (entry != null) { this.addModeButton(mode, new ItemStack(entry.item().get()), buttonIndex++); }
+        }
         this.updateModeButtons();
     }
 

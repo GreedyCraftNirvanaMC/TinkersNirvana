@@ -2,6 +2,8 @@
 Installation information
 =======
 
+工具制作、装配和强化使用方式见 [TOOLS.md](TOOLS.md)，材料与 KubeJS 扩展接口见 [TOOL_API.md](TOOL_API.md)。
+
 This template repository can be directly cloned to get you started with a new
 mod. Simply create a new repository cloned from this one, by following the
 instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).

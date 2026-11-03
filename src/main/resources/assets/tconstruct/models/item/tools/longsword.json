@@ -1,0 +1,16 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconstruct:item/antique/broadsword/handle",
+    "layer1": "tconstruct:item/antique/longsword/blade",
+    "layer2": "tconstruct:item/antique/longsword/guard"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconstruct:broken": 1
+      },
+      "model": "tconstruct:item/tools/longsword_broken"
+    }
+  ]
+}

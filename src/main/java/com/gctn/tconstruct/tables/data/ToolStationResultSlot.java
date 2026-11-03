@@ -32,10 +32,16 @@ public class ToolStationResultSlot extends Slot {
         return mayPickup;
     }
 
-    // 工具台结果槽只允许单个物品。
+    // 拆解源仅接受一个工具；部件加工允许一次输出整批产物。
     @Override
     public int getMaxStackSize() {
-        return 1;
+        return this.menu.isMode(Mode.DISASSEMBLE) ? 1 : 64;
+    }
+
+    @Override
+    public ItemStack remove(int amount) {
+        // 与原版 ResultContainer 一致，右键领取也取走完整配方批次。
+        return super.remove(this.getItem().getCount());
     }
 
     // 玩家放入或清空结果槽时，通知菜单生成或取消拆解预览。

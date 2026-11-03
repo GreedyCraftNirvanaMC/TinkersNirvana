@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BBB",
+    "MTM",
+    "M M"
+  ],
+  "key": {
+    "B": {
+      "item": "tconstruct:seared_bricks"
+    },
+    "M": {
+      "item": "minecraft:iron_block"
+    },
+    "T": {
+      "item": "tconstruct:blockitem/toolstation"
+    }
+  },
+  "result": {
+    "id": "tconstruct:toolforge",
+    "count": 1
+  }
+}

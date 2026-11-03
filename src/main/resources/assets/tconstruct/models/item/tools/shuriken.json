@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconstruct:item/antique/shuriken/shuriken",
+    "layer1": "tconstruct:item/antique/shuriken/shuriken2",
+    "layer2": "tconstruct:item/antique/shuriken/shuriken3",
+    "layer3": "tconstruct:item/antique/shuriken/shuriken4"
+  }
+}

@@ -37,8 +37,12 @@ public abstract class TinkerTools extends Item {
      * Returns the number of modifier slots that can still be used on this tool.
      */
     public final int getAvailableModifierSlots(ItemStack stack) {
-        int totalSlots = getBaseModifierSlots(stack) + getMaterialModifierSlotAdjustment(stack);
+        int totalSlots = getTotalModifierSlots(stack);
         return Math.max(0, totalSlots - Math.max(0, getUsedModifierSlots(stack)));
+    }
+
+    public final int getTotalModifierSlots(ItemStack stack) {
+        return getBaseModifierSlots(stack) + getMaterialModifierSlotAdjustment(stack);
     }
 
     /** Override for tool types whose base modifier slot count is not 3. */
@@ -48,12 +52,12 @@ public abstract class TinkerTools extends Item {
 
     /** Hook for modifier slots added or removed by material traits. */
     protected int getMaterialModifierSlotAdjustment(ItemStack stack) {
-        return 0;
+        return com.gctn.tconstruct.tools.traits.AntiqueTraits.level(stack, "writable") + ToolModifiers.level(stack, "endearment") + ToolModifiers.units(stack, "creative");
     }
 
     /** Hook for the number of slots consumed by applied modifiers. */
     protected int getUsedModifierSlots(ItemStack stack) {
-        return 0;
+        return ToolModifiers.usedSlots(stack);
     }
 
     public static boolean isBroken(ItemStack stack) {
@@ -76,6 +80,7 @@ public abstract class TinkerTools extends Item {
         if (entity.level().isClientSide || amount <= 0 || isBroken(stack)) {
             return;
         }
+        if (entity.getRandom().nextFloat() < ToolModifiers.level(stack, "reinforced") * .2F) { return; }
         amount = ToolTraits.modifyDamage(stack, amount, entity);
         if (amount <= 0) {
             return;
@@ -88,6 +93,7 @@ public abstract class TinkerTools extends Item {
             stack.setCount(originalCount);
             stack.setDamageValue(maxDamage);
         }
+        if (isBroken(stack) && entity.getUseItem() == stack) { entity.stopUsingItem(); }
     }
 
     /** 被动治疗不能复活损坏工具；材料修复走组装台的独立模拟流程。 */
@@ -161,6 +167,15 @@ public abstract class TinkerTools extends Item {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
         ToolTraits.inventoryTick(stack, level, entity, slotId, isSelected);
+        ToolModifiers.tick(stack, level, entity, slotId, isSelected);
+        if (!level.isClientSide && this instanceof com.gctn.tconstruct.tools.tools.AntiqueTool item) {
+            var alien = TinkerDataComponents.getTraitsTag(stack).getCompound("alien");
+            if (alien.getBoolean("Rebuild")) {
+                ToolTraits.updateTraitData(stack, "alien", tag -> tag.remove("Rebuild"));
+                ToolBuilder.rebuild(stack, item.definition());
+            }
+            if (entity.tickCount % 20 == 0) { ToolModifiers.applyEnchantments(stack, level.registryAccess()); }
+        }
     }
 
 }

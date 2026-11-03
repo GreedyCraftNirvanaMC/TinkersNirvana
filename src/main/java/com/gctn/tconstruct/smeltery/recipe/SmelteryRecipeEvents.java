@@ -43,6 +43,7 @@ public final class SmelteryRecipeEvents {
 
     private static void rebuild(MinecraftServer server) {
         SmelteryRecipes.initialize();
+        com.gctn.tconstruct.api.TinkerContent.installCastingRecipes();
         SmelteryRecipes.AUTOMATIC_MELTING.clear();
         for (var holder : server.getRecipeManager().getRecipes()) {
             if (!(holder.value() instanceof CraftingRecipe recipe)) {

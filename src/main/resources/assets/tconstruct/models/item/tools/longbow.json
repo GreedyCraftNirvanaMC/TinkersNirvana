@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconstruct:item/antique/longbow/limb_top",
+    "layer1": "tconstruct:item/antique/longbow/limb_bottom",
+    "layer2": "tconstruct:item/antique/longbow/grip",
+    "layer3": "tconstruct:item/antique/longbow/bowstring"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        -90,
+        260,
+        -45
+      ],
+      "translation": [
+        -1.875,
+        -1.25,
+        4.0
+      ],
+      "scale": [
+        1.0625,
+        1.0625,
+        0.875
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        -90,
+        -260,
+        45
+      ],
+      "translation": [
+        -1.875,
+        -1.25,
+        4.0
+      ],
+      "scale": [
+        1.0625,
+        1.0625,
+        0.875
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        25
+      ],
+      "translation": [
+        1.13,
+        3.2,
+        1.13
+      ],
+      "scale": [
+        0.875,
+        0.875,
+        0.7
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        -25
+      ],
+      "translation": [
+        1.13,
+        3.2,
+        1.13
+      ],
+      "scale": [
+        0.875,
+        0.875,
+        0.7
+      ]
+    }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "pulling": 1
+      },
+      "model": "tconstruct:item/tools/longbow_state_0"
+    },
+    {
+      "predicate": {
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "tconstruct:item/tools/longbow_state_1"
+    },
+    {
+      "predicate": {
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "tconstruct:item/tools/longbow_state_2"
+    },
+    {
+      "predicate": {
+        "tconstruct:broken": 1
+      },
+      "model": "tconstruct:item/tools/longbow_broken"
+    }
+  ]
+}

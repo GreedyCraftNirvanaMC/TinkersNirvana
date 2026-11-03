@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconstruct:item/antique/scythe/handle",
+    "layer1": "tconstruct:item/antique/scythe/head",
+    "layer2": "tconstruct:item/antique/scythe/binding",
+    "layer3": "tconstruct:item/antique/scythe/accessory"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconstruct:broken": 1
+      },
+      "model": "tconstruct:item/tools/scythe_broken"
+    }
+  ]
+}

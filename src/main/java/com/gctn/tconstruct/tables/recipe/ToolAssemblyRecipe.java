@@ -15,7 +15,7 @@ public class ToolAssemblyRecipe {
     private final PartRequirement[] requirements;
     private final Function<Material[], ItemStack> resultFactory;
 
-    ToolAssemblyRecipe(PartRequirement[] requirements, Function<Material[], ItemStack> resultFactory) {
+    public ToolAssemblyRecipe(PartRequirement[] requirements, Function<Material[], ItemStack> resultFactory) {
         this.requirements = requirements;
         this.resultFactory = resultFactory;
     }
@@ -45,6 +45,9 @@ public class ToolAssemblyRecipe {
             materials[index] = material;
         }
 
+        for (int slot = 0; slot < 6; slot++) {
+            if (getRequiredItem(slot) == null && !container.getItem(slot).isEmpty()) { return ItemStack.EMPTY; }
+        }
         return this.resultFactory.apply(materials);
     }
 
@@ -67,8 +70,8 @@ public class ToolAssemblyRecipe {
         return null;
     }
 
-    record PartRequirement(int inputSlot, Supplier<? extends Item> item, String requiredStat) {
-        Item requiredItem() {
+    public record PartRequirement(int inputSlot, Supplier<? extends Item> item, String requiredStat) {
+        public Item requiredItem() {
             return this.item.get();
         }
     }

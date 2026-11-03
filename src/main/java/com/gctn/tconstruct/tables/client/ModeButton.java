@@ -51,6 +51,7 @@ class ModeButton extends AbstractButton {
         super(x, y, SIZE, SIZE, Component.translatable(
                 "container.tconstruct.toolstation.mode." + mode.name().toLowerCase(Locale.ROOT)));
         this.mode = mode;
+        this.setTooltip(net.minecraft.client.gui.components.Tooltip.create(this.getMessage()));
         this.itemIcon = itemIcon;
         this.iconTexture = iconTexture;
         this.iconU = iconU;

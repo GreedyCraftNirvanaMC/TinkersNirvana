@@ -62,10 +62,150 @@
     },
     {
       "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_arrow_head",
+      "mask": "tconstruct:item/cast_masks/arrow_head",
+      "offset_x": 0,
+      "offset_y": 0
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_axe_head",
+      "mask": "tconstruct:item/cast_masks/axe_head",
+      "offset_x": -2,
+      "offset_y": 4
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_binding",
+      "mask": "tconstruct:item/cast_masks/binding",
+      "offset_x": 0,
+      "offset_y": 0
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_bow_limb",
+      "mask": "tconstruct:item/cast_masks/bow_limb",
+      "offset_x": 4,
+      "offset_y": -2
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_broad_axe_head",
+      "mask": "tconstruct:item/cast_masks/broad_axe_head",
+      "offset_x": -3,
+      "offset_y": 4
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_cross_guard",
+      "mask": "tconstruct:item/cast_masks/cross_guard",
+      "offset_x": 3,
+      "offset_y": -3
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_excavator_head",
+      "mask": "tconstruct:item/cast_masks/excavator_head",
+      "offset_x": -3,
+      "offset_y": 3
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_hammer_head",
+      "mask": "tconstruct:item/cast_masks/hammer_head",
+      "offset_x": -3,
+      "offset_y": 3
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_hand_guard",
+      "mask": "tconstruct:item/cast_masks/hand_guard",
+      "offset_x": 4,
+      "offset_y": -4
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_kama_head",
+      "mask": "tconstruct:item/cast_masks/kama_head",
+      "offset_x": -2,
+      "offset_y": 4
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_knife_blade",
+      "mask": "tconstruct:item/cast_masks/knife_blade",
+      "offset_x": 0,
+      "offset_y": 0
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_large_plate",
+      "mask": "tconstruct:item/cast_masks/large_plate",
+      "offset_x": 0,
+      "offset_y": 0
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_large_sword_blade",
+      "mask": "tconstruct:item/cast_masks/large_sword_blade",
+      "offset_x": -1,
+      "offset_y": 1
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_pan_head",
+      "mask": "tconstruct:item/cast_masks/pan_head",
+      "offset_x": -2,
+      "offset_y": 2
+    },
+    {
+      "type": "tconstruct:cast",
       "sprite": "tconstruct:item/cast_pickaxe_head",
       "mask": "tconstruct:item/cast_masks/pickaxe_head",
       "offset_x": -2,
       "offset_y": 2
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_scythe_head",
+      "mask": "tconstruct:item/cast_masks/scythe_head",
+      "offset_x": -2,
+      "offset_y": 5
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_shard",
+      "mask": "tconstruct:item/cast_masks/shard",
+      "offset_x": 0,
+      "offset_y": 0
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_sharpening_kit",
+      "mask": "tconstruct:item/cast_masks/sharpening_kit",
+      "offset_x": 0,
+      "offset_y": 0
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_shovel_head",
+      "mask": "tconstruct:item/cast_masks/shovel_head",
+      "offset_x": -3,
+      "offset_y": 3
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_sign_head",
+      "mask": "tconstruct:item/cast_masks/sign_head",
+      "offset_x": 0,
+      "offset_y": 2
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_sword_blade",
+      "mask": "tconstruct:item/cast_masks/sword_blade",
+      "offset_x": 0,
+      "offset_y": 0
     },
     {
       "type": "tconstruct:cast",
@@ -76,8 +216,22 @@
     },
     {
       "type": "tconstruct:cast",
-      "sprite": "tconstruct:item/cast_binding",
-      "mask": "tconstruct:item/cast_masks/binding",
+      "sprite": "tconstruct:item/cast_tough_binding",
+      "mask": "tconstruct:item/cast_masks/tough_binding",
+      "offset_x": 0,
+      "offset_y": 0
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_tough_tool_rod",
+      "mask": "tconstruct:item/cast_masks/tough_tool_rod",
+      "offset_x": 0,
+      "offset_y": 0
+    },
+    {
+      "type": "tconstruct:cast",
+      "sprite": "tconstruct:item/cast_wide_guard",
+      "mask": "tconstruct:item/cast_masks/wide_guard",
       "offset_x": 0,
       "offset_y": 0
     }

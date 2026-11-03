@@ -1,0 +1,7 @@
+{
+  "parent": "tconstruct:item/tools/frypan",
+  "textures": {
+    "layer0": "tconstruct:item/antique/broadsword/handle",
+    "layer1": "tconstruct:item/antique/frypan/broken_head"
+  }
+}

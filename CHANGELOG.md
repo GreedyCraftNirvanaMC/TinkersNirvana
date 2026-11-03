@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- Port Antique's complete registered tool catalog: harvesting tools, six melee
+  weapons, bows/crossbows, arrows/bolts, and shurikens, with shared part definitions,
+  native tool actions, damage, repair, ammunition, and material components.
+- Add the full part catalog, pattern-based material crafting, complete part casts,
+  coated bolt cores, Tool Forge progression, and survival crafting entries.
+- Restore source material stats and traits, add combat/drop/projectile lifecycle
+  callbacks, tool modifiers, embossing, fortification, moss, and soulbound handling.
+- Keep one set of physical menu slots across tool modes, preserve complete output
+  batches, and avoid reequip/mining resets from transient trait state.
+- Add public Java/KubeJS material, ingredient, stat, trait, modifier, and casting
+  registration APIs without adding a runtime KubeJS dependency.
+- Restyle 169 Antique textures and draw seven new icons in GIMP, retaining source
+  silhouettes, tool layers, damaged states, and bow/crossbow draw stages; include
+  Antique tool sounds and Chinese/English text.
+
 - Add Ardite Ore with Antique-based GIMP artwork, original default hardness and
   harvest tier, block/item tags, self drops, Smeltery integration, and bilingual names.
 - Allow cobalt-tier assembled tools to harvest blocks requiring netherite-tier tools.

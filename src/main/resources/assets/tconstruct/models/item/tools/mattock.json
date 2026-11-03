@@ -1,0 +1,16 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconstruct:item/antique/mattock/handle",
+    "layer1": "tconstruct:item/antique/mattock/head",
+    "layer2": "tconstruct:item/antique/mattock/back"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconstruct:broken": 1
+      },
+      "model": "tconstruct:item/tools/mattock_broken"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "tconstruct:item/tools/shovel",
+  "textures": {
+    "layer0": "tconstruct:item/antique/shovel/handle",
+    "layer1": "tconstruct:item/antique/shovel/broken_head",
+    "layer2": "tconstruct:item/antique/shovel/binding"
+  }
+}

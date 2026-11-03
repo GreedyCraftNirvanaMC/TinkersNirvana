@@ -24,6 +24,9 @@ public final class ToolStationDefaultRecipes {
     // 预览结果
     public static ItemStack createResult(Container container) {
         ItemStack tool = container.getItem(TOOL_SLOT);
+        if (tool.getItem() instanceof com.gctn.tconstruct.tools.PatternItem) {
+            return PartBuilderRecipes.createResult(container);
+        }
         if (!isTinkerTool(tool)) {
             return ItemStack.EMPTY;
         }
@@ -39,6 +42,10 @@ public final class ToolStationDefaultRecipes {
     // 确认后消耗原料
     public static void consumeInputs(Container container) {
         ItemStack tool = container.getItem(TOOL_SLOT);
+        if (tool.getItem() instanceof com.gctn.tconstruct.tools.PatternItem) {
+            PartBuilderRecipes.consumeInputs(container);
+            return;
+        }
         if (!isTinkerTool(tool)) {
             return;
         }
@@ -64,10 +71,13 @@ public final class ToolStationDefaultRecipes {
 
     // TODO 匹配强化配方
     private static ItemStack createEnhancementResult(Container container) {
-        return ItemStack.EMPTY;
+        var plan = com.gctn.tconstruct.tools.ToolModifiers.plan(container);
+        return plan == null ? ItemStack.EMPTY : plan.result();
     }
 
     private static void consumeEnhancementInputs(Container container) {
+        var plan = com.gctn.tconstruct.tools.ToolModifiers.plan(container);
+        if (plan != null) { plan.consume(container); }
     }
 
     // 获取修复结果
@@ -174,7 +184,7 @@ public final class ToolStationDefaultRecipes {
                 continue;
             }
             String inputItemId = BuiltInRegistries.ITEM.getKey(materialStack.getItem()).toString();
-            double matEfficient = materialMatchesInput(material, inputItemId);
+            double matEfficient = com.gctn.tconstruct.library.materials.MaterialInputs.value(materialStack, material);
             if (matEfficient > 0.0) {
                 repairMatches.add(new RepairMatch(slot, partEfficient, matEfficient));
             }

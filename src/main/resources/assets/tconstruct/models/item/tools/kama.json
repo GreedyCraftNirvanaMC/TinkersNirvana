@@ -1,0 +1,16 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconstruct:item/antique/pickaxe/handle",
+    "layer1": "tconstruct:item/antique/kama/head",
+    "layer2": "tconstruct:item/antique/kama/binding"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconstruct:broken": 1
+      },
+      "model": "tconstruct:item/tools/kama_broken"
+    }
+  ]
+}

@@ -101,6 +101,13 @@ public final class SmelteryModule {
                 "clay_cast_pickaxe_head", "clay_cast_tool_rod", "clay_cast_binding"}) {
             ITEMS.put(name, ItemRegister.ITEMS.register(name, () -> new Item(new Item.Properties())));
         }
+        for (var part : com.gctn.tconstruct.library.toolparts.AntiqueParts.entries().values()) {
+            if (!java.util.Set.of("Head", "Handle", "Extra", "Bow").contains(part.stat())) { continue; }
+            for (String prefix : java.util.List.of("cast_", "clay_cast_")) {
+                String name = prefix + part.id();
+                if (!ITEMS.containsKey(name)) { ITEMS.put(name, ItemRegister.ITEMS.register(name, () -> new Item(new Item.Properties()))); }
+            }
+        }
         for (String metal : new String[]{"cobalt", "ardite", "manyullyn", "pigiron", "knightslime", "alubrass", "alumite",
                 "bronze", "tin", "aluminum", "steel"}) {
             for (String form : new String[]{"ingot", "nugget"}) {
