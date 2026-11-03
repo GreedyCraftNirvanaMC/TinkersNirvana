@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Apply the supplied Chinese tool-part names to parts and their metal/clay casts.
 - Apply the supplied Chinese metal glossary to ingot, nugget, and storage-block
   names, and add the missing bilingual Cobalt Ore name.
 - Port blue/purple slime mobs and spawn eggs, original jumping/squish/fall rules,
