@@ -7,6 +7,13 @@ They are distributed under LGPL-3.0-only. The original license is included in
 `TinkersAntique-LICENSE.txt` and packaged in the mod JAR under `META-INF/licenses`.
 Existing unrelated project code retains its original license.
 
+The refreshed metal artwork was edited and exported in GIMP using user-supplied
+Minecraft iron ingot, nugget, block, and ore textures as references, together with
+Minecraft 1.21.1 stone, netherrack, and copper ore artwork. Minecraft-derived
+artwork remains copyright Mojang AB / Microsoft and is not covered by the
+TinkersAntique license. Material palettes and pig-iron/ardite details retain
+their attribution to TinkersAntique above.
+
 Reference project: https://github.com/Elite-Modding-Team/TinkersAntique
 
 Source areas used for this port:

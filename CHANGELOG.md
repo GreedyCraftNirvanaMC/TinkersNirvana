@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Refresh eleven metals' ingots, nuggets, and storage blocks plus ported ores
+  in GIMP using modern Minecraft texture references and distinct material palettes.
 - Use the requested Chinese blue/purple slime names for mobs and spawn eggs.
 - Apply the supplied Chinese tool-part names to parts and their metal/clay casts.
 - Apply the supplied Chinese metal glossary to ingot, nugget, and storage-block
