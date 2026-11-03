@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add Ardite Ore with Antique-based GIMP artwork, original default hardness and
+  harvest tier, block/item tags, self drops, Smeltery integration, and bilingual names.
+- Allow cobalt-tier assembled tools to harvest blocks requiring netherite-tier tools.
 - Refine metal-nugget highlights and shadows using the modern vanilla gold nugget
   as a style reference while retaining each Antique silhouette and detail.
 - Restyle eleven metals' ingots, nuggets, storage blocks, and ported ores in GIMP

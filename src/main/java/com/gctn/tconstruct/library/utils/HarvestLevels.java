@@ -45,6 +45,10 @@ public class HarvestLevels {
         if (harvestLevel == HarvestLevels.DIAMOND) {
             return BlockTags.INCORRECT_FOR_IRON_TOOL;
         }
-        return BlockTags.INCORRECT_FOR_DIAMOND_TOOL;
+        if (harvestLevel == HarvestLevels.OBSIDIAN) {
+            return BlockTags.INCORRECT_FOR_DIAMOND_TOOL;
+        }
+        // 四级镐必须使用下界合金级拒绝标签，才能正确采掘默认四级的阿迪特矿石。
+        return BlockTags.INCORRECT_FOR_NETHERITE_TOOL;
     }
 }

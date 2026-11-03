@@ -3,6 +3,7 @@
   "values": [
     "tconstruct:copper_ore",
     "tconstruct:tin_ore",
-    "tconstruct:aluminum_ore"
+    "tconstruct:aluminum_ore",
+    "tconstruct:ardite_ore"
   ]
 }

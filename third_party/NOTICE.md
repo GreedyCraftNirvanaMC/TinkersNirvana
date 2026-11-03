@@ -80,6 +80,12 @@ Common ore additions adapt `shared/block/BlockCommonOre.java`, its registration
 in `shared/TinkerCommons.java`, and original copper/tin/aluminum ore textures
 and names under LGPL-3.0-only.
 
+Ardite Ore adapts `shared/block/BlockOre.java`, its default harvest tier in
+`common/config/Config.java`, registration in `shared/TinkerCommons.java`, and
+`nether_ore_ardite.png` / `ore_ardite.png` under LGPL-3.0-only. Its original
+mineral layer was restyled in GIMP over the Minecraft netherrack background
+attributed above.
+
 Colored slime mobs adapt `world/entity/EntityBlueSlime.java`,
 `EntityPurpleSlime.java`, entity/egg registration in `world/TinkerWorld.java`,
 `library/client/renderer/RenderTinkerSlime.java`,
