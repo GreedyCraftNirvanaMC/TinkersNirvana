@@ -35,6 +35,12 @@ public class PatternItem extends Item {
     }
 
     @Override
+    public Component getName(ItemStack stack) {
+        return Component.translatable("item.tconstruct.pattern",
+                Component.translatable("item.tconstruct." + selected(stack).id() + ".name"));
+    }
+
+    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!level.isClientSide) {

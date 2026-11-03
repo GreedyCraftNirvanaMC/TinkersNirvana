@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Format tool pattern names with their selected part instead of displaying an
+  untranslated `%s` placeholder.
 - Port Antique's complete registered tool catalog: harvesting tools, six melee
   weapons, bows/crossbows, arrows/bolts, and shurikens, with shared part definitions,
   native tool actions, damage, repair, ammunition, and material components.
