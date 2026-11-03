@@ -10,7 +10,7 @@ Existing unrelated project code retains its original license.
 The refreshed metal artwork was edited and exported in GIMP from each item's
 corresponding TinkersAntique texture. Original silhouettes, material patterns,
 and mineral-cluster layouts retain their attribution above. User-supplied
-modern Minecraft iron textures served as visual style references only.
+modern Minecraft iron and gold-nugget textures served as visual style references only.
 Ore backgrounds use Minecraft 1.21.1 stone and netherrack artwork; those
 Minecraft-derived backgrounds remain copyright Mojang AB / Microsoft and
 are not covered by the TinkersAntique license.

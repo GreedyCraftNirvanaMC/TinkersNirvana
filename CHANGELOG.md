@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Refine metal-nugget highlights and shadows using the modern vanilla gold nugget
+  as a style reference while retaining each Antique silhouette and detail.
 - Restyle eleven metals' ingots, nuggets, storage blocks, and ported ores in GIMP
   from their corresponding Antique artwork, preserving individual silhouettes,
   patterns, and mineral layouts while refining palettes for modern Minecraft.
