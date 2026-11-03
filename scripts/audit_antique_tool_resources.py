@@ -95,7 +95,8 @@ for entry in manifest:
     assert any(pixel[3] for pixel in pixels), (path, "empty image")
     assert not ({b"eXIf", b"iCCP", b"tEXt", b"iTXt", b"zTXt", b"tIME"} & chunks.keys()), (path, "unexpected metadata")
     if entry["source"]:
-        original = source / entry["source"]
+        texture_root = source if entry.get("source_mod", "tconstruct") == "tconstruct" else args.antique.parent / "Mantle/src/main/resources/assets/mantle"
+        original = texture_root / entry["source"]
         assert hashlib.sha256(original.read_bytes()).hexdigest() == entry["source_sha256"], original
         sw, sh, before, _ = png(original)
         if "crop" in entry:

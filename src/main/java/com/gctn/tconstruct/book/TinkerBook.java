@@ -19,12 +19,13 @@ import java.util.function.Supplier;
 public final class TinkerBook {
     public static final Supplier<Item> ITEM = ItemRegister.ITEMS.register("book", () -> new Item(new Item.Properties().stacksTo(1)) {
         @Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-            if (level.isClientSide) { com.gctn.tconstruct.book.client.BookScreen.open(); }
+            if (level.isClientSide) { com.gctn.tconstruct.book.client.BookScreen.open(hand); }
+            else { BookNetwork.begin(player, hand); }
             return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide);
         }
     });
     private TinkerBook() {}
-    public static void init() {}
+    public static void init(net.neoforged.bus.api.IEventBus bus) { BookNetwork.register(bus); }
     @SubscribeEvent private static void login(PlayerEvent.PlayerLoggedInEvent event) {
         if (!com.gctn.tconstruct.Config.SPAWN_WITH_BOOK.get()) { return; }
         Player player = event.getEntity(); var data = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);

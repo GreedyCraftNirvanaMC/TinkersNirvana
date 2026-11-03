@@ -33,7 +33,9 @@ import java.util.*;
 public final class BookContents {
     public static final List<String> SECTIONS = List.of("intro", "tools", "materials", "bowmaterials", "traits", "modifiers", "seared_devices", "world");
     private static volatile Map<ResourceLocation, JsonObject> resources = Map.of();
-    public record Page(String id, String section, int order, Component title, List<Component> text, List<ItemStack> icons, JsonObject image, Structure structure) {}
+    public record Page(String id, String section, int order, Component title, List<Component> text, List<ItemStack> icons, JsonObject image, Structure structure, JsonObject data) {
+        public Page(String id, String section, int order, Component title, List<Component> text, List<ItemStack> icons, JsonObject image, Structure structure) { this(id, section, order, title, text, icons, image, structure, new JsonObject()); }
+    }
     public record Structure(int width, int height, int depth, List<PlacedBlock> blocks) {}
     public record PlacedBlock(int x, int y, int z, BlockState state) {}
     private record Input(ItemStack stack, float value) {}
@@ -67,7 +69,7 @@ public final class BookContents {
         Map<Material, List<Input>> inputs = new IdentityHashMap<>();
         for (ItemStack stack : catalog) { var match = MaterialInputs.match(stack); if (match != null) { inputs.computeIfAbsent(match.material(), ignored -> new ArrayList<>()).add(new Input(stack, match.value())); } }
         for (var entry : localized.entrySet()) {
-            JsonObject data = entry.getValue(); String section = string(data, "section", "intro"), title = string(data, "title", "");
+            JsonObject data = entry.getValue().deepCopy(); String section = string(data, "section", "intro"), title = string(data, "title", "");
             List<Component> text = text(data, "text"), iconsText = new ArrayList<>(); List<ItemStack> icons = new ArrayList<>();
             if (data.has("tool")) {
                 String id = data.get("tool").getAsString(); toolPages.add(id); var tool = AntiqueTools.get(id);
@@ -76,6 +78,7 @@ public final class BookContents {
             }
             if (data.has("modifier")) {
                 String id = data.get("modifier").getAsString(); id = id.equals("extramodifier") ? "creative" : id.equals("extratrait") ? "embossment" : id;
+                data.addProperty("modifier", id);
                 modifierPages.add(id); title = title.isBlank() ? Component.translatable("modifier.tconstruct." + id).getString() : title;
                 addModifier(id, icons, iconsText, catalog);
             }
@@ -83,7 +86,7 @@ public final class BookContents {
                 if (data.has(key)) { text.add(Component.literal("")); for (JsonElement row : data.getAsJsonArray(key)) { text.add(Component.literal("• " + row.getAsString())); } }
             }
             text.addAll(iconsText);
-            pages.add(new Page(entry.getKey(), section, data.has("order") ? data.get("order").getAsInt() : 0, Component.literal(title.isBlank() ? labels.getOrDefault(string(data, "id", ""), string(data, "id", "")) : title), List.copyOf(text), List.copyOf(icons), data.has("image") ? data.getAsJsonObject("image") : null, data.has("structure") ? structure(data.getAsJsonObject("structure")) : null));
+            pages.add(new Page(entry.getKey(), section, data.has("order") ? data.get("order").getAsInt() : 0, Component.literal(title.isBlank() ? labels.getOrDefault(string(data, "id", ""), string(data, "id", "")) : title), List.copyOf(text), List.copyOf(icons), data.has("image") ? data.getAsJsonObject("image") : null, data.has("structure") ? structure(data.getAsJsonObject("structure")) : null, data));
         }
         for (var tool : AntiqueTools.entries().values()) {
             if (!toolPages.contains(tool.definition().id())) { List<ItemStack> icons = new ArrayList<>(); List<Component> text = new ArrayList<>(); addTool(tool, icons, text); pages.add(new Page("tool:" + tool.definition().id(), "tools", 100, Component.translatable("item.tconstruct." + tool.definition().id() + ".name"), text, icons, null, null)); }
@@ -135,16 +138,31 @@ public final class BookContents {
             if (material.isCraftable()) { text.add(Component.translatable("book.tconstruct.craftable")); }
             if (material.isCastable()) { text.add(Component.translatable("book.tconstruct.castable")); }
             if (!inputs.isEmpty()) { text.add(Component.translatable("book.tconstruct.ingredients")); for (Input input : inputs) { icons.add(input.stack); String value = java.math.BigDecimal.valueOf(input.value).setScale(3, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString(); text.add(Component.translatable("book.tconstruct.material_value", input.stack.getHoverName(), value)); } }
-            pages.add(new Page("material:" + material.identifier + (ranged ? ":ranged" : ""), ranged ? "bowmaterials" : "materials", 0, Component.translatable("material." + material.identifier + ".name").withColor(material.color), List.copyOf(text), List.copyOf(icons), null, null));
+            var metadata = new JsonObject(); metadata.addProperty("material", material.identifier); metadata.addProperty("ranged", ranged);
+            if (labels.containsKey(material.identifier + ".flavour")) { metadata.addProperty("flavour", labels.get(material.identifier + ".flavour")); }
+            pages.add(new Page("material:" + material.identifier + (ranged ? ":ranged" : ""), ranged ? "bowmaterials" : "materials", 0, Component.translatable("material." + material.identifier + ".name").withColor(material.color), List.copyOf(text), List.copyOf(icons), null, null, metadata));
         }
     }
     private static void stat(List<Component> text, String name, Object value) { text.add(Component.translatable("book.tconstruct.stat." + name, value)); }
-    private static List<Component> text(JsonObject data, String name) {
+    static List<Component> text(JsonObject data, String name) {
         List<Component> result = new ArrayList<>();
+        var paragraph = Component.empty();
         if (data.has(name)) { for (JsonElement row : data.getAsJsonArray(name)) {
-            if (row.isJsonPrimitive()) { result.add(Component.literal(row.getAsString())); }
-            else { JsonObject object = row.getAsJsonObject(); if (object.has("paragraph") && object.get("paragraph").getAsBoolean()) { result.add(Component.literal("")); } result.add(Component.literal(string(object, "text", ""))); }
+            if (row.isJsonPrimitive()) { paragraph.append(Component.literal(row.getAsString())); }
+            else {
+                JsonObject object = row.getAsJsonObject();
+                if (object.has("paragraph") && object.get("paragraph").getAsBoolean() && !paragraph.getString().isEmpty()) { result.add(paragraph); paragraph = Component.empty(); }
+                var line = Component.literal(string(object, "text", "")); var style = net.minecraft.network.chat.Style.EMPTY;
+                for (String flag : List.of("bold", "italic", "underlined", "strikethrough", "obfuscated")) {
+                    if (object.has(flag) && object.get(flag).getAsBoolean()) { style = style.applyFormat(switch (flag) { case "bold" -> net.minecraft.ChatFormatting.BOLD; case "italic" -> net.minecraft.ChatFormatting.ITALIC; case "underlined" -> net.minecraft.ChatFormatting.UNDERLINE; case "strikethrough" -> net.minecraft.ChatFormatting.STRIKETHROUGH; default -> net.minecraft.ChatFormatting.OBFUSCATED; }); }
+                }
+                if (object.has("color")) { var color = net.minecraft.network.chat.TextColor.parseColor(object.get("color").getAsString()).result(); if (color.isPresent()) { style = style.withColor(color.get()); } }
+                if (object.has("tooltip")) { var tooltip = new StringBuilder(); for (var part : object.getAsJsonArray("tooltip")) { if (!tooltip.isEmpty()) { tooltip.append('\n'); } tooltip.append(part.getAsString()); } style = style.withHoverEvent(new net.minecraft.network.chat.HoverEvent(net.minecraft.network.chat.HoverEvent.Action.SHOW_TEXT, Component.literal(tooltip.toString()))); }
+                if (object.has("action")) { String action = object.get("action").getAsString(); for (String prefix : List.of("go-to-page-rtn:", "go-to-page:")) { if (action.startsWith(prefix)) { style = style.withClickEvent(new net.minecraft.network.chat.ClickEvent(net.minecraft.network.chat.ClickEvent.Action.CHANGE_PAGE, action.substring(prefix.length()))); break; } } }
+                paragraph.append(line.setStyle(style));
+            }
         } }
+        if (!paragraph.getString().isEmpty()) { result.add(paragraph); }
         return result;
     }
     private static String string(JsonObject data, String name, String fallback) { return data.has(name) ? data.get(name).getAsString() : fallback; }

@@ -1,5 +1,14 @@
 # Antique content attribution
 
+The guidebook cover, fixed two-page layout, navigation arrows, reading-position
+handling, and structure-preview interactions adapt Mantle's `GuiBook`, `GuiArrow`,
+`BookHelper`, `TextDataRenderer`, and `ElementStructure`. Mantle's book and
+bookfront atlases were restyled and exported through GIMP MCP; provenance is in
+`scripts/antique_book_ui_textures.json`. These source portions and assets retain
+their MIT license and Slime Knights attribution in `Mantle-LICENSE.txt`, packaged
+under `META-INF/licenses`. They are adapted to native Minecraft 1.21.1 and
+NeoForge APIs; Mantle is not a build or runtime dependency.
+
 The Smeltery implementation in `src/main/java/com/gctn/tconstruct/smeltery`
 (excluding the pre-existing `Debug.java`) and the accompanying Smeltery assets
 are adapted from TinkersAntique 2.13.0.210, by Slime Knights and its contributors.

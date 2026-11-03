@@ -979,5 +979,19 @@
   "book.tconstruct.group.Shaft": "Arrow Shaft",
   "book.tconstruct.group.Fletching": "Fletching",
   "book.tconstruct.material_value": "%s: %s material units",
-  "item.tconstruct.pattern.blank": "Blank Pattern"
+  "item.tconstruct.pattern.blank": "Blank Pattern",
+  "book.tconstruct.cover_title": "Materials and You",
+  "book.tconstruct.cover_subtitle": "by Skyla",
+  "book.tconstruct.open": "Open book",
+  "book.tconstruct.cover": "Cover",
+  "book.tconstruct.previous": "Previous spread",
+  "book.tconstruct.next": "Next spread",
+  "book.tconstruct.back": "Back",
+  "book.tconstruct.search_button": "Search",
+  "book.tconstruct.search_results": "Search results",
+  "book.tconstruct.continued": "%s (continued)",
+  "book.tconstruct.structure.animate": "Toggle layer animation",
+  "book.tconstruct.structure.reset": "Reset model",
+  "book.tconstruct.structure.controls": "Drag to rotate; scroll to zoom",
+  "book.tconstruct.material_details": "Material and trait details"
 }

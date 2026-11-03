@@ -979,5 +979,19 @@
   "book.tconstruct.group.Shaft": "箭杆",
   "book.tconstruct.group.Fletching": "箭羽",
   "book.tconstruct.material_value": "%s：%s 份材料",
-  "item.tconstruct.pattern.blank": "空白模具"
+  "item.tconstruct.pattern.blank": "空白模具",
+  "book.tconstruct.cover_title": "匠魂宝典",
+  "book.tconstruct.cover_subtitle": "作者：Skyla",
+  "book.tconstruct.open": "打开宝典",
+  "book.tconstruct.cover": "封面",
+  "book.tconstruct.previous": "上一页",
+  "book.tconstruct.next": "下一页",
+  "book.tconstruct.back": "返回",
+  "book.tconstruct.search_button": "搜索",
+  "book.tconstruct.search_results": "搜索结果",
+  "book.tconstruct.continued": "%s（续）",
+  "book.tconstruct.structure.animate": "切换逐层搭建动画",
+  "book.tconstruct.structure.reset": "复位模型",
+  "book.tconstruct.structure.controls": "拖动旋转；滚轮缩放",
+  "book.tconstruct.material_details": "材料与词条详情"
 }

@@ -73,7 +73,8 @@ def restyle_tools(antique_root, output_root, start=0, end=None, manifest_name="a
                             pixels[(y * 16 + x) * 4:(y * 16 + x) * 4 + 4] = rgba
             layer.get_buffer().set(Gegl.Rectangle.new(0, 0, 16, 16), "R'G'B'A u8", bytes(pixels))
         else:
-            source = source_root / row["source"]
+            texture_root = source_root if row.get("source_mod", "tconstruct") == "tconstruct" else Path(antique_root).parent / "Mantle/src/main/resources/assets/mantle"
+            source = texture_root / row["source"]
             if hashlib.sha256(source.read_bytes()).hexdigest() != row["source_sha256"]:
                 raise ValueError("Source texture changed: " + str(source))
             image = Gimp.file_load(Gimp.RunMode.NONINTERACTIVE, Gio.File.new_for_path(str(source)))

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Rebuild Materials and You around Mantle's cover, facing paper pages, icon
+  contents, tool assembly diagrams, material columns, and modifier ingredient
+  layouts; paginate long text, retain inline styles/tooltips, save each book's
+  reading position, and add zoomable animated structure previews without a Mantle dependency.
+
 - Add the Stencil Table, Part Builder, persistent Crafting Station, pattern/part
   chests, shared workshop navigation, adjacent inventory access, material variants,
   tool naming and part replacement, crafting-grid kit repair, and offhand harvesting.
