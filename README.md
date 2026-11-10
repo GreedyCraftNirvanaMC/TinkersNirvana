@@ -1,28 +1,28 @@
+# TinkersNirvana
 
-Installation information
-=======
+[简体中文](README.zh-CN.md)
 
-工具制作、装配和强化使用方式见 [TOOLS.md](TOOLS.md)，材料与 KubeJS 扩展接口见 [TOOL_API.md](TOOL_API.md)。
-世界与村庄设置见 [WORLD.md](WORLD.md)，宝典操作和资源包扩展见 [BOOK.md](BOOK.md)，装置使用见 [GADGETS.md](GADGETS.md)。
+**Version 1.21.1-1.0.0 · Minecraft Java Edition 1.21.1 · NeoForge**
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+TinkersNirvana brings the classic TinkersAntique experience to Minecraft 1.21.1. Build tools from interchangeable parts, customize them with modifiers, and process materials with the Smeltery, Tinker Tank, and Seared Furnace. The port includes the workshops, slime islands, gadgets, the in-game *Materials and You* guide, and refreshed block and item textures.
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+## Install
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
+1. Set up Minecraft Java Edition 1.21.1 with Java 21 and NeoForge 21.1.218 or later in the 21.1 series.
+2. Put `TinkersNirvana-1.21.1-1.0.0.jar` in the instance's `mods` directory. For multiplayer, install the same version on the server and each client.
 
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
+Mantle is not required. The mod ID is `tconstruct`.
 
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+## Build from source
+
+Run `./gradlew build` with JDK 21. On Windows, run `.\gradlew.bat build`. The mod JAR is written to `build/libs/`.
+
+## Guides
+
+- [Tools, assembly, and modifiers](TOOLS.md) · [Material and KubeJS integration](TOOL_API.md)
+- [Smeltery](SMELTERY.md) · [Tinker Tank](TINKER_TANK.md) · [Seared Furnace](SEARED_FURNACE.md)
+- [In-game book](BOOK.md) · [Gadgets](GADGETS.md) · [World generation](WORLD.md)
+
+## License and credits
+
+The project's MIT-licensed portions are covered by the [MIT License](LICENSE). TinkersAntique-derived code and assets retain [LGPL-3.0-only](third_party/TinkersAntique-LICENSE.txt). Mantle-derived code and assets retain [Mantle's MIT license](third_party/Mantle-LICENSE.txt). See the [third-party notices](third_party/NOTICE.md) for attribution to Slime Knights and contributors, and for details on Minecraft-derived artwork. A [Chinese license translation](LICENSE.zh-CN.md) is also available.
