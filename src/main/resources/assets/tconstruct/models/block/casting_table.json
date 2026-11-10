@@ -1,4 +1,5 @@
 {
+  "parent": "minecraft:block/block",
   "textures": {
     "top": "tconstruct:block/smeltery/castingtable_top",
     "side": "tconstruct:block/smeltery/castingtable_side",

@@ -24,7 +24,7 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     private static final ResourceLocation ICON_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(TinkersNirvana.MODID, "textures/gui/icons.png");
 
-    private static final int MODE_BUTTON_X = -108;
+    private static final int MAX_MODE_BUTTON_COLUMNS = 5;
     private static final int MODE_BUTTON_Y = 10;
     private static final int MODE_BUTTON_SPACING = 22;
     private static final float INPUT_SLOT_ICON_ALPHA = 0.35F;
@@ -41,6 +41,8 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     private final NearbyInventoryPanel nearbyPanel;
     private net.minecraft.client.gui.components.EditBox nameField;
     private String observedName;
+    private boolean applyingServerName;
+    private int modeButtonColumns;
 
     public ToolStationScreen(ToolStationMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -57,23 +59,31 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     protected void init() {
         super.init();
         this.modeButtons.clear();
+        this.modeButtonColumns = Math.clamp(leftPos / MODE_BUTTON_SPACING, 1, MAX_MODE_BUTTON_COLUMNS);
         nearbyPanel.init(leftPos, topPos, menu.containerId, this::addRenderableWidget);
-        nameField = new net.minecraft.client.gui.components.EditBox(font, leftPos + 79, topPos + 18, 88, 12, Component.translatable("gui.tconstruct.tool_name"));
-        nameField.setMaxLength(50); nameField.setBordered(false); nameField.setTextColor(0xffffff);
-        observedName = menu.pendingName(); nameField.setValue(observedName);
-        nameField.setResponder(name -> net.neoforged.neoforge.network.PacketDistributor.sendToServer(new com.gctn.tconstruct.tables.WorkshopNetwork.Rename(menu.containerId, name)));
+        nameField = new net.minecraft.client.gui.components.EditBox(font, leftPos + 70, topPos + 8, 98, 10, Component.translatable("gui.tconstruct.tool_name"));
+        nameField.setMaxLength(50);
+        nameField.setBordered(false);
+        nameField.setTextColor(0x202020);
+        observedName = menu.pendingName();
+        nameField.setValue(observedName);
+        nameField.setResponder(name -> {
+            if (!applyingServerName) {
+                net.neoforged.neoforge.network.PacketDistributor.sendToServer(
+                        new com.gctn.tconstruct.tables.WorkshopNetwork.Rename(menu.containerId, name));
+            }
+        });
         addRenderableWidget(nameField);
         WorkshopNavigation.add(menu.position(), menu.containerId, leftPos + 8, topPos - 20, this::addRenderableWidget);
-        this.addModeButton(Mode.DEFAULT, ICON_TEXTURE, 55, 1, 16, 16, 0);
-        this.addModeButton(Mode.DISASSEMBLE, new ItemStack(Items.SHEARS), 1);
-        this.addModeButton(Mode.PICKAXE, new ItemStack(Items.WOODEN_PICKAXE), 2);
-        this.addModeButton(Mode.SHOVEL, new ItemStack(Items.WOODEN_SHOVEL), 3);
-        this.addModeButton(Mode.AXE, new ItemStack(Items.WOODEN_AXE), 4);
-        int buttonIndex = 5;
+        this.addModeButton(Mode.DEFAULT, ICON_TEXTURE, 55, 1, 16, 16);
+        this.addModeButton(Mode.DISASSEMBLE, new ItemStack(Items.SHEARS));
+        this.addModeButton(Mode.PICKAXE, new ItemStack(Items.WOODEN_PICKAXE));
+        this.addModeButton(Mode.SHOVEL, new ItemStack(Items.WOODEN_SHOVEL));
+        this.addModeButton(Mode.AXE, new ItemStack(Items.WOODEN_AXE));
         for (Mode mode : Mode.values()) {
             if (mode == Mode.DEFAULT || mode == Mode.DISASSEMBLE || mode == Mode.PICKAXE || mode == Mode.SHOVEL || mode == Mode.AXE || mode == Mode.DEBUG) { continue; }
             var entry = com.gctn.tconstruct.tools.AntiqueTools.get(mode.name().toLowerCase(java.util.Locale.ROOT));
-            if (entry != null) { this.addModeButton(mode, new ItemStack(entry.item().get()), buttonIndex++); }
+            if (entry != null) { this.addModeButton(mode, new ItemStack(entry.item().get())); }
         }
         this.updateModeButtons();
     }
@@ -81,9 +91,16 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         nameField.visible = !menu.isMode(Mode.DISASSEMBLE);
+        if (!nameField.visible && getFocused() == nameField) {
+            setFocused(null);
+        }
         if (!menu.pendingName().equals(observedName) && !nameField.isFocused()) {
             observedName = menu.pendingName();
-            if (!nameField.getValue().equals(observedName)) { nameField.setValue(observedName); }
+            if (!nameField.getValue().equals(observedName)) {
+                applyingServerName = true;
+                nameField.setValue(observedName);
+                applyingServerName = false;
+            }
         }
         this.updateModeButtons();
         super.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -94,9 +111,12 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         nearbyPanel.update(); nearbyPanel.render(guiGraphics, leftPos, topPos);
         guiGraphics.blit(BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-        guiGraphics.blit(BACKGROUND_TEXTURE, this.leftPos - 110, this.topPos, 0, 180, 108, 7);
-        guiGraphics.blit(BACKGROUND_TEXTURE, this.leftPos - 2, this.topPos, 131, 180, 2, 7);
-        guiGraphics.blit(BACKGROUND_TEXTURE, this.leftPos + this.imageWidth, this.topPos, 0, 180, 133, 7);
+        int beamWidth = modeButtonColumns * MODE_BUTTON_SPACING;
+        guiGraphics.blit(BACKGROUND_TEXTURE, leftPos - beamWidth, topPos, 0, 180, beamWidth - 2, 7);
+        guiGraphics.blit(BACKGROUND_TEXTURE, leftPos - 2, topPos, 131, 180, 2, 7);
+        if (!nameField.visible) {
+            guiGraphics.fill(leftPos + 68, topPos + 6, leftPos + 170, topPos + 18, 0xffc6c6c6);
+        }
         for (int inputSlot = 0; inputSlot < ToolStationMenu.INPUT_SLOT_COUNT; inputSlot++) {
             if (this.menu.isInputSlotVisible(inputSlot)) {
                 SlotPosition position = this.menu.getInputSlotPosition(inputSlot);
@@ -117,6 +137,9 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     }
 
     private void renderInputSlotIcon(GuiGraphics guiGraphics, int inputSlot, int x, int y) {
+        if (!this.menu.areSlotsEmpty(inputSlot)) {
+            return;
+        }
         if (this.menu.isMode(Mode.DEFAULT)) {
             this.renderDefaultSlotIcon(guiGraphics, inputSlot);
             return;
@@ -133,26 +156,18 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     }
 
     private void renderDefaultSlotIcon(GuiGraphics guiGraphics, int inputSlot) {
-        if (!this.menu.areSlotsEmpty(inputSlot)) {
-            return;
-        }
-
         DefaultSlotIcon icon = DEFAULT_SLOT_ICONS[inputSlot];
         guiGraphics.blit(ICON_TEXTURE, this.leftPos + icon.x(), this.topPos + icon.y(), icon.u(), 237, 16, 13);
     }
 
-    private void addModeButton(Mode mode, ItemStack icon, int index) {
-        int x = this.leftPos + MODE_BUTTON_X + index % 5 * MODE_BUTTON_SPACING;
-        int y = this.topPos + MODE_BUTTON_Y + (index / 5) * MODE_BUTTON_SPACING;
-        ModeButton button = new ModeButton(x, y, mode, icon, BACKGROUND_TEXTURE, ICON_TEXTURE,
+    private void addModeButton(Mode mode, ItemStack icon) {
+        ModeButton button = new ModeButton(0, 0, mode, icon, BACKGROUND_TEXTURE, ICON_TEXTURE,
                 this.menu::isMode, selectedMode -> this.setMode(selectedMode.getButtonId()));
         this.modeButtons.add(this.addRenderableWidget(button));
     }
 
-    private void addModeButton(Mode mode, ResourceLocation resourceLocation, int uOffset, int vOffset, int uWidth, int vHeight, int index) {
-        int x = this.leftPos + MODE_BUTTON_X + index % 5 * MODE_BUTTON_SPACING;
-        int y = this.topPos + MODE_BUTTON_Y + (index / 5) * MODE_BUTTON_SPACING;
-        ModeButton button = new ModeButton(x, y, mode, resourceLocation, uOffset, vOffset, uWidth, vHeight,
+    private void addModeButton(Mode mode, ResourceLocation resourceLocation, int uOffset, int vOffset, int uWidth, int vHeight) {
+        ModeButton button = new ModeButton(0, 0, mode, resourceLocation, uOffset, vOffset, uWidth, vHeight,
                 BACKGROUND_TEXTURE, ICON_TEXTURE, this.menu::isMode,
                 selectedMode -> this.setMode(selectedMode.getButtonId()));
         this.modeButtons.add(this.addRenderableWidget(button));
@@ -168,9 +183,17 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     }
 
     private void updateModeButtons() {
+        int index = 0;
         for (ModeButton button : this.modeButtons) {
             button.visible = this.menu.isModeButtonVisible(button.getMode());
             button.active = button.visible && !this.menu.isMode(button.getMode());
+            if (button.visible) {
+                int column = index % modeButtonColumns;
+                int row = index / modeButtonColumns;
+                button.setX(leftPos - (modeButtonColumns - column) * MODE_BUTTON_SPACING + 2);
+                button.setY(topPos + MODE_BUTTON_Y + row * MODE_BUTTON_SPACING);
+                index++;
+            }
         }
     }
 
@@ -181,6 +204,12 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
         return super.keyPressed(key, scan, modifiers);
     }
     @Override protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
+        for (ModeButton modeButton : modeButtons) {
+            if (modeButton.visible && mouseX >= modeButton.getX() && mouseX < modeButton.getX() + modeButton.getWidth()
+                    && mouseY >= modeButton.getY() && mouseY < modeButton.getY() + modeButton.getHeight()) {
+                return false;
+            }
+        }
         return !nearbyPanel.contains(mouseX, mouseY, left, top) && super.hasClickedOutside(mouseX, mouseY, left, top, button);
     }
 }
