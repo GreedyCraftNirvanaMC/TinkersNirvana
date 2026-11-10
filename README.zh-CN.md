@@ -1,17 +1,12 @@
 # TinkersNirvana
 
+<img src="src/main/resources/tinkersnirvana-logo.png" alt="TinkersNirvana" width="192">
+
 [English](README.md)
 
 **版本 1.21.1-1.0.0 · Minecraft Java 版 1.21.1 · NeoForge**
 
-TinkersNirvana 将经典的《匠魂怀古》移植到 Minecraft 1.21.1。你可以用不同材质的部件组装工具，借助强化定制工具，并使用冶炼炉、工匠储罐和焦黑熔炉加工材料。移植版包含工坊、史莱姆空岛、实用装置、游戏内宝典《材料与你》，以及重新绘制的方块和物品贴图。
-
-## 安装
-
-1. 使用 Java 21 运行 Minecraft Java 版 1.21.1，并安装 NeoForge 21.1.218 或更高的 21.1 系列版本。
-2. 将 `TinkersNirvana-1.21.1-1.0.0.jar` 放入游戏实例的 `mods` 目录。多人游戏中，服务端和各客户端应安装相同版本。
-
-游戏无需安装 Mantle。模组 ID 为 `tconstruct`。
+TinkersNirvana 将《匠魂怀古》移植到 Minecraft 1.21.1。你可以用不同材质的部件组装工具，借助强化定制工具，并使用冶炼炉、工匠储罐和焦黑熔炉加工材料。移植版包含工坊、史莱姆空岛、实用装置、游戏内宝典《匠魂宝典》，以及重新绘制的方块和物品贴图。
 
 ## 从源码构建
 

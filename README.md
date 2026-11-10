@@ -1,17 +1,12 @@
 # TinkersNirvana
 
+<img src="src/main/resources/tinkersnirvana-logo.png" alt="TinkersNirvana" width="192">
+
 [简体中文](README.zh-CN.md)
 
 **Version 1.21.1-1.0.0 · Minecraft Java Edition 1.21.1 · NeoForge**
 
-TinkersNirvana brings the classic TinkersAntique experience to Minecraft 1.21.1. Build tools from interchangeable parts, customize them with modifiers, and process materials with the Smeltery, Tinker Tank, and Seared Furnace. The port includes the workshops, slime islands, gadgets, the in-game *Materials and You* guide, and refreshed block and item textures.
-
-## Install
-
-1. Set up Minecraft Java Edition 1.21.1 with Java 21 and NeoForge 21.1.218 or later in the 21.1 series.
-2. Put `TinkersNirvana-1.21.1-1.0.0.jar` in the instance's `mods` directory. For multiplayer, install the same version on the server and each client.
-
-Mantle is not required. The mod ID is `tconstruct`.
+TinkersNirvana ports TinkersAntique to Minecraft 1.21.1. Assemble tools from parts made of different materials, customize them with modifiers, and process materials in the Smeltery, Tinker Tank, and Seared Furnace. The port includes workshops, slime islands, gadgets, the in-game *Materials and You* guide, and refreshed block and item textures.
 
 ## Build from source
 
