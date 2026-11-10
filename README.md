@@ -19,9 +19,11 @@ Run `./gradlew build` with JDK 21. On Windows, run `.\gradlew.bat build`. The mo
 
 ## Guides
 
-- [Tools, assembly, and modifiers](TOOLS.md) · [Material and KubeJS integration](TOOL_API.md)
-- [Smeltery](SMELTERY.md) · [Tinker Tank](TINKER_TANK.md) · [Seared Furnace](SEARED_FURNACE.md)
-- [In-game book](BOOK.md) · [Gadgets](GADGETS.md) · [World generation](WORLD.md)
+- [Tools, assembly, and modifiers](docs/en/TOOLS.md) · [Tool extension API](docs/en/TOOL_API.md) · [Trait system](docs/en/TRAITS.md)
+- [Smeltery](docs/en/SMELTERY.md) · [Tinker Tank](docs/en/TINKER_TANK.md) · [Seared Furnace](docs/en/SEARED_FURNACE.md)
+- [Materials and You](docs/en/BOOK.md) · [Gadgets](docs/en/GADGETS.md) · [Clear glass](docs/en/CLEAR_GLASS.md)
+- [World generation](docs/en/WORLD.md) · [Ores](docs/en/ORES.md) · [Slime](docs/en/SLIME.md) · [Soils and slime crystals](docs/en/SOILS.md)
+- [Manual playtest](docs/en/PLAYTEST_TOOLS.md) · [Changelog](docs/en/CHANGELOG.md)
 
 ## License and credits
 

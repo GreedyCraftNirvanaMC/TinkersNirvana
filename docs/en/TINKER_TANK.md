@@ -1,5 +1,7 @@
 # Tinker Tank
 
+[README](../../README.md) · [简体中文](../zh-CN/TINKER_TANK.md)
+
 The Tinker Tank stores multiple fluids without heating, melting, or alloying them.
 Its controller and all twelve seared slab/stair styles are in the Smeltery creative
 tab. Names and screen text support English and Simplified Chinese.

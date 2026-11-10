@@ -1,5 +1,7 @@
 # Slime blocks, items, and mobs
 
+[README](../../README.md) · [简体中文](../zh-CN/SLIME.md)
+
 The Slime creative tab contains blue, purple, blood, and magma slime blocks,
 five congealed slime colors, and five edible slimeballs. Vanilla supplies the
 green slime block and green slimeball. Pink blocks are registered but hidden
@@ -8,8 +10,7 @@ from the creative tab, as in TinkersAntique.
 Pack four same-color slimeballs in a square to make congealed slime, or nine
 in a full crafting grid to make a slime block. Craft a block by itself to recover
 four or nine slimeballs. Pink blocks have no ordinary packing or unpacking
-recipes. Until the world module is available, Antique's fallback recipes turn a
-vanilla slimeball plus blue, purple, or orange dye into the corresponding blue,
+recipes. Antique's fallback recipes turn a vanilla slimeball plus blue, purple, or orange dye into the corresponding blue,
 purple, or magma slimeball. Blood slimeballs can be cast from blood.
 
 Ordinary slime blocks use vanilla slime bounce, careful walking, and piston
@@ -75,8 +76,4 @@ mob produces 25 mB of its matching slime fluid per heart of melting damage.
 
 Spawn predicates recognize their own source or flowing slime fluid and the
 block tags `tconstruct:slime_spawnable/blue` and
-`tconstruct:slime_spawnable/purple`. These tags are empty until slime grass is
-ported or supplied by a pack. Blue's tag corresponds to non-purple slime grass;
-purple's tag corresponds to purple slime grass. Natural population and slime
-island generation remain part of the world-module port. Spawn eggs and summon
-commands are available immediately.
+`tconstruct:slime_spawnable/purple`. Blue's tag corresponds to non-purple slime grass, and purple's tag corresponds to purple slime grass. See [world generation](WORLD.md) for natural spawning. Spawn eggs and summon commands are also available.

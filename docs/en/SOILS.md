@@ -1,5 +1,7 @@
 # Soils and slime crystals
 
+[README](../../README.md) · [简体中文](../zh-CN/SOILS.md)
+
 The Slime tab includes Green Slimy Mud, Blue Slimy Mud, Slimy Magma Mud,
 Graveyard Soil, Consecrated Soil, and green, blue, and magma slime crystals.
 Grout remains in the Smeltery tab with its existing registry identity.
@@ -32,9 +34,4 @@ Smelt Graveyard Soil for 200 ticks to obtain Consecrated Soil and 0.1 XP.
 Smelt each slime mud for 200 ticks to obtain its matching crystal and 0.75 XP.
 These are ordinary smelting recipes, so native furnaces and the Seared Furnace
 can use them. Crystals expose `c:slime_crystals/<color>` item tags for integration.
-The remaining slime tool statistics and traits are separate ports.
-
-Green and blue mud reject ordinary plants. The empty block tag
-`tconstruct:slime_plants` provides their dedicated plant-support extension point
-for the future world module. Adding these soils does not register slime plants,
-trees, mobs, or world generation.
+Green and blue mud reject ordinary plants. Data packs can extend the dedicated plant-support block tag `tconstruct:slime_plants`. See [world generation](WORLD.md) for slime trees, plants, and islands.

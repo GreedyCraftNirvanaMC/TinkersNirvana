@@ -1,5 +1,7 @@
 # Seared Furnace
 
+[README](../../README.md) · [简体中文](../zh-CN/SEARED_FURNACE.md)
+
 The Seared Furnace uses ordinary Minecraft smelting recipes and shared liquid
 fuel to cook several batches at once. Its controller is in the Smeltery creative
 tab. Craft it with eight Seared Bricks (items) surrounding a vanilla furnace.

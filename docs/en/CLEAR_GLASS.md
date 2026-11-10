@@ -1,8 +1,10 @@
 # Clear Glass
 
+[README](../../README.md) · [简体中文](../zh-CN/CLEAR_GLASS.md)
+
 Cast 1,000 mB of molten glass in a basin to make Clear Glass. Surround one dye
 with eight Clear Glass blocks to craft eight stained clear glass blocks. All
-sixteen colors use Antique's original connected textures, item names, tint
+sixteen colors use Antique's connection rules, item names, tint
 values, and beacon colors. Adjacent blocks connect only when their type and
 color match. The stained variants are in the Smeltery creative tab.
 

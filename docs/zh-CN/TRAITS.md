@@ -1,5 +1,7 @@
 # 词条框架
 
+[首页](../../README.zh-CN.md) · [English](../en/TRAITS.md)
+
 ## 数据模型
 
 - `AbstractTraits` 是注册一次的不可变行为定义，不保存材料初始等级或单个工具的运行状态。

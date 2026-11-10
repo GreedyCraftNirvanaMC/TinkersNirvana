@@ -1,5 +1,7 @@
 # Changelog
 
+[README](../../README.md) · [简体中文](../zh-CN/CHANGELOG.md)
+
 ## Unreleased
 
 - Restore direct main-index entries for the Tinker Tank and Seared Furnace,

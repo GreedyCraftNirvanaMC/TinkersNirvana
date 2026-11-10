@@ -1,5 +1,7 @@
 # Ores
 
+[README](../../README.md) · [简体中文](../zh-CN/ORES.md)
+
 The Blocks creative tab includes Antique's Copper Ore, Tin Ore, and Aluminum
 Ore at `tconstruct:copper_ore`, `tconstruct:tin_ore`, and
 `tconstruct:aluminum_ore`. Each uses artwork restyled from its Antique texture and cutout rendering,
@@ -24,6 +26,4 @@ Ardite uses `c:ores/ardite`, `c:ores`, `c:ore_rates/singular`, and
 `c:ores_in_ground/netherrack` on blocks and items. Its Smeltery output follows
 the same ore-yield setting and produces molten Ardite (288 mB by default).
 
-This block registration provides no world-generation placement or additional
-furnace recipes. Packs can place the ore blocks through their own generation
-configuration. In-game names support English and Simplified Chinese.
+[World generation settings](WORLD.md) control ore placement. The ore block registration itself adds no ordinary furnace recipes. Data packs can override placement. In-game names support English and Simplified Chinese.

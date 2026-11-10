@@ -19,9 +19,11 @@ TinkersNirvana 将经典的《匠魂怀古》移植到 Minecraft 1.21.1。你可
 
 ## 使用指南
 
-- [工具、装配与强化](TOOLS.md) · [材料与 KubeJS 扩展](TOOL_API.md)
-- [冶炼炉](SMELTERY.md) · [工匠储罐](TINKER_TANK.md) · [焦黑熔炉](SEARED_FURNACE.md)
-- [游戏内宝典](BOOK.md) · [实用装置](GADGETS.md) · [世界生成](WORLD.md)
+- [工具、装配与强化](docs/zh-CN/TOOLS.md) · [工具扩展接口](docs/zh-CN/TOOL_API.md) · [词条框架](docs/zh-CN/TRAITS.md)
+- [冶炼炉](docs/zh-CN/SMELTERY.md) · [工匠储罐](docs/zh-CN/TINKER_TANK.md) · [焦黑熔炉](docs/zh-CN/SEARED_FURNACE.md)
+- [游戏内宝典](docs/zh-CN/BOOK.md) · [实用装置](docs/zh-CN/GADGETS.md) · [透明玻璃](docs/zh-CN/CLEAR_GLASS.md)
+- [世界生成](docs/zh-CN/WORLD.md) · [矿石](docs/zh-CN/ORES.md) · [史莱姆](docs/zh-CN/SLIME.md) · [土壤与史莱姆水晶](docs/zh-CN/SOILS.md)
+- [手工验证](docs/zh-CN/PLAYTEST_TOOLS.md) · [更新日志](docs/zh-CN/CHANGELOG.md)
 
 ## 许可证与署名
 

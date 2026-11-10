@@ -1,5 +1,7 @@
 # 工具扩展接口
 
+[首页](../../README.zh-CN.md) · [English](../en/TOOL_API.md)
+
 接口入口为 `com.gctn.tconstruct.api.TinkerContent`。材料、词条和强化应在启动阶段注册，并在客户端与服务端保持一致。修改启动脚本后需要重启；不应在玩家交互或服务器 tick 中修改全局定义。
 
 ## KubeJS 材料示例

@@ -1,8 +1,9 @@
 # Smeltery
 
+[README](../../README.md) · [简体中文](../zh-CN/SMELTERY.md)
+
 The Smeltery is available in the **Smeltery** creative tab on Minecraft 1.21.1 / NeoForge.
-It uses TinkersAntique's structure rules, fluid quantities, heating and casting rules,
-GUI textures, block textures, and sound assets.
+It follows TinkersAntique's structure rules, fluid quantities, heating, and casting.
 
 Build a rectangular seared-block floor, then build walls around an empty interior.
 The inside can be 1–9 blocks wide and 1–9 blocks deep. Put one Smeltery Controller
