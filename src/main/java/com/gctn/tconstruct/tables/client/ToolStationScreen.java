@@ -43,6 +43,7 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     private String observedName;
     private boolean applyingServerName;
     private int modeButtonColumns;
+    private Mode slotLayoutMode;
 
     public ToolStationScreen(ToolStationMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -183,6 +184,11 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     }
 
     private void updateModeButtons() {
+        Mode currentMode = this.menu.getMode();
+        if (this.slotLayoutMode != currentMode) {
+            this.menu.updateInputSlotPositions();
+            this.slotLayoutMode = currentMode;
+        }
         int index = 0;
         for (ModeButton button : this.modeButtons) {
             button.visible = this.menu.isModeButtonVisible(button.getMode());

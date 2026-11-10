@@ -215,6 +215,21 @@ public class ToolStationMenu extends AbstractContainerMenu {
         return ToolStationSlotPositions.getDisplayInputSlotPosition(this.getMode(), inputSlot);
     }
 
+    /** Client display slots keep the same container and network indices when they move. */
+    public void updateInputSlotPositions() {
+        for (int inputSlot = 0; inputSlot < INPUT_SLOT_COUNT; inputSlot++) {
+            int menuSlot = INPUT_MENU_SLOT_START + inputSlot;
+            Slot current = this.slots.get(menuSlot);
+            SlotPosition position = this.getInputSlotPosition(inputSlot);
+            if (current.x == position.slotX() && current.y == position.slotY()) {
+                continue;
+            }
+            Slot moved = new ModeAwareInputSlot(this, this.toolStation, inputSlot, position.slotX(), position.slotY(), inputSlot);
+            moved.index = current.index;
+            this.slots.set(menuSlot, moved);
+        }
+    }
+
     public ItemStack getInputSlotIcon(int inputSlot) {
         if (!this.isInputSlotInsertable(inputSlot)) {
             return ItemStack.EMPTY;
