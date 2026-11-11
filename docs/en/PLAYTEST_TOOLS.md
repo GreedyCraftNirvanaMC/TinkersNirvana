@@ -2,7 +2,7 @@
 
 [README](../../README.md) · [简体中文](../zh-CN/PLAYTEST_TOOLS.md)
 
-Use `build/libs/TinkersNirvana-1.21.1-1.0.0.jar` with Minecraft 1.21.1 and NeoForge 21.1.218. These scenarios require a game client.
+Use `build/libs/TinkersNirvana-1.21.1-1.0.1.jar` with Minecraft 1.21.1 and NeoForge 21.1.218. These scenarios require a game client.
 
 | Scenario | Action | Expected result |
 | --- | --- | --- |

@@ -92,7 +92,7 @@ public final class AntiqueToolClient {
         if (stack.getItem() instanceof AntiqueTool item && !item.definition().id().equals("pickaxe")) {
             for (var entry : ToolTraits.getTraits(stack)) {
                 event.getToolTip().add(entry.trait().getDisplayName(entry.level()));
-                if (Screen.hasAltDown()) { event.getToolTip().add(entry.trait().getDescription()); }
+                if (Screen.hasAltDown()) { if (!entry.trait().getDescription().getString().isBlank()) { event.getToolTip().add(entry.trait().getDescription()); } }
             }
             event.getToolTip().add(TinkerTools.getDurabilityTip(stack));
             if (Screen.hasShiftDown()) {
@@ -101,7 +101,7 @@ public final class AntiqueToolClient {
                 for (var part : item.definition().parts()) {
                     event.getToolTip().add(Component.translatable("tooltip.tconstruct.part_material",
                             Component.translatable("item.tconstruct." + part.part() + ".name"),
-                            Component.translatable("material." + data.getString(part.key()) + ".name")));
+                            com.gctn.tconstruct.library.materials.Material.nameOf(data.getString(part.key()))));
                 }
                 event.getToolTip().add(Component.translatable("tooltip.tconstruct.tool.miningspeed", ToolBuilder.savedStats(stack).getFloat("MiningSpeed")));
                 event.getToolTip().add(Component.translatable("tooltip.tconstruct.tool.mininglevel",
@@ -116,7 +116,7 @@ public final class AntiqueToolClient {
             if (materialData.contains("FortifiedTier")) {
                 Component tier = com.gctn.tconstruct.library.utils.HarvestLevels.getHarvestLevelName(materialData.getInt("FortifiedTier"));
                 String material = materialData.getString("FortifiedMaterial");
-                event.getToolTip().add(material.isEmpty() ? tier : Component.translatable("tooltip.tconstruct.fortified", Component.translatable("material." + material + ".name"), tier));
+                event.getToolTip().add(material.isEmpty() ? tier : Component.translatable("tooltip.tconstruct.fortified", com.gctn.tconstruct.library.materials.Material.nameOf(material), tier));
             }
             for (String id : ToolModifiers.entries().keySet()) {
                 int units = ToolModifiers.units(stack, id);
@@ -127,7 +127,7 @@ public final class AntiqueToolClient {
         var part = AntiqueParts.get(stack);
         if (part != null && part.id().equals("bolt_core")) {
             String coating = TinkerDataComponents.getMaterialTag(stack).getString("Coating");
-            if (!coating.isEmpty()) { event.getToolTip().add(Component.translatable("tooltip.tconstruct.coating", Component.translatable("material." + coating + ".name"))); }
+            if (!coating.isEmpty()) { event.getToolTip().add(Component.translatable("tooltip.tconstruct.coating", com.gctn.tconstruct.library.materials.Material.nameOf(coating))); }
         }
         if (part != null && !java.util.Set.of("tool_rod", "binding").contains(part.id())) {
             var material = TinkerMaterials.getMaterial(TinkerDataComponents.getMaterialTag(stack).getString(Tags.PART_MATERIAL));
@@ -157,7 +157,7 @@ public final class AntiqueToolClient {
             if (material != null) {
                 for (var entry : material.getTraitsForStats(part.stat().equals("Bow") ? java.util.List.of("Bow", "Head") : java.util.List.of(part.stat()))) {
                     event.getToolTip().add(entry.trait().getDisplayName(entry.level()));
-                    if (Screen.hasAltDown()) { event.getToolTip().add(entry.trait().getDescription()); }
+                    if (Screen.hasAltDown()) { if (!entry.trait().getDescription().getString().isBlank()) { event.getToolTip().add(entry.trait().getDescription()); } }
                 }
             }
         }

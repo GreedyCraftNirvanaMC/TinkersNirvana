@@ -77,7 +77,7 @@ public class PickaxeTips {
             // TODO 按下Ctrl时显示详细信息
         } else if (Screen.hasAltDown()) {
             for (ToolTraits.Entry entry : ToolTraits.getTraits(stack)) {
-                upperTips.add(Either.left(entry.trait().getDescription()));
+                if (!entry.trait().getDescription().getString().isBlank()) { upperTips.add(Either.left(entry.trait().getDescription())); }
             }
         } else {
             upperTips.add(Either.left(TinkerTools.shiftTip));

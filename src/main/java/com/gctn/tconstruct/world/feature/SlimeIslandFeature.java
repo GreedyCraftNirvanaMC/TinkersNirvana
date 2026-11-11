@@ -44,6 +44,13 @@ public class SlimeIslandFeature extends Feature<NoneFeatureConfiguration> {
         int width = 20 + random.nextInt(13), depth = 20 + random.nextInt(13), height = 11 + random.nextInt(3);
         BlockPos start = new BlockPos(x - width / 2, surface - height, z - depth / 2);
         if (start.getY() <= level.getMinBuildHeight() || surface + 10 >= level.getMaxBuildHeight()) { return false; }
+        BlockPos firstTree = new BlockPos(x - width / 3, surface + 1, z);
+        // Reserve an unobstructed canopy before writing any island blocks.
+        for (BlockPos pos : BlockPos.betweenClosed(firstTree.offset(-4, 0, -4), firstTree.offset(4, 8, 4))) {
+            if (!level.ensureCanWrite(pos) || level.getBlockEntity(pos) != null) { return false; }
+            BlockState state = level.getBlockState(pos);
+            if (!state.getFluidState().isEmpty() || !(state.isAir() || state.canBeReplaced())) { return false; }
+        }
         // Refuse occupied inventories and out-of-region writes before carving the island.
         for (BlockPos pos : BlockPos.betweenClosed(start, start.offset(width, height + 2, depth))) {
             if (!level.ensureCanWrite(pos) || level.getBlockEntity(pos) != null) { return false; }
@@ -78,11 +85,28 @@ public class SlimeIslandFeature extends Feature<NoneFeatureConfiguration> {
         List<BlockState> rim = magma ? List.of(congealed("magma"), congealed("magma"), congealed("magma"), congealed("magma"), congealed("magma"), congealed("blood"))
                 : dirt.equals("purple") ? List.of(congealed("purple")) : List.of(congealed("green"), congealed("blue"));
         SlimeLakeShape.generate(level, random, new BlockPos(x, surface, z), liquid, congealed(dirt), rim, false, null);
-        plants(level, random, start, width, depth, height, plants);
         String treeFoliage = plants;
         var tree = new SlimeTreeFeature.Configuration(5, 4, congealed(magma ? "magma" : "green"), WorldModule.LEAVES.get(treeFoliage).get().defaultBlockState(),
                 magma ? Optional.empty() : Optional.of(WorldModule.VINES.get(treeFoliage + "1").get().defaultBlockState()), true);
-        for (int i = 0; i < 3; i++) { SlimeTreeFeature.generate(level, random, start.offset(random.nextInt(width), height, random.nextInt(depth)), tree); }
+        // The lake may replace the reserved tree's soil, so restore its supporting grass.
+        level.setBlock(firstTree.below(), grass, 2);
+        var firstTreeConfig = new SlimeTreeFeature.Configuration(tree.minHeight(), tree.heightRange(),
+                tree.trunk(), tree.leaves(), tree.vine(), false);
+        SlimeTreeFeature.generate(level, random, firstTree, firstTreeConfig);
+        int targetTrees = 1 + random.nextInt(3);
+        int trees = 1;
+        java.util.List<BlockPos> trunks = new java.util.ArrayList<>();
+        trunks.add(firstTree);
+        for (int attempt = 0; attempt < 32 && trees < targetTrees; attempt++) {
+            BlockPos candidate = start.offset(random.nextInt(width), height, random.nextInt(depth));
+            if (trunks.stream().anyMatch(pos -> Math.abs(pos.getX() - candidate.getX()) < 5
+                    && Math.abs(pos.getZ() - candidate.getZ()) < 5)) { continue; }
+            if (SlimeTreeFeature.generate(level, random, candidate, tree)) {
+                trees++;
+                trunks.add(candidate);
+            }
+        }
+        plants(level, random, start, width, depth, height, plants);
         if (!magma) {
             BlockState vine = WorldModule.VINES.get(foliage + "0").get().defaultBlockState();
             for (int i = 0; i < 30; i++) { vines(level, random, start.offset(-1 + random.nextInt(width + 2), 0, -1 + random.nextInt(depth + 2)), height, foliage, vine); }

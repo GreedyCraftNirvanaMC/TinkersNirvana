@@ -56,7 +56,7 @@ public final class ToolBuilder {
         rebuild(tool, definition);
         Material display = materials.get(Math.min(1, materials.size() - 1));
         tool.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_part",
-                Component.translatable("material." + display.identifier + ".name"),
+                display.getDisplayName(),
                 Component.translatable("item.tconstruct." + definition.id() + ".name")));
         tool.setDamageValue(0);
         return tool;
@@ -98,7 +98,22 @@ public final class ToolBuilder {
         saved.putFloat("ProjectileDamage", stats.projectileDamage);
         saved.putFloat("Accuracy", stats.accuracy);
         data.put("Stats", saved);
+        data.putString("DefinitionSession", com.gctn.tconstruct.tools.traits.TinkerTraits.definitionSession());
         tool.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
+        if (!definition.parts().isEmpty()) {
+            String displayId = data.getString(definition.parts().get(Math.min(1, definition.parts().size() - 1)).key());
+            tool.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_part",
+                    Material.nameOf(displayId), Component.translatable("item.tconstruct." + definition.id() + ".name")));
+        }
+    }
+
+    public static boolean ensureCurrent(ItemStack tool, ToolDefinition definition) {
+        String current = com.gctn.tconstruct.tools.traits.TinkerTraits.definitionSession();
+        if (!current.isEmpty() && !current.equals(TinkerDataComponents.getMaterialTag(tool).getString("DefinitionSession"))) {
+            rebuild(tool, definition);
+            return true;
+        }
+        return false;
     }
 
     public static ToolStats calculate(ItemStack tool, ToolDefinition definition) {

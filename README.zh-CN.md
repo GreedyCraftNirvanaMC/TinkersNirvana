@@ -4,7 +4,7 @@
 
 [English](README.md)
 
-**版本 1.21.1-1.0.0 · Minecraft Java 版 1.21.1 · NeoForge**
+**版本 1.21.1-1.0.1 · Minecraft Java 版 1.21.1 · NeoForge**
 
 TinkersNirvana 将《匠魂怀古》移植到 Minecraft 1.21.1。你可以用不同材质的部件组装工具，借助强化定制工具，并使用冶炼炉、工匠储罐和焦黑熔炉加工材料。移植版包含工坊、史莱姆空岛、实用装置、游戏内宝典《匠魂宝典》，以及重新绘制的方块和物品贴图。
 
@@ -12,13 +12,10 @@ TinkersNirvana 将《匠魂怀古》移植到 Minecraft 1.21.1。你可以用不
 
 使用 JDK 21 执行 `./gradlew build`。Windows 下执行 `.\gradlew.bat build`。构建生成的模组 JAR 位于 `build/libs/`。
 
-## 使用指南
+## 开发/魔改
 
-- [工具、装配与强化](docs/zh-CN/TOOLS.md) · [工具扩展接口](docs/zh-CN/TOOL_API.md) · [词条框架](docs/zh-CN/TRAITS.md)
-- [冶炼炉](docs/zh-CN/SMELTERY.md) · [工匠储罐](docs/zh-CN/TINKER_TANK.md) · [焦黑熔炉](docs/zh-CN/SEARED_FURNACE.md)
-- [游戏内宝典](docs/zh-CN/BOOK.md) · [实用装置](docs/zh-CN/GADGETS.md) · [透明玻璃](docs/zh-CN/CLEAR_GLASS.md)
-- [世界生成](docs/zh-CN/WORLD.md) · [矿石](docs/zh-CN/ORES.md) · [史莱姆](docs/zh-CN/SLIME.md) · [土壤与史莱姆水晶](docs/zh-CN/SOILS.md)
-- [手工验证](docs/zh-CN/PLAYTEST_TOOLS.md) · [更新日志](docs/zh-CN/CHANGELOG.md)
+- [KubeJS 材料与词条接口](docs/zh-CN/KUBEJS.md)
+- [Java 附属开发接口](docs/zh-CN/TOOL_API.md)
 
 ## 许可证与署名
 

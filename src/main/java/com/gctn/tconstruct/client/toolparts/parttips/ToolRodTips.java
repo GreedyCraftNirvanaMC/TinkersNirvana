@@ -69,7 +69,7 @@ public class ToolRodTips {
             addedTips.add(Either.left(durabilityTip));
         } else if (Screen.hasAltDown()) {
             for (AbstractTraits.TraitEntry entry : material.getTraits("Handle")) {
-                addedTips.add(Either.left(entry.trait().getDescription()));
+                if (!entry.trait().getDescription().getString().isBlank()) { addedTips.add(Either.left(entry.trait().getDescription())); }
             }
         } else {
             addedTips.add(Either.left(shiftTip));

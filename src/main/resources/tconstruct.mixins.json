@@ -3,7 +3,7 @@
   "minVersion": "0.8.7",
   "package": "com.gctn.tconstruct.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": ["EntityChannelFluidMixin", "PlayerOffhandHarvestMixin", "ServerOffhandHarvestMixin", "LivingEntityDamageAccessor"],
+  "mixins": ["EntityChannelFluidMixin", "PlayerOffhandHarvestMixin", "ServerOffhandHarvestMixin", "LivingEntityDamageAccessor", "WorldgenTreeFeatureMixin"],
   "client": ["ClientOffhandHarvestMixin"],
   "injectors": {"defaultRequire": 1}
 }

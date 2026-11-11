@@ -310,7 +310,7 @@ public final class ToolModifiers {
     public static float modifyAttack(ItemStack tool, LivingEntity attacker, LivingEntity target, float damage) {
         if (target.getType().is(EntityTypeTags.UNDEAD)) { damage += units(tool, "smite") / 24F * 2.5F; }
         if (target.getType().is(EntityTypeTags.ARTHROPOD)) { damage += units(tool, "bane_of_arthropods") / 24F * 2.5F; }
-        return AntiqueTraits.has(tool, "squeaky") ? 0 : damage;
+        return AntiqueTraits.has(tool, "squeaky", "modifyAttack") ? 0 : damage;
     }
 
     public static void afterHit(ItemStack tool, LivingEntity target, LivingEntity attacker) {

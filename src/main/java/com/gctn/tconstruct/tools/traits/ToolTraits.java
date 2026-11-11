@@ -37,18 +37,20 @@ public final class ToolTraits {
 
     public static void addTraits(CompoundTag tag, List<AbstractTraits.TraitEntry> traits) {
         for (AbstractTraits.TraitEntry entry : traits) {
-            AbstractTraits trait = entry.trait();
+            AbstractTraits trait = TinkerTraits.getTrait(entry.trait().identifier);
+            if (trait == null) { continue; }
+            int level = Math.min(entry.level(), trait.maxLevel);
             CompoundTag data = tag.getCompound(trait.identifier);
             if (trait instanceof LeveledTraits leveled && !leveled.stacksRepeatedLevels()) {
                 int[] applied = data.getIntArray("AppliedLevels");
-                if (Arrays.stream(applied).anyMatch(value -> value == entry.level())) {
+                if (Arrays.stream(applied).anyMatch(value -> value == level)) {
                     continue;
                 }
                 int[] updated = Arrays.copyOf(applied, applied.length + 1);
-                updated[applied.length] = entry.level();
+                updated[applied.length] = level;
                 data.putIntArray("AppliedLevels", updated);
             }
-            int combinedLevel = trait.addLevel(data.getInt("Level"), entry.level());
+            int combinedLevel = trait.addLevel(data.getInt("Level"), level);
             data.putInt("Level", Math.clamp(combinedLevel, 1, trait.maxLevel));
             data.putInt("StrengthenNumber", trait.strengthenNumber);
             tag.put(trait.identifier, data);
@@ -104,10 +106,19 @@ public final class ToolTraits {
         }
         for (Entry entry : getTraits(tool)) {
             updateTraitData(tool, entry.trait().identifier, data -> {
+                int storedLevel = data.getInt("Level");
                 data.putInt("Level", entry.level());
                 entry.trait().inventoryTick(tool, world, entity, slot, selected, data);
+                data.putInt("Level", storedLevel);
             });
         }
+    }
+
+    public static int modifyModifierSlots(ItemStack tool, int slots) {
+        for (Entry entry : getTraits(tool)) {
+            slots = entry.trait().modifyModifierSlots(tool, entry.level(), slots);
+        }
+        return slots;
     }
 
     public static int modifyDurability(ItemStack tool, int durability) {

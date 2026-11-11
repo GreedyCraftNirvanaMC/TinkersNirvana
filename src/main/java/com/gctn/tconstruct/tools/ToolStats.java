@@ -31,4 +31,37 @@ public class ToolStats {
     public int growthDurability;
     public float growthAttack;
     public float growthSpeed;
+    public ToolStats copy() {
+        ToolStats result = new ToolStats();
+        result.copyFrom(this);
+        return result;
+    }
+
+    public void copyFrom(ToolStats other) {
+        durability = other.durability;
+        baseDurability = other.baseDurability;
+        harvestLevel = other.harvestLevel;
+        miningSpeed = other.miningSpeed;
+        attack = other.attack;
+        attackSpeed = other.attackSpeed;
+        baseAttackSpeed = other.baseAttackSpeed;
+        drawSpeed = other.drawSpeed;
+        range = other.range;
+        projectileDamage = other.projectileDamage;
+        accuracy = other.accuracy;
+        growthDurability = other.growthDurability;
+        growthAttack = other.growthAttack;
+        growthSpeed = other.growthSpeed;
+        attributes.clear();
+        attributes.addAll(other.attributes);
+    }
+
+    public void validate() {
+        if (durability < 1 || harvestLevel < 0 || !Float.isFinite(miningSpeed) || miningSpeed < 0
+                || !Float.isFinite(attack) || !Float.isFinite(attackSpeed) || !Float.isFinite(baseAttackSpeed)
+                || !Float.isFinite(drawSpeed) || !Float.isFinite(range) || !Float.isFinite(projectileDamage)
+                || !Float.isFinite(accuracy) || !Float.isFinite(growthAttack) || !Float.isFinite(growthSpeed)) {
+            throw new IllegalArgumentException("Invalid calculated tool stats");
+        }
+    }
 }

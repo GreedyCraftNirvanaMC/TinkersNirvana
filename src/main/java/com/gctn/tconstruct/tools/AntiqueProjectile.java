@@ -78,7 +78,7 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     @Override
     protected void onHitBlock(net.minecraft.world.phys.BlockHitResult result) {
         super.onHitBlock(result);
-        if (!level().isClientSide && com.gctn.tconstruct.tools.traits.AntiqueTraits.has(traitTool(), "breakable") && random.nextBoolean()) { discard(); }
+        ToolTraits.forEach(traitTool(), (trait, level) -> trait.onProjectileHitBlock(traitTool(), level, this, result));
     }
 
     @Override

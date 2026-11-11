@@ -46,6 +46,7 @@ public class TinkersNirvana {
         TinkerRegistry.register(modEventBus);
         BlockRegister.register(modEventBus);
         ItemRegister.register(modEventBus);
+        com.gctn.tconstruct.api.ContentRegistries.register(modEventBus);
         MaterialList.init();
         new TinkerMaterials();
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

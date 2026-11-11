@@ -21,6 +21,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Slime;
@@ -51,8 +52,11 @@ public final class AntiqueTraits {
         return new AbstractTraits.TraitEntry(TinkerTraits.getTrait(id), level);
     }
     public static boolean has(ItemStack tool, String id) { return level(tool, id) > 0; }
-    public static int level(ItemStack tool, String id) {
-        return ToolTraits.getTraits(tool).stream().filter(entry -> entry.trait().identifier.equals(id)).mapToInt(ToolTraits.Entry::level).findFirst().orElse(0);
+    public static boolean has(ItemStack tool, String id, String hook) { return level(tool, id, hook) > 0; }
+    public static int level(ItemStack tool, String id) { return level(tool, id, "rules"); }
+    private static int level(ItemStack tool, String id, String hook) {
+        return ToolTraits.getTraits(tool).stream().filter(entry -> (hook.equals("rules") ? entry.trait().usesNativeRules() : entry.trait().usesNativeHook(hook))
+                && com.gctn.tconstruct.api.ContentNames.traitId(entry.trait().identifier).equals(com.gctn.tconstruct.api.ContentNames.traitId(id))).mapToInt(ToolTraits.Entry::level).findFirst().orElse(0);
     }
 
     private static int traitColor(String id) {
@@ -85,6 +89,26 @@ public final class AntiqueTraits {
         @Override public int getPriority() { return identifier.equals("squeaky") ? Integer.MIN_VALUE : 100; }
 
         @Override
+        public int modifyModifierSlots(ItemStack tool, int level, int slots) {
+            return identifier.equals("writable") ? (int) Math.min(Integer.MAX_VALUE, (long) slots + level) : slots;
+        }
+
+        @Override
+        public void onExperienceDrop(ItemStack tool, int level, net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent event) {
+            Player player = event.getAttackingPlayer();
+            if (identifier.equals("established") && player != null) {
+                int xp = event.getDroppedExperience();
+                event.setDroppedExperience(xp == 0 ? (player.getRandom().nextFloat() < .03F ? 1 : 0)
+                        : 1 + Math.round(xp * 1.25F + player.getRandom().nextFloat() * .25F));
+            }
+        }
+
+        @Override
+        public void onProjectileHitBlock(ItemStack tool, int level, net.minecraft.world.entity.projectile.AbstractArrow arrow, net.minecraft.world.phys.BlockHitResult hit) {
+            if (identifier.equals("breakable") && !arrow.level().isClientSide && arrow.getRandom().nextBoolean()) { arrow.discard(); }
+        }
+
+        @Override
         public void onProjectileLaunch(ItemStack tool, int level, net.minecraft.world.entity.projectile.AbstractArrow arrow) {
             if (identifier.equals("hovering")) { arrow.setDeltaMovement(arrow.getDeltaMovement().scale(.5)); }
             else if (identifier.equals("endspeed")) { arrow.setNoGravity(true); }
@@ -101,6 +125,8 @@ public final class AntiqueTraits {
         @Override
         public void modifyStats(ItemStack tool, int level, ToolStats stats) {
             switch (identifier) {
+                case "heavy" -> stats.attribute(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE,
+                        "tconstruct:heavy", 1, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE, EquipmentSlotGroup.HAND);
                 case "lightweight" -> stats.attackSpeed *= 1.1F;
                 case "fractured" -> stats.attack += 1.5F;
                 case "alien" -> {

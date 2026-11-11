@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 
 public class Material {
     public final String identifier;
-    public final int color;
+    public int color;
     public final boolean hidden;
 
     public Map<String, AbstractMaterialStats> stats = new HashMap<>();
@@ -29,6 +29,47 @@ public class Material {
 
     private BooleanSupplier availability = () -> true;
     private Supplier<ItemStack> representativeItem = () -> ItemStack.EMPTY;
+
+    private String translationKey;
+    private net.minecraft.network.chat.Component displayName;
+    private final List<Supplier<ItemStack>> fallbackItems = new ArrayList<>();
+
+    public Material displayName(net.minecraft.network.chat.Component name) { displayName = name; return this; }
+    public Material translationKey(String key) { translationKey = key; return this; }
+    public Material fallbackItem(Supplier<ItemStack> item) { fallbackItems.add(item); return this; }
+
+    public net.minecraft.network.chat.Component getDisplayName() {
+        ItemStack representative = getRepresentativeItem();
+        ItemStack input = fallbackItems.stream().map(Supplier::get).filter(stack -> !stack.isEmpty()).findFirst().orElse(ItemStack.EMPTY);
+        net.minecraft.network.chat.Component fallback = displayName != null ? displayName.copy()
+                : !representative.isEmpty() ? representative.getHoverName()
+                : !input.isEmpty() ? input.getHoverName()
+                : net.minecraft.network.chat.Component.literal(identifier);
+        var legacy = com.gctn.tconstruct.api.ContentNames.translated("material." + identifier + ".name", fallback);
+        String key = translationKey == null ? com.gctn.tconstruct.api.ContentNames.key("material", identifier, "name") : translationKey;
+        return com.gctn.tconstruct.api.ContentNames.translated(key, legacy);
+    }
+
+    public static net.minecraft.network.chat.Component nameOf(String id) {
+        Material material = com.gctn.tconstruct.library.TinkerMaterials.getMaterial(id);
+        return material == null ? net.minecraft.network.chat.Component.literal(id) : material.getDisplayName();
+    }
+
+    public void removeTrait(String id) {
+        String canonical = com.gctn.tconstruct.api.ContentNames.traitId(id);
+        traits.values().forEach(list -> list.removeIf(entry -> com.gctn.tconstruct.api.ContentNames.traitId(entry.trait().identifier).equals(canonical)));
+    }
+
+    public void clearTraits() { traits.clear(); }
+
+    private static List<AbstractTraits.TraitEntry> resolveTraits(List<AbstractTraits.TraitEntry> source) {
+        List<AbstractTraits.TraitEntry> resolved = new ArrayList<>();
+        for (var entry : source) {
+            var current = com.gctn.tconstruct.tools.traits.TinkerTraits.getTrait(entry.trait().identifier);
+            if (current != null) { resolved.add(new AbstractTraits.TraitEntry(current, Math.min(entry.level(), current.maxLevel))); }
+        }
+        return List.copyOf(resolved);
+    }
 
     // 参数不全的默认初始化
     public Material(String identifier, int color) { this(identifier, color, false); }
@@ -125,14 +166,14 @@ public class Material {
     // 获取词条属性
     public List<AbstractTraits.TraitEntry> getTraits(String pos) {
         // null 位置表示默认配置；指定位置的配置整体替换默认配置，而不是追加。
-        return List.copyOf(traits.getOrDefault(pos, traits.getOrDefault(null, List.of())));
+        return resolveTraits(traits.getOrDefault(pos, traits.getOrDefault(null, List.of())));
     }
 
     /** 多属性部件只合并显式部位词条；全部缺失时才采用默认列表。 */
     public List<AbstractTraits.TraitEntry> getTraitsForStats(List<String> positions) {
         List<AbstractTraits.TraitEntry> result = new ArrayList<>();
         for (String position : positions) { result.addAll(traits.getOrDefault(position, List.of())); }
-        return result.isEmpty() ? List.copyOf(traits.getOrDefault(null, List.of())) : List.copyOf(result);
+        return resolveTraits(result.isEmpty() ? traits.getOrDefault(null, List.of()) : result);
     }
 
     public int getColor() { return color; }
