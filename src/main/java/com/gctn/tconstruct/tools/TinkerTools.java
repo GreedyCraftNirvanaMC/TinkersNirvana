@@ -52,7 +52,8 @@ public abstract class TinkerTools extends Item {
 
     /** Hook for modifier slots added or removed by material traits. */
     protected int getMaterialModifierSlotAdjustment(ItemStack stack) {
-        return (int) Math.min(Integer.MAX_VALUE, (long) com.gctn.tconstruct.tools.traits.AntiqueTraits.level(stack, "writable") + ToolModifiers.level(stack, "endearment") + ToolModifiers.units(stack, "creative"));
+        int slots = (int) Math.min(Integer.MAX_VALUE, (long) ToolModifiers.level(stack, "endearment") + ToolModifiers.units(stack, "creative"));
+        return ToolTraits.modifyModifierSlots(stack, slots);
     }
 
     /** Hook for the number of slots consumed by applied modifiers. */
@@ -167,6 +168,11 @@ public abstract class TinkerTools extends Item {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
+        if (!level.isClientSide && this instanceof com.gctn.tconstruct.tools.tools.AntiqueTool item) {
+            if (ToolBuilder.ensureCurrent(stack, item.definition())) {
+                ToolModifiers.applyEnchantments(stack, level.registryAccess());
+            }
+        }
         ToolTraits.inventoryTick(stack, level, entity, slotId, isSelected);
         ToolModifiers.tick(stack, level, entity, slotId, isSelected);
         if (!level.isClientSide && this instanceof com.gctn.tconstruct.tools.tools.AntiqueTool item) {

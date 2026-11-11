@@ -16,6 +16,9 @@
 | --- | --- | --- |
 | `world.generateSlimeIslands` | `true` | 黏液岛与岩浆岛 |
 | `world.slimeIslandRate` / `world.magmaIslandRate` | `730` / `100` | 平均多少区块尝试生成一座岛 |
+| `world.islandSlimeSpawnInterval` | `40` | 玩家附近普通黏液岛额外尝试刷新匠魂史莱姆的间隔（游戏刻） |
+| `world.islandSlimeCap` | `16` | 每座普通黏液岛自然刷新的匠魂史莱姆数量上限 |
+| `world.slimeOutsideIslandSeconds` | `30` | 匠魂史莱姆连续离开空岛多少秒后清除 |
 | `world.generateIslandsInSuperflat` | `false` | 超平坦世界中的黏液岛 |
 | `world.generateSlimePools` | `false` | 地下黏液池与岩浆池 |
 | `world.slimePoolRate` / `world.magmaPoolRate` | `30` | 地下池尝试频率 |
@@ -24,6 +27,8 @@
 | `world.villageWorkshopWeight` / `world.villageSmelteryWeight` | `30` / `9` | 村庄建筑权重 |
 
 黏液岛和黏液池分别提供维度 ID 列表、黑白名单开关及地表维度限制。维度采用资源 ID，空列表有效。矿石分别提供铜、锡、铝、钴和阿迪特的开关与次数；主世界矿石还可调整最低、最高高度。次数为零可关闭对应尝试。
+
+每座新生成的黏液岛会生成 1–3 棵黏液树。蓝色、紫色史莱姆可在液态史莱姆中呼吸和游动，连续离岛达到配置时长后会被清除，不产生掉落、经验或分裂。返回任意普通黏液岛会重置计时；计时随实体保存。
 
 ## 数据包扩展
 

@@ -4,23 +4,29 @@
  */
 package com.gctn.tconstruct.common.slime;
 
+import com.gctn.tconstruct.Config;
 import com.gctn.tconstruct.smeltery.SmelteryFluids;
+import com.gctn.tconstruct.world.IslandBounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.fluids.FluidType;
 
 /** 两种彩色史莱姆共用原生攻击、体型属性和分裂流程，行为差异由实体类型决定。 */
 public final class AntiqueSlime extends Slime {
@@ -29,8 +35,61 @@ public final class AntiqueSlime extends Slime {
     public static final TagKey<Block> PURPLE_SPAWNABLE = TagKey.create(Registries.BLOCK,
             ResourceLocation.fromNamespaceAndPath("tconstruct", "slime_spawnable/purple"));
 
+    private int outsideIslandTicks;
+
     public AntiqueSlime(EntityType<? extends Slime> type, Level level) {
         super(type, level);
+    }
+
+    private static boolean isSlimeFluid(FluidType type) {
+        return type == SmelteryFluids.get("greenslime").getFluidType()
+                || type == SmelteryFluids.get("blueslime").getFluidType()
+                || type == SmelteryFluids.get("purpleslime").getFluidType();
+    }
+
+    @Override
+    public boolean canDrownInFluidType(FluidType type) {
+        return !isSlimeFluid(type) && super.canDrownInFluidType(type);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        // Slime's native floating goal only recognizes vanilla water and lava.
+        goalSelector.addGoal(0, new FloatGoal(this) {
+            @Override
+            public boolean canUse() {
+                return isInFluidType((type, height) -> isSlimeFluid(type) && height > getFluidJumpThreshold());
+            }
+        });
+    }
+
+    @Override
+    public void tick() {
+        if (isSlimeFluid(getEyeInFluidType())) {
+            setAirSupply(getMaxAirSupply());
+        }
+        super.tick();
+        if (level() instanceof ServerLevel level && isAlive()) {
+            if (IslandBounds.containsNormalIsland(level, blockPosition())) {
+                outsideIslandTicks = 0;
+            } else if (++outsideIslandTicks >= Config.SLIME_OUTSIDE_ISLAND_SECONDS.get() * 20) {
+                // Discard while alive to bypass death loot, XP and Slime's death-splitting path.
+                discard();
+            }
+        }
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putInt("TconstructOutsideIslandTicks", outsideIslandTicks);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        outsideIslandTicks = Math.max(0, tag.getInt("TconstructOutsideIslandTicks"));
     }
 
     public boolean isPurple() {

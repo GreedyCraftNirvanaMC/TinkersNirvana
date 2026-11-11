@@ -123,7 +123,7 @@ for name, biome in [("slime_island", "#minecraft:is_overworld"), ("magma_island"
 
 for metal in ["cobalt", "ardite", "copper", "tin", "aluminum"]:
     nether = metal in ["cobalt", "ardite"]
-    target = {"predicate_type": "minecraft:block_match", "block": "minecraft:netherrack"} if nether else {"predicate_type": "minecraft:tag_match", "tag": "minecraft:stone_ore_replaceables"}
+    target = {"predicate_type": "minecraft:block_match", "block": "minecraft:netherrack" if nether else "minecraft:stone"}
     name = "ore_" + metal
     write(root / f"data/tconstruct/worldgen/configured_feature/{name}.json", {"type": "minecraft:ore", "config": {"size": 5, "discard_chance_on_air_exposure": 0,
         "targets": [{"target": target, "state": {"Name": "tconstruct:" + metal + "_ore"}}]}})

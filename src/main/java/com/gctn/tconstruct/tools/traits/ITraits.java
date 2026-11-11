@@ -12,6 +12,11 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 
 /** 生命周期回调默认无效果，具体词条只需覆盖自己关心的触发点。 */
 public interface ITraits {
+    default void onProjectileHitBlock(ItemStack tool, int level, net.minecraft.world.entity.projectile.AbstractArrow projectile, net.minecraft.world.phys.BlockHitResult hit) {}
+
+    default int modifyModifierSlots(ItemStack tool, int level, int slots) { return slots; }
+    default void onExperienceDrop(ItemStack tool, int level, net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent event) {}
+
     default void onProjectileLaunch(ItemStack tool, int level, net.minecraft.world.entity.projectile.AbstractArrow projectile) {}
 
     default void onProjectileTick(ItemStack tool, int level, net.minecraft.world.entity.projectile.AbstractArrow projectile) {}

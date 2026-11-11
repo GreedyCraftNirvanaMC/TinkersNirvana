@@ -43,6 +43,9 @@ public class Config {
     public static final ModConfigSpec.BooleanValue ISLANDS_SUPERFLAT = BUILDER.define("world.generateIslandsInSuperflat", false);
     public static final ModConfigSpec.IntValue SLIME_ISLAND_RATE = BUILDER.defineInRange("world.slimeIslandRate", 730, 1, Integer.MAX_VALUE);
     public static final ModConfigSpec.IntValue MAGMA_ISLAND_RATE = BUILDER.defineInRange("world.magmaIslandRate", 100, 1, Integer.MAX_VALUE);
+    public static final ModConfigSpec.IntValue ISLAND_SPAWN_INTERVAL = BUILDER.defineInRange("world.islandSlimeSpawnInterval", 40, 20, 1200);
+    public static final ModConfigSpec.IntValue ISLAND_SLIME_CAP = BUILDER.defineInRange("world.islandSlimeCap", 16, 1, 64);
+    public static final ModConfigSpec.IntValue SLIME_OUTSIDE_ISLAND_SECONDS = BUILDER.defineInRange("world.slimeOutsideIslandSeconds", 30, 1, 3600);
     public static final ModConfigSpec.BooleanValue GEN_SLIME_POOLS = BUILDER.define("world.generateSlimePools", false);
     public static final ModConfigSpec.IntValue SLIME_POOL_RATE = BUILDER.defineInRange("world.slimePoolRate", 30, 1, Integer.MAX_VALUE);
     public static final ModConfigSpec.IntValue MAGMA_POOL_RATE = BUILDER.defineInRange("world.magmaPoolRate", 30, 1, Integer.MAX_VALUE);

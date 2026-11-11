@@ -47,7 +47,7 @@ public final class PartTraitTips {
         for (AbstractTraits.TraitEntry entry : material.getTraits(stat)) {
             tips.add(Either.left(entry.trait().getDisplayName(entry.level())));
             if (Screen.hasAltDown()) {
-                tips.add(Either.left(entry.trait().getDescription()));
+                if (!entry.trait().getDescription().getString().isBlank()) { tips.add(Either.left(entry.trait().getDescription())); }
             }
         }
         if (!Screen.hasAltDown() && !tips.isEmpty()) {

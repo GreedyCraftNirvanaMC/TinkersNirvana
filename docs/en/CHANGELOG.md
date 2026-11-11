@@ -2,7 +2,14 @@
 
 [README](../../README.md) · [简体中文](../zh-CN/CHANGELOG.md)
 
-## Unreleased
+## 1.21.1-1.0.1
+
+- Add optional KubeJS material and trait builders, definition edits and removal, translatable name fallbacks, saved-tool refresh, and Java addon documentation.
+- Fix island slime spawning and add Tinkers-only spawn settings, liquid breathing, and off-island cleanup.
+- Generate 1–3 slime trees per new island and block natural vanilla trees on slime soil.
+- Fix ingot cast/fluid rendering, add placed-fluid translations, and align Overworld ore replacement rules.
+
+## 1.21.1-1.0.0
 
 - Restore direct main-index entries for the Tinker Tank and Seared Furnace,
   reusing their existing introduction, construction and animated structure pages

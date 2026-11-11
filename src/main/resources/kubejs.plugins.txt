@@ -1,0 +1,1 @@
+com.gctn.tconstruct.compat.kubejs.TinkerKubeJSPlugin

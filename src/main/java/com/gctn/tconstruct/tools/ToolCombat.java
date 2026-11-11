@@ -46,7 +46,7 @@ public final class ToolCombat {
             event.setInvulnerabilityTicks(4);
         }
         event.setAmount(Math.max(0, ToolModifiers.modifyAttack(tool, attacker, event.getEntity(), damage)));
-        if (com.gctn.tconstruct.tools.traits.AntiqueTraits.has(tool, "squeaky")) {
+        if (com.gctn.tconstruct.tools.traits.AntiqueTraits.has(tool, "squeaky", "modifyAttack")) {
             attacker.level().playSound(null, event.getEntity().blockPosition(), ToolSounds.SQUEAK.get(), net.minecraft.sounds.SoundSource.PLAYERS, 1, 1);
         }
     }

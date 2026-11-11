@@ -18,6 +18,14 @@ version = mod_version
 group = mod_group_id
 
 repositories {
+    maven {
+        url = 'https://maven.latvian.dev/releases'
+        content { includeGroup 'dev.latvian.mods'; includeGroup 'dev.latvian.apps' }
+    }
+    maven {
+        url = 'https://maven.latvian.dev/mirror'
+        content { includeGroup 'com.github.rtyley' }
+    }
     // Add here additional repositories if required by some of the dependencies below.
 }
 
@@ -112,6 +120,9 @@ configurations {
 }
 
 dependencies {
+    compileOnly 'dev.latvian.mods:kubejs-neoforge:2101.7.2-build.381'
+    compileOnly 'dev.latvian.mods:rhino:2101.2.7-build.81'
+    localRuntime 'dev.latvian.mods:kubejs-neoforge:2101.7.2-build.381'
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"

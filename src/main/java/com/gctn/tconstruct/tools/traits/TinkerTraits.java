@@ -47,18 +47,43 @@ public final class TinkerTraits {
 
     /** 注册一个词条；同一 identifier 不能注册两次。 */
     public static <T extends AbstractTraits> T registerTrait(T trait) {
-        if (TRAITS_BY_NAME.containsKey(trait.identifier)) {
+        if (TRAITS_BY_NAME.containsKey(com.gctn.tconstruct.api.ContentNames.traitId(trait.identifier))) {
             throw new IllegalArgumentException("Duplicate trait identifier: " + trait.identifier);
         }
         traits.add(trait);
-        TRAITS_BY_NAME.put(trait.identifier, trait);
+        TRAITS_BY_NAME.put(com.gctn.tconstruct.api.ContentNames.traitId(trait.identifier), trait);
+        definitionsChanged();
         return trait;
+    }
+
+    private static String definitionSession = "";
+
+    public static String definitionSession() { return definitionSession; }
+    public static void definitionsChanged() { definitionSession = java.util.UUID.randomUUID().toString(); }
+
+    public static void replaceTrait(AbstractTraits replacement) {
+        registerTraits();
+        String key = com.gctn.tconstruct.api.ContentNames.traitId(replacement.identifier);
+        AbstractTraits previous = TRAITS_BY_NAME.get(key);
+        if (previous == null) { throw new IllegalArgumentException("Unknown trait: " + replacement.identifier); }
+        traits.set(traits.indexOf(previous), replacement);
+        TRAITS_BY_NAME.put(key, replacement);
+        definitionsChanged();
+    }
+
+    public static void removeTrait(String id) {
+        registerTraits();
+        AbstractTraits previous = TRAITS_BY_NAME.remove(com.gctn.tconstruct.api.ContentNames.traitId(id));
+        if (previous == null) { throw new IllegalArgumentException("Unknown trait: " + id); }
+        traits.remove(previous);
+        definitionsChanged();
     }
 
     /** 根据词条标识符反向查找已注册的词条，找不到时返回 null。 */
     public static AbstractTraits getTrait(String traitsName) {
         registerTraits();
-        return TRAITS_BY_NAME.get(traitsName);
+        if (traitsName == null || net.minecraft.resources.ResourceLocation.tryParse(traitsName) == null) { return null; }
+        return TRAITS_BY_NAME.get(com.gctn.tconstruct.api.ContentNames.traitId(traitsName));
     }
 
     /** 根据词条标识符获取颜色；找不到时返回白色。 */

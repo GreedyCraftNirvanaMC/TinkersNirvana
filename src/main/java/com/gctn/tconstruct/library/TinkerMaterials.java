@@ -305,7 +305,7 @@ public class TinkerMaterials {
 
     public static Material getMaterial(String materialId) {
         for (Material material : TinkerMaterials.materials) {
-            if (material.identifier.equals(materialId)) {
+            if (material.identifier.equals(materialId) || ("tconstruct:" + material.identifier).equals(materialId)) {
                 return material;
             }
         }

@@ -100,10 +100,17 @@ public final class TinkerContent {
         material.setCastable(true);
     }
 
+    /** Startup editor for an existing fluid binding, before recipes have been installed. */
+    public static void configureCastingMaterial(Material material, String fluidId) {
+        ResourceLocation id = ResourceLocation.parse(fluidId);
+        if (INSTALLED_CASTING.contains(material)) { throw new IllegalStateException("Casting edits require a restart: " + material.identifier); }
+        CASTING_FLUIDS.put(material, id);
+    }
+
     public static void installCastingRecipes() {
         for (var entry : CASTING_FLUIDS.entrySet()) {
             Material material = entry.getKey();
-            if (INSTALLED_CASTING.contains(material)) { continue; }
+            if (!material.isCastable() || INSTALLED_CASTING.contains(material)) { continue; }
             var fluid = net.minecraft.core.registries.BuiltInRegistries.FLUID.get(entry.getValue());
             if (fluid == net.minecraft.world.level.material.Fluids.EMPTY) { throw new IllegalArgumentException("Unknown casting fluid: " + entry.getValue()); }
             for (var part : com.gctn.tconstruct.library.toolparts.AntiqueParts.entries().values()) {

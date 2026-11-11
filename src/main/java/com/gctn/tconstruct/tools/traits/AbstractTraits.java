@@ -4,13 +4,13 @@ import net.minecraft.network.chat.Component;
 
 import java.util.Objects;
 
-/** 共享且不可变的词条定义；材料赋予等级与工具运行状态均不存放在定义中。 */
+/** 启动期间配置的共享词条定义；材料赋予等级与工具运行状态均不存放在定义中。 */
 public abstract class AbstractTraits implements ITraits {
     public final String identifier;
-    public final int maxLevel;
-    public final int color;
+    public int maxLevel;
+    public int color;
     // -1 代表非强化升级
-    public final int strengthenNumber;
+    public int strengthenNumber;
     public AbstractTraits(String identifier, int maxLevel, int strengthenNumber, int color) {
         if (identifier == null || identifier.isBlank() || maxLevel < 1) {
             throw new IllegalArgumentException("Invalid trait definition: " + identifier);
@@ -35,18 +35,30 @@ public abstract class AbstractTraits implements ITraits {
     public int getPriority() { return 100; }
 
     public Component getDisplayName(int toolLevel) {
-        var name = Component.translatable("traits." + identifier + ".name");
-        return (maxLevel > 1 ? Component.translatable("tooltip.tconstruct.trait.level", name, toolLevel) : name)
+        var name = displayName();
+        return (maxLevel > 1 ? Component.translatable("tooltip.tconstruct.trait.level", name, toolLevel) : name).copy()
                 .withColor(color);
     }
 
     public Component getDescription() {
-        return Component.translatable("traits." + identifier + ".description").withColor(color);
+        return com.gctn.tconstruct.api.ContentNames.translated(com.gctn.tconstruct.api.ContentNames.key("traits", identifier, "description"),
+                Component.translatableWithFallback("traits." + identifier + ".description", "")).copy().withColor(color);
     }
 
     public String getTranslatedName() {
-        return Component.translatable("traits." + this.identifier + ".name").getString();
+        return displayName().getString();
     }
+
+    public Component getNameComponent() { return displayName(); }
+
+    protected Component displayName() {
+        return com.gctn.tconstruct.api.ContentNames.translated(com.gctn.tconstruct.api.ContentNames.key("traits", identifier, "name"),
+                Component.translatableWithFallback("traits." + identifier + ".name", identifier));
+    }
+
+    /** Native rules outside lifecycle callbacks are controlled by the rules hook. */
+    public boolean usesNativeRules() { return true; }
+    public boolean usesNativeHook(String hook) { return true; }
 
     /** 材料赋予的词条及初始等级；等级不属于共享的词条定义。 */
     public record TraitEntry(AbstractTraits trait, int level) {

@@ -113,7 +113,7 @@ public final class AntiqueParts {
             data.putString(Tags.PART_MATERIAL, material.identifier);
             stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
             stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_part",
-                    Component.translatable("material." + material.identifier + ".name"),
+                    material.getDisplayName(),
                     Component.translatable("item.tconstruct." + id + ".name")));
             return stack;
         }

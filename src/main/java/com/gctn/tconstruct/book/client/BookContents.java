@@ -136,7 +136,7 @@ public final class BookContents {
                 else if (stats instanceof BowStringMaterialStats string) { stat(text, "modifier", string.modifier); }
                 else if (stats instanceof ArrowShaftMaterialStats shaft) { stat(text, "modifier", shaft.modifier); stat(text, "ammo", shaft.bonusAmmo); }
                 else if (stats instanceof FletchingMaterialStats fletching) { stat(text, "accuracy", fletching.accuracy); stat(text, "modifier", fletching.modifier); }
-                for (var trait : material.getTraits(position)) { text.add(trait.trait().getDisplayName(trait.level())); text.add(trait.trait().getDescription()); }
+                for (var trait : material.getTraits(position)) { text.add(trait.trait().getDisplayName(trait.level())); if (!trait.trait().getDescription().getString().isBlank()) { text.add(trait.trait().getDescription()); } }
                 text.add(Component.literal(""));
             }
             if (text.isEmpty()) { continue; }
@@ -150,7 +150,7 @@ public final class BookContents {
             }
             var metadata = new JsonObject(); metadata.addProperty("material", material.identifier); metadata.addProperty("ranged", ranged);
             if (labels.containsKey(material.identifier + ".flavour")) { metadata.addProperty("flavour", labels.get(material.identifier + ".flavour")); }
-            pages.add(new Page("material:" + material.identifier + (ranged ? ":ranged" : ""), ranged ? "bowmaterials" : "materials", TinkerMaterials.materials.indexOf(material), Component.translatable("material." + material.identifier + ".name").withColor(material.color), List.copyOf(text), List.copyOf(icons), null, null, metadata));
+            pages.add(new Page("material:" + material.identifier + (ranged ? ":ranged" : ""), ranged ? "bowmaterials" : "materials", TinkerMaterials.materials.indexOf(material), material.getDisplayName().copy().withColor(material.color), List.copyOf(text), List.copyOf(icons), null, null, metadata));
         }
     }
     static Component paper(Component text) {

@@ -13,18 +13,13 @@ import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
@@ -50,7 +45,7 @@ public final class ToolGameplayEvents {
         ItemStack tool = event.getTool();
         if (!(tool.getItem() instanceof TinkerTools) || TinkerTools.isBroken(tool)) { return; }
         ToolTraits.forEach(tool, (trait, level) -> trait.onBlockDrops(tool, level, event));
-        if (ToolModifiers.level(tool, "autosmelt") > 0 && !AntiqueTraits.has(tool, "autosmelt")) { ToolModifiers.smeltDrops(event); }
+        if (ToolModifiers.level(tool, "autosmelt") > 0 && !AntiqueTraits.has(tool, "autosmelt", "onBlockDrops")) { ToolModifiers.smeltDrops(event); }
         int blasting = ToolModifiers.level(tool, "blasting");
         if (blasting > 0 && !event.getLevel().random.nextBoolean()) { event.getDrops().clear(); }
         if (tool.getItem() instanceof AntiqueTool item && (item.definition().action() == ToolDefinition.Action.KAMA || item.definition().action() == ToolDefinition.Action.SCYTHE)
@@ -113,15 +108,6 @@ public final class ToolGameplayEvents {
     }
 
     @SubscribeEvent
-    public static void heavy(ItemAttributeModifierEvent event) {
-        if (event.getItemStack().getItem() instanceof TinkerTools && !TinkerTools.isBroken(event.getItemStack())
-                && AntiqueTraits.has(event.getItemStack(), "heavy")) {
-            event.addModifier(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(
-                    ResourceLocation.fromNamespaceAndPath(TinkersNirvana.MODID, "heavy"), 1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.HAND);
-        }
-    }
-
-    @SubscribeEvent
     public static void teleport(EntityTeleportEvent.EnderEntity event) {
         if (event.getEntity() instanceof LivingEntity entity && entity.hasEffect(TinkerEffects.ENDERFERENCE)) { event.setCanceled(true); }
     }
@@ -129,10 +115,10 @@ public final class ToolGameplayEvents {
     @SubscribeEvent
     public static void experience(LivingExperienceDropEvent event) {
         Player player = event.getAttackingPlayer();
-        if (player != null && AntiqueTraits.has(player.getMainHandItem(), "established") && !TinkerTools.isBroken(player.getMainHandItem())) {
-            int xp = event.getDroppedExperience();
-            event.setDroppedExperience(xp == 0 ? (player.getRandom().nextFloat() < .03F ? 1 : 0) : 1 + Math.round(xp * 1.25F + player.getRandom().nextFloat() * .25F));
+        if (player != null && !TinkerTools.isBroken(player.getMainHandItem())) {
+            ToolTraits.forEach(player.getMainHandItem(), (trait, level) -> trait.onExperienceDrop(player.getMainHandItem(), level, event));
         }
+
     }
 
     @SubscribeEvent
