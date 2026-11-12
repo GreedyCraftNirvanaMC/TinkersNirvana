@@ -4,7 +4,7 @@
 
 [简体中文](README.zh-CN.md)
 
-**Version 1.21.1-1.0.1 · Minecraft Java Edition 1.21.1 · NeoForge**
+**Version 1.21.1-1.0.2 · Minecraft Java Edition 1.21.1 · NeoForge**
 
 TinkersNirvana ports TinkersAntique to Minecraft 1.21.1. Assemble tools from parts made of different materials, customize them with modifiers, and process materials in the Smeltery, Tinker Tank, and Seared Furnace. The port includes workshops, slime islands, gadgets, the in-game *Materials and You* guide, and refreshed block and item textures.
 
@@ -16,6 +16,7 @@ Run `./gradlew build` with JDK 21. On Windows, run `.\gradlew.bat build`. The mo
 
 - [KubeJS materials and traits](docs/en/KUBEJS.md)
 - [Java addon API](docs/en/TOOL_API.md)
+- [Register existing addon parts in native workshops](docs/EXTERNAL_PARTS.md)
 
 ## License and credits
 

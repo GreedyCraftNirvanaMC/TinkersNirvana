@@ -197,6 +197,7 @@ public final class SmelteryRecipes {
             String name = material.identifier;
             if (!material.isCastable() || !SmelteryFluids.ENTRIES.containsKey(name)) { continue; }
             for (var part : com.gctn.tconstruct.library.toolparts.AntiqueParts.entries().values()) {
+                if (part.external()) { continue; }
                 if (!java.util.Set.of("Head", "Handle", "Extra", "Bow").contains(part.stat()) || !material.hasStats(part.stat())) { continue; }
                 ItemStack output = part.create(material);
                 int cost = Math.round(part.cost() * INGOT);
@@ -218,6 +219,7 @@ public final class SmelteryRecipes {
             }
         }
         for (var part : com.gctn.tconstruct.library.toolparts.AntiqueParts.entries().values()) {
+            if (part.external()) { continue; }
             if (!java.util.Set.of("Head", "Handle", "Extra", "Bow").contains(part.stat())) { continue; }
             Item item = part.item().get();
             for (String fluid : new String[]{"gold", "alubrass", "brass"}) {

@@ -102,6 +102,7 @@ public final class SmelteryModule {
             ITEMS.put(name, ItemRegister.ITEMS.register(name, () -> new Item(new Item.Properties())));
         }
         for (var part : com.gctn.tconstruct.library.toolparts.AntiqueParts.entries().values()) {
+            if (part.external()) { continue; }
             if (!java.util.Set.of("Head", "Handle", "Extra", "Bow").contains(part.stat())) { continue; }
             for (String prefix : java.util.List.of("cast_", "clay_cast_")) {
                 String name = prefix + part.id();
