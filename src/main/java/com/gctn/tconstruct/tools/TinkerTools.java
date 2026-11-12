@@ -1,6 +1,7 @@
 package com.gctn.tconstruct.tools;
 
 import com.gctn.tconstruct.TinkersNirvana;
+import com.gctn.tconstruct.api.ToolUpgradeApi;
 import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.Material;
@@ -42,7 +43,9 @@ public abstract class TinkerTools extends Item {
     }
 
     public final int getTotalModifierSlots(ItemStack stack) {
-        return (int) Math.clamp((long) getBaseModifierSlots(stack) + getMaterialModifierSlotAdjustment(stack), 0, Integer.MAX_VALUE);
+        // 升级奖励独立于材料词条，替换部件或重算属性时仍按保存的等级提供槽位。
+        return (int) Math.clamp((long) getBaseModifierSlots(stack) + getMaterialModifierSlotAdjustment(stack)
+                + ToolUpgradeApi.getLevel(stack), 0, Integer.MAX_VALUE);
     }
 
     /** Override for tool types whose base modifier slot count is not 3. */
