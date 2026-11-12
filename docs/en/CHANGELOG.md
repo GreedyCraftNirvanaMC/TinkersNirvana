@@ -2,7 +2,7 @@
 
 [README](../../README.md) · [简体中文](../zh-CN/CHANGELOG.md)
 
-## Unreleased
+## 1.21.1-1.0.3
 
 - Expose `ToolUpgradeApi` for addons to level tools, granting one persistent modifier slot per successful upgrade.
 

@@ -2,7 +2,7 @@
 
 [首页](../../README.zh-CN.md) · [English](../en/CHANGELOG.md)
 
-## 未发布
+## 1.21.1-1.0.3
 
 - 开放 `ToolUpgradeApi`，供附属升级工具，每次成功升级永久增加一个强化槽。
 

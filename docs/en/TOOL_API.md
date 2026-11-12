@@ -2,13 +2,13 @@
 
 [README](../../README.md) · [KubeJS](KUBEJS.md) · [简体中文](../zh-CN/TOOL_API.md)
 
-Target Minecraft 1.21.1, NeoForge and JDK 21. Add the mod JAR as a compile and development runtime dependency, for example `implementation files('libs/TinkersNirvana-1.21.1-1.0.1.jar')`. Declare a required dependency on mod ID `tconstruct` in the addon's `neoforge.mods.toml`. The API in `com.gctn.tconstruct.api` works independently of KubeJS.
+Target Minecraft 1.21.1, NeoForge and JDK 21. Add the mod JAR as a compile and development runtime dependency, for example `implementation files('libs/TinkersNirvana-1.21.1-1.0.3.jar')`. Declare a required dependency on mod ID `tconstruct` in the addon's `neoforge.mods.toml`. The API in `com.gctn.tconstruct.api` works independently of KubeJS.
 
 Development dependency example.
 
 ```groovy
 dependencies {
-    implementation files('libs/TinkersNirvana-1.21.1-1.0.1.jar')
+    implementation files('libs/TinkersNirvana-1.21.1-1.0.3.jar')
 }
 ```
 
@@ -18,7 +18,7 @@ In addition to the addon's own mod declaration, add this block to `META-INF/neof
 [[dependencies.exampleaddon]]
 modId = "tconstruct"
 type = "required"
-versionRange = "[1.21.1-1.0.1,)"
+versionRange = "[1.21.1-1.0.3,)"
 ordering = "AFTER"
 side = "BOTH"
 ```
