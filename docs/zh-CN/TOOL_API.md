@@ -2,13 +2,13 @@
 
 [首页](../../README.zh-CN.md) · [KubeJS](KUBEJS.md) · [English](../en/TOOL_API.md)
 
-附属使用 Minecraft 1.21.1、NeoForge 和 JDK 21。将本模组 JAR 作为编译及开发运行依赖，例如在附属的 Gradle 工程中使用 `implementation files('libs/TinkersNirvana-1.21.1-1.0.1.jar')`。在附属的 `neoforge.mods.toml` 声明对模组 ID `tconstruct` 的必需依赖。Java 接口位于 `com.gctn.tconstruct.api`，可独立于 KubeJS 使用。
+附属使用 Minecraft 1.21.1、NeoForge 和 JDK 21。将本模组 JAR 作为编译及开发运行依赖，例如在附属的 Gradle 工程中使用 `implementation files('libs/TinkersNirvana-1.21.1-1.0.3.jar')`。在附属的 `neoforge.mods.toml` 声明对模组 ID `tconstruct` 的必需依赖。Java 接口位于 `com.gctn.tconstruct.api`，可独立于 KubeJS 使用。
 
 开发工程的依赖示例。
 
 ```groovy
 dependencies {
-    implementation files('libs/TinkersNirvana-1.21.1-1.0.1.jar')
+    implementation files('libs/TinkersNirvana-1.21.1-1.0.3.jar')
 }
 ```
 
@@ -18,7 +18,7 @@ dependencies {
 [[dependencies.exampleaddon]]
 modId = "tconstruct"
 type = "required"
-versionRange = "[1.21.1-1.0.1,)"
+versionRange = "[1.21.1-1.0.3,)"
 ordering = "AFTER"
 side = "BOTH"
 ```
@@ -97,6 +97,26 @@ new MaterialDefinition(wood)
 复杂词条可以继承 `AbstractTraits` 或 `LeveledTraits` 并实现 `ITraits` 的回调，再通过 `TinkerTraits.registerTrait` 注册。`LeveledTraits` 默认累加不同初始强度，覆盖 `stacksRepeatedLevels()` 可以让相同强度重复累加。每把工具的计时器等状态应保存在该工具的词条 CompoundTag 中。
 
 `ToolStats.attribute(holder, id, amount, operation, slotGroup)` 添加原生物品属性。`modifyStats` 和修复预览应保持确定性；世界修改使用实际攻击、方块或服务端更新回调。
+
+## 工具升级
+
+`com.gctn.tconstruct.api.ToolUpgradeApi` 提供独立于 KubeJS 的工具升级接口，无需启动注册。经验、升级条件、等级上限和提示由附属控制。工具初始为 0 级；每次成功升级，在材料词条和原有额外槽位之外增加恰好一个强化槽。
+
+```java
+import com.gctn.tconstruct.api.ToolUpgradeApi;
+import com.gctn.tconstruct.tools.TinkerTools;
+
+// 在逻辑服务端线程执行，先检查附属自己的升级条件。
+if (ToolUpgradeApi.tryUpgrade(toolStack)) {
+    // 成功后再扣除附属的升级成本。
+    int level = ToolUpgradeApi.getLevel(toolStack);
+    int freeSlots = ((TinkerTools) toolStack.getItem()).getAvailableModifierSlots(toolStack);
+}
+```
+
+`isSupported(stack)` 接受非空的 `TinkerTools` 物品，包括附属子类。`getLevel(stack)` 对不支持的物品返回 0。`tryUpgrade(stack)` 原地修改传入的物品；不支持的物品、数量不为 1 的堆叠、达到整数上限或实际总槽位无法恰好增加一个时，返回 false 并保持物品不变。多次调用会连续升级，附属需保证每次升级只调用一次。预览时传入 `stack.copy()`，正式提交时才升级实际物品栏中的工具，并按所属容器接口要求标记物品栏或方块实体已变更。
+
+等级保存在现有材料组件中，随工具存档和复制，修复、更换部件和重算属性时保留；旧工具无需迁移。强化槽数量、强化校验与现有提示立即读取新总数，无需重算属性。接口本身不提供经验获取或等级提示；附属工具子类若自行替换材料数据，应保留原有字段。
 
 ## 现有接口
 

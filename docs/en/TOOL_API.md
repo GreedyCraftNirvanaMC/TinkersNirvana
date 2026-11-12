@@ -2,13 +2,13 @@
 
 [README](../../README.md) · [KubeJS](KUBEJS.md) · [简体中文](../zh-CN/TOOL_API.md)
 
-Target Minecraft 1.21.1, NeoForge and JDK 21. Add the mod JAR as a compile and development runtime dependency, for example `implementation files('libs/TinkersNirvana-1.21.1-1.0.1.jar')`. Declare a required dependency on mod ID `tconstruct` in the addon's `neoforge.mods.toml`. The API in `com.gctn.tconstruct.api` works independently of KubeJS.
+Target Minecraft 1.21.1, NeoForge and JDK 21. Add the mod JAR as a compile and development runtime dependency, for example `implementation files('libs/TinkersNirvana-1.21.1-1.0.3.jar')`. Declare a required dependency on mod ID `tconstruct` in the addon's `neoforge.mods.toml`. The API in `com.gctn.tconstruct.api` works independently of KubeJS.
 
 Development dependency example.
 
 ```groovy
 dependencies {
-    implementation files('libs/TinkersNirvana-1.21.1-1.0.1.jar')
+    implementation files('libs/TinkersNirvana-1.21.1-1.0.3.jar')
 }
 ```
 
@@ -18,7 +18,7 @@ In addition to the addon's own mod declaration, add this block to `META-INF/neof
 [[dependencies.exampleaddon]]
 modId = "tconstruct"
 type = "required"
-versionRange = "[1.21.1-1.0.1,)"
+versionRange = "[1.21.1-1.0.3,)"
 ordering = "AFTER"
 side = "BOTH"
 ```
@@ -97,6 +97,26 @@ Tools save trait IDs and independent state and resolve current definitions at ru
 Extend `AbstractTraits` or `LeveledTraits`, implement the needed `ITraits` callbacks, and register through `TinkerTraits.registerTrait`. Leveled traits add distinct initial strengths by default. Override `stacksRepeatedLevels()` to allow repeated strengths to stack. Store per-tool timers in the tool's trait CompoundTag.
 
 `ToolStats.attribute(holder, id, amount, operation, slotGroup)` adds native item attributes. Keep stat and repair-preview calculations deterministic. Use actual combat, block or server tick hooks for world mutations.
+
+## Tool upgrades
+
+`com.gctn.tconstruct.api.ToolUpgradeApi` exposes tool leveling without KubeJS or startup registration. The addon controls experience, upgrade requirements, limits and messages. Tools start at level 0; each successful upgrade adds exactly one modifier slot in addition to material traits and existing slot modifiers.
+
+```java
+import com.gctn.tconstruct.api.ToolUpgradeApi;
+import com.gctn.tconstruct.tools.TinkerTools;
+
+// Run on the logical server thread, after checking your addon's upgrade requirements.
+if (ToolUpgradeApi.tryUpgrade(toolStack)) {
+    // Deduct your addon's upgrade cost only after success.
+    int level = ToolUpgradeApi.getLevel(toolStack);
+    int freeSlots = ((TinkerTools) toolStack.getItem()).getAvailableModifierSlots(toolStack);
+}
+```
+
+`isSupported(stack)` accepts nonempty `TinkerTools` items, including addon subclasses. `getLevel(stack)` returns 0 for unsupported items. `tryUpgrade(stack)` mutates the supplied stack and returns false without changes for unsupported items, stacks whose count is not 1, integer limits, or when the total slot count cannot increase by exactly one. Calls are cumulative; the addon must ensure each upgrade is applied once. Use `stack.copy()` for a preview and apply the upgrade to the authoritative inventory stack only when committing it. Mark the owning inventory or block entity changed as required by that inventory's API.
+
+The level is stored in the existing persistent material component and survives saves, item copies, repairs, part replacement and stat rebuilds. Existing tools need no migration. Slot counts, modifier validation and existing tooltips read the new total immediately; no stat rebuild is necessary. The API does not grant experience or add level text to tooltips. Addon tool subclasses that replace material data must preserve its existing fields.
 
 ## Existing APIs
 

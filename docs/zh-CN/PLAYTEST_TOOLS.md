@@ -2,7 +2,7 @@
 
 [首页](../../README.zh-CN.md) · [English](../en/PLAYTEST_TOOLS.md)
 
-使用构建后的 `build/libs/TinkersNirvana-1.21.1-1.0.1.jar`，Minecraft 1.21.1 / NeoForge 21.1.218。以下是待执行的实际客户端验证，未以编译或资源审计替代。
+使用构建后的 `build/libs/TinkersNirvana-1.21.1-1.0.3.jar`，Minecraft 1.21.1 / NeoForge 21.1.218。以下是待执行的实际客户端验证，未以编译或资源审计替代。
 
 | 场景 | 操作 | 预期 |
 | --- | --- | --- |

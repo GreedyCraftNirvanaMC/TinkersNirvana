@@ -2,6 +2,10 @@
 
 [README](../../README.md) · [简体中文](../zh-CN/CHANGELOG.md)
 
+## 1.21.1-1.0.3
+
+- Expose `ToolUpgradeApi` for addons to level tools, granting one persistent modifier slot per successful upgrade.
+
 ## 1.21.1-1.0.1
 
 - Add optional KubeJS material and trait builders, definition edits and removal, translatable name fallbacks, saved-tool refresh, and Java addon documentation.
