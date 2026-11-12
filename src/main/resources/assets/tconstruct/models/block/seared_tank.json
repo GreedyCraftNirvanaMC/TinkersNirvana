@@ -1,6 +1,7 @@
 {
   "parent": "block/block",
   "textures": {
+    "particle": "#side",
     "top": "tconstruct:block/smeltery/seared_tank_top",
     "side": "tconstruct:block/smeltery/seared_tank_side"
   },
