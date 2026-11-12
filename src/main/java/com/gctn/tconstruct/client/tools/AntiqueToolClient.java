@@ -41,6 +41,7 @@ public final class AntiqueToolClient {
             }, entry.item().get());
         }
         for (var part : AntiqueParts.entries().values()) {
+            if (part.external()) { continue; }
             event.register((stack, tint) -> {
                 var data = TinkerDataComponents.getMaterialTag(stack);
                 var material = TinkerMaterials.getMaterial(part.id().equals("bolt_core") && tint == 1 ? data.getString("Coating") : data.getString(Tags.PART_MATERIAL));
@@ -125,6 +126,7 @@ public final class AntiqueToolClient {
             }
         }
         var part = AntiqueParts.get(stack);
+        if (part != null && part.external()) { return; }
         if (part != null && part.id().equals("bolt_core")) {
             String coating = TinkerDataComponents.getMaterialTag(stack).getString("Coating");
             if (!coating.isEmpty()) { event.getToolTip().add(Component.translatable("tooltip.tconstruct.coating", com.gctn.tconstruct.library.materials.Material.nameOf(coating))); }

@@ -25,6 +25,10 @@ import java.util.function.Supplier;
 /** 部件目录共用于创造栏、加工、浇筑、工具定义及第三方扩展。 */
 public final class AntiqueParts {
     private static final Map<String, Definition> PARTS = new LinkedHashMap<>();
+    private static final Map<String, ExternalPart> EXTERNAL_PARTS = new LinkedHashMap<>();
+    private record ExternalPart(java.util.function.Predicate<Material> accepts,
+                                java.util.function.Function<Material, ItemStack> factory,
+                                Supplier<Component> name) {}
 
     static {
         existing("tool_rod", 1, "Handle", ToolRod.TOOL_ROD);
@@ -69,6 +73,18 @@ public final class AntiqueParts {
         return definition;
     }
 
+    /** Registers an addon's existing item after item registration; does not create an item or a cast. */
+    public static Definition registerExternal(String id, float cost, String stat, Supplier<? extends Item> item,
+            java.util.function.Predicate<Material> accepts, java.util.function.Function<Material, ItemStack> factory,
+            Supplier<Component> displayName) {
+        if (!id.contains(":")) { throw new IllegalArgumentException("External parts require a namespaced identifier: " + id); }
+        net.minecraft.resources.ResourceLocation.parse(id);
+        if (!Float.isFinite(cost) || cost <= 0 || PARTS.containsKey(id)) { throw new IllegalArgumentException("Invalid or duplicate external part: " + id); }
+        java.util.Objects.requireNonNull(item); java.util.Objects.requireNonNull(stat);
+        EXTERNAL_PARTS.put(id, new ExternalPart(java.util.Objects.requireNonNull(accepts), java.util.Objects.requireNonNull(factory), java.util.Objects.requireNonNull(displayName)));
+        return existing(id, cost, stat, item);
+    }
+
     public static Map<String, Definition> entries() { return Collections.unmodifiableMap(PARTS); }
     public static Definition get(String id) { return PARTS.get(id); }
     public static void init() {}
@@ -104,9 +120,24 @@ public final class AntiqueParts {
     }
 
     public record Definition(String id, float cost, String stat, Supplier<? extends Item> item) {
+        public boolean external() { return EXTERNAL_PARTS.containsKey(id); }
+        public Component displayName() {
+            var external = EXTERNAL_PARTS.get(id);
+            return external == null ? Component.translatable("item.tconstruct." + id + ".name") : external.name.get().copy();
+        }
+        public boolean acceptsMaterial(Material material) {
+            var external = EXTERNAL_PARTS.get(id);
+            return external == null ? material.hasStats(stat) && (!stat.equals("Bow") || material.hasStats("Head")) : external.accepts.test(material);
+        }
         public ItemStack create(Material material) {
-            if (!material.hasStats(stat) || (stat.equals("Bow") && !material.hasStats("Head"))) {
+            if (!acceptsMaterial(material)) {
                 return ItemStack.EMPTY;
+            }
+            var external = EXTERNAL_PARTS.get(id);
+            if (external != null) {
+                ItemStack stack = external.factory.apply(material);
+                if (!stack.isEmpty() && !stack.is(item.get())) { throw new IllegalArgumentException("External part factory returned the wrong item: " + id); }
+                return stack.copy();
             }
             ItemStack stack = new ItemStack(item.get());
             CompoundTag data = new CompoundTag();

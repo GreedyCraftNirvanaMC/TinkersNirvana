@@ -36,7 +36,7 @@ public class WorkshopScreen extends AbstractContainerScreen<WorkshopMenu> {
                 var part = patterns.get(i);
                 Button button = new WorkshopNavigation.IconButton(leftPos - 112 + i % 5 * 22, topPos + 8 + i / 5 * 22,
                         new ItemStack(part.item().get()), pressed -> send(index));
-                button.setTooltip(Tooltip.create(Component.translatable("item.tconstruct." + part.id() + ".name")));
+                button.setTooltip(Tooltip.create(part.displayName()));
                 selections.add(addRenderableWidget(button));
             }
         } else if (menu.kind().storage()) {

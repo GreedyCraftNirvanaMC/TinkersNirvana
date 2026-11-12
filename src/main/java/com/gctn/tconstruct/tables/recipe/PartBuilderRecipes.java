@@ -33,7 +33,7 @@ public final class PartBuilderRecipes {
             ItemStack input = container.getItem(slot);
             if (input.isEmpty()) { continue; }
             var match = MaterialInputs.match(input);
-            if (match == null || !match.material().isCraftable() || !match.material().hasStats(part.stat())) { return null; }
+            if (match == null || !match.material().isCraftable() || !part.acceptsMaterial(match.material())) { return null; }
             if (material != null && material != match.material()) { return null; }
             material = match.material();
             while (counts[slot] < input.getCount() && value + 0.0001F < part.cost()) {
@@ -43,6 +43,8 @@ public final class PartBuilderRecipes {
         }
         // 不接受无法完整分配的高价值原料，避免悄悄吞掉多余材料。
         if (material == null) { return null; }
+        ItemStack result = part.create(material);
+        if (result.isEmpty()) { return null; }
         if (returnShards) {
             if (value + .0001F < part.cost()) { return null; }
             float surplus = value - part.cost();
@@ -51,15 +53,15 @@ public final class PartBuilderRecipes {
             ItemStack remainder = ItemStack.EMPTY;
             if (shards > 0) {
                 remainder = com.gctn.tconstruct.library.toolparts.AntiqueParts.get("shard").create(material);
+                if (remainder.isEmpty()) { return null; }
                 remainder.setCount(shards);
                 ItemStack existing = container.getItem(6);
                 if (!existing.isEmpty() && (!ItemStack.isSameItemSameComponents(existing, remainder) || existing.getCount() + shards > existing.getMaxStackSize())) { return null; }
             }
-            return new Plan(part.create(material), counts, remainder);
+            return new Plan(result, counts, remainder);
         }
         int outputCount = Math.round(value / part.cost());
         if (outputCount < 1 || outputCount > 64 || Math.abs(value - part.cost() * outputCount) > 0.001F) { return null; }
-        ItemStack result = part.create(material);
         result.setCount(outputCount);
         return new Plan(result, counts);
     }

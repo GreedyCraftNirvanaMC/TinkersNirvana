@@ -40,7 +40,7 @@ public class PatternItem extends Item {
     public Component getName(ItemStack stack) {
         if (isBlank(stack)) { return Component.translatable("item.tconstruct.pattern.blank"); }
         return Component.translatable("item.tconstruct.pattern",
-                Component.translatable("item.tconstruct." + selected(stack).id() + ".name"));
+                selected(stack).displayName());
     }
 
     @Override
@@ -55,7 +55,7 @@ public class PatternItem extends Item {
             data.putString("Pattern", part.id());
             stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
             player.displayClientMessage(Component.translatable("message.tconstruct.pattern_selected",
-                    Component.translatable("item.tconstruct." + part.id() + ".name")), true);
+                    part.displayName()), true);
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }
@@ -63,7 +63,7 @@ public class PatternItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         if (!isBlank(stack)) { tooltip.add(Component.translatable("tooltip.tconstruct.pattern_part",
-                Component.translatable("item.tconstruct." + selected(stack).id() + ".name"))); }
+                selected(stack).displayName())); }
         tooltip.add(Component.translatable("tooltip.tconstruct.pattern_usage"));
     }
 }
