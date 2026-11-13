@@ -95,10 +95,13 @@ Edit `config/tconstruct-common.toml`.
 | `general.addFlintRecipe` | `true` | Craft one flint from three gravel after recipe reload |
 | `general.craftingStationBlacklist` | `[]` | Exclude adjacent storage by block ID, block-entity type ID, or full class name |
 | `tools.deconstructTools` | `true` | Allow disassembly |
+| `tools.initialModifierSlots` | `3` | Base modifier slots for new and existing tools; range 0 to 2147483647. Material traits, extra-slot modifiers and tool levels are added separately. |
 | `tools.vanillaToolBreaking` | `false` | Destroy tools when durability runs out |
 | `tools.oldMattockAndKama` | `false` | By default, the mattock makes paths and the kama tills. Enable to make the mattock till instead. |
 | `tools.repairToolsOnAnvils` | `false` | Allow tools in vanilla anvils |
 | `tools.autosmeltFortuneInteraction` | `false` | Apply Antique's extra Fortune yield to autosmelting |
 | `tools.despawnProjectile` | `1200` | Ticks before grounded custom ammunition despawns. Non-destructible ammunition uses one tenth of this time. |
+
+Changing the base slot count does not remove installed modifiers or reset tool levels. If the total falls below the slots already used, available slots are shown as zero and further slot-consuming modifiers are rejected. Keep this common setting identical on the server and clients so tooltips match server validation; restart after editing it.
 
 Select a part before using a blank mold for processing. See the [tool extension API](TOOL_API.md) for beheading drops and entity melting.

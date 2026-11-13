@@ -118,6 +118,14 @@ if (ToolUpgradeApi.tryUpgrade(toolStack)) {
 
 等级保存在现有材料组件中，随工具存档和复制，修复、更换部件和重算属性时保留；旧工具无需迁移。强化槽数量、强化校验与现有提示立即读取新总数，无需重算属性。接口本身不提供经验获取或等级提示；附属工具子类若自行替换材料数据，应保留原有字段。
 
+## 投射物发射器追溯
+
+在逻辑服务端调用 `ToolRanged.launcherFor(projectile)`，可获得实际发射物品的独立副本，类位于 `com.gctn.tconstruct.tools.ToolRanged`。快照在扣除发射器耐久前保存，随实体存档，玩家切换手持物后仍可读取。支持自制箭、弩箭、匠魂发射器射出的原版箭、分裂投射物和手里剑（来源即手里剑本身）。
+
+`ToolRanged.traitsFor(projectile)` 仍返回战斗使用的合并词条和强化数据，不代表实际发射器。新投射物的原版 `AbstractArrow.getWeaponItem()` 来源也会正确设置；即使原版附魔清空该字段，`launcherFor` 的独立记录仍保留。快照不是实时物品栏引用，修改副本不会升级或损坏玩家的武器。旧投射物或未记录发射器的投射物返回 `ItemStack.EMPTY`，不会从玩家当前手持物猜测。此持久化记录仅供服务端读取，不同步至客户端。
+
+自行创建投射物时使用 `new AntiqueProjectile(level, owner, pickup, mergedTraits, launcher)`。原四参数构造器继续兼容没有来源信息的调用方，不记录发射器。
+
 ## 现有接口
 
 `TinkerContent` 保留材料原料、属性、词条、强化原料、原生属性、斩首掉落和浇铸注册入口。调用 `castingMaterial(material, fluidId)` 将材料绑定到已有流体；服务器启动时会安装对应规则。

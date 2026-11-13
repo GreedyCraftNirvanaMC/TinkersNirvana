@@ -23,8 +23,14 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     public AntiqueProjectile(EntityType<? extends AntiqueProjectile> type, Level level) { super(type, level); }
 
     public AntiqueProjectile(Level level, LivingEntity owner, ItemStack pickup, ItemStack tool) {
-        super(ToolRanged.PROJECTILE.get(), owner, level, pickup, tool.isEmpty() ? null : tool);
+        this(level, owner, pickup, tool, ItemStack.EMPTY);
+    }
+
+    public AntiqueProjectile(Level level, LivingEntity owner, ItemStack pickup, ItemStack tool, ItemStack launcher) {
+        // 合并词条的弹药只用于匠魂效果；原版武器来源必须是发射时的真实弓弩。
+        super(ToolRanged.PROJECTILE.get(), owner, level, pickup, launcher.isEmpty() ? null : launcher);
         entityData.set(TOOL, tool.copy());
+        ToolRanged.saveLauncher(this, launcher);
     }
 
     @Override
