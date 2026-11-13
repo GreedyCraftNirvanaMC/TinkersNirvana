@@ -48,9 +48,9 @@ public abstract class TinkerTools extends Item {
                 + ToolUpgradeApi.getLevel(stack), 0, Integer.MAX_VALUE);
     }
 
-    /** Override for tool types whose base modifier slot count is not 3. */
+    /** Override for tool types whose base modifier slot count differs from the configured default. */
     protected int getBaseModifierSlots(ItemStack stack) {
-        return DEFAULT_MODIFIER_SLOTS;
+        return com.gctn.tconstruct.Config.INITIAL_MODIFIER_SLOTS.get();
     }
 
     /** Hook for modifier slots added or removed by material traits. */

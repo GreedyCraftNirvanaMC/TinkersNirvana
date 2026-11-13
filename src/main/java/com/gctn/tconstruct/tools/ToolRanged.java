@@ -31,6 +31,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class ToolRanged {
+    private static final String LAUNCHER_TAG = "TinkerLauncher";
     private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, TinkersNirvana.MODID);
     public static final DeferredHolder<EntityType<?>, EntityType<AntiqueProjectile>> PROJECTILE = ENTITIES.register("tool_projectile",
             () -> EntityType.Builder.<AntiqueProjectile>of(AntiqueProjectile::new, MobCategory.MISC)
@@ -129,6 +130,8 @@ public final class ToolRanged {
     }
 
     private static boolean shoot(AntiqueTool launcher, ItemStack tool, ItemStack ammo, Player player, float power, InteractionHand hand) {
+        // 在扣除耐久和运行词条前保留快照，命中时不再依赖玩家当前手持物。
+        ItemStack firedFrom = tool.copyWithCount(1);
         boolean crossbow = launcher.definition().action() == ToolDefinition.Action.CROSSBOW;
         boolean shuriken = launcher.definition().action() == ToolDefinition.Action.SHURIKEN;
         ItemStack pickup = crossbow ? ammo.copyWithCount(1) : pickupFor(ammo);
@@ -152,8 +155,9 @@ public final class ToolRanged {
             traits.set(com.gctn.tconstruct.init.TinkerDataComponents.TINKER_MATERIAL.get(), net.minecraft.world.item.component.CustomData.of(material));
         }
         AbstractArrow arrow = pickup.getItem() instanceof ArrowItem vanilla
-                ? vanilla.createArrow(player.level(), pickup, player, tool)
-                : new AntiqueProjectile(player.level(), player, pickup, traits);
+                ? vanilla.createArrow(player.level(), pickup, player, firedFrom)
+                : new AntiqueProjectile(player.level(), player, pickup, traits, firedFrom);
+        saveLauncher(arrow, firedFrom);
         arrow.getPersistentData().put("TinkerTool", traits.save(player.registryAccess()));
         float range = shuriken ? 1 : Math.max(.1F, ToolBuilder.savedStats(tool).getFloat("Range"));
         float accuracy = Math.max(.1F, ToolBuilder.savedStats(traits).getFloat("Accuracy"));
@@ -171,7 +175,7 @@ public final class ToolRanged {
         if (!crossbow) { consumeAmmo(ammo, player); }
         if (!shuriken) { launcher.damage(tool, 1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND); }
         if (com.gctn.tconstruct.tools.traits.AntiqueTraits.has(traits, "splitting") && player.getRandom().nextBoolean()) {
-            var extra = new AntiqueProjectile(player.level(), player, pickup, traits);
+            var extra = new AntiqueProjectile(player.level(), player, pickup, traits, firedFrom);
             extra.setBaseDamage(arrow.getBaseDamage());
             extra.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, 3 / accuracy);
             extra.pickup = AbstractArrow.Pickup.DISALLOWED;
@@ -180,6 +184,19 @@ public final class ToolRanged {
         player.level().playSound(null, player.blockPosition(), crossbow ? SoundEvents.CROSSBOW_SHOOT : SoundEvents.ARROW_SHOOT,
                 SoundSource.PLAYERS, 1, 1 / (player.getRandom().nextFloat() * .4F + 1.2F) + power * .5F);
         return true;
+    }
+
+    static void saveLauncher(AbstractArrow arrow, ItemStack launcher) {
+        // NeoForge 持久化数据独立于原版可被附魔清空的 weapon 字段，随实体存档保存。
+        if (!launcher.isEmpty()) { arrow.getPersistentData().put(LAUNCHER_TAG, launcher.save(arrow.registryAccess())); }
+    }
+
+    /** 服务端读取发射器快照；返回独立副本。旧投射物缺少记录时返回空，不从弹药或手持物猜测。 */
+    public static ItemStack launcherFor(net.minecraft.world.entity.Entity entity) {
+        if (entity instanceof AbstractArrow && entity.getPersistentData().contains(LAUNCHER_TAG)) {
+            return ItemStack.parseOptional(entity.registryAccess(), entity.getPersistentData().getCompound(LAUNCHER_TAG));
+        }
+        return ItemStack.EMPTY;
     }
 
     public static ItemStack traitsFor(net.minecraft.world.entity.Entity entity) {

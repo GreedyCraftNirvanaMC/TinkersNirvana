@@ -118,6 +118,14 @@ if (ToolUpgradeApi.tryUpgrade(toolStack)) {
 
 The level is stored in the existing persistent material component and survives saves, item copies, repairs, part replacement and stat rebuilds. Existing tools need no migration. Slot counts, modifier validation and existing tooltips read the new total immediately; no stat rebuild is necessary. The API does not grant experience or add level text to tooltips. Addon tool subclasses that replace material data must preserve its existing fields.
 
+## Projectile launcher attribution
+
+On the logical server, call `ToolRanged.launcherFor(projectile)` to read an independent copy of the item used to fire a projectile. Import `com.gctn.tconstruct.tools.ToolRanged`. This snapshot is captured before launcher durability is consumed, persists with the entity, and remains available after the player switches items. It covers custom arrows, bolts, vanilla arrows fired by Tinkers launchers, split projectiles and thrown shurikens (whose source is the shuriken itself).
+
+`ToolRanged.traitsFor(projectile)` still returns the merged trait/modifier tool used for combat; it does not identify the launcher. The launcher's native `AbstractArrow.getWeaponItem()` source is also set correctly for new projectiles, while `launcherFor` keeps its own record even if a native enchantment clears that source. The snapshot is not a live inventory reference: modifying it does not upgrade or damage the player's weapon. Older projectiles or projectiles created without a launcher record return `ItemStack.EMPTY`; the API never guesses from the player's current hand. This persistent record is server-side and is not synchronized to clients.
+
+For custom spawns, use `new AntiqueProjectile(level, owner, pickup, mergedTraits, launcher)`. The original four-argument constructor remains available for callers without launcher information and does not record a launcher.
+
 ## Existing APIs
 
 `TinkerContent` retains material ingredients, stats, traits, modifier ingredients, native attributes, head drops and casting entry points. `castingMaterial(material, fluidId)` binds an existing fluid; the server installs the derived rules at startup.

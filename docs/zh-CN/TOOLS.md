@@ -95,10 +95,13 @@ Shift 查看属性、材料和剩余强化槽，Alt 查看词条说明。材料�
 | `general.addFlintRecipe` | `true` | 三块砂砾合成一枚燧石，重载配方时生效 |
 | `general.craftingStationBlacklist` | `[]` | 按方块 ID、方块实体类型 ID 或完整类名排除合成站相邻储存 |
 | `tools.deconstructTools` | `true` | 允许拆解工具 |
+| `tools.initialModifierSlots` | `3` | 新旧工具的基础强化槽数，范围为 0 至 2147483647；材料词条、额外槽位强化和工具等级另行叠加 |
 | `tools.vanillaToolBreaking` | `false` | 开启后，耗尽耐久会销毁工具 |
 | `tools.oldMattockAndKama` | `false` | 默认鹤嘴锄铺路、短镰耕地；开启后鹤嘴锄耕地，短镰不耕地 |
 | `tools.repairToolsOnAnvils` | `false` | 允许工具参与原版铁砧处理 |
 | `tools.autosmeltFortuneInteraction` | `false` | 自动冶炼时启用 Antique 的额外幸运产量 |
 | `tools.despawnProjectile` | `1200` | 自定义弹药落地后的消失刻数；不毁弹药使用十分之一时间 |
+
+修改基础槽数不会移除已安装的强化或重置工具等级。若总槽数低于已用槽数，剩余槽数显示为零，并拒绝继续安装占用槽位的强化。此项为 common 配置，服务端和客户端应设置一致，确保提示与服务端校验一致；修改后重启生效。
 
 空白模具需要先选择部件，再用于加工。斩首掉落与实体熔炼配置见 [TOOL_API.md](TOOL_API.md)。

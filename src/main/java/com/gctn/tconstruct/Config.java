@@ -34,6 +34,9 @@ public class Config {
             .comment("Adjacent inventories to exclude by block ID, block entity type ID, or fully qualified class name.")
             .defineListAllowEmpty("general.craftingStationBlacklist", List.of(), () -> "minecraft:chest", value -> value instanceof String);
     public static final ModConfigSpec.BooleanValue DECONSTRUCT_TOOLS = BUILDER.define("tools.deconstructTools", true);
+    public static final ModConfigSpec.IntValue INITIAL_MODIFIER_SLOTS = BUILDER
+            .comment("Base modifier slots for all tools, including existing tools. Material traits and upgrades add slots separately.")
+            .defineInRange("tools.initialModifierSlots", 3, 0, Integer.MAX_VALUE);
     public static final ModConfigSpec.BooleanValue VANILLA_TOOL_BREAKING = BUILDER.define("tools.vanillaToolBreaking", false);
     public static final ModConfigSpec.BooleanValue OLD_MATTOCK_AND_KAMA = BUILDER.define("tools.oldMattockAndKama", false);
     public static final ModConfigSpec.BooleanValue REPAIR_TOOLS_ON_ANVILS = BUILDER.define("tools.repairToolsOnAnvils", false);
