@@ -2,13 +2,13 @@
 
 [首页](../../README.zh-CN.md) · [KubeJS](KUBEJS.md) · [English](../en/TOOL_API.md)
 
-附属使用 Minecraft 1.21.1、NeoForge 和 JDK 21。将本模组 JAR 作为编译及开发运行依赖，例如在附属的 Gradle 工程中使用 `implementation files('libs/TinkersNirvana-1.21.1-1.0.3.jar')`。在附属的 `neoforge.mods.toml` 声明对模组 ID `tconstruct` 的必需依赖。Java 接口位于 `com.gctn.tconstruct.api`，可独立于 KubeJS 使用。
+附属使用 Minecraft 1.21.1、NeoForge 和 JDK 21。将本模组 JAR 作为编译及开发运行依赖，例如在附属的 Gradle 工程中使用 `implementation files('libs/TinkersNirvana-1.21.1-1.0.4.jar')`。在附属的 `neoforge.mods.toml` 声明对模组 ID `tconstruct` 的必需依赖。Java 接口位于 `com.gctn.tconstruct.api`，可独立于 KubeJS 使用。
 
 开发工程的依赖示例。
 
 ```groovy
 dependencies {
-    implementation files('libs/TinkersNirvana-1.21.1-1.0.3.jar')
+    implementation files('libs/TinkersNirvana-1.21.1-1.0.4.jar')
 }
 ```
 
@@ -18,7 +18,7 @@ dependencies {
 [[dependencies.exampleaddon]]
 modId = "tconstruct"
 type = "required"
-versionRange = "[1.21.1-1.0.3,)"
+versionRange = "[1.21.1-1.0.4,)"
 ordering = "AFTER"
 side = "BOTH"
 ```

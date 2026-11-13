@@ -4,7 +4,7 @@
 
 [English](README.md)
 
-**版本 1.21.1-1.0.3 · Minecraft Java 版 1.21.1 · NeoForge**
+**版本 1.21.1-1.0.4 · Minecraft Java 版 1.21.1 · NeoForge**
 
 TinkersNirvana 将《匠魂怀古》移植到 Minecraft 1.21.1。你可以用不同材质的部件组装工具，借助强化定制工具，并使用冶炼炉、工匠储罐和焦黑熔炉加工材料。移植版包含工坊、史莱姆空岛、实用装置、游戏内宝典《匠魂宝典》，以及重新绘制的方块和物品贴图。
 

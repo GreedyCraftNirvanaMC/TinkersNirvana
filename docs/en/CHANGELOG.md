@@ -2,7 +2,7 @@
 
 [README](../../README.md) · [简体中文](../zh-CN/CHANGELOG.md)
 
-## Unreleased
+## 1.21.1-1.0.4
 
 - Preserve the actual projectile launcher separately from merged ammunition traits, including split projectiles, and expose `ToolRanged.launcherFor` for server-side integrations.
 - Add `tools.initialModifierSlots` to configure the base modifier slot count for new and existing tools (default 3).

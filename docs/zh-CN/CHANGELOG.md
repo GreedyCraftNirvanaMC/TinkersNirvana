@@ -2,7 +2,7 @@
 
 [首页](../../README.zh-CN.md) · [English](../en/CHANGELOG.md)
 
-## 未发布
+## 1.21.1-1.0.4
 
 - 将投射物的实际发射器与合并后的弹药词条分开保存，覆盖分裂投射物，并开放服务端接口 `ToolRanged.launcherFor`。
 - 新增 `tools.initialModifierSlots`，配置新旧工具的基础强化槽数，默认保持 3。
