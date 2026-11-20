@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "tconsnirvana:block/firewood",
+    "top": "tconsnirvana:block/firewood",
+    "side": "tconsnirvana:block/firewood"
+  }
+}

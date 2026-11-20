@@ -1,0 +1,10 @@
+{
+  "type": "tconsnirvana:drying",
+  "ingredient": {
+    "item": "minecraft:cod"
+  },
+  "result": {
+    "id": "tconsnirvana:jerky_fish"
+  },
+  "time": 6000
+}

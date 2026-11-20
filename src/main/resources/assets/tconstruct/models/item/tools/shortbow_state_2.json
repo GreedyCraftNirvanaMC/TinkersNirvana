@@ -1,8 +1,0 @@
-{
-  "parent": "tconstruct:item/tools/shortbow",
-  "textures": {
-    "layer0": "tconstruct:item/antique/shortbow/limb_top_3",
-    "layer1": "tconstruct:item/antique/shortbow/limb_bottom_3",
-    "layer2": "tconstruct:item/antique/shortbow/bowstring_3"
-  }
-}

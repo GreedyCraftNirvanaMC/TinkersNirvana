@@ -1,0 +1,11 @@
+{
+  "parent": "tconsnirvana:block/table",
+  "textures": {
+    "particle": "tconsnirvana:block/workshop/partbuilder_top",
+    "top": "tconsnirvana:block/workshop/partbuilder_top",
+    "side": "tconsnirvana:block/table_side",
+    "bottom": "minecraft:block/oak_log",
+    "leg": "minecraft:block/oak_log",
+    "leg_bottom": "minecraft:block/oak_log"
+  }
+}

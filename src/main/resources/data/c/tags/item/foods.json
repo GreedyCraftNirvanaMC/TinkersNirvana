@@ -1,10 +1,10 @@
 {
   "replace": false,
   "values": [
-    "tconstruct:slimeball_blue",
-    "tconstruct:slimeball_purple",
-    "tconstruct:slimeball_blood",
-    "tconstruct:slimeball_magma",
-    "tconstruct:slimeball_pink"
+    "tconsnirvana:slimeball_blue",
+    "tconsnirvana:slimeball_purple",
+    "tconsnirvana:slimeball_blood",
+    "tconsnirvana:slimeball_magma",
+    "tconsnirvana:slimeball_pink"
   ]
 }

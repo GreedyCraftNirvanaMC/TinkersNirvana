@@ -6,7 +6,7 @@
 
 - `AbstractTraits` 是注册一次的不可变行为定义，不保存材料初始等级或单个工具的运行状态。
 - `AbstractTraits.TraitEntry(trait, level)` 表示材料赋予的词条及初始等级，并检查等级范围。
-- 工具的 `tconstruct:tinker_traits` 组件保存实际 `Level`、`StrengthenNumber` 和词条独立状态。
+- 工具的 `tconsnirvana:tinker_traits` 组件保存实际 `Level`、`StrengthenNumber` 和词条独立状态。
   兼容现有存档格式；旧工具保留已保存的词条和属性，不自动按新材料配置重建。
 - `ToolTraits` 统一组装和读取词条。未知 identifier、错误数据类型和非正等级不执行，
   但保留存档数据；执行等级不超过定义的 `maxLevel`。

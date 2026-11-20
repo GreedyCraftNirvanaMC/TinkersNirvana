@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "tconstruct:item/antique/bolt/shaft",
-    "layer1": "tconstruct:item/antique/bolt/head",
-    "layer2": "tconstruct:item/antique/bolt/fletching"
-  }
-}

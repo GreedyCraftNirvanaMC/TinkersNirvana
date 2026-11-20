@@ -19,12 +19,12 @@ public class Config {
                     () -> "minecraft:zombie;true;minecraft:zombie_head", value -> value instanceof String);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> ENTITY_MELTING = BUILDER
             .comment("entity_id or #entity_type_tag;include_subclasses;fluid_id;amount_per_two_damage_mB. Later matches override earlier ones.")
-            .defineListAllowEmpty("smeltery.entityMelting", List.of("minecraft:blaze;true;tconstruct:blazing_blood;20", "minecraft:evoker;true;tconstruct:emerald;6", "minecraft:guardian;true;tconstruct:stone;50",
-                    "minecraft:illusioner;true;tconstruct:emerald;6", "minecraft:skeleton;true;tconstruct:notmilk;20", "minecraft:skeleton_horse;true;tconstruct:notmilk;20", "minecraft:silverfish;true;tconstruct:stone;25",
-                    "minecraft:slime;false;tconstruct:greenslime;25", "minecraft:snow_golem;true;minecraft:water;100", "minecraft:spider;true;tconstruct:venom;20", "minecraft:stray;true;tconstruct:notmilk;20",
-                    "minecraft:bogged;true;tconstruct:notmilk;20", "minecraft:villager;true;tconstruct:emerald;6", "minecraft:iron_golem;true;tconstruct:iron;18", "minecraft:vindicator;true;tconstruct:emerald;6",
-                    "minecraft:wither_skeleton;true;tconstruct:notmilk;20", "minecraft:zombified_piglin;true;tconstruct:gold;10", "tconstruct:blueslime;false;tconstruct:blueslime;25", "tconstruct:purpleslime;false;tconstruct:purpleslime;25"),
-                    () -> "minecraft:zombie;false;tconstruct:blood;20", value -> value instanceof String);
+            .defineListAllowEmpty("smeltery.entityMelting", List.of("minecraft:blaze;true;tconsnirvana:blazing_blood;20", "minecraft:evoker;true;tconsnirvana:emerald;6", "minecraft:guardian;true;tconsnirvana:stone;50",
+                    "minecraft:illusioner;true;tconsnirvana:emerald;6", "minecraft:skeleton;true;tconsnirvana:notmilk;20", "minecraft:skeleton_horse;true;tconsnirvana:notmilk;20", "minecraft:silverfish;true;tconsnirvana:stone;25",
+                    "minecraft:slime;false;tconsnirvana:greenslime;25", "minecraft:snow_golem;true;minecraft:water;100", "minecraft:spider;true;tconsnirvana:venom;20", "minecraft:stray;true;tconsnirvana:notmilk;20",
+                    "minecraft:bogged;true;tconsnirvana:notmilk;20", "minecraft:villager;true;tconsnirvana:emerald;6", "minecraft:iron_golem;true;tconsnirvana:iron;18", "minecraft:vindicator;true;tconsnirvana:emerald;6",
+                    "minecraft:wither_skeleton;true;tconsnirvana:notmilk;20", "minecraft:zombified_piglin;true;tconsnirvana:gold;10", "tconsnirvana:blueslime;false;tconsnirvana:blueslime;25", "tconsnirvana:purpleslime;false;tconsnirvana:purpleslime;25"),
+                    () -> "minecraft:zombie;false;tconsnirvana:blood;20", value -> value instanceof String);
 
     public static final ModConfigSpec.BooleanValue CHESTS_KEEP_INVENTORY = BUILDER.define("general.chestsKeepInventory", true);
     public static final ModConfigSpec.BooleanValue REUSE_STENCIL = BUILDER.define("general.reuseStencil", true);
@@ -81,14 +81,14 @@ public class Config {
 
     public static final ModConfigSpec.ConfigValue<List<? extends String>> MOD_PRIORITIES = BUILDER
             .comment("A list of ModIds to decide priorities")
-            .defineListAllowEmpty("mod_priorities", List.of("tconstruct"), () -> "", obj -> obj instanceof String);
+            .defineListAllowEmpty("mod_priorities", List.of("tconsnirvana"), () -> "", obj -> obj instanceof String);
 
     // Preserve Antique's defaults while allowing the same Smeltery tuning on NeoForge.
     public static final ModConfigSpec.IntValue SMELTERY_HEAT_TICK_RATE = BUILDER
             .defineInRange("smeltery.heatItemsTickrateSmeltery", 4, 1, 20);
     // 焦黑熔炉保持原版独立的加热间隔，避免与冶炼炉的配置互相影响。
     public static final ModConfigSpec.IntValue SEARED_FURNACE_HEAT_TICK_RATE = BUILDER
-            .translation("config.tconstruct.seared_furnace.heat_tick_rate")
+            .translation("config.tconsnirvana.seared_furnace.heat_tick_rate")
             .defineInRange("smeltery.heatItemsTickrateSearedFurnace", 4, 1, 20);
     public static final ModConfigSpec.IntValue LIQUID_TRANSFER_RATE = BUILDER
             .defineInRange("smeltery.liquidTransferRate", 6, 1, 144);
@@ -104,11 +104,11 @@ public class Config {
     public static final ModConfigSpec.BooleanValue TEMPERATURE_CELSIUS = BUILDER.define("smeltery.temperatureCelsius", true);
     // 原版通透玻璃默认需要精准采集，关闭后普通破坏也会掉落玻璃。
     public static final ModConfigSpec.BooleanValue CLEAR_GLASS_SILK_TOUCH = BUILDER
-            .translation("config.tconstruct.clear_glass.silk_touch")
+            .translation("config.tconsnirvana.clear_glass.silk_touch")
             .define("smeltery.clearGlassSilkTouch", true);
     // 默认混色得到绿色史莱姆块；开启后保留纯绿色配方，混色改为隐藏的粉色块。
     public static final ModConfigSpec.BooleanValue MATCH_VANILLA_SLIME_BLOCK = BUILDER
-            .translation("config.tconstruct.slime.match_vanilla")
+            .translation("config.tconsnirvana.slime.match_vanilla")
             .define("general.matchVanillaSlimeblock", false);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> MELTING_IGNORE = BUILDER
             .comment("Items or #item_tags ignored when deriving melting values from crafting ingredients.")

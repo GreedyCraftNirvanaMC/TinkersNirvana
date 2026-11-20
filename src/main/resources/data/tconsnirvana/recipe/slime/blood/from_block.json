@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "A"
+  ],
+  "key": {
+    "A": {
+      "item": "tconsnirvana:slime_blood"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:slimeball_blood",
+    "count": 9
+  }
+}

@@ -12,7 +12,7 @@
 
 导流槽优先向下输送，再向两侧输出分流。点击侧臂切换方向，潜行点击按反方向循环；点击中央开关底部输出。相连的拉杆或按钮也可控制底部闸门。
 
-配置位于 `config/tconstruct-common.toml` 的 `[smeltery]`。
+配置位于 `config/tconsnirvana-common.toml` 的 `[smeltery]`。
 
 | 键 | 默认值 |
 | --- | --- |

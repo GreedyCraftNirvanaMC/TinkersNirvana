@@ -1,0 +1,53 @@
+{
+  "smeltery_loop": {
+    "sounds": [
+      "tconsnirvana:smeltery_loop"
+    ]
+  },
+  "faucet_pour": {
+    "sounds": [
+      "tconsnirvana:faucet_pour_loop"
+    ]
+  },
+  "faucet_trigger": {
+    "sounds": [
+      "tconsnirvana:faucet_trigger1",
+      "tconsnirvana:faucet_trigger2"
+    ]
+  },
+  "sizzle": {
+    "sounds": [
+      "tconsnirvana:sizzle"
+    ]
+  },
+  "frypan_hit": {
+    "sounds": [
+      "tconsnirvana:frypan_hit"
+    ]
+  },
+  "toy_squeak": {
+    "sounds": [
+      "tconsnirvana:toy_squeak"
+    ]
+  },
+  "charged": {
+    "sounds": [
+      "tconsnirvana:charged"
+    ]
+  },
+  "discharge": {
+    "sounds": [
+      "tconsnirvana:discharge"
+    ]
+  },
+  "crossbow_reload": {
+    "sounds": [
+      "tconsnirvana:crossbow_reload"
+    ]
+  },
+  "slimesling": {
+    "sounds": [
+      "tconsnirvana:slimesling"
+    ]
+  }
+}

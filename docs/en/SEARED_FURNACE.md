@@ -35,7 +35,7 @@ without requiring a resize. On structural failure, the first nine inventory
 slots remain in the controller; overflow drops outside it. Repairing the shell
 restores the full inventory size. Removing the controller drops all stored items.
 
-Configuration is in `config/tconstruct-common.toml`, under `[smeltery]`:
+Configuration is in `config/tconsnirvana-common.toml`, under `[smeltery]`:
 `heatItemsTickrateSearedFurnace` defaults to `4`, matching Antique. It is independent
 of the Smeltery heating interval. English and Simplified Chinese translations are
 provided for the new screen, item, status messages, and configuration label.

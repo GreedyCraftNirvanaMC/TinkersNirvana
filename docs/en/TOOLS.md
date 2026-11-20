@@ -2,7 +2,7 @@
 
 [README](../../README.md) · [简体中文](../zh-CN/TOOLS.md)
 
-For Minecraft 1.21.1 / NeoForge. Tools share the material components, trait system, Tool Station, and Smeltery. The existing pickaxe ID is `tconstruct:pickaxe/pickaxe`.
+For Minecraft 1.21.1 / NeoForge. Tools share the material components, trait system, Tool Station, and Smeltery. The pickaxe ID is `tconsnirvana:pickaxe/pickaxe`.
 
 ## Crafting workflow
 
@@ -11,11 +11,11 @@ For Minecraft 1.21.1 / NeoForge. Tools share the material components, trait syst
 3. Wood, stone, flint, bone, and cactus can be worked directly. For metal parts, pour molten metal into a cast on the Casting Table. Make the metal cast over an existing part. Clay casts are consumed on use.
 4. In an assembly mode, place parts where the slot icons show and take the finished tool. Three Seared Bricks blocks, four metal blocks, and a Tool Station make a Tool Forge. Fourteen metal types, including iron, are supported.
 
-Processing uses the full material value. High-value ingredients such as logs can produce multiple parts. If the value cannot be divided evenly, the recipe leaves the input intact. Use smaller ingredients such as planks or shards. Repair mode puts the tool in the center. Assembly slots follow each tool's part layout.
+The Part Builder takes enough material for one part and returns usable surplus as shards. The Tool Station can produce multiple parts in a batch when the value consumed is an exact multiple of the part cost. Repair mode puts the tool in the center. Assembly slots follow each tool's part layout.
 
 ## Workshops, storage, and repair
 
-The Crafting Station has nine inputs, a vanilla recipe book, and access to adjacent storage. Use the top tabs to switch between adjacent stations. The Pattern Chest stores one of each pattern or cast. The Part Chest separates parts by material and component. Both chests have 256 slots and pagination.
+The Crafting Station has nine inputs, a vanilla recipe book, and access to adjacent storage. Workstations connected horizontally to a Crafting Station show tabs at the top. The Pattern Chest stores one of each pattern or cast. The Part Chest separates parts by material and component. Both chests have 256 slots and show extra pages as the displayed inventory fills.
 
 With a Pattern Chest attached, left-click a pattern in the Part Builder sidebar to swap it with the current pattern. The Tool Station can access a connected Part Chest. By default, breaking a chest retains its inventory, controlled by `general.chestsKeepInventory`. Workshop wood and metal finishes follow the crafting ingredients and persist through placement, drops, and pick block.
 
@@ -87,7 +87,7 @@ Textures retain Antique silhouettes, part layers, broken states, and draw stages
 
 ## Tool and crafting settings
 
-Edit `config/tconstruct-common.toml`.
+Edit `config/tconsnirvana-common.toml`.
 
 | Key | Default | Effect |
 | --- | --- | --- |

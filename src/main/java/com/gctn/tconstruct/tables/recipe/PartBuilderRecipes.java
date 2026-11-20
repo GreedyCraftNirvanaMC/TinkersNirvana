@@ -79,7 +79,7 @@ public final class PartBuilderRecipes {
             }
             if (value + .0001F < part.cost()) { continue; }
             ItemStack result = part.create(material);
-            if (result.isEmpty()) { return null; }
+            if (result.isEmpty()) { continue; }
             float surplus = value - part.cost();
             int shards = Math.round(surplus * 2);
             if (Math.abs(surplus - shards * .5F) > .001F) { return null; }
@@ -103,9 +103,7 @@ public final class PartBuilderRecipes {
 
     public static void consumeInputs(Container container) {
         Plan plan = plan(container);
-        if (plan != null) {
-            for (int slot = 1; slot < 6; slot++) { container.removeItem(slot, plan.counts()[slot]); }
-        }
+        if (plan != null) { plan.consume(container); }
     }
     public record Plan(ItemStack result, int[] counts, ItemStack remainder) {
         public Plan(ItemStack result, int[] counts) { this(result, counts, ItemStack.EMPTY); }

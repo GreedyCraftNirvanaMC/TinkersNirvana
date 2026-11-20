@@ -1,0 +1,10 @@
+{
+  "type": "tconsnirvana:drying",
+  "ingredient": {
+    "item": "minecraft:rabbit"
+  },
+  "result": {
+    "id": "tconsnirvana:jerky_rabbit"
+  },
+  "time": 6000
+}

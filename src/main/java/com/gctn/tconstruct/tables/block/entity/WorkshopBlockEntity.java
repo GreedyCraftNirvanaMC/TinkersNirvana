@@ -48,7 +48,7 @@ public class WorkshopBlockEntity extends net.minecraft.world.level.block.entity.
     public IItemHandler itemHandler() { return handler; }
     public static boolean isCast(ItemStack stack) {
         var id = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        return id.getNamespace().equals("tconstruct") && (id.getPath().startsWith("cast_") || id.getPath().startsWith("clay_cast_"));
+        return id.getNamespace().equals("tconsnirvana") && (id.getPath().startsWith("cast_") || id.getPath().startsWith("clay_cast_"));
     }
     private static String partCastFamily(ItemStack stack) {
         String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
@@ -91,7 +91,7 @@ public class WorkshopBlockEntity extends net.minecraft.world.level.block.entity.
         return true;
     }
     @Override protected Component getDefaultName() {
-        return Component.translatable("block.tconstruct." + (kind() == Kind.PATTERN_CHEST && getBlockState().getValue(WorkshopBlock.CASTS) ? "cast_chest" : kind().id));
+        return Component.translatable("block.tconsnirvana." + (kind() == Kind.PATTERN_CHEST && getBlockState().getValue(WorkshopBlock.CASTS) ? "cast_chest" : kind().id));
     }
     @Override protected AbstractContainerMenu createMenu(int id, Inventory inventory) {
         return kind() == Kind.CRAFTING ? new PersistentCraftingMenu(id, inventory, this) : new WorkshopMenu(id, inventory, this);

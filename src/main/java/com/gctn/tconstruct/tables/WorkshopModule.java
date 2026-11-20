@@ -91,6 +91,14 @@ public final class WorkshopModule {
     }
     public record Tab(BlockPos position, int buttonId) {}
 
+    /** 按距离返回联动范围内每种工作方块的首个位置，包括没有合成站的组合。 */
+    public static List<BlockPos> connected(Level level, BlockPos origin, Player player) {
+        var offered = new HashSet<net.minecraft.world.level.block.Block>();
+        return connectedByDistance(level, origin, player).stream()
+                .filter(pos -> offered.add(level.getBlockState(pos).getBlock()))
+                .toList();
+    }
+
     public static List<Tab> connectedTabs(Level level, BlockPos origin, Player player) {
         var found = connectedByDistance(level, origin, player);
         // 怀古按界面编号去重并降序排列，工具装配台和工匠砧共用编号 25。

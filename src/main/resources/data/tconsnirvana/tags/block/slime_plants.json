@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+    "tconsnirvana:slime_tall_grass_blue",
+    "tconsnirvana:slime_fern_blue",
+    "tconsnirvana:slime_sapling_blue",
+    "tconsnirvana:slime_tall_grass_purple",
+    "tconsnirvana:slime_fern_purple",
+    "tconsnirvana:slime_sapling_purple",
+    "tconsnirvana:slime_tall_grass_orange",
+    "tconsnirvana:slime_fern_orange",
+    "tconsnirvana:slime_sapling_orange",
+    "tconsnirvana:slime_vine_blue",
+    "tconsnirvana:slime_vine_blue_mid",
+    "tconsnirvana:slime_vine_blue_end",
+    "tconsnirvana:slime_vine_purple",
+    "tconsnirvana:slime_vine_purple_mid",
+    "tconsnirvana:slime_vine_purple_end"
+  ]
+}

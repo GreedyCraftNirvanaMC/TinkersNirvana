@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:steel_ingot"
+    },
+    {
+      "item": "tconsnirvana:steel_ingot"
+    },
+    {
+      "item": "tconsnirvana:steel_ingot"
+    },
+    {
+      "item": "tconsnirvana:steel_ingot"
+    },
+    {
+      "item": "tconsnirvana:steel_ingot"
+    },
+    {
+      "item": "tconsnirvana:steel_ingot"
+    },
+    {
+      "item": "tconsnirvana:steel_ingot"
+    },
+    {
+      "item": "tconsnirvana:steel_ingot"
+    },
+    {
+      "item": "tconsnirvana:steel_ingot"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:steel_block"
+  }
+}

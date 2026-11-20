@@ -38,8 +38,8 @@ public class PatternItem extends Item {
 
     @Override
     public Component getName(ItemStack stack) {
-        if (isBlank(stack)) { return Component.translatable("item.tconstruct.pattern.blank"); }
-        return Component.translatable("item.tconstruct.pattern",
+        if (isBlank(stack)) { return Component.translatable("item.tconsnirvana.pattern.blank"); }
+        return Component.translatable("item.tconsnirvana.pattern",
                 selected(stack).displayName());
     }
 
@@ -54,7 +54,7 @@ public class PatternItem extends Item {
             CompoundTag data = TinkerDataComponents.getMaterialTag(stack);
             data.putString("Pattern", part.id());
             stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
-            player.displayClientMessage(Component.translatable("message.tconstruct.pattern_selected",
+            player.displayClientMessage(Component.translatable("message.tconsnirvana.pattern_selected",
                     part.displayName()), true);
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
@@ -62,8 +62,8 @@ public class PatternItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        if (!isBlank(stack)) { tooltip.add(Component.translatable("tooltip.tconstruct.pattern_part",
+        if (!isBlank(stack)) { tooltip.add(Component.translatable("tooltip.tconsnirvana.pattern_part",
                 selected(stack).displayName())); }
-        tooltip.add(Component.translatable("tooltip.tconstruct.pattern_usage"));
+        tooltip.add(Component.translatable("tooltip.tconsnirvana.pattern_usage"));
     }
 }

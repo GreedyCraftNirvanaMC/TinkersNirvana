@@ -1,17 +1,17 @@
 {
   "replace": false,
   "values": [
-    "tconstruct:slime_tall_grass_blue",
-    "tconstruct:slime_fern_blue",
-    "tconstruct:slime_tall_grass_purple",
-    "tconstruct:slime_fern_purple",
-    "tconstruct:slime_tall_grass_orange",
-    "tconstruct:slime_fern_orange",
-    "tconstruct:slime_vine_blue",
-    "tconstruct:slime_vine_blue_mid",
-    "tconstruct:slime_vine_blue_end",
-    "tconstruct:slime_vine_purple",
-    "tconstruct:slime_vine_purple_mid",
-    "tconstruct:slime_vine_purple_end"
+    "tconsnirvana:slime_tall_grass_blue",
+    "tconsnirvana:slime_fern_blue",
+    "tconsnirvana:slime_tall_grass_purple",
+    "tconsnirvana:slime_fern_purple",
+    "tconsnirvana:slime_tall_grass_orange",
+    "tconsnirvana:slime_fern_orange",
+    "tconsnirvana:slime_vine_blue",
+    "tconsnirvana:slime_vine_blue_mid",
+    "tconsnirvana:slime_vine_blue_end",
+    "tconsnirvana:slime_vine_purple",
+    "tconsnirvana:slime_vine_purple_mid",
+    "tconsnirvana:slime_vine_purple_end"
   ]
 }

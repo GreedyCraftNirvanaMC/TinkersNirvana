@@ -36,6 +36,7 @@ import net.neoforged.neoforge.event.level.BlockDropsEvent;
 
 @EventBusSubscriber(modid = TinkersNirvana.MODID)
 public final class ToolGameplayEvents {
+    // 该键写入玩家存档，沿用旧值以便恢复重启前已保留的灵魂绑定物品。
     private static final String SOULBOUND = "tconstruct:soulbound_items";
     private ToolGameplayEvents() {}
 
@@ -137,8 +138,8 @@ public final class ToolGameplayEvents {
 
     @SubscribeEvent
     public static void necroticBone(LootTableLoadEvent event) {
-        if (event.getName().equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("entities/wither_skeleton")) && event.getTable().getPool("tconstruct:necrotic_bone") == null) {
-            event.getTable().addPool(LootPool.lootPool().name("tconstruct:necrotic_bone").setRolls(ConstantValue.exactly(1))
+        if (event.getName().equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("entities/wither_skeleton")) && event.getTable().getPool("tconsnirvana:necrotic_bone") == null) {
+            event.getTable().addPool(LootPool.lootPool().name("tconsnirvana:necrotic_bone").setRolls(ConstantValue.exactly(1))
                     .when(LootItemKilledByPlayerCondition.killedByPlayer())
                     .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(event.getRegistries(), .07F, .05F))
                     .add(LootItem.lootTableItem(ToolSupplies.item("necrotic_bone"))).build());
@@ -245,7 +246,7 @@ public final class ToolGameplayEvents {
         Player player = event.getEntity();
         if (event.getLevel().isClientSide) { return; }
         if (player.experienceLevel < 5 && !player.getAbilities().instabuild) {
-            player.displayClientMessage(net.minecraft.network.chat.Component.translatable("message.tconstruct.moss_levels"), true);
+            player.displayClientMessage(net.minecraft.network.chat.Component.translatable("message.tconsnirvana.moss_levels"), true);
         } else {
             if (!player.getAbilities().instabuild) { event.getItemStack().shrink(1); player.giveExperienceLevels(-5); }
             ItemStack result = new ItemStack(ToolSupplies.item("mending_moss"));

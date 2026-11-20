@@ -1,0 +1,10 @@
+{
+  "type": "tconsnirvana:drying",
+  "ingredient": {
+    "item": "minecraft:clay"
+  },
+  "result": {
+    "id": "tconsnirvana:dried_clay"
+  },
+  "time": 7200
+}

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:ardite_ingot"
+    },
+    {
+      "item": "tconsnirvana:ardite_ingot"
+    },
+    {
+      "item": "tconsnirvana:ardite_ingot"
+    },
+    {
+      "item": "tconsnirvana:ardite_ingot"
+    },
+    {
+      "item": "tconsnirvana:ardite_ingot"
+    },
+    {
+      "item": "tconsnirvana:ardite_ingot"
+    },
+    {
+      "item": "tconsnirvana:ardite_ingot"
+    },
+    {
+      "item": "tconsnirvana:ardite_ingot"
+    },
+    {
+      "item": "tconsnirvana:ardite_ingot"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:ardite_block"
+  }
+}

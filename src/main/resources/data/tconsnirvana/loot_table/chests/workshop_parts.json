@@ -1,0 +1,2318 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 3,
+        "max": 27
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pickaxe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "wood"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.wood.name\"}, {\"translate\": \"item.tconsnirvana.pickaxe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pickaxe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "stone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.stone.name\"}, {\"translate\": \"item.tconsnirvana.pickaxe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pickaxe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "iron"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.iron.name\"}, {\"translate\": \"item.tconsnirvana.pickaxe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pickaxe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "flint"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.flint.name\"}, {\"translate\": \"item.tconsnirvana.pickaxe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pickaxe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "cactus"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.cactus.name\"}, {\"translate\": \"item.tconsnirvana.pickaxe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pickaxe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "bone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.bone.name\"}, {\"translate\": \"item.tconsnirvana.pickaxe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pickaxe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "obsidian"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.obsidian.name\"}, {\"translate\": \"item.tconsnirvana.pickaxe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pickaxe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "netherrack"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.netherrack.name\"}, {\"translate\": \"item.tconsnirvana.pickaxe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pickaxe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "slime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.slime.name\"}, {\"translate\": \"item.tconsnirvana.pickaxe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pickaxe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "paper"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.paper.name\"}, {\"translate\": \"item.tconsnirvana.pickaxe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pickaxe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "prismarine"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.prismarine.name\"}, {\"translate\": \"item.tconsnirvana.pickaxe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pickaxe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "blueslime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.blueslime.name\"}, {\"translate\": \"item.tconsnirvana.pickaxe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/shovel_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "wood"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.wood.name\"}, {\"translate\": \"item.tconsnirvana.shovel_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/shovel_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "stone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.stone.name\"}, {\"translate\": \"item.tconsnirvana.shovel_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/shovel_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "iron"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.iron.name\"}, {\"translate\": \"item.tconsnirvana.shovel_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/shovel_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "flint"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.flint.name\"}, {\"translate\": \"item.tconsnirvana.shovel_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/shovel_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "cactus"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.cactus.name\"}, {\"translate\": \"item.tconsnirvana.shovel_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/shovel_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "bone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.bone.name\"}, {\"translate\": \"item.tconsnirvana.shovel_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/shovel_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "obsidian"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.obsidian.name\"}, {\"translate\": \"item.tconsnirvana.shovel_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/shovel_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "netherrack"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.netherrack.name\"}, {\"translate\": \"item.tconsnirvana.shovel_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/shovel_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "slime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.slime.name\"}, {\"translate\": \"item.tconsnirvana.shovel_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/shovel_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "paper"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.paper.name\"}, {\"translate\": \"item.tconsnirvana.shovel_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/shovel_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "prismarine"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.prismarine.name\"}, {\"translate\": \"item.tconsnirvana.shovel_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/shovel_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "blueslime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.blueslime.name\"}, {\"translate\": \"item.tconsnirvana.shovel_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/axe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "wood"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.wood.name\"}, {\"translate\": \"item.tconsnirvana.axe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/axe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "stone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.stone.name\"}, {\"translate\": \"item.tconsnirvana.axe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/axe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "iron"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.iron.name\"}, {\"translate\": \"item.tconsnirvana.axe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/axe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "flint"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.flint.name\"}, {\"translate\": \"item.tconsnirvana.axe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/axe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "cactus"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.cactus.name\"}, {\"translate\": \"item.tconsnirvana.axe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/axe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "bone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.bone.name\"}, {\"translate\": \"item.tconsnirvana.axe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/axe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "obsidian"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.obsidian.name\"}, {\"translate\": \"item.tconsnirvana.axe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/axe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "netherrack"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.netherrack.name\"}, {\"translate\": \"item.tconsnirvana.axe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/axe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "slime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.slime.name\"}, {\"translate\": \"item.tconsnirvana.axe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/axe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "paper"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.paper.name\"}, {\"translate\": \"item.tconsnirvana.axe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/axe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "prismarine"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.prismarine.name\"}, {\"translate\": \"item.tconsnirvana.axe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/axe_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "blueslime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.blueslime.name\"}, {\"translate\": \"item.tconsnirvana.axe_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/kama_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "wood"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.wood.name\"}, {\"translate\": \"item.tconsnirvana.kama_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/kama_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "stone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.stone.name\"}, {\"translate\": \"item.tconsnirvana.kama_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/kama_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "iron"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.iron.name\"}, {\"translate\": \"item.tconsnirvana.kama_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/kama_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "flint"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.flint.name\"}, {\"translate\": \"item.tconsnirvana.kama_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/kama_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "cactus"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.cactus.name\"}, {\"translate\": \"item.tconsnirvana.kama_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/kama_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "bone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.bone.name\"}, {\"translate\": \"item.tconsnirvana.kama_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/kama_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "obsidian"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.obsidian.name\"}, {\"translate\": \"item.tconsnirvana.kama_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/kama_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "netherrack"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.netherrack.name\"}, {\"translate\": \"item.tconsnirvana.kama_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/kama_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "slime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.slime.name\"}, {\"translate\": \"item.tconsnirvana.kama_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/kama_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "paper"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.paper.name\"}, {\"translate\": \"item.tconsnirvana.kama_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/kama_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "prismarine"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.prismarine.name\"}, {\"translate\": \"item.tconsnirvana.kama_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/kama_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "blueslime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.blueslime.name\"}, {\"translate\": \"item.tconsnirvana.kama_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/binding",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "wood"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.wood.name\"}, {\"translate\": \"item.tconsnirvana.binding.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/binding",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "stone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.stone.name\"}, {\"translate\": \"item.tconsnirvana.binding.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/binding",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "iron"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.iron.name\"}, {\"translate\": \"item.tconsnirvana.binding.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/binding",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "flint"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.flint.name\"}, {\"translate\": \"item.tconsnirvana.binding.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/binding",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "cactus"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.cactus.name\"}, {\"translate\": \"item.tconsnirvana.binding.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/binding",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "bone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.bone.name\"}, {\"translate\": \"item.tconsnirvana.binding.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/binding",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "obsidian"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.obsidian.name\"}, {\"translate\": \"item.tconsnirvana.binding.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/binding",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "netherrack"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.netherrack.name\"}, {\"translate\": \"item.tconsnirvana.binding.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/binding",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "slime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.slime.name\"}, {\"translate\": \"item.tconsnirvana.binding.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/binding",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "paper"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.paper.name\"}, {\"translate\": \"item.tconsnirvana.binding.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/binding",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "prismarine"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.prismarine.name\"}, {\"translate\": \"item.tconsnirvana.binding.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/binding",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "blueslime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.blueslime.name\"}, {\"translate\": \"item.tconsnirvana.binding.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sword_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "wood"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.wood.name\"}, {\"translate\": \"item.tconsnirvana.sword_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sword_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "stone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.stone.name\"}, {\"translate\": \"item.tconsnirvana.sword_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sword_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "iron"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.iron.name\"}, {\"translate\": \"item.tconsnirvana.sword_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sword_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "flint"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.flint.name\"}, {\"translate\": \"item.tconsnirvana.sword_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sword_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "cactus"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.cactus.name\"}, {\"translate\": \"item.tconsnirvana.sword_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sword_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "bone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.bone.name\"}, {\"translate\": \"item.tconsnirvana.sword_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sword_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "obsidian"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.obsidian.name\"}, {\"translate\": \"item.tconsnirvana.sword_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sword_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "netherrack"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.netherrack.name\"}, {\"translate\": \"item.tconsnirvana.sword_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sword_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "slime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.slime.name\"}, {\"translate\": \"item.tconsnirvana.sword_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sword_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "paper"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.paper.name\"}, {\"translate\": \"item.tconsnirvana.sword_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sword_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "prismarine"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.prismarine.name\"}, {\"translate\": \"item.tconsnirvana.sword_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sword_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "blueslime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.blueslime.name\"}, {\"translate\": \"item.tconsnirvana.sword_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/wide_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "wood"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.wood.name\"}, {\"translate\": \"item.tconsnirvana.wide_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/wide_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "stone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.stone.name\"}, {\"translate\": \"item.tconsnirvana.wide_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/wide_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "iron"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.iron.name\"}, {\"translate\": \"item.tconsnirvana.wide_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/wide_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "flint"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.flint.name\"}, {\"translate\": \"item.tconsnirvana.wide_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/wide_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "cactus"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.cactus.name\"}, {\"translate\": \"item.tconsnirvana.wide_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/wide_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "bone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.bone.name\"}, {\"translate\": \"item.tconsnirvana.wide_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/wide_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "obsidian"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.obsidian.name\"}, {\"translate\": \"item.tconsnirvana.wide_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/wide_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "netherrack"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.netherrack.name\"}, {\"translate\": \"item.tconsnirvana.wide_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/wide_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "slime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.slime.name\"}, {\"translate\": \"item.tconsnirvana.wide_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/wide_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "paper"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.paper.name\"}, {\"translate\": \"item.tconsnirvana.wide_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/wide_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "prismarine"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.prismarine.name\"}, {\"translate\": \"item.tconsnirvana.wide_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/wide_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "blueslime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.blueslime.name\"}, {\"translate\": \"item.tconsnirvana.wide_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/hand_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "wood"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.wood.name\"}, {\"translate\": \"item.tconsnirvana.hand_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/hand_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "stone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.stone.name\"}, {\"translate\": \"item.tconsnirvana.hand_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/hand_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "iron"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.iron.name\"}, {\"translate\": \"item.tconsnirvana.hand_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/hand_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "flint"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.flint.name\"}, {\"translate\": \"item.tconsnirvana.hand_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/hand_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "cactus"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.cactus.name\"}, {\"translate\": \"item.tconsnirvana.hand_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/hand_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "bone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.bone.name\"}, {\"translate\": \"item.tconsnirvana.hand_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/hand_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "obsidian"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.obsidian.name\"}, {\"translate\": \"item.tconsnirvana.hand_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/hand_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "netherrack"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.netherrack.name\"}, {\"translate\": \"item.tconsnirvana.hand_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/hand_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "slime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.slime.name\"}, {\"translate\": \"item.tconsnirvana.hand_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/hand_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "paper"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.paper.name\"}, {\"translate\": \"item.tconsnirvana.hand_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/hand_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "prismarine"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.prismarine.name\"}, {\"translate\": \"item.tconsnirvana.hand_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/hand_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "blueslime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.blueslime.name\"}, {\"translate\": \"item.tconsnirvana.hand_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/cross_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "wood"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.wood.name\"}, {\"translate\": \"item.tconsnirvana.cross_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/cross_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "stone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.stone.name\"}, {\"translate\": \"item.tconsnirvana.cross_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/cross_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "iron"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.iron.name\"}, {\"translate\": \"item.tconsnirvana.cross_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/cross_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "flint"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.flint.name\"}, {\"translate\": \"item.tconsnirvana.cross_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/cross_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "cactus"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.cactus.name\"}, {\"translate\": \"item.tconsnirvana.cross_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/cross_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "bone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.bone.name\"}, {\"translate\": \"item.tconsnirvana.cross_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/cross_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "obsidian"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.obsidian.name\"}, {\"translate\": \"item.tconsnirvana.cross_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/cross_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "netherrack"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.netherrack.name\"}, {\"translate\": \"item.tconsnirvana.cross_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/cross_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "slime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.slime.name\"}, {\"translate\": \"item.tconsnirvana.cross_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/cross_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "paper"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.paper.name\"}, {\"translate\": \"item.tconsnirvana.cross_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/cross_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "prismarine"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.prismarine.name\"}, {\"translate\": \"item.tconsnirvana.cross_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/cross_guard",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "blueslime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.blueslime.name\"}, {\"translate\": \"item.tconsnirvana.cross_guard.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/knife_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "wood"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.wood.name\"}, {\"translate\": \"item.tconsnirvana.knife_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/knife_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "stone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.stone.name\"}, {\"translate\": \"item.tconsnirvana.knife_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/knife_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "iron"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.iron.name\"}, {\"translate\": \"item.tconsnirvana.knife_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/knife_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "flint"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.flint.name\"}, {\"translate\": \"item.tconsnirvana.knife_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/knife_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "cactus"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.cactus.name\"}, {\"translate\": \"item.tconsnirvana.knife_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/knife_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "bone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.bone.name\"}, {\"translate\": \"item.tconsnirvana.knife_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/knife_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "obsidian"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.obsidian.name\"}, {\"translate\": \"item.tconsnirvana.knife_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/knife_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "netherrack"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.netherrack.name\"}, {\"translate\": \"item.tconsnirvana.knife_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/knife_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "slime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.slime.name\"}, {\"translate\": \"item.tconsnirvana.knife_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/knife_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "paper"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.paper.name\"}, {\"translate\": \"item.tconsnirvana.knife_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/knife_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "prismarine"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.prismarine.name\"}, {\"translate\": \"item.tconsnirvana.knife_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/knife_blade",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "blueslime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.blueslime.name\"}, {\"translate\": \"item.tconsnirvana.knife_blade.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pan_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "wood"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.wood.name\"}, {\"translate\": \"item.tconsnirvana.pan_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pan_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "stone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.stone.name\"}, {\"translate\": \"item.tconsnirvana.pan_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pan_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "iron"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.iron.name\"}, {\"translate\": \"item.tconsnirvana.pan_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pan_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "flint"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.flint.name\"}, {\"translate\": \"item.tconsnirvana.pan_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pan_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "cactus"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.cactus.name\"}, {\"translate\": \"item.tconsnirvana.pan_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pan_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "bone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.bone.name\"}, {\"translate\": \"item.tconsnirvana.pan_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pan_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "obsidian"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.obsidian.name\"}, {\"translate\": \"item.tconsnirvana.pan_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pan_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "netherrack"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.netherrack.name\"}, {\"translate\": \"item.tconsnirvana.pan_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pan_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "slime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.slime.name\"}, {\"translate\": \"item.tconsnirvana.pan_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pan_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "paper"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.paper.name\"}, {\"translate\": \"item.tconsnirvana.pan_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pan_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "prismarine"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.prismarine.name\"}, {\"translate\": \"item.tconsnirvana.pan_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/pan_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "blueslime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.blueslime.name\"}, {\"translate\": \"item.tconsnirvana.pan_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sign_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "wood"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.wood.name\"}, {\"translate\": \"item.tconsnirvana.sign_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sign_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "stone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.stone.name\"}, {\"translate\": \"item.tconsnirvana.sign_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sign_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "iron"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.iron.name\"}, {\"translate\": \"item.tconsnirvana.sign_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sign_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "flint"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.flint.name\"}, {\"translate\": \"item.tconsnirvana.sign_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sign_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "cactus"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.cactus.name\"}, {\"translate\": \"item.tconsnirvana.sign_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sign_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "bone"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.bone.name\"}, {\"translate\": \"item.tconsnirvana.sign_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sign_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "obsidian"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.obsidian.name\"}, {\"translate\": \"item.tconsnirvana.sign_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sign_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "netherrack"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.netherrack.name\"}, {\"translate\": \"item.tconsnirvana.sign_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sign_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "slime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.slime.name\"}, {\"translate\": \"item.tconsnirvana.sign_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sign_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "paper"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.paper.name\"}, {\"translate\": \"item.tconsnirvana.sign_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sign_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "prismarine"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.prismarine.name\"}, {\"translate\": \"item.tconsnirvana.sign_head.name\"}]}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tconsnirvana:parts/sign_head",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "tconsnirvana:tinker_material": {
+                  "Material": "blueslime"
+                },
+                "minecraft:item_name": "{\"translate\": \"item.tconsnirvana.material_part\", \"with\": [{\"translate\": \"material.blueslime.name\"}, {\"translate\": \"item.tconsnirvana.sign_head.name\"}]}"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

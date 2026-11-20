@@ -1,0 +1,16 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/pickaxe/handle",
+    "layer1": "tconsnirvana:item/antique/pickaxe/head",
+    "layer2": "tconsnirvana:item/antique/pickaxe/binding"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconsnirvana:broken": 1
+      },
+      "model": "tconsnirvana:item/pickaxe/pickaxe_broken"
+    }
+  ]
+}

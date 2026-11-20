@@ -1,0 +1,9 @@
+{
+  "feature": "tconsnirvana:magma_island",
+  "placement": [
+    {
+      "type": "tconsnirvana:antique_worldgen",
+      "setting": "magma_island"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "tconsnirvana:block/brownstone/rough",
+    "top": "tconsnirvana:block/brownstone/rough",
+    "side": "tconsnirvana:block/brownstone/rough"
+  }
+}

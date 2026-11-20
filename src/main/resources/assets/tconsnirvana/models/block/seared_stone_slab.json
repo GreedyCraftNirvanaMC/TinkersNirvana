@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "tconsnirvana:block/smeltery/seared_stone",
+    "top": "tconsnirvana:block/smeltery/seared_stone",
+    "side": "tconsnirvana:block/smeltery/seared_stone"
+  }
+}

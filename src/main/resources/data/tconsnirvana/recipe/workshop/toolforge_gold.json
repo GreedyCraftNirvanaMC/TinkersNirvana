@@ -1,0 +1,26 @@
+{
+  "type": "tconsnirvana:table",
+  "group": "tconsnirvana:tool_forge",
+  "pattern": [
+    "BBB",
+    "MTM",
+    "M M"
+  ],
+  "key": {
+    "B": {
+      "item": "tconsnirvana:seared_bricks"
+    },
+    "M": {
+      "tag": "c:storage_blocks/gold"
+    },
+    "T": {
+      "item": "tconsnirvana:blockitem/toolstation"
+    }
+  },
+  "material": {
+    "tag": "c:storage_blocks/gold"
+  },
+  "result": {
+    "id": "tconsnirvana:toolforge"
+  }
+}

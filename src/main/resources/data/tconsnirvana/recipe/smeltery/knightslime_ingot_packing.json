@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:knightslime_nugget"
+    },
+    {
+      "item": "tconsnirvana:knightslime_nugget"
+    },
+    {
+      "item": "tconsnirvana:knightslime_nugget"
+    },
+    {
+      "item": "tconsnirvana:knightslime_nugget"
+    },
+    {
+      "item": "tconsnirvana:knightslime_nugget"
+    },
+    {
+      "item": "tconsnirvana:knightslime_nugget"
+    },
+    {
+      "item": "tconsnirvana:knightslime_nugget"
+    },
+    {
+      "item": "tconsnirvana:knightslime_nugget"
+    },
+    {
+      "item": "tconsnirvana:knightslime_nugget"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:knightslime_ingot"
+  }
+}

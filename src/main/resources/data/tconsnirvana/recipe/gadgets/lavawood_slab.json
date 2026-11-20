@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconsnirvana:lavawood"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:lavawood_slab",
+    "count": 6
+  }
+}

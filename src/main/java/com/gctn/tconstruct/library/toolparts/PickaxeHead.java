@@ -42,8 +42,8 @@ public class PickaxeHead extends ToolPart {
         CompoundTag tag = new CompoundTag();
         tag.putString(Tags.PART_MATERIAL, material.identifier);
         stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(tag));
-        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_part",
-                material.getDisplayName(), Component.translatable("item.tconstruct.pickaxe_head.name")));
+        stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconsnirvana.material_part",
+                material.getDisplayName(), Component.translatable("item.tconsnirvana.pickaxe_head.name")));
         return stack;
     }
 

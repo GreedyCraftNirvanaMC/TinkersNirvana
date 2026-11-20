@@ -1,0 +1,11 @@
+{
+  "parent": "tconsnirvana:block/table",
+  "textures": {
+    "particle": "tconsnirvana:block/workshop/craftingstation_top",
+    "top": "tconsnirvana:block/workshop/craftingstation_top",
+    "side": "tconsnirvana:block/workshop/craftingstation_side",
+    "bottom": "minecraft:block/oak_planks",
+    "leg": "tconsnirvana:block/table_side",
+    "leg_bottom": "minecraft:block/oak_planks"
+  }
+}

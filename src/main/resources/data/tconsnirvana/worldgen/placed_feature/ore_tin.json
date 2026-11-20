@@ -1,0 +1,12 @@
+{
+  "feature": "tconsnirvana:ore_tin",
+  "placement": [
+    {
+      "type": "tconsnirvana:antique_height",
+      "setting": "tin"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

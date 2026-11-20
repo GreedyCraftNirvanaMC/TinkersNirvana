@@ -1,0 +1,10 @@
+{
+  "type": "tconsnirvana:drying",
+  "ingredient": {
+    "item": "tconsnirvana:slimeball_magma"
+  },
+  "result": {
+    "id": "tconsnirvana:slimedrop_magma"
+  },
+  "time": 6000
+}

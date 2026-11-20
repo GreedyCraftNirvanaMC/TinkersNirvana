@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "tconstruct:tin_ore",
-    "tconstruct:aluminum_ore"
+    "tconsnirvana:tin_ore",
+    "tconsnirvana:aluminum_ore"
   ]
 }

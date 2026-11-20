@@ -12,6 +12,14 @@ public final class ToolStationDisassemblyRecipes {
     private ToolStationDisassemblyRecipes() {
     }
 
+    public static boolean canDisassemble(ItemStack stack) {
+        return canDisassemble(stack, true);
+    }
+
+    public static PartList createParts(ItemStack stack) {
+        return createParts(stack, true);
+    }
+
     public static boolean canDisassemble(ItemStack stack, boolean forge) {
         return !createParts(stack, forge).isEmpty();
     }
@@ -51,15 +59,8 @@ public final class ToolStationDisassemblyRecipes {
     }
 
     private static Material getMaterial(CompoundTag materials, String materialKey, String requiredStat) {
-        String materialId = materials.getString(materialKey);
-        for (Material material : TinkerMaterials.materials) {
-            if (material.identifier.equals(materialId)
-                    && material.getStats() != null
-                    && material.getStats().containsKey(requiredStat)) {
-                return material;
-            }
-        }
-        return null;
+        Material material = TinkerMaterials.getMaterial(materials.getString(materialKey));
+        return material != null && material.hasStats(requiredStat) ? material : null;
     }
 
     public record PartList(ItemStack[] parts) {

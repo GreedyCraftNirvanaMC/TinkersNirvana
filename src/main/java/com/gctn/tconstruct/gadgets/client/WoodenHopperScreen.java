@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 /** 使用原始贴图与居中的单槽布局。 */
 public class WoodenHopperScreen extends AbstractContainerScreen<WoodenHopperMenu> {
-    private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath("tconstruct", "textures/gui/hopper.png");
+    private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath("tconsnirvana", "textures/gui/hopper.png");
 
     public WoodenHopperScreen(WoodenHopperMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);

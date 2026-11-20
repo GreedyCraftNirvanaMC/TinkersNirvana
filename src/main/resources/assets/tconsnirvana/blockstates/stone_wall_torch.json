@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "tconsnirvana:block/stone_wall_torch"
+    },
+    "facing=north": {
+      "model": "tconsnirvana:block/stone_wall_torch",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "tconsnirvana:block/stone_wall_torch",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "tconsnirvana:block/stone_wall_torch",
+      "y": 180
+    }
+  }
+}

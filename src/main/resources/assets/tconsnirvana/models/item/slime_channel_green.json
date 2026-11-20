@@ -1,0 +1,6 @@
+{
+  "parent": "tconsnirvana:block/slime_channel/slime_channel",
+  "textures": {
+    "slime": "tconsnirvana:block/fluids/liquid_flow"
+  }
+}

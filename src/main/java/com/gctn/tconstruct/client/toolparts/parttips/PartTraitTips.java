@@ -51,7 +51,7 @@ public final class PartTraitTips {
             }
         }
         if (!Screen.hasAltDown() && !tips.isEmpty()) {
-            tips.add(Either.left(Component.translatable("tooltip.tconstruct.hold_for_traits", "Alt")
+            tips.add(Either.left(Component.translatable("tooltip.tconsnirvana.hold_for_traits", "Alt")
                     .withColor(0xFFAAAAAA)));
         }
         event.getTooltipElements().addAll(1, tips);

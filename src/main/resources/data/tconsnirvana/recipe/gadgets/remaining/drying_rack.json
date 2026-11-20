@@ -1,0 +1,33 @@
+{
+  "type": "tconsnirvana:table",
+  "pattern": [
+    "AAA"
+  ],
+  "key": {
+    "A": [
+      {
+        "tag": "minecraft:wooden_slabs"
+      },
+      {
+        "item": "tconsnirvana:lavawood_slab"
+      },
+      {
+        "item": "tconsnirvana:firewood_slab"
+      }
+    ]
+  },
+  "material": [
+    {
+      "tag": "minecraft:wooden_slabs"
+    },
+    {
+      "item": "tconsnirvana:lavawood_slab"
+    },
+    {
+      "item": "tconsnirvana:firewood_slab"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:drying_rack"
+  }
+}

@@ -27,9 +27,9 @@ import java.util.*;
 
 /** Mantle's 206×200 paper leaves and cover, with native widgets and component-aware tooltips. */
 public final class BookScreen extends Screen {
-    private static final ResourceLocation BOOK = ResourceLocation.fromNamespaceAndPath("tconstruct", "textures/gui/book/mantle_book.png");
-    private static final ResourceLocation FRONT = ResourceLocation.fromNamespaceAndPath("tconstruct", "textures/gui/book/mantle_bookfront.png");
-    private static final ResourceLocation MODIFY = ResourceLocation.fromNamespaceAndPath("tconstruct", "textures/gui/book/modify.png");
+    private static final ResourceLocation BOOK = ResourceLocation.fromNamespaceAndPath("tconsnirvana", "textures/gui/book/mantle_book.png");
+    private static final ResourceLocation FRONT = ResourceLocation.fromNamespaceAndPath("tconsnirvana", "textures/gui/book/mantle_bookfront.png");
+    private static final ResourceLocation MODIFY = ResourceLocation.fromNamespaceAndPath("tconsnirvana", "textures/gui/book/modify.png");
     private static final int BOOK_WIDTH = 412, BOOK_HEIGHT = 200;
     private final BookDocument document;
     private final InteractionHand hand;
@@ -54,7 +54,7 @@ public final class BookScreen extends Screen {
                 new BookDocument(Minecraft.getInstance().font, BookContents.pages()), BookNetwork.savedPage(Minecraft.getInstance().player.getItemInHand(hand)));
     }
     BookScreen(InteractionHand hand, int slot, BookDocument document, String saved) {
-        super(Component.translatable("item.tconstruct.book")); this.hand = hand; this.slot = slot; this.document = document;
+        super(Component.translatable("item.tconsnirvana.book")); this.hand = hand; this.slot = slot; this.document = document;
         if (!saved.isEmpty()) { spread = spreadFor(document.find(saved)); }
     }
     public static void open(InteractionHand hand) { Minecraft.getInstance().setScreen(new BookScreen(hand)); }
@@ -84,7 +84,7 @@ public final class BookScreen extends Screen {
     }
     private int px(float x) { return Math.round(left + x * scale); }
     private int py(float y) { return Math.round(top + y * scale); }
-    private BookButton button(Kind kind, int x, int y, String message, Runnable action) { return addRenderableWidget(new BookButton(kind, x, y, Component.translatable("book.tconstruct." + message), action)); }
+    private BookButton button(Kind kind, int x, int y, String message, Runnable action) { return addRenderableWidget(new BookButton(kind, x, y, Component.translatable("book.tconsnirvana." + message), action)); }
     private void updateControls() {
         frames = 0;
         coverButton.visible = spread < 0; previous.visible = spread >= 0; next.visible = spread < lastSpread();
@@ -139,10 +139,10 @@ public final class BookScreen extends Screen {
     private void cover(GuiGraphics graphics) {
         tint(0xffffce85); graphics.blit(FRONT, 103, 0, 0, 0, 206, 200, 512, 512); tint(0xffffffff);
         graphics.blit(FRONT, 103, 0, 0, 200, 206, 200, 512, 512);
-        var title = BookContents.paper(Component.translatable("book.tconstruct.cover_title")); float size = font.width(title) <= 67 ? 2.5F : 2;
+        var title = BookContents.paper(Component.translatable("book.tconsnirvana.cover_title")); float size = font.width(title) <= 67 ? 2.5F : 2;
         var pose = graphics.pose(); pose.pushPose(); pose.translate(206 + 3 * size, 95.5F - 4 * size, 1); pose.scale(size, size, 1);
         graphics.drawString(font, title, -font.width(title) / 2, 0, 0xffae8000, true); pose.popPose();
-        var subtitle = BookContents.paper(Component.translatable("book.tconstruct.cover_subtitle"));
+        var subtitle = BookContents.paper(Component.translatable("book.tconsnirvana.cover_subtitle"));
         pose.pushPose(); pose.translate(216.5F, 182, 1); pose.scale(1.5F, 1.5F, 1);
         graphics.drawString(font, subtitle, -font.width(subtitle) / 2, 0, 0xffae8000, true); pose.popPose();
     }

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:ardite_block"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:ardite_ingot",
+    "count": 9
+  }
+}

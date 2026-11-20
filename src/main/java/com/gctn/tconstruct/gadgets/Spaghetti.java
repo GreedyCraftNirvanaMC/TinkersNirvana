@@ -24,7 +24,7 @@ public final class Spaghetti {
     public static final Supplier<MomsSpaghettiItem> MOMS = ItemRegister.ITEMS.register("moms_spaghetti", MomsSpaghettiItem::new);
     private static final TagKey<Item> MEAT = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "foods/cooked_meat"));
     private Spaghetti() {}
-    public static void init() { StationProcessingRecipes.register("tconstruct:spaghetti", stack -> stack.is(MOMS.get()), Spaghetti::plan); }
+    public static void init() { StationProcessingRecipes.register("tconsnirvana:spaghetti", stack -> stack.is(MOMS.get()), Spaghetti::plan); }
     private static StationProcessingRecipes.Plan plan(Container input) {
         ItemStack result = input.getItem(0).copyWithCount(1);
         int[] counts = new int[6]; counts[0] = 1;

@@ -1,0 +1,10 @@
+{
+  "type": "tconsnirvana:drying",
+  "ingredient": {
+    "item": "minecraft:beef"
+  },
+  "result": {
+    "id": "tconsnirvana:jerky_beef"
+  },
+  "time": 6000
+}

@@ -22,8 +22,8 @@ public final class SlimeClientEvents {
     @SubscribeEvent
     private static void tooltip(ItemTooltipEvent event) {
         if (event.getItemStack().getItem() instanceof BlockItem item) {
-            String key = item.getBlock() instanceof ColoredSlimeBlock ? "tooltip.tconstruct.slime"
-                    : item.getBlock() instanceof CongealedSlimeBlock ? "tooltip.tconstruct.slime_congealed" : null;
+            String key = item.getBlock() instanceof ColoredSlimeBlock ? "tooltip.tconsnirvana.slime"
+                    : item.getBlock() instanceof CongealedSlimeBlock ? "tooltip.tconsnirvana.slime_congealed" : null;
             if (key != null) {
                 event.getToolTip().add(Component.translatable(key).withStyle(ChatFormatting.GRAY));
             }

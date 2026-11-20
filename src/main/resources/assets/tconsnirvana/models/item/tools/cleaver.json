@@ -1,0 +1,87 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/broadsword/handle",
+    "layer1": "tconsnirvana:item/antique/cleaver/head",
+    "layer2": "tconsnirvana:item/antique/cleaver/shield",
+    "layer3": "tconsnirvana:item/antique/cleaver/guard"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        55
+      ],
+      "translation": [
+        0,
+        10.0,
+        0.5
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        -55
+      ],
+      "translation": [
+        0,
+        10.0,
+        0.5
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -95,
+        30
+      ],
+      "translation": [
+        2.13,
+        6.0,
+        0.13
+      ],
+      "scale": [
+        1.2,
+        1.2,
+        1.2
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        95,
+        -30
+      ],
+      "translation": [
+        2.13,
+        6.0,
+        0.13
+      ],
+      "scale": [
+        1.2,
+        1.2,
+        1.2
+      ]
+    }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconsnirvana:broken": 1
+      },
+      "model": "tconsnirvana:item/tools/cleaver_broken"
+    }
+  ]
+}

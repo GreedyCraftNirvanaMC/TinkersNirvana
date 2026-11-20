@@ -4,10 +4,12 @@
 
 For Minecraft 1.21.1, NeoForge and KubeJS 2101.7.2, verified with build.381. Install KubeJS and its declared dependencies, then place scripts in `kubejs/startup_scripts/`. Material and trait definitions are startup content. Restart the client and server after editing them and use matching startup scripts on both sides.
 
+When upgrading from 1.0.4, use `tconsnirvana:material` and `tconsnirvana:trait` in `StartupEvents.registry`. Keep calling `TinkerEvents` for edits. Update mod item, tag, recipe and component IDs in scripts. Keep IDs that belong to your own addon or to KubeJS.
+
 ## Register materials
 
 ```js
-StartupEvents.registry('tconstruct:material', event => {
+StartupEvents.registry('tconsnirvana:material', event => {
     event.create('kubejs:amethyst')
         .color(0xA77CE3)
         .craftable(true)
@@ -46,7 +48,7 @@ Stat names are `Head`, `Handle`, `Extra`, `Bow`, `BowString`, `Shaft` and `Fletc
 ## Create traits
 
 ```js
-StartupEvents.registry('tconstruct:trait', event => {
+StartupEvents.registry('tconsnirvana:trait', event => {
     event.create('kubejs:reinforced_edge')
         .displayName('Reinforced Edge')
         .description('Increases attack damage and reduces durability consumption')
@@ -82,7 +84,7 @@ Stacking applies during assembly and part merging; existing tools retain their s
 
 ```js
 TinkerEvents.modifyTraits(event => {
-    event.modify('tconstruct:fractured', trait => {
+    event.modify('tconsnirvana:fractured', trait => {
         trait.color(0xFFAA55)
         trait.replaceHandler('modifyStats', ctx => {
             ctx.stats.attack += 3
@@ -92,7 +94,7 @@ TinkerEvents.modifyTraits(event => {
         })
     })
 
-    event.remove('tconstruct:slimey_blue')
+    event.remove('tconsnirvana:slimey_blue')
 })
 ```
 
@@ -106,15 +108,15 @@ Removed traits are skipped by material bindings and existing tools. Their saved 
 
 ```js
 TinkerEvents.modifyMaterials(event => {
-    event.modify('tconstruct:wood', material => {
-        material.removeTrait('tconstruct:ecological')
+    event.modify('tconsnirvana:wood', material => {
+        material.removeTrait('tconsnirvana:ecological')
         material.addTrait('kubejs:reinforced_edge', 1)
         material.head(100, 3, 1, 1)
     })
 })
 ```
 
-The editor exposes material creation methods plus `addTrait`, `removeTrait` and `clearTraits`. Material binding changes affect subsequent assembly and part replacement. Existing tools retain their own trait records, which resolve current definitions. Builtins accept both `wood` and `tconstruct:wood` while preserving saved IDs.
+The editor exposes material creation methods plus `addTrait`, `removeTrait` and `clearTraits`. Material binding changes affect subsequent assembly and part replacement. Existing tools retain their own trait records, which resolve current definitions. Builtins accept both `wood` and `tconsnirvana:wood` while preserving saved IDs.
 
 ## Callback contexts
 
@@ -165,3 +167,5 @@ Material names resolve in this order: current-language material translation, exp
 ## Other APIs
 
 Existing `TinkerContent` calls remain available for older scripts. See the [Java addon API](TOOL_API.md). Native recipes such as drying can be added through `ServerEvents.recipes` and data packs. Material `castingFluid` derives melting and metal/clay casting rules from registered part costs.
+
+In `server_scripts`, `TinkerToolUpgrades` exposes `isSupported(stack)`, `getLevel(stack)`, `getAvailableSlots(stack)` and `tryUpgrade(stack)`. Apply upgrades on the authoritative stack only after checking your own requirements. `TinkerSmeltery.meltingOutput(stack)` previews the fluid from one item. Pass a cast and available fluid to `TinkerSmeltery.castingOutput(basin, cast, fluid)` to preview casting. See the [Java addon API](TOOL_API.md) for input and result details.

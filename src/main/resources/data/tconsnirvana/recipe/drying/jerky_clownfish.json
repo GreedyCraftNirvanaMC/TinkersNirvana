@@ -1,0 +1,10 @@
+{
+  "type": "tconsnirvana:drying",
+  "ingredient": {
+    "item": "minecraft:tropical_fish"
+  },
+  "result": {
+    "id": "tconsnirvana:jerky_clownfish"
+  },
+  "time": 6000
+}

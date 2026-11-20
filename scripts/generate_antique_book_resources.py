@@ -10,14 +10,15 @@ parser.add_argument("--antique", type=Path, required=True)
 args = parser.parse_args()
 project = Path(__file__).resolve().parents[1]
 root = project / "src/main/resources"
-assets = root / "assets/tconstruct"
+assets = root / "assets/tconsnirvana"
 old = args.antique / "src/main/resources/assets/tconstruct"
 manifest = []
 
 
 def write(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    text = json.dumps(value, ensure_ascii=False, indent=2).replace('"tconstruct:', '"tconsnirvana:')
+    path.write_text(text + "\n", encoding="utf-8")
 
 
 for file in [old / "textures/items/book.png", *sorted((old / "textures/gui/book").glob("*.png"))]:
@@ -77,37 +78,37 @@ for locale in sorted(path for path in (old / "book").iterdir() if path.is_dir() 
             write(assets / f"book/pages/{locale.name}/{section}/{index:02}_{name}.json", data)
 
 names = {
-    "modifier.tconstruct.fortify": ["磨制", "Fortified"],
-    "modifier.tconstruct.embossment": ["镶饰", "Embossment"],
-    "tooltip.tconstruct.fortified": ["磨制：%s（%s）", "Fortified with %s (%s)"],
-    "item.tconstruct.book": ["匠魂宝典", "Materials and You"],
-    "book.tconstruct.search": ["搜索章节、材料与词条", "Search chapters, materials, and traits"],
-    "book.tconstruct.contents": ["目录", "Contents"],
-    "book.tconstruct.section.intro": ["入门", "Getting Started"],
-    "book.tconstruct.section.tools": ["工具", "Tools"],
-    "book.tconstruct.section.materials": ["工具材料", "Tool Materials"],
-    "book.tconstruct.section.bowmaterials": ["远程材料", "Ranged Materials"],
-    "book.tconstruct.section.traits": ["材料词条", "Material Traits"],
-    "book.tconstruct.section.modifiers": ["强化", "Modifiers"],
-    "book.tconstruct.section.seared_devices": ["冶炼设备", "Seared Devices"],
-    "book.tconstruct.section.world": ["世界与装置", "World and Gadgets"],
-    "book.tconstruct.layer.all": ["全部层", "All layers"],
-    "book.tconstruct.layer": ["第 %s 层", "Layer %s"],
-    "book.tconstruct.structure_hint": ["拖动模型旋转，点击层数逐层查看。", "Drag the model to rotate; use the layer button to inspect each layer."],
-    "book.tconstruct.craftable": ["可在部件加工台制作", "Craft parts in the part builder"],
-    "book.tconstruct.castable": ["可在铸造台浇铸", "Cast parts on a casting table"],
-    "book.tconstruct.modifier_limits": ["等级上限：%s；每级材料数：%s", "Maximum level: %s; ingredients per level: %s"],
-    "book.tconstruct.parts": ["部件：", "Parts:"],
-    "book.tconstruct.properties": ["属性：", "Properties:"],
-    "book.tconstruct.ingredients": ["材料来源：", "Material sources:"],
-    "book.tconstruct.material_value": ["%s：%s 份材料", "%s: %s material units"],
-    "book.tconstruct.traits": ["词条：", "Traits:"],
-    "book.tconstruct.empty_search": ["没有匹配的内容", "No matching pages"],
+    "modifier.tconsnirvana.fortify": ["磨制", "Fortified"],
+    "modifier.tconsnirvana.embossment": ["镶饰", "Embossment"],
+    "tooltip.tconsnirvana.fortified": ["磨制：%s（%s）", "Fortified with %s (%s)"],
+    "item.tconsnirvana.book": ["匠魂宝典", "Materials and You"],
+    "book.tconsnirvana.search": ["搜索章节、材料与词条", "Search chapters, materials, and traits"],
+    "book.tconsnirvana.contents": ["目录", "Contents"],
+    "book.tconsnirvana.section.intro": ["入门", "Getting Started"],
+    "book.tconsnirvana.section.tools": ["工具", "Tools"],
+    "book.tconsnirvana.section.materials": ["工具材料", "Tool Materials"],
+    "book.tconsnirvana.section.bowmaterials": ["远程材料", "Ranged Materials"],
+    "book.tconsnirvana.section.traits": ["材料词条", "Material Traits"],
+    "book.tconsnirvana.section.modifiers": ["强化", "Modifiers"],
+    "book.tconsnirvana.section.seared_devices": ["冶炼设备", "Seared Devices"],
+    "book.tconsnirvana.section.world": ["世界与装置", "World and Gadgets"],
+    "book.tconsnirvana.layer.all": ["全部层", "All layers"],
+    "book.tconsnirvana.layer": ["第 %s 层", "Layer %s"],
+    "book.tconsnirvana.structure_hint": ["拖动模型旋转，点击层数逐层查看。", "Drag the model to rotate; use the layer button to inspect each layer."],
+    "book.tconsnirvana.craftable": ["可在部件加工台制作", "Craft parts in the part builder"],
+    "book.tconsnirvana.castable": ["可在铸造台浇铸", "Cast parts on a casting table"],
+    "book.tconsnirvana.modifier_limits": ["等级上限：%s；每级材料数：%s", "Maximum level: %s; ingredients per level: %s"],
+    "book.tconsnirvana.parts": ["部件：", "Parts:"],
+    "book.tconsnirvana.properties": ["属性：", "Properties:"],
+    "book.tconsnirvana.ingredients": ["材料来源：", "Material sources:"],
+    "book.tconsnirvana.material_value": ["%s：%s 份材料", "%s: %s material units"],
+    "book.tconsnirvana.traits": ["词条：", "Traits:"],
+    "book.tconsnirvana.empty_search": ["没有匹配的内容", "No matching pages"],
 }
 for field, zh, en in [("Head", "顶端", "Head"), ("Handle", "手柄", "Handle"), ("Extra", "附件", "Extra"), ("Bow", "弓臂", "Bow Limb"), ("BowString", "弓弦", "Bowstring"), ("Shaft", "箭杆", "Arrow Shaft"), ("Fletching", "箭羽", "Fletching")]:
-    names["book.tconstruct.group." + field] = [zh, en]
+    names["book.tconsnirvana.group." + field] = [zh, en]
 for field, zh, en in [("durability", "耐久", "Durability"), ("speed", "采掘速度", "Mining speed"), ("attack", "攻击伤害", "Attack damage"), ("tier", "采掘等级", "Harvest tier"), ("modifier", "倍率", "Multiplier"), ("draw", "拉弓速度", "Draw speed"), ("range", "射程", "Range"), ("bonus", "额外伤害", "Bonus damage"), ("accuracy", "精准度", "Accuracy"), ("ammo", "额外弹药", "Bonus ammunition")]:
-    names["book.tconstruct.stat." + field] = [zh + "：%s", en + ": %s"]
+    names["book.tconsnirvana.stat." + field] = [zh + "：%s", en + ": %s"]
 
 extra = [
     ("world/islands", "黏液岛与植物", "Slime Islands and Plants", "空岛可在主世界高空生成；熔岩岛可在下界熔岩海生成。岛上有黏液土、彩色草、树叶和藤蔓。黏液树苗需要种在黏液土上。树叶可用剪刀或精准采集获取，黏液草和蕨类可用骨粉增殖。地下黏液池默认关闭，可在配置中启用。", "Slime islands generate above the Overworld; magma islands may form on Nether lava seas. Find slime dirt, colored grass, leaves, and vines there. Slime saplings require slime soil. Shears or Silk Touch collect leaves; bone meal grows grass and ferns. Underground pools are disabled by default and can be enabled in the configuration."),
@@ -124,8 +125,8 @@ for lang, column in [("zh_cn", 0), ("en_us", 1)]:
     data = json.loads(target.read_text(encoding="utf-8-sig"))
     data.update({key: values[column] for key, values in names.items()})
     write(target, data)
-write(assets / "models/item/book.json", {"parent": "minecraft:item/generated", "textures": {"layer0": "tconstruct:item/book"}})
-write(root / "data/tconstruct/recipe/book.json", {"type": "minecraft:crafting_shapeless", "ingredients": [{"item": "minecraft:book"}, {"item": "tconstruct:pattern"}], "result": {"id": "tconstruct:book"}})
-write(root / "data/tconstruct/recipe/book_from_paper.json", {"type": "minecraft:crafting_shapeless", "ingredients": [{"item": "minecraft:paper"}] * 3 + [{"item": "minecraft:string"}] + [{"item": "tconstruct:pattern"}] * 2, "result": {"id": "minecraft:book"}})
+write(assets / "models/item/book.json", {"parent": "minecraft:item/generated", "textures": {"layer0": "tconsnirvana:item/book"}})
+write(root / "data/tconsnirvana/recipe/book.json", {"type": "minecraft:crafting_shapeless", "ingredients": [{"item": "minecraft:book"}, {"item": "tconsnirvana:pattern"}], "result": {"id": "tconsnirvana:book"}})
+write(root / "data/tconsnirvana/recipe/book_from_paper.json", {"type": "minecraft:crafting_shapeless", "ingredients": [{"item": "minecraft:paper"}] * 3 + [{"item": "minecraft:string"}] + [{"item": "tconsnirvana:pattern"}] * 2, "result": {"id": "minecraft:book"}})
 write(project / "scripts/antique_book_textures.json", manifest)
 print(f"Prepared complete translated book text and {len(manifest)} GIMP textures")

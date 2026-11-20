@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "tconsnirvana:block/lavawood",
+    "top": "tconsnirvana:block/lavawood",
+    "side": "tconsnirvana:block/lavawood"
+  }
+}

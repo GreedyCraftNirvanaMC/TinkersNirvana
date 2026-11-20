@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:alumite_ingot"
+    },
+    {
+      "item": "tconsnirvana:alumite_ingot"
+    },
+    {
+      "item": "tconsnirvana:alumite_ingot"
+    },
+    {
+      "item": "tconsnirvana:alumite_ingot"
+    },
+    {
+      "item": "tconsnirvana:alumite_ingot"
+    },
+    {
+      "item": "tconsnirvana:alumite_ingot"
+    },
+    {
+      "item": "tconsnirvana:alumite_ingot"
+    },
+    {
+      "item": "tconsnirvana:alumite_ingot"
+    },
+    {
+      "item": "tconsnirvana:alumite_ingot"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:alumite_block"
+  }
+}

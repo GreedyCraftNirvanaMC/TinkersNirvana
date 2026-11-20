@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "tconsnirvana:seared_slab",
+  "pattern": [
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconsnirvana:seared_brick_fancy"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:seared_brick_fancy_slab",
+    "count": 6
+  }
+}

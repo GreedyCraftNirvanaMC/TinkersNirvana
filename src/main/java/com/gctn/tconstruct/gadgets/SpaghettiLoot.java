@@ -17,8 +17,8 @@ public final class SpaghettiLoot {
     private static final Set<String> TABLES = Set.of("minecraft:chests/desert_pyramid", "minecraft:chests/stronghold_crossing", "minecraft:chests/jungle_temple");
     private SpaghettiLoot() {}
     @SubscribeEvent private static void load(LootTableLoadEvent event) {
-        if (TABLES.contains(event.getName().toString()) && event.getTable().getPool("tconstruct:spaghetti") == null) {
-            event.getTable().addPool(LootPool.lootPool().name("tconstruct:spaghetti").setRolls(ConstantValue.exactly(1))
+        if (TABLES.contains(event.getName().toString()) && event.getTable().getPool("tconsnirvana:spaghetti") == null) {
+            event.getTable().addPool(LootPool.lootPool().name("tconsnirvana:spaghetti").setRolls(ConstantValue.exactly(1))
                     .when(LootItemRandomChanceCondition.randomChance(.05F)).add(LootItem.lootTableItem(Spaghetti.HARD.get())).build());
         }
     }

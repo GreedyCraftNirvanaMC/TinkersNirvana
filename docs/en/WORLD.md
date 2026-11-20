@@ -10,7 +10,7 @@ Tool workshops and smelteries can generate in all five vanilla village styles. C
 
 ## Configuration
 
-Edit `config/tconstruct-common.toml`. World generation settings affect future chunks and do not rewrite existing structures or terrain.
+Edit `config/tconsnirvana-common.toml`. World generation settings affect future chunks and do not rewrite existing structures or terrain.
 
 | Key | Default | Purpose |
 | --- | --- | --- |
@@ -34,8 +34,8 @@ Each slime island makes three tree placement attempts. The resulting tree count 
 
 ## Data packs
 
-Configured and placed features live under `data/tconstruct/worldgen/configured_feature` and `placed_feature`. Biome modifiers live under `data/tconstruct/neoforge/biome_modifier`. Override those resources to change generation stages, biomes, or blocks.
+Configured and placed features live under `data/tconsnirvana/worldgen/configured_feature` and `placed_feature`. Biome modifiers live under `data/tconsnirvana/neoforge/biome_modifier`. Override those resources to change generation stages, biomes, or blocks.
 
-The `tconstruct:slime_tree` configuration takes `trunk` and `leaves` block states, plus optional `vine`, `min_height`, `height_range`, and `seek_height`. Add-ons can reuse it for their own trees.
+The `tconsnirvana:slime_tree` configuration takes `trunk` and `leaves` block states, plus optional `vine`, `min_height`, `height_range`, and `seek_height`. Add-ons can reuse it for their own trees.
 
-Village templates are under `data/tconstruct/structure/village/<biome>`. Additional pools and loot use vanilla data-pack formats. See [Materials and You](BOOK.md) for book extensions.
+Village templates are under `data/tconsnirvana/structure/village/<biome>`. Additional pools and loot use vanilla data-pack formats. See [Materials and You](BOOK.md) for book extensions.

@@ -1,0 +1,13 @@
+{
+  "feature": "tconsnirvana:slime_pool",
+  "placement": [
+    {
+      "type": "tconsnirvana:antique_worldgen",
+      "setting": "slime_pool"
+    },
+    {
+      "type": "tconsnirvana:antique_height",
+      "setting": "slime_pool"
+    }
+  ]
+}

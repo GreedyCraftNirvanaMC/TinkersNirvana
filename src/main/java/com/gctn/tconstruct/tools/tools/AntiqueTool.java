@@ -39,7 +39,7 @@ public class AntiqueTool extends TinkerTools {
     private final ToolDefinition definition;
     public AntiqueTool(ToolDefinition definition) { this.definition = definition; }
     public ToolDefinition definition() { return definition; }
-    @Override public net.minecraft.network.chat.Component getName(ItemStack stack) { return net.minecraft.network.chat.Component.translatable("item.tconstruct." + definition.id() + ".name"); }
+    @Override public net.minecraft.network.chat.Component getName(ItemStack stack) { return net.minecraft.network.chat.Component.translatable("item.tconsnirvana." + definition.id() + ".name"); }
     public boolean isLauncher() {
         return switch (definition.action()) { case SHORTBOW, LONGBOW, CROSSBOW -> true; default -> false; };
     }

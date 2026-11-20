@@ -1,0 +1,16 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/mattock/handle",
+    "layer1": "tconsnirvana:item/antique/mattock/head",
+    "layer2": "tconsnirvana:item/antique/mattock/back"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconsnirvana:broken": 1
+      },
+      "model": "tconsnirvana:item/tools/mattock_broken"
+    }
+  ]
+}

@@ -56,9 +56,9 @@ public final class ToolBuilder {
         tool.set(TinkerDataComponents.TINKER_TRAITS.get(), CustomData.of(traits));
         rebuild(tool, definition);
         Material display = materials.get(Math.min(1, materials.size() - 1));
-        tool.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_part",
+        tool.set(DataComponents.ITEM_NAME, Component.translatable("item.tconsnirvana.material_part",
                 display.getDisplayName(),
-                Component.translatable("item.tconstruct." + definition.id() + ".name")));
+                Component.translatable("item.tconsnirvana." + definition.id() + ".name")));
         tool.setDamageValue(0);
         return tool;
     }
@@ -117,8 +117,8 @@ public final class ToolBuilder {
         tool.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
         if (!definition.parts().isEmpty()) {
             String displayId = data.getString(definition.parts().get(Math.min(1, definition.parts().size() - 1)).key());
-            tool.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_part",
-                    Material.nameOf(displayId), Component.translatable("item.tconstruct." + definition.id() + ".name")));
+            tool.set(DataComponents.ITEM_NAME, Component.translatable("item.tconsnirvana.material_part",
+                    Material.nameOf(displayId), Component.translatable("item.tconsnirvana." + definition.id() + ".name")));
         }
     }
 

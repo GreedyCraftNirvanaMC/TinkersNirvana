@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "tconsnirvana:block/smeltery/seared_brick",
+    "up": "tconsnirvana:block/smeltery/seared_brick",
+    "down": "tconsnirvana:block/smeltery/seared_brick",
+    "east": "tconsnirvana:block/smeltery/seared_brick",
+    "west": "tconsnirvana:block/smeltery/seared_brick",
+    "south": "tconsnirvana:block/smeltery/drain_back",
+    "north": "tconsnirvana:block/smeltery/drain_front"
+  }
+}

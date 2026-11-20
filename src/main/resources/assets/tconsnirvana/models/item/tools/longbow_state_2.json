@@ -1,0 +1,9 @@
+{
+  "parent": "tconsnirvana:item/tools/longbow",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/longbow/limb_top_3",
+    "layer1": "tconsnirvana:item/antique/longbow/limb_bottom_3",
+    "layer2": "tconsnirvana:item/antique/longbow/grip",
+    "layer3": "tconsnirvana:item/antique/longbow/bowstring_3"
+  }
+}

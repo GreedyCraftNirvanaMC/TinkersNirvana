@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "A  ",
+    "AA ",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconsnirvana:lavawood"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:lavawood_stairs",
+    "count": 4
+  }
+}

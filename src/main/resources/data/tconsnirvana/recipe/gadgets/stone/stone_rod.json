@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "tconsnirvana:stone_stick",
+    "count": 4
+  },
+  "pattern": [
+    "A",
+    "A"
+  ],
+  "key": {
+    "A": [
+      {
+        "tag": "c:cobblestones/normal"
+      },
+      {
+        "tag": "c:stones"
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "parent": "tconsnirvana:item/tools/hammer",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/hammer/broken_handle",
+    "layer1": "tconsnirvana:item/antique/hammer/head",
+    "layer2": "tconsnirvana:item/antique/hammer/back",
+    "layer3": "tconsnirvana:item/antique/hammer/front"
+  }
+}

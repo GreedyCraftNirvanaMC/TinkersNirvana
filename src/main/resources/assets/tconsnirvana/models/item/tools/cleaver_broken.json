@@ -1,0 +1,9 @@
+{
+  "parent": "tconsnirvana:item/tools/cleaver",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/broadsword/handle",
+    "layer1": "tconsnirvana:item/antique/cleaver/broken_head",
+    "layer2": "tconsnirvana:item/antique/cleaver/shield",
+    "layer3": "tconsnirvana:item/antique/cleaver/guard"
+  }
+}

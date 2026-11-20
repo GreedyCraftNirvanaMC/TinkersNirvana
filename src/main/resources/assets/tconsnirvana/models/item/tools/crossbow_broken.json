@@ -1,0 +1,9 @@
+{
+  "parent": "tconsnirvana:item/tools/crossbow",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/crossbow/body",
+    "layer1": "tconsnirvana:item/antique/crossbow/limb",
+    "layer2": "tconsnirvana:item/antique/crossbow/binding",
+    "layer3": "tconsnirvana:item/antique/crossbow/bowstring_broken"
+  }
+}

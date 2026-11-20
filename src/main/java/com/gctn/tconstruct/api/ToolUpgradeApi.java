@@ -24,6 +24,11 @@ public final class ToolUpgradeApi {
         return isSupported(tool) ? Math.max(0, TinkerDataComponents.getMaterialTag(tool).getInt(LEVEL_KEY)) : 0;
     }
 
+    /** 返回当前可用强化槽位数，不支持的物品返回 0。 */
+    public static int getAvailableSlots(ItemStack tool) {
+        return isSupported(tool) ? ((TinkerTools) tool.getItem()).getAvailableModifierSlots(tool) : 0;
+    }
+
     /**
      * 原地升一级并新增一个强化槽，成功返回 true。
      * 不支持的物品、非单件堆叠或等级/槽位达到整数上限时返回 false，不修改工具。

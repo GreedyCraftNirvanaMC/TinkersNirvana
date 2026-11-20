@@ -1,0 +1,7 @@
+{
+  "parent": "tconsnirvana:block/channel/side_in",
+  "textures": {
+    "top": "tconsnirvana:block/smeltery/channel_out"
+  },
+  "render_type": "minecraft:cutout"
+}

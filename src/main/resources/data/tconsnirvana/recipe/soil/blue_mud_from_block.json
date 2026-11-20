@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:slime_congealed_blue"
+    },
+    {
+      "tag": "c:sands"
+    },
+    {
+      "tag": "tconsnirvana:soil_recipe_dirt"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:slimy_mud_blue",
+    "count": 1
+  }
+}

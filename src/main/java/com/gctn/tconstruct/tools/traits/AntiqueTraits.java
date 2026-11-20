@@ -137,7 +137,7 @@ public final class AntiqueTraits {
         public void modifyStats(ItemStack tool, int level, ToolStats stats) {
             switch (identifier) {
                 case "heavy" -> stats.attribute(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE,
-                        "tconstruct:heavy", 1, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE, EquipmentSlotGroup.HAND);
+                        "tconsnirvana:heavy", 1, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE, EquipmentSlotGroup.HAND);
                 case "lightweight" -> {
                     stats.attackSpeed *= 1.1F;
                     stats.drawSpeed *= 1.1F;

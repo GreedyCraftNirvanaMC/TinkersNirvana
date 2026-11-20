@@ -9,7 +9,7 @@ parser.add_argument("--antique", type=Path, required=True)
 args = parser.parse_args()
 project = Path(__file__).resolve().parents[1]
 root = project / "src/main/resources"
-assets = root / "assets/tconstruct"
+assets = root / "assets/tconsnirvana"
 old = args.antique / "src/main/resources/assets/tconstruct"
 manifest, names = [], {}
 
@@ -21,7 +21,7 @@ def write(path, data):
 
 def texture(source, output):
     manifest.append({"source": "textures/" + source + ".png", "output": "textures/" + output + ".png", "source_sha256": hashlib.sha256((old / ("textures/" + source + ".png")).read_bytes()).hexdigest(), "neutral": False})
-    return "tconstruct:" + output
+    return "tconsnirvana:" + output
 
 
 def model_item(name, tex):
@@ -29,14 +29,14 @@ def model_item(name, tex):
 
 
 def loot(name, slab=False):
-    entry = {"type": "minecraft:item", "name": "tconstruct:" + name}
+    entry = {"type": "minecraft:item", "name": "tconsnirvana:" + name}
     if slab:
-        entry["functions"] = [{"function": "minecraft:set_count", "count": 2, "conditions": [{"condition": "minecraft:block_state_property", "block": "tconstruct:" + name, "properties": {"type": "double"}}]}]
-    write(root / f"data/tconstruct/loot_table/blocks/{name}.json", {"type": "minecraft:block", "pools": [{"rolls": 1, "entries": [entry], "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+        entry["functions"] = [{"function": "minecraft:set_count", "count": 2, "conditions": [{"condition": "minecraft:block_state_property", "block": "tconsnirvana:" + name, "properties": {"type": "double"}}]}]
+    write(root / f"data/tconsnirvana/loot_table/blocks/{name}.json", {"type": "minecraft:block", "pools": [{"rolls": 1, "entries": [entry], "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
 
 
 def shaped(name, pattern, ingredient, result, count=1):
-    write(root / f"data/tconstruct/recipe/gadgets/remaining/{name}.json", {"type": "minecraft:crafting_shaped", "pattern": pattern, "key": {"A": {"item": ingredient}}, "result": {"id": "tconstruct:" + result, "count": count}})
+    write(root / f"data/tconsnirvana/recipe/gadgets/remaining/{name}.json", {"type": "minecraft:crafting_shaped", "pattern": pattern, "key": {"A": {"item": ingredient}}, "result": {"id": "tconsnirvana:" + result, "count": count}})
 
 
 for model in ["rack", "rack_down", "rack_side"]:
@@ -48,20 +48,20 @@ for name, zh, en, cost in [("item_rack", "物品架", "Item Rack", 2), ("drying_
     variants = {}
     for face, model in [("floor", "rack_down"), ("ceiling", "rack"), ("wall", "rack_side")]:
         for direction, rotation in [("north", 0), ("east", 90), ("south", 180), ("west", 270)]:
-            variants[f"face={face},facing={direction}"] = {"model": "tconstruct:block/" + model, "y": rotation}
+            variants[f"face={face},facing={direction}"] = {"model": "tconsnirvana:block/" + model, "y": rotation}
     write(assets / f"blockstates/{name}.json", {"variants": variants})
-    write(assets / f"models/item/{name}.json", {"parent": "tconstruct:block/rack"})
-    names["block.tconstruct." + name] = [zh, en]
+    write(assets / f"models/item/{name}.json", {"parent": "tconsnirvana:block/rack"})
+    names["block.tconsnirvana." + name] = [zh, en]
     loot(name)
-    ingredient = [{"tag": "minecraft:wooden_slabs"}, {"item": "tconstruct:lavawood_slab"}, {"item": "tconstruct:firewood_slab"}]
-    write(root / f"data/tconstruct/recipe/gadgets/remaining/{name}.json", {"type": "tconstruct:table", "pattern": ["A" * cost], "key": {"A": ingredient}, "material": ingredient, "result": {"id": "tconstruct:" + name}})
+    ingredient = [{"tag": "minecraft:wooden_slabs"}, {"item": "tconsnirvana:lavawood_slab"}, {"item": "tconsnirvana:firewood_slab"}]
+    write(root / f"data/tconsnirvana/recipe/gadgets/remaining/{name}.json", {"type": "tconsnirvana:table", "pattern": ["A" * cost], "key": {"A": ingredient}, "material": ingredient, "result": {"id": "tconsnirvana:" + name}})
 
 for name, zh, en in [("dried_clay", "干燥黏土", "Dried Clay"), ("dried_clay_bricks", "干燥黏土砖", "Dried Clay Bricks")]:
     tex = texture("blocks/" + name, "block/gadgets/" + name)
     write(assets / f"models/block/{name}.json", {"parent": "minecraft:block/cube_all", "textures": {"all": tex}})
-    write(assets / f"blockstates/{name}.json", {"variants": {"": {"model": "tconstruct:block/" + name}}})
-    write(assets / f"models/item/{name}.json", {"parent": "tconstruct:block/" + name})
-    names["block.tconstruct." + name] = [zh, en]
+    write(assets / f"blockstates/{name}.json", {"variants": {"": {"model": "tconsnirvana:block/" + name}}})
+    write(assets / f"models/item/{name}.json", {"parent": "tconsnirvana:block/" + name})
+    names["block.tconsnirvana." + name] = [zh, en]
     loot(name)
     for suffix, parent in [("slab", "slab"), ("slab_top", "slab_top"), ("stairs", "stairs"), ("stairs_inner", "inner_stairs"), ("stairs_outer", "outer_stairs")]:
         write(assets / f"models/block/{name}_{suffix}.json", {"parent": "minecraft:block/" + parent, "textures": {"bottom": tex, "side": tex, "top": tex}})
@@ -69,39 +69,39 @@ for name, zh, en in [("dried_clay", "干燥黏土", "Dried Clay"), ("dried_clay_
         identifier = name + "_" + shape
         reference = assets / f"blockstates/firewood_{shape}.json"
         write(assets / f"blockstates/{identifier}.json", json.loads(reference.read_text().replace("firewood", name)))
-        write(assets / f"models/item/{identifier}.json", {"parent": "tconstruct:block/" + identifier})
+        write(assets / f"models/item/{identifier}.json", {"parent": "tconsnirvana:block/" + identifier})
         loot(identifier, shape == "slab")
-        names["block.tconstruct." + identifier] = [zh + szh, en + " " + sen]
-        shaped(identifier, pattern, "tconstruct:" + name, identifier, count)
-shaped("dried_bricks", ["AA", "AA"], "tconstruct:dried_brick", "dried_clay_bricks")
-shaped("dried_bricks_slab_simple", ["AA"], "tconstruct:dried_brick", "dried_clay_bricks_slab")
+        names["block.tconsnirvana." + identifier] = [zh + szh, en + " " + sen]
+        shaped(identifier, pattern, "tconsnirvana:" + name, identifier, count)
+shaped("dried_bricks", ["AA", "AA"], "tconsnirvana:dried_brick", "dried_clay_bricks")
+shaped("dried_bricks_slab_simple", ["AA"], "tconsnirvana:dried_brick", "dried_clay_bricks_slab")
 model_item("dried_brick", texture("items/materials/dried_brick", "item/gadgets/dried_brick"))
-names["item.tconstruct.dried_brick"] = ["干燥黏土砖块", "Dried Clay Brick"]
+names["item.tconsnirvana.dried_brick"] = ["干燥黏土砖块", "Dried Clay Brick"]
 
 meats = [("monster", "怪物", "Monster", "rotten_flesh"), ("beef", "牛肉", "Beef", "beef"), ("chicken", "鸡肉", "Chicken", "chicken"), ("pork", "猪肉", "Pork", "porkchop"), ("mutton", "羊肉", "Mutton", "mutton"), ("rabbit", "兔肉", "Rabbit", "rabbit"), ("fish", "鳕鱼", "Fish", "cod"), ("salmon", "鲑鱼", "Salmon", "salmon"), ("clownfish", "热带鱼", "Clownfish", "tropical_fish"), ("pufferfish", "河豚", "Pufferfish", "pufferfish")]
 
 
 def drying(name, ingredient, result, time, leather=False):
-    write(root / f"data/tconstruct/recipe/drying/{name}.json", {"type": "tconstruct:drying", "ingredient": ingredient, "result": {"id": result}, "time": time, **({"leather": True} if leather else {})})
+    write(root / f"data/tconsnirvana/recipe/drying/{name}.json", {"type": "tconsnirvana:drying", "ingredient": ingredient, "result": {"id": result}, "time": time, **({"leather": True} if leather else {})})
 
 
 for meat, zh, en, raw in meats:
     name = "jerky_" + meat
     model_item(name, texture("items/food/" + name, "item/gadgets/" + name))
-    names["item.tconstruct." + name] = [zh + "干", en + " Jerky"]
-    drying(name, {"item": "minecraft:" + raw}, "tconstruct:" + name, 6000)
+    names["item.tconsnirvana." + name] = [zh + "干", en + " Jerky"]
+    drying(name, {"item": "minecraft:" + raw}, "tconsnirvana:" + name, 6000)
 for color, zh, en in [("green", "绿色", "Green"), ("blue", "蓝色", "Blue"), ("purple", "紫色", "Purple"), ("blood", "血液", "Blood"), ("magma", "岩浆", "Magma")]:
     name = "slimedrop_" + color
     model_item(name, texture("items/food/" + name, "item/gadgets/" + name))
-    names["item.tconstruct." + name] = [zh + "史莱姆凝露", en + " Slimedrop"]
-    drying(name, {"item": "minecraft:slime_ball" if color == "green" else "tconstruct:slimeball_" + color}, "tconstruct:" + name, 6000)
+    names["item.tconsnirvana." + name] = [zh + "史莱姆凝露", en + " Slimedrop"]
+    drying(name, {"item": "minecraft:slime_ball" if color == "green" else "tconsnirvana:slimeball_" + color}, "tconsnirvana:" + name, 6000)
 for meat in ["beef", "chicken", "cod", "salmon", "mutton", "porkchop", "rabbit"]:
     drying("leather_" + meat, {"item": "minecraft:cooked_" + meat}, "minecraft:leather", 10200, leather=True)
-drying("clay_ball", {"item": "minecraft:clay_ball"}, "tconstruct:dried_brick", 2400)
-drying("clay", {"item": "minecraft:clay"}, "tconstruct:dried_clay", 7200)
+drying("clay_ball", {"item": "minecraft:clay_ball"}, "tconsnirvana:dried_brick", 2400)
+drying("clay", {"item": "minecraft:clay"}, "tconsnirvana:dried_clay", 7200)
 drying("sponge", {"item": "minecraft:wet_sponge"}, "minecraft:sponge", 2400)
 drying("saplings", {"tag": "minecraft:saplings"}, "minecraft:dead_bush", 7200)
-for tag, values in [("mineable/pickaxe", ["tconstruct:" + name + suffix for name in ["dried_clay", "dried_clay_bricks"] for suffix in ["", "_slab", "_stairs"]]), ("mineable/axe", ["tconstruct:item_rack", "tconstruct:drying_rack"])]:
+for tag, values in [("mineable/pickaxe", ["tconsnirvana:" + name + suffix for name in ["dried_clay", "dried_clay_bricks"] for suffix in ["", "_slab", "_stairs"]]), ("mineable/axe", ["tconsnirvana:item_rack", "tconsnirvana:drying_rack"])]:
     target = root / f"data/minecraft/tags/block/{tag}.json"
     data = json.loads(target.read_text()) if target.exists() else {"replace": False, "values": []}
     data["values"] = list(dict.fromkeys(data["values"] + values))

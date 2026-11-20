@@ -57,7 +57,7 @@ public final class SmelteryFluids {
         ENTRIES.put(name, entry);
         entry.type = TYPES.register(name, () -> new FluidType(FluidType.Properties.create().temperature(temperature)
                 .density(2000).viscosity(6000).lightLevel(temperature >= 500 ? 10 : 0)
-                .descriptionId("fluid.tconstruct." + name)));
+                .descriptionId("fluid.tconsnirvana." + name)));
         entry.source = FLUIDS.register(name, () -> new BaseFlowingFluid.Source(entry.properties()));
         entry.flowing = FLUIDS.register("flowing_" + name, () -> new BaseFlowingFluid.Flowing(entry.properties()));
         entry.block = BlockRegister.BLOCKS.register("molten_" + name, () -> new LiquidBlock(entry.source.get(),

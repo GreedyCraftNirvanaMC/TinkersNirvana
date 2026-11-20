@@ -31,9 +31,9 @@ import net.neoforged.neoforge.fluids.FluidType;
 /** 两种彩色史莱姆共用原生攻击、体型属性和分裂流程，行为差异由实体类型决定。 */
 public final class AntiqueSlime extends Slime {
     public static final TagKey<Block> BLUE_SPAWNABLE = TagKey.create(Registries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath("tconstruct", "slime_spawnable/blue"));
+            ResourceLocation.fromNamespaceAndPath("tconsnirvana", "slime_spawnable/blue"));
     public static final TagKey<Block> PURPLE_SPAWNABLE = TagKey.create(Registries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath("tconstruct", "slime_spawnable/purple"));
+            ResourceLocation.fromNamespaceAndPath("tconsnirvana", "slime_spawnable/purple"));
 
     private int outsideIslandTicks;
 

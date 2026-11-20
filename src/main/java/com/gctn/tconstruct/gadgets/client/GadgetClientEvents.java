@@ -54,26 +54,26 @@ public final class GadgetClientEvents {
 
     @SubscribeEvent
     private static void tooltip(ItemTooltipEvent event) {
-        if (event.getItemStack().is(GadgetModule.EFLN.get())) { event.getToolTip().add(Component.translatable("tooltip.tconstruct.efln").withStyle(ChatFormatting.GRAY)); }
+        if (event.getItemStack().is(GadgetModule.EFLN.get())) { event.getToolTip().add(Component.translatable("tooltip.tconsnirvana.efln").withStyle(ChatFormatting.GRAY)); }
         if (event.getItemStack().getItem() instanceof BlockItem item && item.getBlock() instanceof com.gctn.tconstruct.gadgets.block.SlimeChannelBlock) {
-            event.getToolTip().add(Component.translatable("tooltip.tconstruct.slime_channel").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(Component.translatable("tooltip.tconsnirvana.slime_channel").withStyle(ChatFormatting.GRAY));
         }
         if (event.getItemStack().is(GadgetModule.GLOWBALL.get())) {
-            event.getToolTip().add(Component.translatable("tooltip.tconstruct.glowball").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(Component.translatable("tooltip.tconsnirvana.glowball").withStyle(ChatFormatting.GRAY));
         }
         if (event.getItemStack().getItem() instanceof BlockItem item
                 && (item.getBlock() instanceof BrownstoneBlock || item.getBlock() instanceof BrownstoneSlabBlock
                 || item.getBlock() instanceof BrownstoneStairBlock)) {
-            event.getToolTip().add(Component.translatable("tooltip.tconstruct.brownstone").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(Component.translatable("tooltip.tconsnirvana.brownstone").withStyle(ChatFormatting.GRAY));
         }
         if (event.getItemStack().is(GadgetModule.WOODEN_HOPPER.get().asItem())) {
-            event.getToolTip().add(Component.translatable("tooltip.tconstruct.wooden_hopper").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(Component.translatable("tooltip.tconsnirvana.wooden_hopper").withStyle(ChatFormatting.GRAY));
         }
         if (event.getItemStack().is(GadgetModule.PUNJI.get().asItem())) {
-            event.getToolTip().add(Component.translatable("tooltip.tconstruct.punji").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(Component.translatable("tooltip.tconsnirvana.punji").withStyle(ChatFormatting.GRAY));
         }
         if (event.getItemStack().is(GadgetModule.TRAPDOOR_RAIL.get().asItem())) {
-            event.getToolTip().add(Component.translatable("tooltip.tconstruct.wood_rail_trapdoor").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(Component.translatable("tooltip.tconsnirvana.wood_rail_trapdoor").withStyle(ChatFormatting.GRAY));
         }
     }
 }

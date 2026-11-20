@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:knightslime_block"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:knightslime_ingot",
+    "count": 9
+  }
+}

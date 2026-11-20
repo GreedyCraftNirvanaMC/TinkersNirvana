@@ -10,7 +10,7 @@
 
 ## 配置
 
-配置文件为 `config/tconstruct-common.toml`。世界生成设置作用于以后生成的区块，不会改写已有建筑或地形。
+配置文件为 `config/tconsnirvana-common.toml`。世界生成设置作用于以后生成的区块，不会改写已有建筑或地形。
 
 | 配置 | 默认值 | 用途 |
 | --- | --- | --- |
@@ -34,8 +34,8 @@
 
 ## 数据包扩展
 
-配置特征和放置特征位于 `data/tconstruct/worldgen/configured_feature`、`placed_feature`，群系修饰器位于 `data/tconstruct/neoforge/biome_modifier`。修改这些资源可调整生成阶段、群系与方块。
+配置特征和放置特征位于 `data/tconsnirvana/worldgen/configured_feature`、`placed_feature`，群系修饰器位于 `data/tconsnirvana/neoforge/biome_modifier`。修改这些资源可调整生成阶段、群系与方块。
 
-`tconstruct:slime_tree` 配置包含 `trunk`、`leaves` 方块状态，以及可选的 `vine`、`min_height`、`height_range`、`seek_height`。可复用它生成扩展模组的树木。
+`tconsnirvana:slime_tree` 配置包含 `trunk`、`leaves` 方块状态，以及可选的 `vine`、`min_height`、`height_range`、`seek_height`。可复用它生成扩展模组的树木。
 
-村庄建筑模板位于 `data/tconstruct/structure/village/<biome>`，附加结构池和战利品也使用原生数据包格式。宝典扩展见 [BOOK.md](BOOK.md)。
+村庄建筑模板位于 `data/tconsnirvana/structure/village/<biome>`，附加结构池和战利品也使用原生数据包格式。宝典扩展见 [BOOK.md](BOOK.md)。

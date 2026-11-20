@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconsnirvana:block/brownstone_brick_triangle_slab"
+    },
+    "type=double": {
+      "model": "tconsnirvana:block/brownstone_brick_triangle"
+    },
+    "type=top": {
+      "model": "tconsnirvana:block/brownstone_brick_triangle_slab_top"
+    }
+  }
+}

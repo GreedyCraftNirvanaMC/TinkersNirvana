@@ -36,7 +36,7 @@ public abstract class AbstractTraits implements ITraits {
 
     public Component getDisplayName(int toolLevel) {
         var name = displayName();
-        return (maxLevel > 1 ? Component.translatable("tooltip.tconstruct.trait.level", name, toolLevel) : name).copy()
+        return (maxLevel > 1 ? Component.translatable("tooltip.tconsnirvana.trait.level", name, toolLevel) : name).copy()
                 .withColor(color);
     }
 

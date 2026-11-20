@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "tconsnirvana:block/brownstone/brick_cracked",
+    "top": "tconsnirvana:block/brownstone/brick_cracked",
+    "side": "tconsnirvana:block/brownstone/brick_cracked"
+  }
+}

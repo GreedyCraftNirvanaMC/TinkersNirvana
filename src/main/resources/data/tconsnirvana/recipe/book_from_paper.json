@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:string"
+    },
+    {
+      "item": "tconsnirvana:pattern"
+    },
+    {
+      "item": "tconsnirvana:pattern"
+    }
+  ],
+  "result": {
+    "id": "minecraft:book"
+  }
+}

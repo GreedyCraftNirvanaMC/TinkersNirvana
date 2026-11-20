@@ -1,8 +1,0 @@
-{
-  "parent": "tconstruct:item/tools/rapier",
-  "textures": {
-    "layer0": "tconstruct:item/antique/broadsword/handle",
-    "layer1": "tconstruct:item/antique/rapier/broken_blade",
-    "layer2": "tconstruct:item/antique/rapier/guard"
-  }
-}

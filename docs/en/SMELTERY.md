@@ -33,7 +33,7 @@ Channels route fluid downward first, then split it among their side outputs.
 Click an arm to cycle its direction; Shift-click cycles backward. Click the center
 to toggle the bottom output. Attached levers/buttons can control the bottom gate.
 
-Configuration is in `config/tconstruct-common.toml`, under `[smeltery]`:
+Configuration is in `config/tconsnirvana-common.toml`, under `[smeltery]`:
 
 | Key | Default |
 | --- | --- |

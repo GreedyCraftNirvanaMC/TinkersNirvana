@@ -58,16 +58,16 @@ public class PickaxeTips {
         var assembled = com.gctn.tconstruct.tools.ToolBuilder.savedStats(stack);
         if (Screen.hasShiftDown()) {
             Component durabilityTip = TinkerTools.getDurabilityTip(stack);
-            Component miningLevelTip = Component.translatable("tooltip.tconstruct.tool.mininglevel",
+            Component miningLevelTip = Component.translatable("tooltip.tconsnirvana.tool.mininglevel",
                     HarvestLevels.getHarvestLevelName(assembled.isEmpty() ? headStats.harvestLevel : assembled.getInt("HarvestLevel"))
             ).withColor(0xFFAAAAAA);
-            Component miningSpeedTip = Component.translatable("tooltip.tconstruct.tool.miningspeed",
+            Component miningSpeedTip = Component.translatable("tooltip.tconsnirvana.tool.miningspeed",
                     Component.literal(String.valueOf(assembled.isEmpty() ? headStats.miningspeed : assembled.getFloat("MiningSpeed"))).withColor(0xFF78A0CD)
             ).withColor(0xFFAAAAAA);
-            Component attackTip = Component.translatable("tooltip.tconstruct.tool.attack",
+            Component attackTip = Component.translatable("tooltip.tconsnirvana.tool.attack",
                     Component.literal(String.valueOf(assembled.isEmpty() ? headStats.attack : assembled.getFloat("Attack"))).withColor(0xFFD76464)
             ).withColor(0xFFAAAAAA);
-            Component modifiersTip = Component.translatable("tooltip.tconstruct.tool.modifiers",
+            Component modifiersTip = Component.translatable("tooltip.tconsnirvana.tool.modifiers",
                     ((TinkerTools) stack.getItem()).getAvailableModifierSlots(stack)
             ).withColor(0xFFAAAAAA);
             upperTips.add(Either.left(durabilityTip));
@@ -85,7 +85,7 @@ public class PickaxeTips {
         } else {
             upperTips.add(Either.left(TinkerTools.shiftTip));
             upperTips.add(Either.left(TinkerTools.controlTip));
-            upperTips.add(Either.left(Component.translatable("tooltip.tconstruct.hold_for_traits", "Alt")
+            upperTips.add(Either.left(Component.translatable("tooltip.tconsnirvana.hold_for_traits", "Alt")
                     .withColor(0xFFAAAAAA)));
         }
         if (ToolHelper.hasCreativeTabTip(tooltip, stack)) {

@@ -1,0 +1,8 @@
+{
+  "parent": "tconsnirvana:item/tools/hatchet",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/pickaxe/handle",
+    "layer1": "tconsnirvana:item/antique/hatchet/broken_head",
+    "layer2": "tconsnirvana:item/antique/hatchet/binding"
+  }
+}

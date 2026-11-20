@@ -380,7 +380,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable(isForge() ? "block.tconstruct.toolforge" : "container.tconstruct.toolstation.name");
+        return Component.translatable(isForge() ? "block.tconsnirvana.toolforge" : "container.tconsnirvana.toolstation.name");
     }
 
     public boolean isForge() { return getBlockState().is(com.gctn.tconstruct.tables.block.TableBlocks.TOOL_FORGE.get()); }

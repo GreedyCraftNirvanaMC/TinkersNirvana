@@ -33,7 +33,7 @@ public class PiggybackItem extends ArmorItem {
         }
         return current == null ? entities : List.of();
     }
-    private InteractionResult reject(Player player, String reason) { player.displayClientMessage(Component.translatable("message.tconstruct.piggyback." + reason), true); return InteractionResult.FAIL; }
+    private InteractionResult reject(Player player, String reason) { player.displayClientMessage(Component.translatable("message.tconsnirvana.piggyback." + reason), true); return InteractionResult.FAIL; }
     @Override public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         if (player.level().isClientSide) { return InteractionResult.SUCCESS; }
         if (Config.LIMIT_PIGGYBACK.get() && !(target instanceof Player) && !(target instanceof Mob mob && mob.canHaveALeashAttachedToIt())) { return reject(player, "cannot_pick_up"); }

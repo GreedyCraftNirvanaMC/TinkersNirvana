@@ -12,7 +12,7 @@ parser.add_argument("--mantle", type=Path)
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 resources = root / "src/main/resources"
-assets = resources / "assets/tconstruct"
+assets = resources / "assets/tconsnirvana"
 source = args.antique / "src/main/resources/assets/tconstruct"
 mantle = (args.mantle or args.antique.parent / "Mantle") / "src/main/resources/assets/mantle"
 
@@ -129,14 +129,14 @@ for path, content in parsed.items():
     if "models" not in path.parts:
         continue
     parent = content.get("parent", "")
-    if parent.startswith("tconstruct:"):
+    if parent.startswith("tconsnirvana:"):
         assert (assets / ("models/" + parent.split(":", 1)[1] + ".json")).is_file(), (path, parent)
     for texture in content.get("textures", {}).values():
-        if texture.startswith("tconstruct:") and texture not in virtual:
+        if texture.startswith("tconsnirvana:") and texture not in virtual:
             assert (assets / ("textures/" + texture.split(":", 1)[1] + ".png")).is_file(), (path, texture)
     for override in content.get("overrides", []):
         model = override.get("model", "")
-        if model.startswith("tconstruct:"):
+        if model.startswith("tconsnirvana:"):
             assert (assets / ("models/" + model.split(":", 1)[1] + ".json")).is_file(), (path, model)
 
 zh = parsed[assets / "lang/zh_cn.json"]
@@ -145,7 +145,7 @@ assert zh.keys() == en.keys(), ("language key mismatch", zh.keys() - en.keys(), 
 for key in zh:
     assert zh[key].count("%s") == en[key].count("%s"), ("placeholder mismatch", key)
 for key, value in zh.items():
-    if key.startswith(("modifier.tconstruct.", "item.tconstruct.parts.", "item.tconstruct.tools.")) or (key.startswith("traits.") and key.endswith(".name")):
+    if key.startswith(("modifier.tconsnirvana.", "item.tconsnirvana.parts.", "item.tconsnirvana.tools.")) or (key.startswith("traits.") and key.endswith(".name")):
         assert any("\u4e00" <= c <= "\u9fff" for c in value), ("missing Chinese name", key, value)
 
 print(f"PASS: {len(manifest)} PNGs, alpha silhouettes and original hashes; {changed} changed raster images")

@@ -1,0 +1,31 @@
+{
+  "modifier": "soulbound",
+  "text": [
+    {
+      "text": "Ett kärt par. Du älskar ditt verktyg. Inte ens döden kan skilja er åt."
+    }
+  ],
+  "effects": [
+    "Verktyget ligger kvar i din utrustning när du dör",
+    "Bara en nivå",
+    "Kräver INTE en modifierare"
+  ],
+  "demoTool": [
+    "tconsnirvana:broadsword",
+    "tconsnirvana:cleaver",
+    "tconsnirvana:pickaxe",
+    "tconsnirvana:hammer",
+    "tconsnirvana:shortbow",
+    "tconsnirvana:arrow"
+  ],
+  "section": "modifiers",
+  "order": 15,
+  "id": "modifiers/soulbound",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effekter:",
+  "title_color": 16120748
+}

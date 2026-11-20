@@ -18,11 +18,11 @@ public final class TraitDamage {
 
     public static boolean isRetaliation(DamageSource source) {
         return source.is(DamageTypes.THORNS) || source.is(ResourceKey.create(Registries.DAMAGE_TYPE,
-                ResourceLocation.fromNamespaceAndPath("tconstruct", "spiky")));
+                ResourceLocation.fromNamespaceAndPath("tconsnirvana", "spiky")));
     }
     public static boolean hurt(LivingEntity target, LivingEntity attacker, String id, float amount) {
         if (target.level().isClientSide || amount <= 0 || !target.isAlive()) { return false; }
-        var key = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("tconstruct", id));
+        var key = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("tconsnirvana", id));
         DamageSource source = new DamageSource(target.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key), attacker);
         int invulnerability = target.invulnerableTime;
         var damage = (com.gctn.tconstruct.mixin.LivingEntityDamageAccessor) target;

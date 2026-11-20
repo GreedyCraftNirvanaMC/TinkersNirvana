@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "MMM",
+    "MMM",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "tag": "tconsnirvana:mossy_stones"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:moss",
+    "count": 1
+  }
+}

@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 
 @EventBusSubscriber(modid = TinkersNirvana.MODID)
 public final class BookNetwork {
-    private static final String DATA = "tconstruct:book";
+    private static final String DATA = "tconsnirvana:book";
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENTS = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, TinkersNirvana.MODID);
     private static final Supplier<AttachmentType<ReadingSession>> SESSION = ATTACHMENTS.register("book_reading", () -> AttachmentType.builder(ReadingSession::new).build());
     private static final class ReadingSession { ItemStack stack = ItemStack.EMPTY; InteractionHand hand; int slot; }

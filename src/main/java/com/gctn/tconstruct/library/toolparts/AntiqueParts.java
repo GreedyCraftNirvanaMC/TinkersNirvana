@@ -123,7 +123,7 @@ public final class AntiqueParts {
         public boolean external() { return EXTERNAL_PARTS.containsKey(id); }
         public Component displayName() {
             var external = EXTERNAL_PARTS.get(id);
-            return external == null ? Component.translatable("item.tconstruct." + id + ".name") : external.name.get().copy();
+            return external == null ? Component.translatable("item.tconsnirvana." + id + ".name") : external.name.get().copy();
         }
         public boolean acceptsMaterial(Material material) {
             var external = EXTERNAL_PARTS.get(id);
@@ -143,9 +143,9 @@ public final class AntiqueParts {
             CompoundTag data = new CompoundTag();
             data.putString(Tags.PART_MATERIAL, material.identifier);
             stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
-            stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconstruct.material_part",
+            stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tconsnirvana.material_part",
                     material.getDisplayName(),
-                    Component.translatable("item.tconstruct." + id + ".name")));
+                    Component.translatable("item.tconsnirvana." + id + ".name")));
             return stack;
         }
     }

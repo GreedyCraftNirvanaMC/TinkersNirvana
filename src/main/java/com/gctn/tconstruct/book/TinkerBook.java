@@ -29,9 +29,9 @@ public final class TinkerBook {
     @SubscribeEvent private static void login(PlayerEvent.PlayerLoggedInEvent event) {
         if (!com.gctn.tconstruct.Config.SPAWN_WITH_BOOK.get()) { return; }
         Player player = event.getEntity(); var data = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
-        if (!data.getBoolean("tconstruct:spawned_book")) {
+        if (!data.getBoolean("tconsnirvana:spawned_book") && !data.getBoolean("tconstruct:spawned_book")) {
             net.neoforged.neoforge.items.ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ITEM.get()));
-            data.putBoolean("tconstruct:spawned_book", true); player.getPersistentData().put(Player.PERSISTED_NBT_TAG, data);
+            data.putBoolean("tconsnirvana:spawned_book", true); player.getPersistentData().put(Player.PERSISTED_NBT_TAG, data);
         }
     }
 }

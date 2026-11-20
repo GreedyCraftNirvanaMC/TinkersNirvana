@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A A",
+    "A A",
+    "A A"
+  ],
+  "key": {
+    "A": {
+      "item": "tconsnirvana:seared_brick"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:smeltery_drain",
+    "count": 1
+  }
+}

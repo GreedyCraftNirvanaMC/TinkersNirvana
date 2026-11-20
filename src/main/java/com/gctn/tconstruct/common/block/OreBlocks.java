@@ -1,8 +1,6 @@
 package com.gctn.tconstruct.common.block;
 
 import com.gctn.tconstruct.init.BlockRegister;
-import com.gctn.tconstruct.init.ItemRegister;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -31,14 +29,6 @@ public class OreBlocks {
         return List.of(
                 COBALT_ORE, ARDITE_ORE, TIN_ORE, ALUMINUM_ORE
         );
-    }
-
-    static {
-        // 旧区块及物品栏中的模组铜矿石统一解析为原版铜矿石。
-        var oldId = ResourceLocation.fromNamespaceAndPath("tconstruct", "copper_ore");
-        var vanilla = ResourceLocation.withDefaultNamespace("copper_ore");
-        BlockRegister.BLOCKS.addAlias(oldId, vanilla);
-        ItemRegister.ITEMS.addAlias(oldId, vanilla);
     }
 
     private static DeferredBlock<Block> commonOre(String metal) {

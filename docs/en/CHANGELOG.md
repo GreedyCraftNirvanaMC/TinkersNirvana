@@ -2,6 +2,15 @@
 
 [README](../../README.md) · [简体中文](../zh-CN/CHANGELOG.md)
 
+## 1.21.1-1.0.5
+
+- Rename the mod ID and resource namespace to `tconsnirvana`. Add legacy save aliases and copy existing configuration when the new config file is absent. Update addon dependencies, scripts and packs to the new IDs.
+- Restore Antique tool behavior for harvesting, repairs, modifiers, ranged weapons and combat. Fix tool previews and part replacement.
+- Fix melting and casting yields, including raw ore blocks and copper variants. Use vanilla copper ore for new generation.
+- Restore Antique-style workshop tabs, align them to the interface, and preserve cursor and carried items during switching. Fix linked storage and paging.
+- Fix village workshop fences, panes and generation frequency. Fix Firewood animation, stone torches and ladders, slime mud jumps, frame placement and channel item models. Both rack types now mount to sturdy walls.
+- Add Java smeltery queries and KubeJS bindings for smeltery previews and tool upgrades. Update the bilingual integration guides.
+
 ## 1.21.1-1.0.4
 
 - Preserve the actual projectile launcher separately from merged ammunition traits, including split projectiles, and expose `ToolRanged.launcherFor` for server-side integrations.

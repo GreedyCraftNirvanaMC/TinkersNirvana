@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "tconsnirvana:block/world/slimesapling_purple"
+  }
+}

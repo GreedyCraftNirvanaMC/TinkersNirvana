@@ -29,9 +29,9 @@ Put pages at `assets/<namespace>/book/pages/<language>/<section>/<name>.json`. U
 }
 ```
 
-The built-in sections are `intro`, `tools`, `materials`, `bowmaterials`, `modifiers`, and `seared_devices`. For a new section, supply `book.tconstruct.section.<section>` in the language file. Built-in pages are declared in `assets/tconstruct/book/definition.json`. When replacing that namespace's section definition, list the page IDs to enable. Pages in other namespaces join their declared sections automatically.
+The built-in sections are `intro`, `tools`, `materials`, `bowmaterials`, `modifiers`, and `seared_devices`. For a new section, supply `book.tconsnirvana.section.<section>` in the language file. Built-in pages are declared in `assets/tconsnirvana/book/definition.json`. When replacing that namespace's section definition, list the page IDs to enable. Pages in other namespaces join their declared sections automatically.
 
-The main index also links directly to the Seared Furnace and Tinker Tank introductions. Construction instructions and structure previews follow those pages. Resource packs can add index shortcuts through the `shortcuts` array in `definition.json`, for example `{"page": "tconstruct:seared_devices/tinker_tank_intro", "icon": "tconstruct:tinker_tank_controller"}`. A shortcut uses the target's `listing_title` or its page title. Missing targets are skipped and shortcuts do not duplicate page content.
+The main index also links directly to the Seared Furnace and Tinker Tank introductions. Construction instructions and structure previews follow those pages. Resource packs can add index shortcuts through the `shortcuts` array in `definition.json`, for example `{"page": "tconsnirvana:seared_devices/tinker_tank_intro", "icon": "tconsnirvana:tinker_tank_controller"}`. A shortcut uses the target's `listing_title` or its page title. Missing targets are skipped and shortcuts do not duplicate page content.
 
 Supported layouts are `blank`, `text`, `image with text below`, `imageText2`, `tool`, `modifier`, and `structure`. Images support `file`, display `width` and `height`, and source `texture_width` and `texture_height`. `imageText2` centers the image and follows it immediately with text. `image with text below` places the text under the image region. Keep fixed content within the 182×176 paper area. A registered `tool` or `modifier` ID supplies part or ingredient icons. Use `show_in_contents: false` to hide a section entry and `listing_title` for a separate listing name.
 
@@ -43,8 +43,8 @@ A 3D preview uses a `structure` object.
 {
   "size": [3, 2, 3],
   "structure": [
-    {"pos": [0, 0, 0], "endPos": [2, 0, 2], "block": "tconstruct:seared_bricks"},
-    {"pos": [1, 1, 0], "block": "tconstruct:smeltery_controller", "state": {"facing": "north"}}
+    {"pos": [0, 0, 0], "endPos": [2, 0, 2], "block": "tconsnirvana:seared_bricks"},
+    {"pos": [1, 1, 0], "block": "tconsnirvana:smeltery_controller", "state": {"facing": "north"}}
   ]
 }
 ```

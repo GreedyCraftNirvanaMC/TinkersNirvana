@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconsnirvana:block/seared_brick_square_slab"
+    },
+    "type=double": {
+      "model": "tconsnirvana:block/seared_brick_square"
+    },
+    "type=top": {
+      "model": "tconsnirvana:block/seared_brick_square_slab_top"
+    }
+  }
+}

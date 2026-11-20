@@ -30,7 +30,7 @@ public final class SoilClientEvents {
                 case SLIMY_MUD_MAGMA -> null;
             };
             if (key != null) {
-                event.getToolTip().add(Component.translatable("tooltip.tconstruct.soil." + key).withStyle(ChatFormatting.GRAY));
+                event.getToolTip().add(Component.translatable("tooltip.tconsnirvana.soil." + key).withStyle(ChatFormatting.GRAY));
             }
         }
     }

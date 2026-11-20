@@ -1,0 +1,7 @@
+{
+  "parent": "tconsnirvana:item/tools/frypan",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/broadsword/handle",
+    "layer1": "tconsnirvana:item/antique/frypan/broken_head"
+  }
+}

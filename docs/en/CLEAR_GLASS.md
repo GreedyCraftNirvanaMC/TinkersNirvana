@@ -15,7 +15,7 @@ Smeltery and Tinker Tank walls.
 
 By default, recovering clear or stained clear glass requires Silk Touch. Set
 `clearGlassSilkTouch = false` under `[smeltery]` in
-`config/tconstruct-common.toml` to allow ordinary harvesting. Both choices retain
+`config/tconsnirvana-common.toml` to allow ordinary harvesting. Both choices retain
 one-block drops and normal explosion survival behavior. The setting and added
 item names support English and Simplified Chinese.
 

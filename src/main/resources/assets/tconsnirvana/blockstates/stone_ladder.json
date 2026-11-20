@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "tconsnirvana:block/stone_ladder",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "tconsnirvana:block/stone_ladder"
+    },
+    "facing=south": {
+      "model": "tconsnirvana:block/stone_ladder",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "tconsnirvana:block/stone_ladder",
+      "y": 270
+    }
+  }
+}

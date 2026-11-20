@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "bottom": "tconstruct:block/brownstone/brick_cracked",
-    "top": "tconstruct:block/brownstone/brick_cracked",
-    "side": "tconstruct:block/brownstone/brick_cracked"
-  }
-}

@@ -48,20 +48,20 @@ public class ToolRodTips {
         addedTips.add(Either.left(Component.empty()));
 
         Component shiftTip = Component.translatable(
-                "tooltip.tconstruct.hold_for_stats",
+                "tooltip.tconsnirvana.hold_for_stats",
                 Component.literal("Shift").withColor(0xFFFFFF55)
         ).withColor(0xFFAAAAAA);
 
         if (Screen.hasShiftDown()) {
-            Component handleTip = Component.translatable("tooltip.tconstruct.handle")
+            Component handleTip = Component.translatable("tooltip.tconsnirvana.handle")
                     .withColor(0xFFFFFFFF)
                     .withStyle(ChatFormatting.UNDERLINE);
             Component modifierTip = Component.translatable(
-                    "tooltip.tconstruct.handle.modifier",
+                    "tooltip.tconsnirvana.handle.modifier",
                     Component.literal(String.valueOf(handleStats.modifer)).withColor(0xFFB9B95A)
             ).withColor(0xFFAAAAAA);
             Component durabilityTip = Component.translatable(
-                    "tooltip.tconstruct.part.durability",
+                    "tooltip.tconsnirvana.part.durability",
                     Component.literal(String.valueOf(handleStats.durability)).withColor(0xFF47CC47)
             ).withColor(0xFFAAAAAA);
             addedTips.add(Either.left(handleTip));
@@ -74,7 +74,7 @@ public class ToolRodTips {
         } else {
             addedTips.add(Either.left(shiftTip));
             if (!material.getTraits("Handle").isEmpty()) {
-                addedTips.add(Either.left(Component.translatable("tooltip.tconstruct.hold_for_traits", "Alt")
+                addedTips.add(Either.left(Component.translatable("tooltip.tconsnirvana.hold_for_traits", "Alt")
                         .withColor(0xFFAAAAAA)));
             }
         }

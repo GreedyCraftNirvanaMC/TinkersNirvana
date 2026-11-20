@@ -1,0 +1,9 @@
+{
+  "parent": "tconsnirvana:item/tools/scythe",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/scythe/handle",
+    "layer1": "tconsnirvana:item/antique/scythe/broken_head",
+    "layer2": "tconsnirvana:item/antique/scythe/binding",
+    "layer3": "tconsnirvana:item/antique/scythe/accessory"
+  }
+}

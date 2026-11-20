@@ -98,7 +98,7 @@ public final class SmelteryRecipeEvents {
         ResourceLocation item = BuiltInRegistries.ITEM.getKey(stack.getItem());
         for (String entry : Config.MELTING_IGNORE.get()) {
             ResourceLocation id = ResourceLocation.tryParse(entry.startsWith("#") ? entry.substring(1) : entry);
-            if (id != null && (entry.startsWith("#") ? stack.is(TagKey.create(Registries.ITEM, id)) : item.equals(id))) {
+            if (id != null && (entry.startsWith("#") ? stack.is(TagKey.create(Registries.ITEM, id)) : item.equals(BuiltInRegistries.ITEM.resolve(id)))) {
                 return true;
             }
         }
