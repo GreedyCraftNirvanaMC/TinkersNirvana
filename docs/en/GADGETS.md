@@ -18,7 +18,7 @@ held stack; ordinary use consumes one ball.
 
 ## Drying and food
 
-Item Racks and Drying Racks attach to floors, walls, or ceilings. Right-click to place one item and again to retrieve it. Drying Racks make ten jerkies, five slime drops, leather, dried clay, and dried clay bricks. Jerky and slime drops take five minutes and clay balls take two. Hoppers and pipes insert a single item into an empty rack and extract finished goods from a Drying Rack. Ready goods emit comparator strength 15. Set `gadgets.dryingTimeMultiplier` for duration and `gadgets.dryLeather` for drying cooked meat into leather.
+Drying Racks attach to the side of a sturdy block. Item Racks can be placed on floors, walls, or ceilings. Right-click to place one item and again to retrieve it. Drying Racks make ten jerkies, five slime drops, leather, dried clay, and dried clay bricks. Jerky and slime drops take five minutes and clay balls take two. Hoppers and pipes insert a single item into an empty rack and extract finished goods from a Drying Rack. Ready goods emit comparator strength 15. Set `gadgets.dryingTimeMultiplier` for duration and `gadgets.dryLeather` for drying cooked meat into leather.
 
 ## Slime gear
 
@@ -34,7 +34,7 @@ Flint and either gunpowder or sulfur make one EFLN. It progressively breaks bloc
 
 ## Fancy frames and spaghetti
 
-Fancy Frames come in jeweled, aluminum brass, cobalt, Ardite, Manyullyn, gold, and clear variants. They retain vanilla item rotation, maps, and removal. The Clear Frame hides its border when occupied and shows it again when emptied.
+Fancy Frames come in jeweled, aluminum brass, cobalt, Ardite, Manyullyn, gold, and clear variants. They mount on floors, walls, and ceilings and retain vanilla item rotation, maps, and removal. The Clear Frame hides its border when occupied and shows it again when emptied.
 
 Hard Spaghetti is rare loot in desert pyramids, jungle temples, and stronghold corridors. Soak it with three buckets of water for fifteen minutes on a Casting Table, dry it for fifteen minutes, then smelt it into Mom's Spaghetti. It has one hundred servings and stays as an item when exhausted. Refill one serving at a time with wheat in Tool Station repair mode. Beetroot soup adds sauce and returns the bowl. Then add meat with three different cooked meats. Spaghetti items are hidden from creative tabs, as in Antique.
 

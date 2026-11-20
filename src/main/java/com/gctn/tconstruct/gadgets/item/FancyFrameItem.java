@@ -16,8 +16,7 @@ public class FancyFrameItem extends HangingEntityItem {
     public FancyFrameItem(FancyFrames.Kind kind) { super(FancyFrames.ENTITY.get(), new Properties()); this.kind = kind; }
     @Override public InteractionResult useOn(UseOnContext context) {
         var pos = context.getClickedPos().relative(context.getClickedFace()); var player = context.getPlayer(); var stack = context.getItemInHand();
-        if (player != null && !mayPlace(player, context.getClickedFace(), stack, pos)) { return InteractionResult.FAIL; }
-        if (context.getClickedFace().getAxis().isVertical()) { return InteractionResult.FAIL; }
+        if (player != null && !player.mayUseItemAt(pos, context.getClickedFace(), stack)) { return InteractionResult.FAIL; }
         var level = context.getLevel();
         var frame = new FancyItemFrame(level, pos, context.getClickedFace(), kind);
         var data = stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY);

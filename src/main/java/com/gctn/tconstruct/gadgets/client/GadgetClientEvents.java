@@ -32,7 +32,8 @@ public final class GadgetClientEvents {
         SlimeChannels.BLOCKS.values().forEach(block -> event.register((state, level, pos, tint) -> block.get().color, block.get()));
     }
     @SubscribeEvent private static void channelItems(net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.Item event) {
-        SlimeChannels.BLOCKS.values().forEach(block -> event.register((stack, tint) -> block.get().color, block.get()));
+        // 物品渲染会读取颜色的 Alpha；透明度由通道贴图和渲染层控制。
+        SlimeChannels.BLOCKS.values().forEach(block -> event.register((stack, tint) -> 0xff000000 | block.get().color, block.get()));
     }
     @SubscribeEvent private static void channelLayers(net.neoforged.fml.event.lifecycle.FMLClientSetupEvent event) {
         event.enqueueWork(() -> SlimeChannels.BLOCKS.values().forEach(block -> net.minecraft.client.renderer.ItemBlockRenderTypes.setRenderLayer(block.get(), net.minecraft.client.renderer.RenderType.translucent())));

@@ -1,8 +1,9 @@
 {
   "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
   "textures": {
-    "particle": "block/ladder",
-    "texture": "block/ladder"
+    "particle": "tconstruct:block/stone_ladder",
+    "texture": "tconstruct:block/stone_ladder"
   },
   "elements": [
     {

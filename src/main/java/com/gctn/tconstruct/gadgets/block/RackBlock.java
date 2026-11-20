@@ -15,6 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -39,11 +41,30 @@ public class RackBlock extends BaseEntityBlock {
     @Override protected MapCodec<? extends BaseEntityBlock> codec() { return simpleCodec(properties -> new RackBlock(drying, properties)); }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(BlockStateProperties.ATTACH_FACE, BlockStateProperties.HORIZONTAL_FACING); }
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Direction side = context.getClickedFace();
+        if (drying) {
+            if (!side.getAxis().isHorizontal()) { return null; }
+            BlockState state = defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, side);
+            return state.canSurvive(context.getLevel(), context.getClickedPos()) ? state : null;
+        }
         BlockState support = context.getLevel().getBlockState(context.getClickedPos().relative(context.getClickedFace().getOpposite()));
         if (support.getBlock() instanceof RackBlock) { return defaultBlockState().setValue(BlockStateProperties.ATTACH_FACE, support.getValue(BlockStateProperties.ATTACH_FACE)).setValue(BlockStateProperties.HORIZONTAL_FACING, support.getValue(BlockStateProperties.HORIZONTAL_FACING)); }
-        Direction side = context.getClickedFace();
         return defaultBlockState().setValue(BlockStateProperties.ATTACH_FACE, side == Direction.UP ? AttachFace.FLOOR : side == Direction.DOWN ? AttachFace.CEILING : AttachFace.WALL)
                 .setValue(BlockStateProperties.HORIZONTAL_FACING, side.getAxis().isHorizontal() ? side : context.getHorizontalDirection().getOpposite());
+    }
+    @Override protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        // 新放置的晾干架只能挂墙，旧存档已有的地面和天花板状态仍可读取。
+        if (!drying || state.getValue(BlockStateProperties.ATTACH_FACE) != AttachFace.WALL) { return true; }
+        Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        BlockPos support = pos.relative(facing.getOpposite());
+        return level.getBlockState(support).isFaceSturdy(level, support, facing);
+    }
+    @Override protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbor, LevelAccessor level,
+                                               BlockPos pos, BlockPos neighborPos) {
+        if (direction == state.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite() && !state.canSurvive(level, pos)) {
+            return Blocks.AIR.defaultBlockState();
+        }
+        return super.updateShape(state, direction, neighbor, level, pos, neighborPos);
     }
     @Override protected BlockState rotate(BlockState state, Rotation rotation) { return state.setValue(BlockStateProperties.HORIZONTAL_FACING, rotation.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING))); }
     @Override protected BlockState mirror(BlockState state, Mirror mirror) { return rotate(state, mirror.getRotation(state.getValue(BlockStateProperties.HORIZONTAL_FACING))); }
