@@ -16,6 +16,7 @@ import com.gctn.tconstruct.tools.PatternItem;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.handlers.IGuiClickableArea;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
@@ -44,9 +45,10 @@ public final class TinkerJeiPlugin implements IModPlugin {
     }
 
     @Override public void registerCategories(IRecipeCategoryRegistration registration) {
-        var helper = registration.getJeiHelpers().getGuiHelper();
+        var helpers = registration.getJeiHelpers();
+        var itemRenderer = helpers.getIngredientManager().getIngredientRenderer(VanillaTypes.ITEM_STACK);
         for (var kind : RecipeCatalog.Kind.values()) {
-            registration.addRecipeCategories(new ProcessingCategory(kind, helper));
+            registration.addRecipeCategories(new ProcessingCategory(kind, helpers.getGuiHelper(), itemRenderer));
         }
     }
 

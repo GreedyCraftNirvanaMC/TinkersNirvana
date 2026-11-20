@@ -1,19 +1,25 @@
 package com.gctn.tconstruct.compat.jei;
 
 import com.gctn.tconstruct.TinkersNirvana;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.ingredients.IIngredientRenderer;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+
+import java.util.List;
 
 final class ProcessingCategory implements IRecipeCategory<RecipeCatalog.Display> {
     private static final ResourceLocation ARROW = ResourceLocation.withDefaultNamespace("container/furnace/burn_progress");
@@ -29,14 +35,16 @@ final class ProcessingCategory implements IRecipeCategory<RecipeCatalog.Display>
     private final IDrawable icon;
     private final IDrawable slot;
     private final IDrawable background;
+    private final IIngredientRenderer<ItemStack> countedItemRenderer;
     private final int inputColumns;
 
-    ProcessingCategory(RecipeCatalog.Kind kind, IGuiHelper helper) {
+    ProcessingCategory(RecipeCatalog.Kind kind, IGuiHelper helper, IIngredientRenderer<ItemStack> itemRenderer) {
         type = type(kind);
         title = Component.translatable("jei.tconsnirvana." + kind.id());
         icon = helper.createDrawableItemStack(new ItemStack(kind.station.get()));
         slot = helper.getSlotDrawable();
         background = helper.createBlankDrawable(WIDTH, HEIGHT);
+        countedItemRenderer = new CountedItemRenderer(itemRenderer);
         inputColumns = switch (kind) {
             case ALLOYING -> 4;
             case CASTING_TABLE, CASTING_BASIN, PART_BUILDING -> 2;
@@ -69,6 +77,9 @@ final class ProcessingCategory implements IRecipeCategory<RecipeCatalog.Display>
         var fluid = ingredient.fluid();
         if (fluid.isEmpty()) {
             recipeSlot.addItemStacks(ingredient.items());
+            if (ingredient.items().stream().anyMatch(stack -> stack.getCount() > 1)) {
+                recipeSlot.setCustomRenderer(VanillaTypes.ITEM_STACK, countedItemRenderer);
+            }
         } else {
             recipeSlot.setFluidRenderer(fluid.getAmount(), false, 16, 16);
             recipeSlot.addFluidStack(fluid.getFluid(), fluid.getAmount(), fluid.getComponentsPatch());
@@ -84,5 +95,21 @@ final class ProcessingCategory implements IRecipeCategory<RecipeCatalog.Display>
         }
         var font = Minecraft.getInstance().font;
         graphics.drawString(font, recipe.detail(), FIRST_SLOT, 27, 0x404040, false);
+    }
+
+    private record CountedItemRenderer(IIngredientRenderer<ItemStack> delegate) implements IIngredientRenderer<ItemStack> {
+        @Override public void render(GuiGraphics graphics, ItemStack stack) {
+            graphics.renderFakeItem(stack, 0, 0);
+            // 原版数量数字已提升 200 层，再经过新版 JEI 的装饰层会与提示框处于同一深度。
+            graphics.renderItemDecorations(getFontRenderer(Minecraft.getInstance(), stack), stack, 0, 0);
+        }
+
+        @Override public List<Component> getTooltip(ItemStack stack, TooltipFlag flag) {
+            return delegate.getTooltip(stack, flag);
+        }
+
+        @Override public Font getFontRenderer(Minecraft minecraft, ItemStack stack) {
+            return delegate.getFontRenderer(minecraft, stack);
+        }
     }
 }
