@@ -28,6 +28,9 @@ import java.util.List;
 /** Stable physical slots; paged views never resize the network menu. */
 public class WorkshopMenu extends AbstractContainerMenu {
     public static final int PAGE_SIZE = 45;
+    // 缩短箱子顶部的留白，让联动标签和背包槽能在原版最小界面高度下同时显示。
+    public static final int STORAGE_HEADER_REDUCTION = 12;
+    public static final int STORAGE_HEIGHT = 224 - STORAGE_HEADER_REDUCTION;
     private final Kind kind;
     private final BlockPos pos;
     private final Container backing;
@@ -65,7 +68,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
         data.set(1, -1);
         if (kind.storage()) {
             Container page = new PageView();
-            for (int i = 0; i < PAGE_SIZE; i++) { addSlot(new Slot(page, i, 8 + i % 9 * 18, 38 + i / 9 * 18) {
+            for (int i = 0; i < PAGE_SIZE; i++) { addSlot(new Slot(page, i, 8 + i % 9 * 18, 38 - STORAGE_HEADER_REDUCTION + i / 9 * 18) {
                 @Override public boolean mayPlace(ItemStack stack) { return page.canPlaceItem(getContainerSlot(), stack); }
                 @Override public boolean isActive() { return page() * PAGE_SIZE + getContainerSlot() < kind.size; }
             }); }
@@ -102,7 +105,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
             }
         }
         playerStart = slots.size();
-        int playerY = kind.storage() ? 142 : 94;
+        int playerY = kind.storage() ? 142 - STORAGE_HEADER_REDUCTION : 94;
         for (int row = 0; row < 3; row++) { for (int col = 0; col < 9; col++) { addSlot(new Slot(inventory, 9 + row * 9 + col, 8 + col * 18, playerY + row * 18)); } }
         for (int col = 0; col < 9; col++) { addSlot(new Slot(inventory, col, 8 + col * 18, playerY + 58)); }
         playerEnd = slots.size();

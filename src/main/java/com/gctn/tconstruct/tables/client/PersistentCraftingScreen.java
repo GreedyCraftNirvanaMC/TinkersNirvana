@@ -33,11 +33,13 @@ public class PersistentCraftingScreen extends AbstractContainerScreen<Persistent
     @Override
     protected void init() {
         super.init();
+        var tabs = WorkshopNavigation.tabs(menu.position());
+        topPos = WorkshopNavigation.panelTop(topPos, tabs);
         this.widthTooNarrow = this.width < 379;
         this.recipeBookComponent.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.menu);
         this.leftPos = this.recipeBookComponent.updateScreenPosition(this.width, this.imageWidth);
         positionButtons.clear();
-        positionButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.height / 2 - 49, 20, 18, RecipeBookComponent.RECIPE_BUTTON_SPRITES, p_313433_ -> {
+        positionButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.topPos + 34, 20, 18, RecipeBookComponent.RECIPE_BUTTON_SPRITES, p_313433_ -> {
             int oldLeft = this.leftPos;
             this.recipeBookComponent.toggleVisibility();
             this.leftPos = this.recipeBookComponent.updateScreenPosition(this.width, this.imageWidth);
@@ -45,7 +47,7 @@ public class PersistentCraftingScreen extends AbstractContainerScreen<Persistent
             menu.nearby().visible(!recipeBookComponent.isVisible());
         })));
         nearbyPanel.init(leftPos, topPos, menu.containerId, button -> positionButtons.add(addRenderableWidget(button)));
-        WorkshopNavigation.add(menu.position(), menu.containerId, width, height, this::addRenderableWidget);
+        WorkshopNavigation.add(tabs, menu.position(), menu.containerId, leftPos, topPos, button -> positionButtons.add(addRenderableWidget(button)));
         menu.nearby().visible(!recipeBookComponent.isVisible());
         this.addWidget(this.recipeBookComponent);
         this.titleLabelX = 29;
@@ -85,7 +87,7 @@ public class PersistentCraftingScreen extends AbstractContainerScreen<Persistent
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         nearbyPanel.render(guiGraphics, leftPos, topPos);
         int i = this.leftPos;
-        int j = (this.height - this.imageHeight) / 2;
+        int j = this.topPos;
         guiGraphics.blit(CRAFTING_TABLE_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 

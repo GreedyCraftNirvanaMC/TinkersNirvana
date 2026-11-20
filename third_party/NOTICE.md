@@ -61,6 +61,10 @@ text retains its original contributors' attribution. Village structures use
 native modern biome palettes; Antique texture adaptations are recorded in the
 `scripts/antique_*_textures.json` manifests and exported through GIMP.
 
+Workshop tab placement and selection adapt Antique's `GuiTinkerTabs`,
+`ContainerTinkerStation`, and `TinkerStationTabPacket` and Mantle's MIT-licensed
+`GuiWidgetTabs`. The tabs use the built-in Minecraft 1.21.1 creative inventory sprites.
+
 The implementation in `src/main/java/com/gctn/tconstruct/gadgets` and its
 accompanying gadget assets are also adapted from TinkersAntique
 under LGPL-3.0-only. Source areas include `gadgets/TinkerGadgets.java`,

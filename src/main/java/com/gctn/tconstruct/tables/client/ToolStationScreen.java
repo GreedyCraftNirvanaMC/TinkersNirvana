@@ -59,6 +59,8 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     @Override
     protected void init() {
         super.init();
+        var tabs = WorkshopNavigation.tabs(menu.position());
+        topPos = WorkshopNavigation.panelTop(topPos, tabs);
         this.modeButtons.clear();
         this.modeButtonColumns = Math.clamp(leftPos / MODE_BUTTON_SPACING, 1, MAX_MODE_BUTTON_COLUMNS);
         nearbyPanel.init(leftPos, topPos, menu.containerId, this::addRenderableWidget);
@@ -75,7 +77,7 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
             }
         });
         addRenderableWidget(nameField);
-        WorkshopNavigation.add(menu.position(), menu.containerId, width, height, this::addRenderableWidget);
+        WorkshopNavigation.add(tabs, menu.position(), menu.containerId, leftPos, topPos, this::addRenderableWidget);
         this.addModeButton(Mode.DEFAULT, ICON_TEXTURE, 55, 1, 16, 16);
         this.addModeButton(Mode.DISASSEMBLE, new ItemStack(Items.SHEARS));
         this.addModeButton(Mode.PICKAXE, new ItemStack(Items.WOODEN_PICKAXE));

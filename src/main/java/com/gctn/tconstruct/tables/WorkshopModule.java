@@ -17,10 +17,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.network.chat.Component;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -39,16 +39,18 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 
 /** Shared registration and bounded discovery for connected workshop tables. */
 public final class WorkshopModule {
     public enum Kind {
-        CRAFTING("crafting_station", 9), STENCIL("stencil_table", 1), PART_BUILDER("part_builder", 7),
-        PATTERN_CHEST("pattern_chest", 256), PART_CHEST("part_chest", 256);
+        CRAFTING("crafting_station", 9, 50), STENCIL("stencil_table", 1, 10), PART_BUILDER("part_builder", 7, 20),
+        PATTERN_CHEST("pattern_chest", 256, 15), PART_CHEST("part_chest", 256, 16);
         public final String id;
         public final int size;
-        Kind(String id, int size) { this.id = id; this.size = size; }
+        private final int tabPriority;
+        Kind(String id, int size, int tabPriority) { this.id = id; this.size = size; this.tabPriority = tabPriority; }
         public boolean storage() { return this == PATTERN_CHEST || this == PART_CHEST; }
     }
     public static final Map<Kind, DeferredBlock<WorkshopBlock>> BLOCKS = new LinkedHashMap<>();
@@ -87,15 +89,25 @@ public final class WorkshopModule {
         var block = level.getBlockState(pos).getBlock();
         return block instanceof WorkshopBlock || block instanceof ToolStationBlock;
     }
-    public static List<BlockPos> connected(Level level, BlockPos origin, Player player) {
+    public record Tab(BlockPos position, int buttonId) {}
+
+    public static List<Tab> connectedTabs(Level level, BlockPos origin, Player player) {
         var found = connectedByDistance(level, origin, player);
-        // 从任意相邻工作台打开时，按方块 ID 排列，重复类型使用固定坐标作为入口。
-        var byType = new java.util.TreeMap<net.minecraft.resources.ResourceLocation, BlockPos>();
+        // 怀古按界面编号去重并降序排列，工具装配台和工匠砧共用编号 25。
+        var byPriority = new TreeMap<Integer, BlockPos>(Comparator.reverseOrder());
         found.sort(Comparator.naturalOrder());
         for (BlockPos pos : found) {
-            byType.putIfAbsent(BuiltInRegistries.BLOCK.getKey(level.getBlockState(pos).getBlock()), pos);
+            var block = level.getBlockState(pos).getBlock();
+            int priority = block instanceof WorkshopBlock workshop ? workshop.kind().tabPriority : 25;
+            if (pos.equals(origin)) {
+                byPriority.put(priority, pos);
+            } else {
+                byPriority.putIfAbsent(priority, pos);
+            }
         }
-        return List.copyOf(byType.values());
+        if (!byPriority.containsKey(Kind.CRAFTING.tabPriority)) { return List.of(); }
+        // 按钮编号绑定到界面类型，联动方块变化时，旧按钮不会误打开另一种界面。
+        return byPriority.entrySet().stream().map(entry -> new Tab(entry.getValue(), 100 + entry.getKey())).toList();
     }
     public static List<BlockPos> connectedByDistance(Level level, BlockPos origin, Player player) {
         List<BlockPos> found = new ArrayList<>();
@@ -114,39 +126,53 @@ public final class WorkshopModule {
         return found;
     }
     public static boolean navigate(Player player, BlockPos origin, int button) {
-        if (button < 100 || button >= 164) { return false; }
-        var tables = connected(player.level(), origin, player);
-        int index = button - 100;
-        if (index >= tables.size()) { return false; }
-        BlockPos target = tables.get(index);
-        if (player.level().getBlockState(target).getBlock() == player.level().getBlockState(origin).getBlock()) { return false; }
-        open(player, target, true);
-        return true;
+        if (button < 100 || button > 100 + Kind.CRAFTING.tabPriority) { return false; }
+        for (Tab tab : connectedTabs(player.level(), origin, player)) {
+            if (tab.buttonId() == button && !tab.position().equals(origin)) {
+                return open(player, tab.position(), true);
+            }
+        }
+        return false;
     }
     public static void open(Player player, BlockPos pos) {
         open(player, pos, false);
     }
-    private static void open(Player player, BlockPos pos, boolean switching) {
+    private static boolean open(Player player, BlockPos pos, boolean switching) {
         if (!player.level().isClientSide && player.level().getBlockEntity(pos) instanceof MenuProvider provider) {
-            MenuProvider menu = switching ? new NavigationMenuProvider(provider) : provider;
-            if (provider instanceof WorkshopBlockEntity entity) {
-                var source = com.gctn.tconstruct.tables.menu.NearbyInventory.find(player, pos, entity.kind());
-                player.openMenu(menu, buffer -> {
+            Kind kind = provider instanceof WorkshopBlockEntity entity ? entity.kind() : null;
+            var source = com.gctn.tconstruct.tables.menu.NearbyInventory.find(player, pos, kind);
+            MenuProvider menu = provider;
+            ItemStack carried = ItemStack.EMPTY;
+            if (switching) {
+                carried = player.containerMenu.getCarried();
+                menu = new NavigationMenuProvider(provider, carried);
+                // 旧容器正常关闭，但拿在鼠标上的物品沿用到新容器。
+                player.containerMenu.setCarried(ItemStack.EMPTY);
+            }
+            boolean opened = false;
+            try {
+                opened = player.openMenu(menu, buffer -> {
                     buffer.writeBlockPos(pos);
-                    if (entity.kind() != Kind.CRAFTING) { buffer.writeEnum(entity.kind()); }
+                    if (kind != null && kind != Kind.CRAFTING) { buffer.writeEnum(kind); }
                     com.gctn.tconstruct.tables.menu.NearbyInventory.write(buffer, source);
-                });
-            } else {
-                var source = com.gctn.tconstruct.tables.menu.NearbyInventory.find(player, pos, null);
-                player.openMenu(menu, buffer -> { buffer.writeBlockPos(pos); com.gctn.tconstruct.tables.menu.NearbyInventory.write(buffer, source); });
+                }).isPresent();
+                return opened;
+            } finally {
+                if (!opened && !carried.isEmpty()) {
+                    player.containerMenu.setCarried(carried);
+                    player.containerMenu.broadcastChanges();
+                }
             }
         }
+        return false;
     }
 
-    private record NavigationMenuProvider(MenuProvider target) implements MenuProvider {
+    private record NavigationMenuProvider(MenuProvider target, ItemStack carried) implements MenuProvider {
         @Override public Component getDisplayName() { return target.getDisplayName(); }
         @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-            return target.createMenu(id, inventory, player);
+            AbstractContainerMenu menu = target.createMenu(id, inventory, player);
+            if (menu != null) { menu.setCarried(carried); }
+            return menu;
         }
         // 让服务端正常关闭旧容器，同时跳过客户端的关闭包，避免恢复游戏视角并重置鼠标。
         @Override public boolean shouldTriggerClientSideContainerClosingOnOpen() { return false; }

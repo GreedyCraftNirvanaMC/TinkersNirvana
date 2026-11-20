@@ -20,15 +20,17 @@ public class WorkshopScreen extends AbstractContainerScreen<WorkshopMenu> {
     private final NearbyInventoryPanel nearbyPanel;
     public WorkshopScreen(WorkshopMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
-        imageHeight = menu.kind().storage() ? 224 : 184;
-        inventoryLabelY = menu.kind().storage() ? 130 : 82;
-        titleLabelY = menu.kind().storage() ? 25 : 6;
+        imageHeight = menu.kind().storage() ? WorkshopMenu.STORAGE_HEIGHT : 184;
+        inventoryLabelY = menu.kind().storage() ? 130 - WorkshopMenu.STORAGE_HEADER_REDUCTION : 82;
+        titleLabelY = menu.kind().storage() ? 25 - WorkshopMenu.STORAGE_HEADER_REDUCTION : 6;
         nearbyPanel = new NearbyInventoryPanel(menu.nearby());
     }
     @Override protected void init() {
         super.init(); selections.clear();
+        var tabs = WorkshopNavigation.tabs(menu.position());
+        topPos = WorkshopNavigation.panelTop(topPos, tabs);
         nearbyPanel.init(leftPos, topPos, menu.containerId, this::addRenderableWidget);
-        WorkshopNavigation.add(menu.position(), menu.containerId, width, height, this::addRenderableWidget);
+        WorkshopNavigation.add(tabs, menu.position(), menu.containerId, leftPos, topPos, this::addRenderableWidget);
         if (menu.kind() == Kind.STENCIL) {
             var patterns = WorkshopMenu.patterns();
             for (int i = 0; i < patterns.size(); i++) {
@@ -40,8 +42,9 @@ public class WorkshopScreen extends AbstractContainerScreen<WorkshopMenu> {
                 selections.add(addRenderableWidget(button));
             }
         } else if (menu.kind().storage()) {
-            previous = addRenderableWidget(Button.builder(Component.literal("<"), pressed -> send(menu.page() - 1)).bounds(leftPos + 120, topPos + 23, 16, 14).build());
-            next = addRenderableWidget(Button.builder(Component.literal(">"), pressed -> send(menu.page() + 1)).bounds(leftPos + 150, topPos + 23, 16, 14).build());
+            int pageButtonY = topPos + 23 - WorkshopMenu.STORAGE_HEADER_REDUCTION;
+            previous = addRenderableWidget(Button.builder(Component.literal("<"), pressed -> send(menu.page() - 1)).bounds(leftPos + 120, pageButtonY, 16, 14).build());
+            next = addRenderableWidget(Button.builder(Component.literal(">"), pressed -> send(menu.page() + 1)).bounds(leftPos + 150, pageButtonY, 16, 14).build());
         }
     }
     private void send(int id) { if (minecraft != null && minecraft.gameMode != null) { minecraft.gameMode.handleInventoryButtonClick(menu.containerId, id); } }
@@ -70,7 +73,7 @@ public class WorkshopScreen extends AbstractContainerScreen<WorkshopMenu> {
             graphics.fill(x + 16, y, x + 17, y + 17, 0xffffffff);
         }
         if (!menu.kind().storage()) { graphics.drawString(font, "→", leftPos + 93, topPos + 47, 0xff555555, false); }
-        else if (menu.pages() > 1) { graphics.drawString(font, (menu.page() + 1) + "/" + menu.pages(), leftPos + 82, topPos + 27, 0xff404040, false); }
+        else if (menu.pages() > 1) { graphics.drawString(font, (menu.page() + 1) + "/" + menu.pages(), leftPos + 82, topPos + 27 - WorkshopMenu.STORAGE_HEADER_REDUCTION, 0xff404040, false); }
     }
     @Override protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
         return !nearbyPanel.contains(mouseX, mouseY, left, top) && super.hasClickedOutside(mouseX, mouseY, left, top, button);
