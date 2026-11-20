@@ -1,5 +1,7 @@
 package com.gctn.tconstruct.tables.block.entity;
 
+import com.gctn.tconstruct.init.TinkerDataComponents;
+import com.gctn.tconstruct.library.utils.Tags;
 import com.gctn.tconstruct.tables.data.Mode;
 import com.gctn.tconstruct.tables.menu.ToolStationMenu;
 import com.gctn.tconstruct.tables.recipe.ToolAssemblyRecipe;
@@ -265,7 +267,10 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         return true;
     }
 
-    private static boolean canRenameItem(ItemStack stack) { return stack.getItem() instanceof com.gctn.tconstruct.tools.TinkerTools || com.gctn.tconstruct.tables.recipe.StationProcessingRecipes.supports(stack); }
+    private static boolean canRenameItem(ItemStack stack) {
+        return !TinkerDataComponents.getMaterialTag(stack).getBoolean(Tags.NO_RENAME)
+                && (stack.getItem() instanceof com.gctn.tconstruct.tools.TinkerTools || com.gctn.tconstruct.tables.recipe.StationProcessingRecipes.supports(stack));
+    }
 
     private void takeCraftingResult() {
         if (this.createCraftingResult().isEmpty()) {

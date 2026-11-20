@@ -110,15 +110,16 @@ public final class AntiqueTraits {
 
         @Override
         public void onProjectileLaunch(ItemStack tool, int level, net.minecraft.world.entity.projectile.AbstractArrow arrow) {
-            if (identifier.equals("hovering")) { arrow.setDeltaMovement(arrow.getDeltaMovement().scale(.5)); }
-            else if (identifier.equals("endspeed")) { arrow.setNoGravity(true); }
-        }
-
-        @Override
-        public void onProjectileTick(ItemStack tool, int level, net.minecraft.world.entity.projectile.AbstractArrow arrow) {
-            if (identifier.equals("hovering")) { arrow.setDeltaMovement(arrow.getDeltaMovement().add(0, .0475, 0)); }
-            else if (identifier.equals("endspeed") && arrow.tickCount > 1 && arrow.getDeltaMovement().lengthSqr() > .001) {
-                arrow.setDeltaMovement(arrow.getDeltaMovement().normalize().scale(6));
+            if (!(arrow instanceof com.gctn.tconstruct.tools.AntiqueProjectile)) {
+                return;
+            }
+            if (identifier.equals("hovering")) {
+                arrow.setDeltaMovement(arrow.getDeltaMovement().scale(.5));
+                arrow.setBaseDamage(arrow.getBaseDamage() * 2);
+            } else if (identifier.equals("endspeed")) {
+                arrow.setDeltaMovement(arrow.getDeltaMovement().scale(.1));
+                arrow.setBaseDamage(arrow.getBaseDamage() * 10);
+                arrow.setNoGravity(true);
             }
         }
 
@@ -127,7 +128,10 @@ public final class AntiqueTraits {
             switch (identifier) {
                 case "heavy" -> stats.attribute(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE,
                         "tconstruct:heavy", 1, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE, EquipmentSlotGroup.HAND);
-                case "lightweight" -> stats.attackSpeed *= 1.1F;
+                case "lightweight" -> {
+                    stats.attackSpeed *= 1.1F;
+                    stats.drawSpeed *= 1.1F;
+                }
                 case "fractured" -> stats.attack += 1.5F;
                 case "alien" -> {
                     CompoundTag data = TinkerDataComponents.getTraitsTag(tool).getCompound(identifier);
@@ -193,7 +197,7 @@ public final class AntiqueTraits {
                 case "depthdigger" -> speed += Math.max(0, 72 - pos.getY()) / 30F;
                 case "stonebound" -> { if (tool.isCorrectToolForDrops(event.getState())) { speed += (float) (Math.log(tool.getDamageValue() / 72D + 1) * 2); } }
                 case "momentum" -> speed += original * TinkerEffects.level(player, TinkerEffects.MOMENTUM) / 80F;
-                case "lightweight" -> speed += original * .1F;
+                case "lightweight" -> speed *= 1.1F;
                 case "crumbling" -> { if (!event.getState().requiresCorrectToolForDrops()) { speed *= ToolBuilder.savedStats(tool).getFloat("MiningSpeed") * .5F; } }
                 case "unnatural" -> {
                     int required = event.getState().is(BlockTags.INCORRECT_FOR_DIAMOND_TOOL) ? 4 : event.getState().is(BlockTags.INCORRECT_FOR_IRON_TOOL) ? 3
@@ -261,7 +265,7 @@ public final class AntiqueTraits {
         @Override
         public void onBlockDrops(ItemStack tool, int level, BlockDropsEvent event) {
             if (identifier.equals("autosmelt")) { ToolModifiers.smeltDrops(event); }
-            else if (identifier.equals("established") && event.getLevel().random.nextFloat() < (event.getDroppedExperience() > 0 ? .33F : .03F)) {
+            else if (identifier.equals("established") && event.getLevel().random.nextFloat() < .33F) {
                 event.setDroppedExperience(event.getDroppedExperience() + 1);
             }
         }
@@ -273,6 +277,9 @@ public final class AntiqueTraits {
                     && tool.getMaxDamage() - tool.getDamageValue() >= 5 && tool.getItem() instanceof AntiqueTool item) {
                 float chance = .01F + (player.getHealth() < player.getMaxHealth() ? .02F : 0)
                         + Math.max(0, 10 - player.getFoodData().getFoodLevel()) * .0025F;
+                if (player.getFoodData().getFoodLevel() <= 10) {
+                    chance -= player.getFoodData().getSaturationLevel() * .005F;
+                }
                 if (player.getRandom().nextFloat() < chance) { player.getFoodData().eat(1, 0); item.damage(tool, 5, player, EquipmentSlot.MAINHAND); player.playSound(SoundEvents.GENERIC_EAT, .8F, 1); }
             } else if (identifier.equals("shocking") && selected && world.getGameTime() % 5 == 0) {
                 if (data.contains("X")) {

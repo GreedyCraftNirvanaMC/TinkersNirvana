@@ -32,7 +32,6 @@ import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 
 @EventBusSubscriber(modid = TinkersNirvana.MODID)
@@ -42,7 +41,7 @@ public final class ToolGameplayEvents {
 
     @SubscribeEvent
     public static void anvil(net.neoforged.neoforge.event.AnvilUpdateEvent event) {
-        if (!com.gctn.tconstruct.Config.REPAIR_TOOLS_ON_ANVILS.get()
+        if (ToolBuilder.isInfiTool(event.getLeft()) || !com.gctn.tconstruct.Config.REPAIR_TOOLS_ON_ANVILS.get()
                 && (event.getLeft().getItem() instanceof TinkerTools || event.getRight().getItem() instanceof TinkerTools)) { event.setCanceled(true); }
     }
 
@@ -52,14 +51,16 @@ public final class ToolGameplayEvents {
         if (!(tool.getItem() instanceof TinkerTools) || TinkerTools.isBroken(tool)) { return; }
         ToolTraits.forEach(tool, (trait, level) -> trait.onBlockDrops(tool, level, event));
         if (ToolModifiers.level(tool, "autosmelt") > 0 && !AntiqueTraits.has(tool, "autosmelt", "onBlockDrops")) { ToolModifiers.smeltDrops(event); }
-        int blasting = ToolModifiers.level(tool, "blasting");
-        if (blasting > 0 && !event.getLevel().random.nextBoolean()) { event.getDrops().clear(); }
         if (tool.getItem() instanceof AntiqueTool item && (item.definition().action() == ToolDefinition.Action.KAMA
                 || (item.definition().action() == ToolDefinition.Action.SCYTHE && ToolModifiers.level(tool, "silktouch") > 0))
                 && event.getState().is(net.minecraft.tags.BlockTags.LEAVES)) {
             event.getDrops().clear();
             event.getDrops().add(new ItemEntity(event.getLevel(), event.getPos().getX() + .5, event.getPos().getY() + .5, event.getPos().getZ() + .5,
                     new ItemStack(event.getState().getBlock())));
+        }
+        int blasting = ToolModifiers.level(tool, "blasting");
+        if (blasting > 0) {
+            event.getDrops().removeIf(drop -> event.getLevel().random.nextInt(3) < blasting);
         }
         ToolHarvest.reserveSeed(event);
     }
@@ -75,6 +76,9 @@ public final class ToolGameplayEvents {
         if (tool.getItem() instanceof TinkerTools && !TinkerTools.isBroken(tool)) {
             ItemStack used = tool;
             ToolModifiers.afterDamage(used, attacker, event.getNewDamage());
+            if (used == attacker.getMainHandItem()) {
+                ToolModifiers.rewardLuck(used, attacker, (int) (Math.min(50, event.getNewDamage()) / 2));
+            }
             ToolTraits.forEach(used, (trait, level) -> trait.afterDamage(used, level, attacker, event));
         }
         if (!projectile.isEmpty() && !(event.getSource().getDirectEntity() instanceof AntiqueProjectile)) {
@@ -94,14 +98,17 @@ public final class ToolGameplayEvents {
         if (tool.getItem() instanceof TinkerTools && !TinkerTools.isBroken(tool) && fire > 0) { event.getEntity().igniteForSeconds(1 + fire / 8); }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = net.neoforged.bus.api.EventPriority.LOWEST)
     public static void blasting(PlayerEvent.BreakSpeed event) {
         ItemStack tool = event.getEntity().getMainHandItem();
         int level = ToolModifiers.level(tool, "blasting");
         if (level > 0 && !TinkerTools.isBroken(tool)) {
             var pos = event.getPosition().orElse(event.getEntity().blockPosition());
             float hardness = event.getState().getDestroySpeed(event.getEntity().level(), pos);
-            if (hardness > 0) { event.setNewSpeed(Math.max(event.getNewSpeed(), ToolBuilder.savedStats(tool).getFloat("MiningSpeed") * hardness / (level > 2 ? 1.1F : level > 1 ? 1.5F : 2))); }
+            if (hardness > 0) {
+                float target = ToolBuilder.savedStats(tool).getFloat("MiningSpeed") * hardness / (level == 3 ? 1.1F : level == 2 ? 5F : 10F);
+                event.setNewSpeed(net.minecraft.util.Mth.lerp(level / 3F, event.getOriginalSpeed(), target));
+            }
         }
     }
 
@@ -173,11 +180,9 @@ public final class ToolGameplayEvents {
         }
     }
 
-    @SubscribeEvent
-    public static void mending(PlayerXpEvent.XpChange event) {
-        if (event.getAmount() <= 0) { return; }
-        int remaining = event.getAmount();
-        for (ItemStack tool : new ItemStack[]{event.getEntity().getMainHandItem(), event.getEntity().getOffhandItem()}) {
+    public static int storeMendingExperience(Player player, int remaining) {
+        for (ItemStack tool : new ItemStack[]{player.getMainHandItem(), player.getOffhandItem()}) {
+            if (remaining <= 0) { break; }
             int moss = ToolModifiers.level(tool, "mending_moss");
             if (moss == 0 || !(tool.getItem() instanceof TinkerTools)) { continue; }
             CompoundTag data = com.gctn.tconstruct.init.TinkerDataComponents.getMaterialTag(tool);
@@ -189,7 +194,7 @@ public final class ToolGameplayEvents {
                 remaining -= stored;
             }
         }
-        event.setAmount(remaining);
+        return remaining;
     }
 
     @SubscribeEvent

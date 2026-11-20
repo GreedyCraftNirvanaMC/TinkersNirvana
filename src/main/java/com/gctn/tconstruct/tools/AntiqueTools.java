@@ -5,19 +5,29 @@
  */
 package com.gctn.tconstruct.tools;
 
+import com.gctn.tconstruct.init.TinkerDataComponents;
+import com.gctn.tconstruct.library.TinkerMaterials;
+import com.gctn.tconstruct.library.materials.Material;
+import com.gctn.tconstruct.library.utils.Tags;
 import com.gctn.tconstruct.tools.ToolDefinition.Action;
 import com.gctn.tconstruct.tools.ToolDefinition.Part;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import com.gctn.tconstruct.tools.tools.Pickaxe;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.Block;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class AntiqueTools {
@@ -86,21 +96,55 @@ public final class AntiqueTools {
 
     public static Map<String, Entry> entries() { return Collections.unmodifiableMap(TOOLS); }
     public static Entry get(String id) { return TOOLS.get(id); }
-    public static void addCreativeItems(java.util.function.Consumer<net.minecraft.world.item.ItemStack> output) {
-        for (Entry entry : TOOLS.values()) { for (var material : com.gctn.tconstruct.library.TinkerMaterials.materials) {
-            if (material.isHidden()) { continue; }
-            var materials = new java.util.ArrayList<com.gctn.tconstruct.library.materials.Material>();
-            for (var part : entry.definition.parts()) {
-                materials.add(switch (part.stat()) {
-                    case "BowString" -> com.gctn.tconstruct.library.TinkerMaterials.string;
-                    case "Fletching" -> com.gctn.tconstruct.library.TinkerMaterials.feather;
-                    case "Shaft" -> com.gctn.tconstruct.library.TinkerMaterials.wood;
-                    default -> material;
-                });
+    public static void addCreativeItems(Consumer<ItemStack> output) {
+        for (Entry entry : TOOLS.values()) {
+            for (Material material : TinkerMaterials.materials) {
+                if (material.isHidden()) { continue; }
+                List<Material> materials = new ArrayList<>();
+                for (var part : entry.definition.parts()) {
+                    materials.add(switch (part.stat()) {
+                        case "BowString" -> TinkerMaterials.string;
+                        case "Fletching" -> TinkerMaterials.feather;
+                        case "Shaft" -> TinkerMaterials.wood;
+                        default -> material;
+                    });
+                }
+                ItemStack stack = ToolBuilder.assemble(entry, materials);
+                if (!stack.isEmpty()) {
+                    output.accept(stack);
+                    if (!com.gctn.tconstruct.Config.LIST_ALL_TOOL_MATERIALS.get()) { break; }
+                }
             }
-            var stack = ToolBuilder.assemble(entry, materials);
-            if (!stack.isEmpty()) { output.accept(stack); if (!com.gctn.tconstruct.Config.LIST_ALL_TOOL_MATERIALS.get()) { break; } }
-        } }
+            ItemStack infiTool = createInfiTool(entry);
+            if (!infiTool.isEmpty()) { output.accept(infiTool); }
+        }
+    }
+
+    private static ItemStack createInfiTool(Entry entry) {
+        String name = switch (entry.definition().action()) {
+            case PICKAXE -> "InfiHarvester";
+            case HAMMER -> "InfiMiner";
+            case EXCAVATOR -> "InfiDigger";
+            case LUMBERAXE -> "InfiChopper";
+            case FRYPAN -> "Bane of Pigs";
+            default -> "";
+        };
+        if (name.isEmpty()) { return ItemStack.EMPTY; }
+        List<Material> materials = List.of(TinkerMaterials.slime, TinkerMaterials.cobalt, TinkerMaterials.ardite, TinkerMaterials.ardite);
+        ItemStack tool = ToolBuilder.assemble(entry, materials.subList(0, entry.definition().parts().size()));
+        if (tool.isEmpty()) { return tool; }
+        var data = TinkerDataComponents.getMaterialTag(tool);
+        data.putBoolean(Tags.INFI_TOOL, true);
+        data.putBoolean(Tags.NO_RENAME, true);
+        if (entry.definition().action() == Action.FRYPAN) {
+            var modifiers = data.getCompound("Modifiers");
+            modifiers.putInt("fiery", 125);
+            data.put("Modifiers", modifiers);
+        }
+        tool.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
+        tool.set(DataComponents.CUSTOM_NAME, Component.literal(name));
+        ToolBuilder.rebuild(tool, entry.definition());
+        return tool;
     }
     public static void init() {}
     public record Entry(ToolDefinition definition, Supplier<? extends Item> item) {}

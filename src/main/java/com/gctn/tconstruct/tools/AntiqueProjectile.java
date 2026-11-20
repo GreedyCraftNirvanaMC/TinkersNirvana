@@ -7,19 +7,30 @@ package com.gctn.tconstruct.tools;
 
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
+import com.gctn.tconstruct.tools.traits.AntiqueTraits;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.EventHooks;
 
 /** 原版箭实体负责碰撞、保护事件、同步和掉落；附带工具数据用于材料词条。 */
 public class AntiqueProjectile extends AbstractArrow implements net.minecraft.world.entity.projectile.ItemSupplier {
     private int groundedLife;
+    private int flightTicks;
+    private double launchSpeed;
     private static final net.minecraft.network.syncher.EntityDataAccessor<ItemStack> TOOL =
             net.minecraft.network.syncher.SynchedEntityData.defineId(AntiqueProjectile.class, net.minecraft.network.syncher.EntityDataSerializers.ITEM_STACK);
 
@@ -48,6 +59,35 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     @Override
     protected ItemStack getDefaultPickupItem() { return new ItemStack(Items.ARROW); }
 
+    void recordLaunchSpeed() { launchSpeed = getDeltaMovement().length(); }
+
+    @Override
+    protected void onHitEntity(EntityHitResult hit) {
+        double speed = getDeltaMovement().length();
+        if (launchSpeed <= 0 || speed <= 0 || level().isClientSide) {
+            super.onHitEntity(hit);
+            return;
+        }
+        // 怀古按发射时的蓄力计算伤害。原版碰撞仍会乘以当前速度，所以先抵消这个倍率。
+        // 满弓的暴击标记用于粒子，伤害只在射手满足怀古的坠落判定时增加。
+        double normalDamage = getBaseDamage();
+        boolean fullDraw = isCritArrow();
+        double critical = 1;
+        if (getOwner() instanceof LivingEntity owner && owner.fallDistance > 0 && !owner.onGround()
+                && !owner.onClimbable() && !owner.isInWater()
+                && !owner.hasEffect(net.minecraft.world.effect.MobEffects.BLINDNESS) && !owner.isPassenger()) {
+            critical = 1.5;
+        }
+        setBaseDamage(normalDamage * launchSpeed / speed * critical);
+        setCritArrow(false);
+        try {
+            super.onHitEntity(hit);
+        } finally {
+            setBaseDamage(normalDamage);
+            setCritArrow(fullDraw);
+        }
+    }
+
     @Override
     protected void doPostHurtEffects(LivingEntity target) {
         super.doPostHurtEffects(target);
@@ -61,6 +101,7 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("TinkerGroundedLife", groundedLife);
+        if (launchSpeed > 0) { tag.putDouble("TinkerLaunchSpeed", launchSpeed); }
         if (!traitTool().isEmpty()) { tag.put("TinkerTool", traitTool().save(registryAccess())); }
     }
 
@@ -68,14 +109,115 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         groundedLife = Math.max(0, tag.contains("TinkerGroundedLife") ? tag.getInt("TinkerGroundedLife") : tag.getShort("life"));
+        launchSpeed = tag.getDouble("TinkerLaunchSpeed");
         entityData.set(TOOL, ItemStack.parseOptional(registryAccess(), tag.getCompound("TinkerTool")));
     }
 
     @Override
     public void tick() {
+        boolean flight = !inGround && !isNoPhysics();
+        boolean wet = isInWater();
+        double gravity = isNoGravity() ? 0 : getGravity();
+        Vec3 incoming = getDeltaMovement();
         super.tick();
-        if (!inGround) { groundedLife = 0; }
-        if (!inGround) { ToolTraits.forEach(traitTool(), (trait, level) -> trait.onProjectileTick(traitTool(), level, this)); }
+        if (inGround || isRemoved()) {
+            flightTicks = 0;
+            return;
+        }
+        groundedLife = 0;
+        if (flight && incoming.dot(getDeltaMovement()) > 0) {
+            flightTicks++;
+            updateFlight(wet, gravity);
+        } else {
+            flightTicks = 0;
+        }
+        if (!inGround && !isRemoved()) {
+            ToolTraits.forEach(traitTool(), (trait, level) -> trait.onProjectileTick(traitTool(), level, this));
+        }
+    }
+
+    private void updateFlight(boolean wet, double gravity) {
+        boolean hovering = AntiqueTraits.has(traitTool(), "hovering", "onProjectileTick");
+        boolean endspeed = AntiqueTraits.has(traitTool(), "endspeed", "onProjectileTick");
+        double nativeDrag = wet ? getWaterInertia() : .99F;
+        if (endspeed) {
+            setDeltaMovement(getDeltaMovement().scale(1 / nativeDrag).add(0, -getDefaultGravity() / 250, 0));
+            if (flightTicks > 1) {
+                advanceEndspeed();
+            }
+        } else if (hovering || !wet && slowdown() != .01) {
+            double drag = hovering ? .99 : 1 - slowdown();
+            double fall = hovering ? gravity * .05 : gravity;
+            setDeltaMovement(getDeltaMovement().add(0, gravity, 0).scale(drag / nativeDrag).add(0, -fall, 0));
+        }
+    }
+
+    private void advanceEndspeed() {
+        double traveledSquared = 0;
+        double particleTravel = 0;
+        while (!inGround && !isRemoved() && traveledSquared < 40) {
+            Vec3 start = position();
+            Vec3 step = getDeltaMovement();
+            Vec3 end = start.add(step);
+            double distanceSquared = step.lengthSqr();
+            // 沿实际弹道逐段碰撞，保留各段的原版投射物事件，且不为加速飞行加载区块。
+            if (distanceSquared < .001 || !level().hasChunkAt(BlockPos.containing(end))) {
+                break;
+            }
+            HitResult hit = level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+            EntityHitResult entityHit = findHitEntity(start, hit.getType() == HitResult.Type.MISS ? end : hit.getLocation());
+            if (entityHit != null) {
+                if (entityHit.getEntity() instanceof Player victim && getOwner() instanceof Player owner && !owner.canHarmPlayer(victim)) {
+                    break;
+                }
+                hit = entityHit;
+            }
+            if (hit.getType() != HitResult.Type.MISS) {
+                if (EventHooks.onProjectileImpact(this, hit)) {
+                    setPos(end);
+                    break;
+                }
+                ProjectileDeflection deflection = hitTargetOrDeflectSelf(hit);
+                hasImpulse = true;
+                if (inGround) {
+                    setPos(position().add(getDeltaMovement()));
+                }
+                if (deflection != ProjectileDeflection.NONE || inGround || isRemoved() || step.dot(getDeltaMovement()) <= 0) {
+                    break;
+                }
+            }
+            setPos(end);
+            checkInsideBlocks();
+            setDeltaMovement(getDeltaMovement().add(0, -getDefaultGravity() / 250, 0));
+            traveledSquared += distanceSquared;
+            particleTravel += distanceSquared;
+            if (level().isClientSide && particleTravel > .3) {
+                level().addParticle(ParticleTypes.PORTAL, getX(), getY(), getZ(), 0, 0, 0);
+                particleTravel = 0;
+            }
+        }
+        updateRotation();
+    }
+
+    private ToolDefinition.Action projectileAction() {
+        return traitTool().getItem() instanceof AntiqueTool tool ? tool.definition().action() : ToolDefinition.Action.ARROW;
+    }
+
+    private double slowdown() {
+        return switch (projectileAction()) {
+            case BOLT -> .015;
+            case SHURIKEN -> .05;
+            default -> .01;
+        };
+    }
+
+    @Override
+    protected double getDefaultGravity() {
+        return switch (projectileAction()) {
+            case BOLT -> .065;
+            case SHURIKEN -> (tickCount / 10) * .04;
+            default -> super.getDefaultGravity();
+        };
     }
 
     @Override protected void tickDespawn() {
@@ -91,7 +233,9 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     }
 
     @Override
-    protected float getWaterInertia() { return ToolModifiers.level(traitTool(), "fins") > 0 ? .992F : super.getWaterInertia(); }
+    protected float getWaterInertia() {
+        return (float) (ToolModifiers.level(traitTool(), "fins") > 0 ? 1 - slowdown() * .8 : (1 - slowdown()) * .6);
+    }
 
     @Override
     protected boolean tryPickup(Player player) {

@@ -72,7 +72,7 @@ Ammunition is stored as durability, and each shot uses ten points. To recover a 
 - Disassemble a fully repaired tool to recover parts. Taking the first part commits the operation. Changing modes before that returns the original tool. A broken tool remains as an item and can be repaired.
 - Soulbound returns the tool after death. Other drops follow vanilla rules.
 
-Hold Shift for stats, materials, and free modifier slots. Hold Alt for trait descriptions. Stats follow Antique definitions. Existing tools retain saved stats and unknown components survive repair, modification, and recalculation.
+Hold Shift for tool stats and free modifier slots. Hold Ctrl for each part's material, stats, and traits. Hold Alt for trait descriptions. Stats follow Antique definitions. Existing tools retain saved stats and unknown components survive repair, modification, and recalculation.
 
 ## Extensions and resources
 

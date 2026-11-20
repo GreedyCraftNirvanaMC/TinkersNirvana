@@ -151,6 +151,13 @@ public class AntiqueTool extends TinkerTools {
             if (state.getDestroySpeed(level, pos) > 0) {
                 boolean effective = isCorrectToolForDrops(stack, state);
                 ToolTraits.forEach(stack, (trait, traitLevel) -> trait.afterBlockBreak(stack, traitLevel, level, state, pos, entity, effective));
+                ToolModifiers.rewardLuck(stack, entity, 1);
+                int blasting = ToolModifiers.level(stack, "blasting");
+                if (blasting > 0 && level instanceof net.minecraft.server.level.ServerLevel server) {
+                    var particle = server.random.nextInt(20) == 0 ? net.minecraft.core.particles.ParticleTypes.EXPLOSION_EMITTER
+                            : net.minecraft.core.particles.ParticleTypes.EXPLOSION;
+                    server.sendParticles(particle, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, 1, 0, 0, 0, 0);
+                }
                 damageTool(stack, 1, entity, EquipmentSlot.MAINHAND);
             }
             ToolHarvest.afterBreak(this, stack, level, state, pos, entity);

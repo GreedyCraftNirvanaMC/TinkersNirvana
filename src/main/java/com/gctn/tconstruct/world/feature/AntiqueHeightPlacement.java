@@ -25,7 +25,7 @@ public class AntiqueHeightPlacement extends PlacementModifier {
         if (setting.endsWith("pool") || setting.equals("slime_pool_humid")) {
             int max = setting.equals("magma_pool") ? 128 : Config.SLIME_POOL_HEIGHT.get() * (setting.endsWith("humid") ? 3 : 1);
             result.add(new BlockPos(origin.getX() + 8 + random.nextInt(8), random.nextInt(max), origin.getZ() + 8 + random.nextInt(8)));
-            return result.build();
+            return result.build().filter(pos -> !context.getLevel().isOutsideBuildHeight(pos));
         }
         boolean enabled = switch (setting) {
             case "cobalt" -> Config.GEN_COBALT.get(); case "ardite" -> Config.GEN_ARDITE.get(); case "copper" -> Config.GEN_COPPER.get();
@@ -46,10 +46,13 @@ public class AntiqueHeightPlacement extends PlacementModifier {
             if (!context.getLevel().dimensionType().hasSkyLight()) { return Stream.empty(); }
             int min = setting.equals("copper") ? Config.COPPER_MIN_HEIGHT.get() : setting.equals("tin") ? Config.TIN_MIN_HEIGHT.get() : Config.ALUMINUM_MIN_HEIGHT.get();
             int max = setting.equals("copper") ? Config.COPPER_MAX_HEIGHT.get() : setting.equals("tin") ? Config.TIN_MAX_HEIGHT.get() : Config.ALUMINUM_MAX_HEIGHT.get();
+            // 配置可以跨越多个维度的高度范围，采样范围以当前维度实际可放置的高度为限。
+            min = Math.max(min, context.getLevel().getMinBuildHeight());
+            max = Math.min(max, context.getLevel().getMaxBuildHeight());
             if (max <= min) { return Stream.empty(); }
             for (int i = 0; i < count; i++) { result.add(new BlockPos(origin.getX() + random.nextInt(16), min + random.nextInt(max - min), origin.getZ() + random.nextInt(16))); }
         }
-        return result.build();
+        return result.build().filter(pos -> !context.getLevel().isOutsideBuildHeight(pos));
     }
     @Override public PlacementModifierType<?> type() { return WorldModule.HEIGHT_PLACEMENT.get(); }
 }

@@ -1,6 +1,7 @@
 package com.gctn.tconstruct.client.tools.tooltips;
 
 import com.gctn.tconstruct.TinkersNirvana;
+import com.gctn.tconstruct.client.tools.AntiqueToolClient;
 import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.Material;
@@ -8,6 +9,7 @@ import com.gctn.tconstruct.library.stats.HeadMaterialStats;
 import com.gctn.tconstruct.library.utils.HarvestLevels;
 import com.gctn.tconstruct.library.utils.ToolHelper;
 import com.gctn.tconstruct.tools.TinkerTools;
+import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.client.gui.screens.Screen;
@@ -74,7 +76,8 @@ public class PickaxeTips {
             upperTips.add(Either.left(attackTip));
             upperTips.add(Either.left(modifiersTip));
         } else if (Screen.hasControlDown()) {
-            // TODO 按下Ctrl时显示详细信息
+            AntiqueToolClient.appendComponentDetails(stack, ((AntiqueTool) stack.getItem()).definition(),
+                    component -> upperTips.add(Either.left(component)));
         } else if (Screen.hasAltDown()) {
             for (ToolTraits.Entry entry : ToolTraits.getTraits(stack)) {
                 if (!entry.trait().getDescription().getString().isBlank()) { upperTips.add(Either.left(entry.trait().getDescription())); }

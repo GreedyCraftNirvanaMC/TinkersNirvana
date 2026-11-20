@@ -73,7 +73,7 @@ public final class ToolRanged {
                 return InteractionResultHolder.fail(tool);
             }
             if (!level.isClientSide) {
-                shoot(item, tool, tool, player, 1, hand, false);
+                shoot(item, tool, tool, player, 1, 1, hand, false);
             }
             return InteractionResultHolder.sidedSuccess(tool, level.isClientSide);
         }
@@ -82,7 +82,7 @@ public final class ToolRanged {
                 var legacy = tool.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
                 boolean prepaid = !legacy.isEmpty();
                 ItemStack ammo = prepaid ? legacy.getItems().getFirst() : findAmmo(item, player);
-                if (ammo.isEmpty() || shoot(item, tool, ammo, player, 1, hand, prepaid)) {
+                if (ammo.isEmpty() || shoot(item, tool, ammo, player, 1, 1, hand, prepaid)) {
                     setLoaded(tool, false);
                     tool.remove(DataComponents.CHARGED_PROJECTILES);
                 }
@@ -134,7 +134,7 @@ public final class ToolRanged {
         progress = Math.min(1, used / (float) drawTime(item, tool));
         float power = BowItem.getPowerForTime((int) (progress * 20)) * progress;
         if (power >= .1F) {
-            shoot(item, tool, ammo, player, power, player.getUsedItemHand(), false);
+            shoot(item, tool, ammo, player, power, progress, player.getUsedItemHand(), false);
         }
     }
 
@@ -166,7 +166,7 @@ public final class ToolRanged {
         return after < before;
     }
 
-    private static boolean shoot(AntiqueTool launcher, ItemStack tool, ItemStack ammo, Player player, float power,
+    private static boolean shoot(AntiqueTool launcher, ItemStack tool, ItemStack ammo, Player player, float power, float progress,
                                  InteractionHand hand, boolean prepaid) {
         // 在扣除耐久和运行词条前保留快照，命中时不再依赖玩家当前手持物。
         ItemStack firedFrom = tool.copyWithCount(1);
@@ -221,18 +221,23 @@ public final class ToolRanged {
             float accuracy = Math.max(.1F, ToolBuilder.savedStats(traits).getFloat("Accuracy"));
             inaccuracy = Math.max(0, inaccuracy - (1 - 1 / accuracy) * velocity / 2);
         }
-        if (ammo.getItem() instanceof AntiqueTool) {
-            float damage = ToolBuilder.savedStats(pickup).getFloat("Attack");
+        arrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, inaccuracy);
+        if (arrow instanceof AntiqueProjectile) {
+            float strength = progress * progress;
+            double damage = player.getAttributeBaseValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE)
+                    + ToolBuilder.savedStats(pickup).getFloat("Attack");
             if (!shuriken) {
                 float bonus = crossbow ? 3F : launcher.definition().action() == ToolDefinition.Action.LONGBOW ? 2.5F : 0F;
                 float multiplier = crossbow ? 1.3F : launcher.definition().action() == ToolDefinition.Action.LONGBOW ? 1.25F : .8F;
-                damage = (damage + bonus * power + ToolBuilder.savedStats(tool).getFloat("ProjectileDamage")) * multiplier;
+                damage = (damage + bonus * strength + ToolBuilder.savedStats(tool).getFloat("ProjectileDamage")) * multiplier;
             }
-            arrow.setBaseDamage(Math.max(0, damage) / Math.max(.1F, velocity));
+            arrow.setBaseDamage(Math.max(0, damage * strength) / Math.max(.001, arrow.getDeltaMovement().length()));
         }
-        arrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, inaccuracy);
-        arrow.setCritArrow(power >= 1);
+        arrow.setCritArrow(!shuriken && progress >= 1);
+        double launchDamage = arrow.getBaseDamage();
+        double launchVelocity = arrow.getDeltaMovement().length();
         com.gctn.tconstruct.tools.traits.ToolTraits.forEach(traits, (trait, level) -> trait.onProjectileLaunch(traitsFor(arrow), level, arrow));
+        if (arrow instanceof AntiqueProjectile projectile) { projectile.recordLaunchSpeed(); }
         if (!player.level().addFreshEntity(arrow)) {
             return false;
         }
@@ -245,10 +250,11 @@ public final class ToolRanged {
         }
         if (splits && player.getRandom().nextBoolean()) {
             var extra = new AntiqueProjectile(player.level(), player, pickup, traits, firedFrom);
-            extra.setBaseDamage(arrow.getBaseDamage());
             extra.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, inaccuracy + 3);
+            extra.setBaseDamage(launchDamage * launchVelocity / Math.max(.001, extra.getDeltaMovement().length()));
             extra.setCritArrow(arrow.isCritArrow());
             com.gctn.tconstruct.tools.traits.ToolTraits.forEach(traits, (trait, level) -> trait.onProjectileLaunch(extra.traitTool(), level, extra));
+            extra.recordLaunchSpeed();
             extra.pickup = AbstractArrow.Pickup.DISALLOWED;
             player.level().addFreshEntity(extra);
         }

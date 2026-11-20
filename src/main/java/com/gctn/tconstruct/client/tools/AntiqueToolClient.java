@@ -8,7 +8,10 @@ package com.gctn.tconstruct.client.tools;
 import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.TinkerMaterials;
+import com.gctn.tconstruct.library.materials.Material;
+import com.gctn.tconstruct.library.stats.*;
 import com.gctn.tconstruct.library.toolparts.AntiqueParts;
+import com.gctn.tconstruct.library.utils.HarvestLevels;
 import com.gctn.tconstruct.library.utils.Tags;
 import com.gctn.tconstruct.tools.*;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
@@ -26,6 +29,8 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+
+import java.util.function.Consumer;
 
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public final class AntiqueToolClient {
@@ -107,8 +112,11 @@ public final class AntiqueToolClient {
                 event.getToolTip().add(Component.translatable("tooltip.tconstruct.tool.miningspeed", ToolBuilder.savedStats(stack).getFloat("MiningSpeed")));
                 event.getToolTip().add(Component.translatable("tooltip.tconstruct.tool.mininglevel",
                         com.gctn.tconstruct.library.utils.HarvestLevels.getHarvestLevelName(ToolBuilder.savedStats(stack).getInt("HarvestLevel"))));
+            } else if (Screen.hasControlDown()) {
+                appendComponentDetails(stack, item.definition(), event.getToolTip()::add);
             } else {
                 event.getToolTip().add(TinkerTools.shiftTip);
+                event.getToolTip().add(TinkerTools.controlTip);
                 event.getToolTip().add(Component.translatable("tooltip.tconstruct.hold_for_traits", "Alt"));
             }
         }
@@ -162,6 +170,50 @@ public final class AntiqueToolClient {
                     if (Screen.hasAltDown()) { if (!entry.trait().getDescription().getString().isBlank()) { event.getToolTip().add(entry.trait().getDescription()); } }
                 }
             }
+        }
+    }
+
+    public static void appendComponentDetails(ItemStack stack, ToolDefinition definition, Consumer<Component> tooltip) {
+        var data = TinkerDataComponents.getMaterialTag(stack);
+        for (var part : definition.parts()) {
+            Material material = TinkerMaterials.getMaterial(data.getString(part.key()));
+            if (material == null) { continue; }
+            var component = AntiqueParts.get(part.part());
+            if (component == null) { continue; }
+            tooltip.accept(Component.translatable("tooltip.tconstruct.part_material",
+                    component.item().get().getDescription(), material.getDisplayName())
+                    .withColor(material.color).withStyle(net.minecraft.ChatFormatting.UNDERLINE));
+            // 弓臂也提供头部属性，弩身则同时贡献手柄和附件属性。
+            var stats = part.traitStats(definition.action());
+            for (String type : stats) {
+                appendComponentStats(material.getStats().get(type), tooltip);
+            }
+            for (var entry : material.getTraitsForStats(stats)) {
+                tooltip.accept(entry.trait().getDisplayName(entry.level()));
+            }
+            tooltip.accept(Component.empty());
+        }
+    }
+
+    private static void appendComponentStats(AbstractMaterialStats stats, Consumer<Component> tooltip) {
+        if (stats == null) { return; }
+        switch (stats) {
+            case HeadMaterialStats head -> {
+                tooltip.accept(Component.translatable("tooltip.tconstruct.part_durability", head.durability));
+                tooltip.accept(Component.translatable("tooltip.tconstruct.tool.miningspeed", head.miningspeed));
+                tooltip.accept(Component.translatable("tooltip.tconstruct.tool.mininglevel", HarvestLevels.getHarvestLevelName(head.harvestLevel)));
+                tooltip.accept(Component.translatable("tooltip.tconstruct.tool.attack", head.attack));
+            }
+            case HandleMaterialStats handle -> {
+                tooltip.accept(Component.translatable("tooltip.tconstruct.handle.modifier", handle.modifer));
+                tooltip.accept(Component.translatable("tooltip.tconstruct.part_durability", handle.durability));
+            }
+            case ExtraMaterialStats extra -> tooltip.accept(Component.translatable("tooltip.tconstruct.part_durability", extra.durability));
+            case BowMaterialStats bow -> tooltip.accept(Component.translatable("tooltip.tconstruct.bow_stats", bow.drawSpeed, bow.range, bow.bonusDamage));
+            case BowStringMaterialStats string -> tooltip.accept(Component.translatable("tooltip.tconstruct.handle.modifier", string.modifier));
+            case ArrowShaftMaterialStats shaft -> tooltip.accept(Component.translatable("tooltip.tconstruct.shaft_stats", shaft.modifier, shaft.bonusAmmo));
+            case FletchingMaterialStats fletching -> tooltip.accept(Component.translatable("tooltip.tconstruct.fletching_stats", fletching.accuracy, fletching.modifier));
+            default -> { }
         }
     }
 }

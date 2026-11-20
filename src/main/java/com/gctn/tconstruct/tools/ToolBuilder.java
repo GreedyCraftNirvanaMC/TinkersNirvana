@@ -10,6 +10,7 @@ import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.library.stats.*;
 import com.gctn.tconstruct.library.utils.HarvestLevels;
+import com.gctn.tconstruct.library.utils.Tags;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -81,6 +82,11 @@ public final class ToolBuilder {
             case MATTOCK -> .95F;
             default -> 1;
         };
+        if (isInfiTool(tool)) {
+            // 怀古的创造变体覆盖最终值。保存在材料数据中，重算后也要保留。
+            stats.durability = stats.baseDurability = 999999;
+            stats.attack = stats.miningSpeed = 999999;
+        }
         tool.set(DataComponents.MAX_DAMAGE, Math.max(1, stats.durability));
         tool.set(DataComponents.DAMAGE, Math.min(tool.getDamageValue(), tool.getMaxDamage()));
         List<Tool.Rule> rules = new ArrayList<>();
@@ -205,4 +211,6 @@ public final class ToolBuilder {
     }
 
     public static CompoundTag savedStats(ItemStack tool) { return TinkerDataComponents.getMaterialTag(tool).getCompound("Stats"); }
+
+    public static boolean isInfiTool(ItemStack tool) { return TinkerDataComponents.getMaterialTag(tool).getBoolean(Tags.INFI_TOOL); }
 }

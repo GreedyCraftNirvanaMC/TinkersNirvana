@@ -72,6 +72,7 @@ public final class BookScreen extends Screen {
         next = button(Kind.NEXT, 371, 175, "next", () -> turn(1));
         back = button(Kind.LEFT, 197, 193, "back", this::back);
         index = button(Kind.INDEX, -9, 0, "contents", () -> { returnSpread = -2; navigate("go-to-page:index"); });
+        index.setX(Math.max(0, index.getX()));
         coverButton = button(Kind.COVER, 103, 0, "open", () -> { spread = 0; updateControls(); });
         structureControls.clear();
         for (int side = 0; side < 2; side++) {

@@ -28,7 +28,7 @@ Edit `config/tconstruct-common.toml`. World generation settings affect future ch
 
 Islands and pools have separate dimension ID lists, allowlist or denylist settings, and surface-dimension restrictions. Use resource IDs. Empty lists are valid. Copper, tin, aluminum, cobalt, and Ardite each have an ore toggle and attempt count. Overworld ores also have minimum and maximum height settings. A count of zero disables attempts.
 
-Each newly generated slime island has 1–3 slime trees. Blue and purple slimes can breathe and swim in liquid slime. After the configured time away from an island, they are removed without drops, experience or splitting. Returning to any ordinary slime island resets the timer, which is saved with the entity.
+Each slime island makes three tree placement attempts. The resulting tree count depends on suitable ground. Blue and purple slimes can breathe and swim in liquid slime. After the configured time away from an island, they are removed without drops, experience or splitting. Returning to any ordinary slime island resets the timer, which is saved with the entity.
 
 ## Data packs
 

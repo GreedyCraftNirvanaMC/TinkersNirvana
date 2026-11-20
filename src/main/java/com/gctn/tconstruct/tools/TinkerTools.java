@@ -43,6 +43,7 @@ public abstract class TinkerTools extends Item {
     }
 
     public final int getTotalModifierSlots(ItemStack stack) {
+        if (ToolBuilder.isInfiTool(stack)) { return 0; }
         // 升级奖励独立于材料词条，替换部件或重算属性时仍按保存的等级提供槽位。
         return (int) Math.clamp((long) getBaseModifierSlots(stack) + getMaterialModifierSlotAdjustment(stack)
                 + ToolUpgradeApi.getLevel(stack), 0, Integer.MAX_VALUE);
@@ -82,7 +83,7 @@ public abstract class TinkerTools extends Item {
 
     protected final void damageTool(ItemStack stack, int amount, LivingEntity entity, EquipmentSlot slot) {
         if (slot == EquipmentSlot.MAINHAND && entity instanceof net.minecraft.world.entity.player.Player player && com.gctn.tconstruct.tools.DualToolHarvest.active(player)) { slot = EquipmentSlot.OFFHAND; }
-        if (entity.level().isClientSide || amount <= 0 || isBroken(stack)) {
+        if (entity.level().isClientSide || amount <= 0 || isBroken(stack) || ToolBuilder.isInfiTool(stack)) {
             return;
         }
         if (entity.getRandom().nextFloat() < ToolModifiers.level(stack, "reinforced") * .2F) { return; }
