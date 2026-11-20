@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "tconsnirvana:block/hopper_down"
+    },
+    "facing=north": {
+      "model": "tconsnirvana:block/hopper_side"
+    },
+    "facing=south": {
+      "model": "tconsnirvana:block/hopper_side",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "tconsnirvana:block/hopper_side",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "tconsnirvana:block/hopper_side",
+      "y": 90
+    }
+  }
+}

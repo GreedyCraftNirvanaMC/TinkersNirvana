@@ -1,0 +1,29 @@
+{
+  "modifier": "reinforced",
+  "text": [
+    {
+      "text": "När en förstärkningsplatta läggs till på ett verktyg verkar den hjälpa till att förbättra dess hållbarhet och göra det starkare."
+    }
+  ],
+  "effects": [
+    "Lägger till en chans att inte konsumera hållbarhet",
+    "Grupperas med föregående förstärkningsnivåer",
+    "Flera nivåer"
+  ],
+  "demoTool": [
+    "tconsnirvana:pickaxe",
+    "tconsnirvana:hammer",
+    "tconsnirvana:shortbow",
+    "tconsnirvana:arrow"
+  ],
+  "section": "modifiers",
+  "order": 8,
+  "id": "modifiers/reinforced",
+  "title": "",
+  "layout": "modifier",
+  "show_in_contents": true,
+  "titleless": true,
+  "listing_title": "",
+  "properties_label": "Effekter:",
+  "title_color": 5254787
+}

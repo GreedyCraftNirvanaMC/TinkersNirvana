@@ -27,11 +27,11 @@ Crafting recipes:
 | Graveyard Soil | Dirt, rotten flesh, bone meal |
 
 Sand uses `c:sands`, and grout gravel uses `c:gravels`. The green/blue recipes accept dirt, coarse dirt, and podzol
-through `tconstruct:soil_recipe_dirt`, matching the old dirt block's variants.
+through `tconsnirvana:soil_recipe_dirt`, matching the old dirt block's variants.
 The Graveyard Soil recipe requires ordinary dirt.
 
 Smelt Graveyard Soil for 200 ticks to obtain Consecrated Soil and 0.1 XP.
 Smelt each slime mud for 200 ticks to obtain its matching crystal and 0.75 XP.
 These are ordinary smelting recipes, so native furnaces and the Seared Furnace
 can use them. Crystals expose `c:slime_crystals/<color>` item tags for integration.
-Green and blue mud reject ordinary plants. Data packs can extend the dedicated plant-support block tag `tconstruct:slime_plants`. See [world generation](WORLD.md) for slime trees, plants, and islands.
+Green and blue mud reject ordinary plants. Data packs can extend the dedicated plant-support block tag `tconsnirvana:slime_plants`. See [world generation](WORLD.md) for slime trees, plants, and islands.

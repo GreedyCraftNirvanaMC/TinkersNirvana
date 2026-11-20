@@ -8,7 +8,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--antique", type=Path, required=True)
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-assets = root / "src/main/resources/assets/tconstruct"
+assets = root / "src/main/resources/assets/tconsnirvana"
 original = args.antique / "src/main/resources/assets/tconstruct"
 modifier_colors = {}
 for file in (args.antique / "src/main/java/slimeknights/tconstruct/tools/modifiers").glob("*.java"):
@@ -18,7 +18,8 @@ modifier_colors.update({"harvestheight": 0xcaf6a2, "harvestwidth": 0xcaf6a2})
 
 def write(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    text = json.dumps(value, ensure_ascii=False, indent=2).replace('"tconstruct:', '"tconsnirvana:')
+    path.write_text(text + "\n", encoding="utf-8")
 
 def language(path):
     result = {}
@@ -36,7 +37,7 @@ for section in json.loads((original / "book/index.json").read_text()):
     ids = [name + "/" + (Path(row["data"]).stem if "data" in row else "blank_" + str(index)) for index, row in enumerate(entries)]
     icon = section.get("icon", {}).get("item", {}).get("id", "minecraft:book")
     if icon == "tconstruct:edible":
-        icon = "tconstruct:slimeball_blue"  # original edible metadata 1
+        icon = "tconsnirvana:slimeball_blue"  # original edible metadata 1
     definition.append({"id": name, "icon": icon, "pages": ids})
     for locale in sorted((original / "book").iterdir()):
         if not locale.is_dir() or locale.name == "sections":
@@ -70,7 +71,7 @@ for section in json.loads((original / "book/index.json").read_text()):
 # Keep machine chapters directly reachable from the main index while retaining
 # their original page IDs and their position within the seared-device sequence.
 shortcuts = [
-    {"page": f"tconstruct:seared_devices/{machine}_intro", "icon": f"tconstruct:{machine}_controller"}
+    {"page": f"tconsnirvana:seared_devices/{machine}_intro", "icon": f"tconsnirvana:{machine}_controller"}
     for machine in ("seared_furnace", "tinker_tank")
 ]
 write(assets / "book/definition.json", {"sections": definition, "shortcuts": shortcuts})
@@ -87,10 +88,10 @@ for locale in ("en_us", "zh_cn"):
         name = section["id"]
         label = "smeltery_intro" if name == "seared_devices" else name
         if label in book_labels:
-            current["book.tconstruct.section." + name] = book_labels[label]
+            current["book.tconsnirvana.section." + name] = book_labels[label]
     appearance = json.loads((original / "book/appearance.json").read_text().replace("0xffce85", str(0xffce85)))
-    current["book.tconstruct.cover_title"] = appearance["title"]
-    current["book.tconstruct.cover_subtitle"] = appearance["subtitle"]
+    current["book.tconsnirvana.cover_title"] = appearance["title"]
+    current["book.tconsnirvana.cover_subtitle"] = appearance["subtitle"]
     for key in keys:
         value = source.get(key, base[key]); visited = {key}
         while value in source and value not in visited:

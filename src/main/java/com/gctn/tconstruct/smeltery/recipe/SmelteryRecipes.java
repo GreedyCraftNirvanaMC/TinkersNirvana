@@ -18,15 +18,21 @@ import com.gctn.tconstruct.smeltery.SmelteryTank;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 /** The original quantities and temperature/cooling rules, independent of a recipe's item source. */
@@ -41,6 +47,7 @@ public final class SmelteryRecipes {
     public static final List<Fuel> FUELS = new ArrayList<>();
     public static final List<EntityMelting> ENTITY_MELTING = new ArrayList<>();
     public static final java.util.Map<Item, Melting> AUTOMATIC_MELTING = new java.util.HashMap<>();
+    private static final Map<Casting, StandardCast> STANDARD_CASTS = new IdentityHashMap<>();
     private static boolean initialized;
 
     private SmelteryRecipes() {
@@ -72,11 +79,27 @@ public final class SmelteryRecipes {
                     ItemStack output = preferred(name, form.suffix);
                     if (!output.isEmpty()) {
                         String cast = form.suffix.equals("block") ? "" : "cast_" + form.suffix;
-                        CASTING.add(casting(form.suffix.equals("block"), castPredicate(cast), fluid, form.amount, output, false, false));
+                        Casting standard = casting(form.suffix.equals("block"), castPredicate(cast), fluid, form.amount, output, false, false);
+                        CASTING.add(standard);
+                        STANDARD_CASTS.put(standard, new StandardCast(name, form.suffix));
                     }
                 }
             }
+            var rawBlocks = TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                    ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/raw_" + name));
+            MELTING.add(new Melting(stack -> stack.is(rawBlocks) || isNamed(stack, name, "raw_block"),
+                    new FluidStack(fluid, BLOCK * 2), temperature(fluid, BLOCK * 2), 9));
         }
+        // 按切石机最省料的路径确定回收量，防止同一批铜反复切割、熔炼后增值。
+        addCopperVariants(Blocks.COPPER_BLOCK, BLOCK);
+        addCopperVariants(Blocks.CUT_COPPER, BLOCK / 4);
+        addCopperVariants(Blocks.CUT_COPPER_STAIRS, BLOCK / 4);
+        addCopperVariants(Blocks.CUT_COPPER_SLAB, BLOCK / 8);
+        addCopperVariants(Blocks.CHISELED_COPPER, BLOCK / 4);
+        addCopperVariants(Blocks.COPPER_GRATE, BLOCK / 4);
+        addCopperVariants(Blocks.COPPER_BULB, BLOCK * 3 / 4);
+        addCopperVariants(Blocks.COPPER_DOOR, INGOT * 2);
+        addCopperVariants(Blocks.COPPER_TRAPDOOR, INGOT * 3);
         addMelting(Items.ICE, Fluids.WATER, 1000, 305);
         addMelting(Items.PACKED_ICE, Fluids.WATER, 2000, 310);
         addMelting(Items.SNOW_BLOCK, Fluids.WATER, 1000, 305);
@@ -237,8 +260,9 @@ public final class SmelteryRecipes {
                 new ItemStack(com.gctn.tconstruct.tools.ToolSupplies.item("blazing_bone")), 12, true, false));
         alloy("obsidian", 36, new FluidStack(Fluids.WATER, 125), new FluidStack(Fluids.LAVA, 125));
         alloy("clay", 144, fluid("stone", 72), fluid("dirt", 144), new FluidStack(Fluids.WATER, 250));
-        alloy("pigiron", 144, fluid("iron", 144), fluid("blood", 40), fluid("clay", 72));
+        // 骑士史莱姆与生铁共用铁液，按怀古顺序先尝试骑士史莱姆。
         alloy("knightslime", 72, fluid("iron", 72), fluid("purpleslime", 125), fluid("stone", 144));
+        alloy("pigiron", 144, fluid("iron", 144), fluid("blood", 40), fluid("clay", 72));
         alloy("manyullyn", 2, fluid("cobalt", 2), fluid("ardite", 2));
         alloy("bronze", 4, fluid("copper", 3), fluid("tin", 1));
         alloy("electrum", 2, fluid("gold", 1), fluid("silver", 1));
@@ -253,14 +277,17 @@ public final class SmelteryRecipes {
         for (int i = MELTING.size() - 1; i >= 0; i--) {
             if (MELTING.get(i).input.test(stack)) {
                 Melting recipe = MELTING.get(i);
-                if (recipe.ore) {
-                    int amount = (int) (recipe.output.getAmount() / 2.0 * com.gctn.tconstruct.Config.ORE_TO_INGOT_RATIO.get());
+                if (recipe.ore()) {
+                    // 先计算单个粗矿的取整产量，确保打包熔炼和逐个熔炼的产量完全一致。
+                    double base = recipe.output.getAmount() / (2.0 * recipe.oreUnits());
+                    int amount = (int) (base * com.gctn.tconstruct.Config.ORE_TO_INGOT_RATIO.get()) * recipe.oreUnits();
                     return melting(recipe.input, recipe.output.getFluid(), amount);
                 }
                 return recipe;
             }
         }
-        return AUTOMATIC_MELTING.get(stack.getItem());
+        Melting inferred = AUTOMATIC_MELTING.get(stack.getItem());
+        return inferred != null && inferred.input.test(stack) ? inferred : null;
     }
 
     public static Fuel fuel(FluidStack stack) {
@@ -288,7 +315,15 @@ public final class SmelteryRecipes {
         for (int i = CASTING.size() - 1; i >= 0; i--) {
             Casting recipe = CASTING.get(i);
             if (recipe.basin == basin && recipe.fluid == fluid && recipe.cast.test(cast)) {
-                return recipe;
+                StandardCast standard = STANDARD_CASTS.get(recipe);
+                if (standard == null) { return recipe; }
+                // 标准铸模的标签产物会随数据包重载改变。显式浇铸配方仍保留注册时的优先级。
+                ItemStack output = preferred(standard.material, standard.form);
+                if (!output.isEmpty()) {
+                    return ItemStack.matches(recipe.output, output) ? recipe
+                            : new Casting(recipe.basin, recipe.cast, recipe.fluid, recipe.amount, output,
+                                    recipe.time, recipe.consumeCast, recipe.switchOutputs);
+                }
             }
         }
         if (!basin && (fluid == SmelteryFluids.get("gold") || fluid == SmelteryFluids.get("alubrass") || fluid == SmelteryFluids.get("brass"))) {
@@ -318,7 +353,18 @@ public final class SmelteryRecipes {
     private static boolean isNamed(ItemStack stack, String material, String suffix) {
         ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         return id.getPath().equals(material + "_" + suffix) || id.getPath().equals("deepslate_" + material + "_" + suffix)
-                || suffix.equals("raw") && id.getPath().equals("raw_" + material);
+                || suffix.equals("raw") && id.getPath().equals("raw_" + material)
+                || suffix.equals("raw_block") && id.getPath().equals("raw_" + material + "_block");
+    }
+
+    private static void addCopperVariants(Block base, int amount) {
+        var copper = SmelteryFluids.get("copper");
+        var waxable = HoneycombItem.WAXABLES.get();
+        for (Block block = base; block != null; block = WeatheringCopper.getNext(block).orElse(null)) {
+            addMelting(block.asItem(), copper, amount);
+            Block waxed = waxable.get(block);
+            if (waxed != null) { addMelting(waxed.asItem(), copper, amount); }
+        }
     }
 
     private static ItemStack preferred(String material, String suffix) {
@@ -337,10 +383,14 @@ public final class SmelteryRecipes {
             default -> "";
         };
         if (!tag.isEmpty()) {
-            var items = BuiltInRegistries.ITEM.getTag(TagKey.create(net.minecraft.core.registries.Registries.ITEM,
-                    ResourceLocation.fromNamespaceAndPath("c", tag + "/" + material)));
-            if (items.isPresent() && items.get().size() > 0) {
-                return new ItemStack(items.get().get(0).value());
+            var key = TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                    ResourceLocation.fromNamespaceAndPath("c", tag + "/" + material));
+            var items = BuiltInRegistries.ITEM.getTag(key);
+            if (items.isPresent()) {
+                // 1.21.1 重载后可能仍保留已删除标签的集合，持有者的成员关系才会被重绑。
+                for (var holder : items.get()) {
+                    if (holder.is(key)) { return new ItemStack(holder.value()); }
+                }
             }
         }
         return ItemStack.EMPTY;
@@ -395,10 +445,14 @@ public final class SmelteryRecipes {
         ALLOYS.add(new Alloy(fluid(name, amount), List.of(inputs)));
     }
 
-    public record Melting(Predicate<ItemStack> input, FluidStack output, int temperature, boolean ore) {
+    public record Melting(Predicate<ItemStack> input, FluidStack output, int temperature, int oreUnits) {
+        public Melting(Predicate<ItemStack> input, FluidStack output, int temperature, boolean ore) {
+            this(input, output, temperature, ore ? 1 : 0);
+        }
         public Melting(Predicate<ItemStack> input, FluidStack output, int temperature) {
             this(input, output, temperature, false);
         }
+        public boolean ore() { return oreUnits > 0; }
         public int heat() {
             return Math.max(5, temperature - 300);
         }
@@ -445,5 +499,8 @@ public final class SmelteryRecipes {
     }
 
     private record Form(String tag, int amount, String suffix) {
+    }
+
+    private record StandardCast(String material, String form) {
     }
 }

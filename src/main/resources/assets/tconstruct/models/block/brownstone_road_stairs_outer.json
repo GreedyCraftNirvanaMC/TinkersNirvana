@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/outer_stairs",
-  "textures": {
-    "bottom": "tconstruct:block/brownstone/road",
-    "top": "tconstruct:block/brownstone/road",
-    "side": "tconstruct:block/brownstone/road"
-  }
-}

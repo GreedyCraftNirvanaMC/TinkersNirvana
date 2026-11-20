@@ -83,7 +83,7 @@ public class RackBlockEntity extends BaseContainerBlockEntity {
         super.setChanged();
         if (level != null && !level.isClientSide && !isRemoved()) { level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3); level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock()); }
     }
-    @Override protected Component getDefaultName() { return Component.translatable(drying() ? "block.tconstruct.drying_rack" : "block.tconstruct.item_rack"); }
+    @Override protected Component getDefaultName() { return Component.translatable(drying() ? "block.tconsnirvana.drying_rack" : "block.tconsnirvana.item_rack"); }
     @Override protected AbstractContainerMenu createMenu(int id, Inventory inventory) { return null; }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries); items = NonNullList.withSize(2, ItemStack.EMPTY); ContainerHelper.loadAllItems(tag, items, registries);

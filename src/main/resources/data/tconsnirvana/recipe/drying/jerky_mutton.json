@@ -1,0 +1,10 @@
+{
+  "type": "tconsnirvana:drying",
+  "ingredient": {
+    "item": "minecraft:mutton"
+  },
+  "result": {
+    "id": "tconsnirvana:jerky_mutton"
+  },
+  "time": 6000
+}

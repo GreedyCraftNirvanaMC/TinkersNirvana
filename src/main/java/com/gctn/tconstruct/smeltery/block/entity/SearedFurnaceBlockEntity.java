@@ -24,6 +24,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
@@ -45,6 +46,7 @@ public class SearedFurnaceBlockEntity extends BaseContainerBlockEntity implement
     private NonNullList<ItemStack> items = NonNullList.create();
     private int[] heat = new int[0];
     private int[] required = new int[0];
+    private RecipeManager recipes;
     private SearedFurnaceStructure structure;
     private Set<BlockPos> members = Set.of();
     private BlockPos min;
@@ -69,6 +71,7 @@ public class SearedFurnaceBlockEntity extends BaseContainerBlockEntity implement
     }
 
     public void tick() {
+        refreshRecipes();
         if (needsCheck || tick == 0 && (!active() || ++fullCheck >= 15)) {
             needsCheck = false;
             fullCheck = 0;
@@ -176,16 +179,43 @@ public class SearedFurnaceBlockEntity extends BaseContainerBlockEntity implement
                 .map(recipe -> recipe.value().assemble(input, level.registryAccess())).orElse(ItemStack.EMPTY);
     }
 
+    private void refreshRecipes() {
+        RecipeManager current = level.getRecipeManager();
+        if (recipes == current) {
+            return;
+        }
+        recipes = current;
+        // 数据包重载会换掉配方管理器，重新检查现有输入，同时保留已出炉的物品。
+        for (int slot = 0; slot < items.size(); slot++) {
+            int previous = required[slot];
+            int previousHeat = heat[slot];
+            if (previousHeat == 1 && previous == 0) {
+                continue;
+            }
+            updateRequired(slot);
+            if (required[slot] != previous && heat[slot] != -1) {
+                heat[slot] = 0;
+            }
+            if (previous != required[slot] || previousHeat != heat[slot]) {
+                changed();
+            }
+        }
+    }
+
     private void updateRequired(int slot) {
         ItemStack stack = items.get(slot);
         ItemStack output = result(stack);
         required[slot] = 0;
         if (output.isEmpty()) {
+            heat[slot] = 0;
             return;
         }
         if ((long) output.getCount() * stack.getCount() > Math.min(16, output.getMaxStackSize())) {
             heat[slot] = -1;
             return;
+        }
+        if (heat[slot] < 0) {
+            heat[slot] = 0;
         }
         // 原版以 200 刻为基准，整批时间按数量缩放；食物另外加快 20%。
         int time = (int) (200 * stack.getCount() / 4.0F * (output.has(DataComponents.FOOD) ? 0.8F : 1.0F));
@@ -415,6 +445,7 @@ public class SearedFurnaceBlockEntity extends BaseContainerBlockEntity implement
         SmelteryInventory.load(tag, items, registries);
         heat = Arrays.copyOf(tag.getIntArray("Heat"), size);
         required = Arrays.copyOf(tag.getIntArray("Required"), size);
+        recipes = null;
         active = tag.getBoolean("Active");
         heating = tag.getBoolean("Heating");
         fuel = Math.max(0, tag.getInt("Fuel"));

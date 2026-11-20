@@ -1,5 +1,6 @@
 package com.gctn.tconstruct.api;
 
+import com.gctn.tconstruct.TinkersNirvana;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -17,7 +18,10 @@ public final class ContentNames {
 
     public static String traitId(String id) {
         ResourceLocation key = ResourceLocation.parse(id);
-        String namespace = id.contains(":") ? key.getNamespace() : "tconstruct";
+        String namespace = key.getNamespace();
+        if (!id.contains(":") || namespace.equals("tconstruct")) {
+            namespace = TinkersNirvana.MODID;
+        }
         return namespace + ":" + key.getPath();
     }
 }

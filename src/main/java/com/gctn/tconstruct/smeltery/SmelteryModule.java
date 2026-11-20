@@ -133,7 +133,7 @@ public final class SmelteryModule {
                     .networkSynchronized(net.neoforged.neoforge.fluids.SimpleFluidContent.STREAM_CODEC));
     private static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TinkersNirvana.MODID);
     public static final Supplier<CreativeModeTab> TAB = TABS.register("smeltery", () -> CreativeModeTab.builder()
-            .title(Component.translatable("tab.tconstruct.smeltery")).icon(() -> TANK.get().asItem().getDefaultInstance())
+            .title(Component.translatable("tab.tconsnirvana.smeltery")).icon(() -> TANK.get().asItem().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 BLOCKS.values().forEach(block -> output.accept(block.get()));
                 SEARED_SHAPES.values().forEach(block -> output.accept(block.get()));

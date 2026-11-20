@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconsnirvana:block/dried_clay_slab"
+    },
+    "type=double": {
+      "model": "tconsnirvana:block/dried_clay"
+    },
+    "type=top": {
+      "model": "tconsnirvana:block/dried_clay_slab_top"
+    }
+  }
+}

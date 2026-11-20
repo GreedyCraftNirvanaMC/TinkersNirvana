@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "tconsnirvana:seared_stairs",
+  "pattern": [
+    "A  ",
+    "AA ",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconsnirvana:seared_brick_small"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:seared_brick_small_stairs",
+    "count": 4
+  }
+}

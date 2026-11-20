@@ -33,12 +33,18 @@ public final class TinkerEffects {
         @Override public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) { return duration % 2 == 0; }
         @Override public boolean applyEffectTick(LivingEntity entity, int amplifier) {
             if (entity.level().isClientSide) { return true; }
-            int count = 0;
-            for (ItemEntity item : entity.level().getEntitiesOfClass(ItemEntity.class, entity.getBoundingBox().inflate(1.8 + amplifier * .3))) {
-                if (++count > 200) { break; }
-                if (item.hasPickUpDelay() || item.getItem().isEmpty()) { continue; }
+            int pulled = 0;
+            double range = 1.8 + amplifier * .3;
+            var area = new net.minecraft.world.phys.AABB(entity.position(), entity.position()).inflate(range);
+            for (ItemEntity item : entity.level().getEntitiesOfClass(ItemEntity.class, area)) {
+                if (pulled > 200) { break; }
+                if (!item.isAlive() || item.getItem().isEmpty()) { continue; }
                 Vec3 direction = entity.position().subtract(item.position());
-                if (direction.lengthSqr() > .05) { item.setDeltaMovement(item.getDeltaMovement().add(direction.normalize().scale(.07))); }
+                if (direction.lengthSqr() > .05) {
+                    // 拾取延迟由原版处理，怀古会在这段时间内照常吸引掉落物。
+                    item.setDeltaMovement(item.getDeltaMovement().add(direction.normalize().scale(.07)));
+                    pulled++;
+                }
             }
             return true;
         }

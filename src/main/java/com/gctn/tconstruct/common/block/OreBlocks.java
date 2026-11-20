@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class OreBlocks {
-    public static final DeferredBlock<Block> COPPER_ORE = commonOre("copper");
     public static final DeferredBlock<Block> TIN_ORE = commonOre("tin");
     public static final DeferredBlock<Block> ALUMINUM_ORE = commonOre("aluminum");
     // 旧版 setHardness 同时保证抗爆强度至少等于硬度，下界矿石的两项数值均为十。
@@ -28,7 +27,7 @@ public class OreBlocks {
 
     public static Collection<DeferredBlock<?>> entries() {
         return List.of(
-                COBALT_ORE, ARDITE_ORE, COPPER_ORE, TIN_ORE, ALUMINUM_ORE
+                COBALT_ORE, ARDITE_ORE, TIN_ORE, ALUMINUM_ORE
         );
     }
 

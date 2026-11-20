@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "A A",
+    "A A"
+  ],
+  "key": {
+    "A": {
+      "item": "tconsnirvana:seared_brick"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:casting_table",
+    "count": 1
+  }
+}

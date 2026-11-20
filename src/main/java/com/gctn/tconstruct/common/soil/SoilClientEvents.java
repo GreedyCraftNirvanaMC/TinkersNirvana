@@ -13,7 +13,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
-/** 蓝色与熔岩泥泞的原版提示共用绿色泥泞的说明，使用真正的翻译键解析。 */
+/** 土壤的物品提示按当前方块行为显示。 */
 @EventBusSubscriber(modid = TinkersNirvana.MODID, value = Dist.CLIENT)
 public final class SoilClientEvents {
     private SoilClientEvents() {
@@ -26,9 +26,12 @@ public final class SoilClientEvents {
                 case GROUT -> "grout";
                 case GRAVEYARD -> "graveyard";
                 case CONSECRATED -> "consecrated";
-                default -> "slimy_mud";
+                case SLIMY_MUD_GREEN, SLIMY_MUD_BLUE -> "slimy_mud";
+                case SLIMY_MUD_MAGMA -> null;
             };
-            event.getToolTip().add(Component.translatable("tooltip.tconstruct.soil." + key).withStyle(ChatFormatting.GRAY));
+            if (key != null) {
+                event.getToolTip().add(Component.translatable("tooltip.tconsnirvana.soil." + key).withStyle(ChatFormatting.GRAY));
+            }
         }
     }
 }

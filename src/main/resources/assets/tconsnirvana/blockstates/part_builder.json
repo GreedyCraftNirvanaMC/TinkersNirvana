@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "tconsnirvana:block/part_builder",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "tconsnirvana:block/part_builder",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "tconsnirvana:block/part_builder",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "tconsnirvana:block/part_builder",
+      "y": 270
+    }
+  }
+}

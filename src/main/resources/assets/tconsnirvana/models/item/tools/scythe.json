@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/scythe/handle",
+    "layer1": "tconsnirvana:item/antique/scythe/head",
+    "layer2": "tconsnirvana:item/antique/scythe/binding",
+    "layer3": "tconsnirvana:item/antique/scythe/accessory"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconsnirvana:broken": 1
+      },
+      "model": "tconsnirvana:item/tools/scythe_broken"
+    }
+  ]
+}

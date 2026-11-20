@@ -1,0 +1,20 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tconsnirvana:item/gadgets/moms_spaghetti"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconsnirvana:seasoning": 1
+      },
+      "model": "tconsnirvana:item/moms_spaghetti_sauce"
+    },
+    {
+      "predicate": {
+        "tconsnirvana:seasoning": 2
+      },
+      "model": "tconsnirvana:item/moms_spaghetti_meat"
+    }
+  ]
+}

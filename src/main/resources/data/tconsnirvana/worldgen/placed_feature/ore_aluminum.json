@@ -1,0 +1,12 @@
+{
+  "feature": "tconsnirvana:ore_aluminum",
+  "placement": [
+    {
+      "type": "tconsnirvana:antique_height",
+      "setting": "aluminum"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

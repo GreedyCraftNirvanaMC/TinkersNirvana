@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "tconsnirvana:brownstone_creeper_stairs",
+    "count": 4
+  },
+  "group": "tconsnirvana:brownstone_stairs",
+  "pattern": [
+    "A  ",
+    "AA ",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconsnirvana:brownstone_creeper"
+    }
+  }
+}

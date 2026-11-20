@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:alubrass_nugget"
+    },
+    {
+      "item": "tconsnirvana:alubrass_nugget"
+    },
+    {
+      "item": "tconsnirvana:alubrass_nugget"
+    },
+    {
+      "item": "tconsnirvana:alubrass_nugget"
+    },
+    {
+      "item": "tconsnirvana:alubrass_nugget"
+    },
+    {
+      "item": "tconsnirvana:alubrass_nugget"
+    },
+    {
+      "item": "tconsnirvana:alubrass_nugget"
+    },
+    {
+      "item": "tconsnirvana:alubrass_nugget"
+    },
+    {
+      "item": "tconsnirvana:alubrass_nugget"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:alubrass_ingot"
+  }
+}

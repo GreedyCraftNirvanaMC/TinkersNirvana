@@ -26,14 +26,14 @@ the current transaction. A rising redstone signal also activates the faucet.
 Basins cast blocks. Tables cast ingots, nuggets, gems, and the tool parts already
 provided by this project. Pour gold, aluminum brass, or brass over a suitable item
 or part to create a reusable cast. Clay can create disposable tool-part casts.
-Casting blocks accept hopper input and allow completed outputs to be extracted.
+Casting blocks accept hopper input and allow completed outputs to be extracted. Fluid handlers can also drain liquid before a casting finishes.
 Seared tanks retain their fluid when broken and can also hold fluid as items.
 
 Channels route fluid downward first, then split it among their side outputs.
 Click an arm to cycle its direction; Shift-click cycles backward. Click the center
 to toggle the bottom output. Attached levers/buttons can control the bottom gate.
 
-Configuration is in `config/tconstruct-common.toml`, under `[smeltery]`:
+Configuration is in `config/tconsnirvana-common.toml`, under `[smeltery]`:
 
 | Key | Default |
 | --- | --- |
@@ -53,6 +53,8 @@ Configuration is in `config/tconstruct-common.toml`, under `[smeltery]`:
 when deriving melting recipes from crafting ingredients. Its defaults allow
 wood, sticks, string, redstone, and chests to be omitted, matching Antique's
 crafting-to-melting scan. Derived recipes are rebuilt after datapack reloads.
+Automatic melting requires every crafting route and ingredient alternative to yield
+the same fluid and amount per item. Explicit melting recipes take precedence.
 
 For mod integrations, initialize `SmelteryRecipes` after item/fluid registration,
 then append melting, casting, fuel, alloy, or entity-melting entries to its public

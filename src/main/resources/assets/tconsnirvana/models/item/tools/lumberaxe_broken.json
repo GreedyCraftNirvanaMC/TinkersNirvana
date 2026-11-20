@@ -1,0 +1,9 @@
+{
+  "parent": "tconsnirvana:item/tools/lumberaxe",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/lumberaxe/handle",
+    "layer1": "tconsnirvana:item/antique/lumberaxe/broken_head",
+    "layer2": "tconsnirvana:item/antique/lumberaxe/shield",
+    "layer3": "tconsnirvana:item/antique/lumberaxe/binding"
+  }
+}

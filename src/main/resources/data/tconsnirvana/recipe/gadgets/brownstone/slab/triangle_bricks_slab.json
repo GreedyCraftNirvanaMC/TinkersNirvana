@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "tconsnirvana:brownstone_brick_triangle_slab",
+    "count": 6
+  },
+  "group": "tconsnirvana:brownstone_slab",
+  "pattern": [
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconsnirvana:brownstone_brick_triangle"
+    }
+  }
+}

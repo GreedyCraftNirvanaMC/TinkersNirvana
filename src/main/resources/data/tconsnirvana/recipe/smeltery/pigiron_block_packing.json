@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:pigiron_ingot"
+    },
+    {
+      "item": "tconsnirvana:pigiron_ingot"
+    },
+    {
+      "item": "tconsnirvana:pigiron_ingot"
+    },
+    {
+      "item": "tconsnirvana:pigiron_ingot"
+    },
+    {
+      "item": "tconsnirvana:pigiron_ingot"
+    },
+    {
+      "item": "tconsnirvana:pigiron_ingot"
+    },
+    {
+      "item": "tconsnirvana:pigiron_ingot"
+    },
+    {
+      "item": "tconsnirvana:pigiron_ingot"
+    },
+    {
+      "item": "tconsnirvana:pigiron_ingot"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:pigiron_block"
+  }
+}

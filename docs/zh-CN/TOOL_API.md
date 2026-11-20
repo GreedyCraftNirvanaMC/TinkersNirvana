@@ -2,13 +2,13 @@
 
 [首页](../../README.zh-CN.md) · [KubeJS](KUBEJS.md) · [English](../en/TOOL_API.md)
 
-附属使用 Minecraft 1.21.1、NeoForge 和 JDK 21。将本模组 JAR 作为编译及开发运行依赖，例如在附属的 Gradle 工程中使用 `implementation files('libs/TinkersNirvana-1.21.1-1.0.4.jar')`。在附属的 `neoforge.mods.toml` 声明对模组 ID `tconstruct` 的必需依赖。Java 接口位于 `com.gctn.tconstruct.api`，可独立于 KubeJS 使用。
+附属使用 Minecraft 1.21.1、NeoForge 和 JDK 21。将本模组 JAR 作为编译及开发运行依赖，例如在附属的 Gradle 工程中使用 `implementation files('libs/TinkersNirvana-1.21.1-1.0.5.jar')`。在附属的 `neoforge.mods.toml` 声明对模组 ID `tconsnirvana` 的必需依赖。Java 接口位于 `com.gctn.tconstruct.api`，可独立于 KubeJS 使用。
 
 开发工程的依赖示例。
 
 ```groovy
 dependencies {
-    implementation files('libs/TinkersNirvana-1.21.1-1.0.4.jar')
+    implementation files('libs/TinkersNirvana-1.21.1-1.0.5.jar')
 }
 ```
 
@@ -16,9 +16,9 @@ dependencies {
 
 ```toml
 [[dependencies.exampleaddon]]
-modId = "tconstruct"
+modId = "tconsnirvana"
 type = "required"
-versionRange = "[1.21.1-1.0.4,)"
+versionRange = "[1.21.1-1.0.5,)"
 ordering = "AFTER"
 side = "BOTH"
 ```
@@ -74,16 +74,16 @@ public final class ExampleAddon {
 ## 修改与删除
 
 ```java
-var previous = TinkerTraits.getTrait("tconstruct:fractured");
+var previous = TinkerTraits.getTrait("tconsnirvana:fractured");
 var replacement = new TraitDefinition(previous.identifier, previous)
         .replaceHandler("modifyStats", ctx -> ctx.stats.attack += 3);
 TinkerTraits.replaceTrait(replacement);
 
-TinkerTraits.removeTrait("tconstruct:slimey_blue");
+TinkerTraits.removeTrait("tconsnirvana:slimey_blue");
 
 var wood = com.gctn.tconstruct.library.TinkerMaterials.getMaterial("wood");
 new MaterialDefinition(wood)
-        .removeTrait("tconstruct:ecological")
+        .removeTrait("tconsnirvana:ecological")
         .addTrait("exampleaddon:edge", 1)
         .install();
 ```
@@ -130,4 +130,8 @@ if (ToolUpgradeApi.tryUpgrade(toolStack)) {
 
 `TinkerContent` 保留材料原料、属性、词条、强化原料、原生属性、斩首掉落和浇铸注册入口。调用 `castingMaterial(material, fluidId)` 将材料绑定到已有流体；服务器启动时会安装对应规则。
 
-自定义强化使用 `ToolModifiers.Definition` 和 `ToolModifiers.register`；强化原料可通过 `TinkerContent.modifierItem`、`modifierTag` 注册。原生晾晒配方使用配方类型 `tconstruct:drying`，包含 `ingredient`、`result`、`time`。其它扩展应复用已有原生配方和组件，保持配方管理器的重载流程。
+自定义强化使用 `ToolModifiers.Definition` 和 `ToolModifiers.register`；强化原料可通过 `TinkerContent.modifierItem`、`modifierTag` 注册。原生晾晒配方使用配方类型 `tconsnirvana:drying`，包含 `ingredient`、`result`、`time`。其它扩展应复用已有原生配方和组件，保持配方管理器的重载流程。
+
+## 查询冶炼与浇铸结果
+
+在逻辑服务端调用 `SmelteryApi.meltingOutput(input)`，可按当前配方、标签和矿物倍率查询单件输入的流体产量。`SmelteryApi.castingOutput(basin, cast, fluid)` 在流体充足时返回浇铸产物。使用铸造盆时传入 `true`，无铸模时传入 `ItemStack.EMPTY`。两种方法都返回独立副本，无法加工时返回空堆叠，查询不会消耗输入。

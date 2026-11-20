@@ -1,6 +1,7 @@
 package com.gctn.tconstruct.client.tools.tooltips;
 
 import com.gctn.tconstruct.TinkersNirvana;
+import com.gctn.tconstruct.client.tools.AntiqueToolClient;
 import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.Material;
@@ -8,6 +9,7 @@ import com.gctn.tconstruct.library.stats.HeadMaterialStats;
 import com.gctn.tconstruct.library.utils.HarvestLevels;
 import com.gctn.tconstruct.library.utils.ToolHelper;
 import com.gctn.tconstruct.tools.TinkerTools;
+import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.client.gui.screens.Screen;
@@ -56,16 +58,16 @@ public class PickaxeTips {
         var assembled = com.gctn.tconstruct.tools.ToolBuilder.savedStats(stack);
         if (Screen.hasShiftDown()) {
             Component durabilityTip = TinkerTools.getDurabilityTip(stack);
-            Component miningLevelTip = Component.translatable("tooltip.tconstruct.tool.mininglevel",
+            Component miningLevelTip = Component.translatable("tooltip.tconsnirvana.tool.mininglevel",
                     HarvestLevels.getHarvestLevelName(assembled.isEmpty() ? headStats.harvestLevel : assembled.getInt("HarvestLevel"))
             ).withColor(0xFFAAAAAA);
-            Component miningSpeedTip = Component.translatable("tooltip.tconstruct.tool.miningspeed",
+            Component miningSpeedTip = Component.translatable("tooltip.tconsnirvana.tool.miningspeed",
                     Component.literal(String.valueOf(assembled.isEmpty() ? headStats.miningspeed : assembled.getFloat("MiningSpeed"))).withColor(0xFF78A0CD)
             ).withColor(0xFFAAAAAA);
-            Component attackTip = Component.translatable("tooltip.tconstruct.tool.attack",
+            Component attackTip = Component.translatable("tooltip.tconsnirvana.tool.attack",
                     Component.literal(String.valueOf(assembled.isEmpty() ? headStats.attack : assembled.getFloat("Attack"))).withColor(0xFFD76464)
             ).withColor(0xFFAAAAAA);
-            Component modifiersTip = Component.translatable("tooltip.tconstruct.tool.modifiers",
+            Component modifiersTip = Component.translatable("tooltip.tconsnirvana.tool.modifiers",
                     ((TinkerTools) stack.getItem()).getAvailableModifierSlots(stack)
             ).withColor(0xFFAAAAAA);
             upperTips.add(Either.left(durabilityTip));
@@ -74,7 +76,8 @@ public class PickaxeTips {
             upperTips.add(Either.left(attackTip));
             upperTips.add(Either.left(modifiersTip));
         } else if (Screen.hasControlDown()) {
-            // TODO 按下Ctrl时显示详细信息
+            AntiqueToolClient.appendComponentDetails(stack, ((AntiqueTool) stack.getItem()).definition(),
+                    component -> upperTips.add(Either.left(component)));
         } else if (Screen.hasAltDown()) {
             for (ToolTraits.Entry entry : ToolTraits.getTraits(stack)) {
                 if (!entry.trait().getDescription().getString().isBlank()) { upperTips.add(Either.left(entry.trait().getDescription())); }
@@ -82,7 +85,7 @@ public class PickaxeTips {
         } else {
             upperTips.add(Either.left(TinkerTools.shiftTip));
             upperTips.add(Either.left(TinkerTools.controlTip));
-            upperTips.add(Either.left(Component.translatable("tooltip.tconstruct.hold_for_traits", "Alt")
+            upperTips.add(Either.left(Component.translatable("tooltip.tconsnirvana.hold_for_traits", "Alt")
                     .withColor(0xFFAAAAAA)));
         }
         if (ToolHelper.hasCreativeTabTip(tooltip, stack)) {

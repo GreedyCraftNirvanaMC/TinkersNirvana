@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/item_frame_map",
+  "textures": {
+    "wood": "tconsnirvana:block/block_ardite",
+    "back": "tconsnirvana:block/gadgets/frame_background",
+    "particle": "#wood"
+  }
+}

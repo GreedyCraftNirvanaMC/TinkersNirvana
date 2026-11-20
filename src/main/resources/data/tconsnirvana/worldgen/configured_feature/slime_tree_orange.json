@@ -1,0 +1,12 @@
+{
+  "type": "tconsnirvana:slime_tree",
+  "config": {
+    "trunk": {
+      "Name": "tconsnirvana:slime_congealed_magma"
+    },
+    "leaves": {
+      "Name": "tconsnirvana:slime_leaves_orange"
+    },
+    "seek_height": false
+  }
+}

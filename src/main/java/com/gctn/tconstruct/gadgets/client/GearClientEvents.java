@@ -46,6 +46,6 @@ public final class GearClientEvents {
     @SubscribeEvent private static void tooltip(ItemTooltipEvent event) {
         var item = event.getItemStack().getItem();
         String key = item instanceof SlimeSlingItem ? "slimesling" : item instanceof SlimeBootsItem ? "slime_boots" : item instanceof PiggybackItem ? "piggybackpack" : null;
-        if (key != null) { event.getToolTip().add(Component.translatable("tooltip.tconstruct." + key).withStyle(ChatFormatting.GRAY)); }
+        if (key != null) { event.getToolTip().add(Component.translatable("tooltip.tconsnirvana." + key).withStyle(ChatFormatting.GRAY)); }
     }
 }

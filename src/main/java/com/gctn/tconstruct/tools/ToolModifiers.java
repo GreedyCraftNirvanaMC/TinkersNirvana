@@ -151,7 +151,7 @@ public final class ToolModifiers {
         return definition == null || units == 0 ? 0 : Math.min(definition.maxLevel(), (units - 1) / definition.unitsPerLevel() + 1);
     }
     public static int usedSlots(ItemStack tool) {
-        return (int) Math.min(Integer.MAX_VALUE, MODIFIERS.keySet().stream().filter(id -> !java.util.Set.of("creative", "endearment", "incognito", "beheading").contains(id))
+        return (int) Math.min(Integer.MAX_VALUE, MODIFIERS.keySet().stream().filter(id -> !java.util.Set.of("creative", "endearment", "incognito").contains(id))
                 .mapToLong(id -> id.equals("luck") || id.equals("blasting") ? (units(tool, id) > 0 ? 1 : 0) : level(tool, id)).sum());
     }
 
@@ -183,9 +183,10 @@ public final class ToolModifiers {
             }
         }
         if (!changed) {
+            boolean[] grouped = new boolean[6];
             for (int slot = 1; slot < 6; slot++) {
                 ItemStack input = container.getItem(slot);
-                if (input.isEmpty()) { continue; }
+                if (input.isEmpty() || grouped[slot]) { continue; }
                 Definition match = MODIFIERS.values().stream().filter(definition -> ingredientValue(definition, input) > 0).findFirst().orElse(null);
                 if (match == null) { return null; }
                 int current = modifiers.getInt(match.id());
@@ -193,15 +194,43 @@ public final class ToolModifiers {
                 int capacity = match.id().equals("luck") ? 360 : match.maxLevel() * match.unitsPerLevel();
                 var staged = source.copyWithCount(1); var stagedData = material.copy(); stagedData.put("Modifiers", modifiers.copy()); staged.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(stagedData));
                 int free = item.getTotalModifierSlots(staged) - usedSlots(staged);
-                if (!java.util.Set.of("creative", "endearment", "incognito", "beheading").contains(match.id())) {
+                if (!java.util.Set.of("creative", "endearment", "incognito").contains(match.id())) {
                     if (match.id().equals("luck") || match.id().equals("blasting")) { if (current == 0 && free <= 0) { return null; } }
                     else { capacity = (int) Math.min(capacity, Math.max(0L, (long) level(staged, match.id()) + free) * match.unitsPerLevel()); }
                 }
                 int value = ingredientValue(match, input);
+                if (match.id().equals("blasting") || match.id().equals("fins")) {
+                    // 整级强化合计各槽的材料，取走产物时只扣除完成整级所需的数量。
+                    int needed = capacity - current;
+                    int[] values = new int[6];
+                    long available = 0;
+                    for (int other = slot; other < 6; other++) {
+                        if (grouped[other]) { continue; }
+                        ItemStack stack = container.getItem(other);
+                        int otherValue = stack.isEmpty() ? 0 : ingredientValue(match, stack);
+                        if (otherValue > 0) {
+                            values[other] = otherValue;
+                            grouped[other] = true;
+                            available += (long) otherValue * stack.getCount();
+                        }
+                    }
+                    int add = (int) Math.min(needed, available);
+                    add -= (current + add) % match.unitsPerLevel();
+                    if (add <= 0) { return null; }
+                    int remaining = add;
+                    for (int other = slot; other < 6 && remaining > 0; other++) {
+                        int otherValue = values[other];
+                        if (otherValue == 0) { continue; }
+                        ItemStack stack = container.getItem(other);
+                        counts[other] = (int) Math.min(stack.getCount(), ((long) remaining + otherValue - 1) / otherValue);
+                        remaining -= counts[other] * otherValue;
+                    }
+                    modifiers.putInt(match.id(), current + add);
+                    changed = true;
+                    continue;
+                }
                 int consumed = (int) Math.min(input.getCount(), ((long) Math.max(0, capacity - current) + value - 1) / value);
                 int add = (int) Math.min(Math.max(0, capacity - current), (long) consumed * value);
-                if (match.id().equals("blasting")) { add -= add % 3; }
-                if (match.id().equals("fins")) { add -= add % 2; }
                 if (add <= 0) { return null; }
                 counts[slot] = (int) (((long) add + value - 1) / value);
                 modifiers.putInt(match.id(), current + add);
@@ -211,10 +240,11 @@ public final class ToolModifiers {
         if (!changed || (modifiers.getInt("silktouch") > 0 && modifiers.getInt("luck") > 0)
                 || (AntiqueTraits.has(source, "squeaky") && (modifiers.getInt("luck") > 0 || modifiers.getInt("silktouch") > 0))) { return null; }
         if (modifiers.getInt("blasting") > 0 && (item.definition().effectiveBlocks().isEmpty() || modifiers.getInt("luck") > 0
-                || modifiers.getInt("silktouch") > 0 || AntiqueTraits.has(source, "squeaky"))) { return null; }
+                || modifiers.getInt("silktouch") > 0 || modifiers.getInt("autosmelt") > 0
+                || AntiqueTraits.has(source, "squeaky") || AntiqueTraits.has(source, "autosmelt"))) { return null; }
         if (modifiers.getInt("fins") > 0 && !item.isAmmo()) { return null; }
         if ((modifiers.getInt("harvestwidth") > 0 || modifiers.getInt("harvestheight") > 0)
-                && switch (item.definition().action()) { case HAMMER, EXCAVATOR, LUMBERAXE, SCYTHE -> false; default -> true; }) { return null; }
+                && !ToolHarvest.supportsExpanders(item.definition().action())) { return null; }
         material.put("Modifiers", modifiers);
         result.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(material));
         if (((TinkerTools) result.getItem()).getTotalModifierSlots(result) < usedSlots(result)) { return null; }
@@ -231,12 +261,23 @@ public final class ToolModifiers {
         int pearl = find(container, stack -> stack.is(Items.ENDER_PEARL));
         int obsidian = find(container, stack -> stack.is(Items.OBSIDIAN));
         int eye = find(container, stack -> stack.is(Items.ENDER_EYE));
-        int dust = find(container, stack -> stack.is(Items.GLOWSTONE_DUST) && stack.getCount() >= 2);
-        if (pearl >= 0 && obsidian >= 0 && level(source, "beheading") < 10) {
+        int dustNeeded = 2;
+        if (eye >= 0 && units(source, "glowing") == 0) {
+            for (int slot = 1; slot < 6 && dustNeeded > 0; slot++) {
+                ItemStack stack = container.getItem(slot);
+                if (stack.is(Items.GLOWSTONE_DUST)) {
+                    counts[slot] = Math.min(stack.getCount(), dustNeeded);
+                    dustNeeded -= counts[slot];
+                }
+            }
+        }
+        if (pearl >= 0 && obsidian >= 0 && level(source, "beheading") < (item.definition().action() == ToolDefinition.Action.CLEAVER ? 8 : 10)) {
+            java.util.Arrays.fill(counts, 0);
             counts[pearl] = 1; counts[obsidian] = 1; id = "beheading";
-        } else if (eye >= 0 && dust >= 0 && units(source, "glowing") == 0) {
-            counts[eye] = 1; counts[dust] = 2; id = "glowing";
+        } else if (dustNeeded == 0) {
+            counts[eye] = 1; id = "glowing";
         } else {
+            java.util.Arrays.fill(counts, 0);
             int partSlot = find(container, stack -> AntiqueParts.get(stack) != null);
             int green = find(container, stack -> stack.is(com.gctn.tconstruct.common.soil.SoilModule.CRYSTALS.get("green").get()));
             int blue = find(container, stack -> stack.is(com.gctn.tconstruct.common.soil.SoilModule.CRYSTALS.get("blue").get()));
@@ -263,7 +304,7 @@ public final class ToolModifiers {
         if (AntiqueTraits.has(result, "squeaky") && (modifiers.getInt("luck") > 0 || modifiers.getInt("silktouch") > 0)) { return null; }
         material.put("Modifiers", modifiers);
         result.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(material));
-        if (item.getTotalModifierSlots(result) < usedSlots(result)) { return null; }
+        if (!isCompatible(result)) { return null; }
         ToolBuilder.rebuild(result, item.definition());
         return new Plan(result, counts);
     }
@@ -287,7 +328,8 @@ public final class ToolModifiers {
         var modifiers = data(tool);
         if (modifiers.getInt("silktouch") > 0 && modifiers.getInt("luck") > 0) { return false; }
         if (AntiqueTraits.has(tool, "squeaky") && (modifiers.getInt("luck") > 0 || modifiers.getInt("silktouch") > 0 || modifiers.getInt("blasting") > 0)) { return false; }
-        if (modifiers.getInt("blasting") > 0 && (item.definition().effectiveBlocks().isEmpty() || modifiers.getInt("luck") > 0 || modifiers.getInt("silktouch") > 0)) { return false; }
+        if (modifiers.getInt("blasting") > 0 && (item.definition().effectiveBlocks().isEmpty() || modifiers.getInt("luck") > 0
+                || modifiers.getInt("silktouch") > 0 || modifiers.getInt("autosmelt") > 0 || AntiqueTraits.has(tool, "autosmelt"))) { return false; }
         if (modifiers.getInt("fins") > 0 && !item.isAmmo()) { return false; }
         return item.getTotalModifierSlots(tool) >= usedSlots(tool);
     }
@@ -308,8 +350,8 @@ public final class ToolModifiers {
     }
 
     public static float modifyAttack(ItemStack tool, LivingEntity attacker, LivingEntity target, float damage) {
-        if (target.getType().is(EntityTypeTags.UNDEAD)) { damage += units(tool, "smite") / 24F * 2.5F; }
-        if (target.getType().is(EntityTypeTags.ARTHROPOD)) { damage += units(tool, "bane_of_arthropods") / 24F * 2.5F; }
+        if (target.getType().is(EntityTypeTags.UNDEAD)) { damage += units(tool, "smite") / 24F * 7F; }
+        if (target.getType().is(EntityTypeTags.ARTHROPOD)) { damage += units(tool, "bane_of_arthropods") / 24F * 7F; }
         return AntiqueTraits.has(tool, "squeaky", "modifyAttack") ? 0 : damage;
     }
 
@@ -319,6 +361,28 @@ public final class ToolModifiers {
         if (units(tool, "knockback") > 0) { target.knockback(units(tool, "knockback") * .1, attacker.getX() - target.getX(), attacker.getZ() - target.getZ()); }
         if (units(tool, "shulking") > 0) { target.addEffect(new MobEffectInstance(MobEffects.LEVITATION, units(tool, "shulking") / 2 + 10)); }
         if (level(tool, "webbed") > 0) { target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, level(tool, "webbed") * 60, 1)); }
+    }
+
+    public static void rewardLuck(ItemStack tool, LivingEntity user, int attempts) {
+        int current = units(tool, "luck");
+        if (current <= 0 || current >= 360 || attempts <= 0 || user.level().isClientSide || TinkerTools.isBroken(tool)) {
+            return;
+        }
+
+        int improved = current;
+        for (int i = 0; i < attempts && improved < 360; i++) {
+            if (user.getRandom().nextFloat() <= .03F) {
+                improved++;
+            }
+        }
+        if (improved != current) {
+            var material = TinkerDataComponents.getMaterialTag(tool);
+            var modifiers = material.getCompound("Modifiers");
+            modifiers.putInt("luck", improved);
+            material.put("Modifiers", modifiers);
+            tool.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(material));
+            applyEnchantments(tool, user.registryAccess());
+        }
     }
 
     public static void afterDamage(ItemStack tool, LivingEntity attacker, float actualDamage) {

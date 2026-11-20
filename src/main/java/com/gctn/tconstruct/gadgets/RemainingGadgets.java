@@ -35,7 +35,7 @@ public final class RemainingGadgets {
     private static final DeferredRegister<BlockEntityType<?>> ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, TinkersNirvana.MODID);
     public static final Supplier<BlockEntityType<RackBlockEntity>> RACK_ENTITY = ENTITIES.register("rack", () -> BlockEntityType.Builder.of(RackBlockEntity::new, ITEM_RACK.get(), DRYING_RACK.get()).build(null));
     private static final DeferredRegister<RecipeType<?>> TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, TinkersNirvana.MODID);
-    public static final Supplier<RecipeType<DryingRecipe>> DRYING_TYPE = TYPES.register("drying", () -> new RecipeType<>() { @Override public String toString() { return "tconstruct:drying"; } });
+    public static final Supplier<RecipeType<DryingRecipe>> DRYING_TYPE = TYPES.register("drying", () -> new RecipeType<>() { @Override public String toString() { return "tconsnirvana:drying"; } });
     private static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, TinkersNirvana.MODID);
     public static final Supplier<RecipeSerializer<DryingRecipe>> DRYING_SERIALIZER = SERIALIZERS.register("drying", DryingRecipe.Serializer::new);
     static {

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "tconsnirvana:spaghetti_cold"
+  },
+  "result": {
+    "id": "tconsnirvana:moms_spaghetti"
+  },
+  "experience": 2,
+  "cookingtime": 200
+}

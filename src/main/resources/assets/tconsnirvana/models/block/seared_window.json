@@ -1,0 +1,8 @@
+{
+  "parent": "tconsnirvana:block/tank",
+  "textures": {
+    "side": "tconsnirvana:block/smeltery/seared_window_side",
+    "top": "tconsnirvana:block/smeltery/seared_window_top"
+  },
+  "render_type": "minecraft:cutout"
+}

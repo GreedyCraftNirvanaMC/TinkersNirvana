@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:alubrass_ingot"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:alubrass_nugget",
+    "count": 9
+  }
+}

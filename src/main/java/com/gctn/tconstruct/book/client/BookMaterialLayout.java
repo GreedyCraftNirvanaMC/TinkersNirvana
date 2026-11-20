@@ -45,9 +45,9 @@ final class BookMaterialLayout {
         List<BookDocument.Icon> display = new ArrayList<>();
         if (!source.icons().isEmpty()) { display.add(new BookDocument.Icon(edge, y, List.of(source.icons().getFirst()))); }
         if (material.isCraftable()) {
-            display.add(new BookDocument.Icon(edge, y, List.of(new ItemStack(com.gctn.tconstruct.tables.WorkshopModule.BLOCKS.get(com.gctn.tconstruct.tables.WorkshopModule.Kind.PART_BUILDER).get())), 1, Component.translatable("book.tconstruct.craftable")));
+            display.add(new BookDocument.Icon(edge, y, List.of(new ItemStack(com.gctn.tconstruct.tables.WorkshopModule.BLOCKS.get(com.gctn.tconstruct.tables.WorkshopModule.Kind.PART_BUILDER).get())), 1, Component.translatable("book.tconsnirvana.craftable")));
         }
-        if (material.isCastable()) { display.add(new BookDocument.Icon(edge, y, List.of(new ItemStack(com.gctn.tconstruct.smeltery.SmelteryModule.BASIN.get())), 1, Component.translatable("book.tconstruct.castable"))); }
+        if (material.isCastable()) { display.add(new BookDocument.Icon(edge, y, List.of(new ItemStack(com.gctn.tconstruct.smeltery.SmelteryModule.BASIN.get())), 1, Component.translatable("book.tconsnirvana.castable"))); }
         for (String id : List.of("pickaxe", "mattock", "broadsword", "hammer", "cleaver", "shuriken", "frypan", "lumberaxe", "battlesign")) {
             if (display.size() >= 9) { break; }
             var tool = AntiqueTools.get(id); if (tool == null) { continue; }

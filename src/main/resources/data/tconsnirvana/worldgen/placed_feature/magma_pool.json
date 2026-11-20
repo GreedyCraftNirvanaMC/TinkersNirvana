@@ -1,0 +1,13 @@
+{
+  "feature": "tconsnirvana:magma_pool",
+  "placement": [
+    {
+      "type": "tconsnirvana:antique_worldgen",
+      "setting": "magma_pool"
+    },
+    {
+      "type": "tconsnirvana:antique_height",
+      "setting": "magma_pool"
+    }
+  ]
+}

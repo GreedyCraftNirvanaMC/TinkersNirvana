@@ -1,0 +1,16 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/shovel/handle",
+    "layer1": "tconsnirvana:item/antique/shovel/head",
+    "layer2": "tconsnirvana:item/antique/shovel/binding"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconsnirvana:broken": 1
+      },
+      "model": "tconsnirvana:item/tools/shovel_broken"
+    }
+  ]
+}

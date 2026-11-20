@@ -16,10 +16,10 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
-@EventBusSubscriber(modid = "tconstruct", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "tconsnirvana", value = Dist.CLIENT)
 public class TCBlockStateProvider extends BlockStateProvider {
     public TCBlockStateProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
-        super(output, "tconstruct", existingFileHelper);
+        super(output, "tconsnirvana", existingFileHelper);
     }
 
     @Override

@@ -1,0 +1,12 @@
+{
+  "feature": "tconsnirvana:ore_cobalt",
+  "placement": [
+    {
+      "type": "tconsnirvana:antique_height",
+      "setting": "cobalt"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

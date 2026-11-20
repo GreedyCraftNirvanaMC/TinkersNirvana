@@ -6,8 +6,10 @@
 
 ## 注册材料
 
+从 1.0.4 升级时，将 `StartupEvents.registry` 的材料、词条注册表改为 `tconsnirvana:material` 和 `tconsnirvana:trait`，编辑事件继续使用 `TinkerEvents`。脚本内引用的本模组物品、标签、配方和组件也应改为新命名空间。附属模组及 `kubejs:` 自己注册的 ID 保持原样。
+
 ```js
-StartupEvents.registry('tconstruct:material', event => {
+StartupEvents.registry('tconsnirvana:material', event => {
     event.create('kubejs:amethyst')
         .color(0xA77CE3)
         .craftable(true)
@@ -46,7 +48,7 @@ StartupEvents.registry('tconstruct:material', event => {
 ## 创建词条
 
 ```js
-StartupEvents.registry('tconstruct:trait', event => {
+StartupEvents.registry('tconsnirvana:trait', event => {
     event.create('kubejs:reinforced_edge')
         .displayName('坚固刃口')
         .description('提高攻击伤害，减少耐久消耗')
@@ -82,7 +84,7 @@ StartupEvents.registry('tconstruct:trait', event => {
 
 ```js
 TinkerEvents.modifyTraits(event => {
-    event.modify('tconstruct:fractured', trait => {
+    event.modify('tconsnirvana:fractured', trait => {
         trait.color(0xFFAA55)
         trait.replaceHandler('modifyStats', ctx => {
             ctx.stats.attack += 3
@@ -92,7 +94,7 @@ TinkerEvents.modifyTraits(event => {
         })
     })
 
-    event.remove('tconstruct:slimey_blue')
+    event.remove('tconsnirvana:slimey_blue')
 })
 ```
 
@@ -106,15 +108,15 @@ TinkerEvents.modifyTraits(event => {
 
 ```js
 TinkerEvents.modifyMaterials(event => {
-    event.modify('tconstruct:wood', material => {
-        material.removeTrait('tconstruct:ecological')
+    event.modify('tconsnirvana:wood', material => {
+        material.removeTrait('tconsnirvana:ecological')
         material.addTrait('kubejs:reinforced_edge', 1)
         material.head(100, 3, 1, 1)
     })
 })
 ```
 
-修改器支持材料注册表中的方法，以及 `addTrait`、`removeTrait` 和 `clearTraits`。材料词条绑定变更用于后续装配和部件更换。已有工具仍保留其自身词条记录，定义的修改和删除会作用于这些记录。内置材料可用 `wood` 或 `tconstruct:wood` 查询，存档沿用既有 ID。
+修改器支持材料注册表中的方法，以及 `addTrait`、`removeTrait` 和 `clearTraits`。材料词条绑定变更用于后续装配和部件更换。已有工具仍保留其自身词条记录，定义的修改和删除会作用于这些记录。内置材料可用 `wood` 或 `tconsnirvana:wood` 查询，存档沿用既有 ID。
 
 ## 回调上下文
 
@@ -172,3 +174,5 @@ assets/kubejs/lang/en_us.json
 ## 其它接口
 
 现有 `TinkerContent` Java API 可供旧脚本继续调用，Java 附属开发见 [TOOL_API.md](TOOL_API.md)。晾晒等原生配方可通过 `ServerEvents.recipes` 和数据包添加。当前材料的 `castingFluid` 会根据部件用量生成对应熔炼、金属铸模和黏土铸模浇铸规则。
+
+在 `server_scripts` 中可直接调用 `TinkerToolUpgrades.isSupported(stack)`、`getLevel(stack)`、`getAvailableSlots(stack)` 和 `tryUpgrade(stack)`。升级前由脚本检查自己的条件，并将修改应用到服务端持有的物品堆叠。`TinkerSmeltery.meltingOutput(stack)` 查询单件物品的流体产量，`TinkerSmeltery.castingOutput(basin, cast, fluid)` 可按铸模和流体量预览浇铸结果。

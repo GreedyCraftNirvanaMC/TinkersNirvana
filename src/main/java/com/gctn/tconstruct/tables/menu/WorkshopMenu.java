@@ -28,11 +28,22 @@ import java.util.List;
 /** Stable physical slots; paged views never resize the network menu. */
 public class WorkshopMenu extends AbstractContainerMenu {
     public static final int PAGE_SIZE = 45;
+    // 缩短箱子顶部的留白，让联动标签和背包槽能在原版最小界面高度下同时显示。
+    public static final int STORAGE_HEADER_REDUCTION = 12;
+    public static final int STORAGE_HEIGHT = 224 - STORAGE_HEADER_REDUCTION;
     private final Kind kind;
     private final BlockPos pos;
     private final Container backing;
     private final ResultContainer result = new ResultContainer();
-    private final SimpleContainerData data = new SimpleContainerData(2);
+    private final WorkshopStoragePages storagePages;
+    private final SimpleContainerData data = new SimpleContainerData(3) {
+        @Override public int get(int index) {
+            if (index == 2 && storagePages != null) {
+                return storagePages.pageCount(PAGE_SIZE, slot -> !backing.getItem(slot).isEmpty());
+            }
+            return super.get(index);
+        }
+    };
     private final Inventory inventory;
     private final int playerStart;
     private final int playerEnd;
@@ -51,11 +62,13 @@ public class WorkshopMenu extends AbstractContainerMenu {
     private WorkshopMenu(int id, Inventory inventory, Kind kind, BlockPos pos, Container backing, NearbyInventory.Source source) {
         super(WorkshopModule.MENU.get(), id);
         this.kind = kind; this.pos = pos; this.backing = backing; this.inventory = inventory;
-        nearby = new NearbyInventory(inventory.player, source, kind == Kind.STENCIL ? 182 : -94);
+        storagePages = kind.storage() && !inventory.player.level().isClientSide
+                ? new WorkshopStoragePages(kind.size, slot -> !backing.getItem(slot).isEmpty()) : null;
+        nearby = new NearbyInventory(inventory.player, source, kind == Kind.STENCIL ? 182 : -96);
         data.set(1, -1);
         if (kind.storage()) {
             Container page = new PageView();
-            for (int i = 0; i < PAGE_SIZE; i++) { addSlot(new Slot(page, i, 8 + i % 9 * 18, 38 + i / 9 * 18) {
+            for (int i = 0; i < PAGE_SIZE; i++) { addSlot(new Slot(page, i, 8 + i % 9 * 18, 38 - STORAGE_HEADER_REDUCTION + i / 9 * 18) {
                 @Override public boolean mayPlace(ItemStack stack) { return page.canPlaceItem(getContainerSlot(), stack); }
                 @Override public boolean isActive() { return page() * PAGE_SIZE + getContainerSlot() < kind.size; }
             }); }
@@ -92,7 +105,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
             }
         }
         playerStart = slots.size();
-        int playerY = kind.storage() ? 142 : 94;
+        int playerY = kind.storage() ? 142 - STORAGE_HEADER_REDUCTION : 94;
         for (int row = 0; row < 3; row++) { for (int col = 0; col < 9; col++) { addSlot(new Slot(inventory, 9 + row * 9 + col, 8 + col * 18, playerY + row * 18)); } }
         for (int col = 0; col < 9; col++) { addSlot(new Slot(inventory, col, 8 + col * 18, playerY + 58)); }
         playerEnd = slots.size();
@@ -113,7 +126,8 @@ public class WorkshopMenu extends AbstractContainerMenu {
         super.clicked(slot, button, type, player);
     }
     public int page() { return data.get(0); }
-    public int pages() { return (kind.size + PAGE_SIZE - 1) / PAGE_SIZE; }
+    public int pages() { return Math.max(page() + 1, data.get(2)); }
+    public int firstNearbySlot() { return playerEnd; }
     public int selection() { return data.get(1); }
     public static List<AntiqueParts.Definition> patterns() { return AntiqueParts.entries().values().stream().filter(part -> !part.id().equals("bolt_core")).toList(); }
     @Override public boolean stillValid(Player player) {
@@ -172,7 +186,11 @@ public class WorkshopMenu extends AbstractContainerMenu {
         return original;
     }
     private class PageView implements Container {
-        private int index(int slot) { return inventory.player.level().isClientSide ? slot : page() * PAGE_SIZE + slot; }
+        private int index(int slot) {
+            if (storagePages == null) { return slot; }
+            int displaySlot = page() * PAGE_SIZE + slot;
+            return displaySlot < backing.getContainerSize() ? storagePages.index(displaySlot) : displaySlot;
+        }
         @Override public int getContainerSize() { return PAGE_SIZE; }
         @Override public boolean isEmpty() { for (int i = 0; i < PAGE_SIZE; i++) { if (!getItem(i).isEmpty()) { return false; } } return true; }
         @Override public ItemStack getItem(int slot) { return index(slot) < backing.getContainerSize() ? backing.getItem(index(slot)) : ItemStack.EMPTY; }

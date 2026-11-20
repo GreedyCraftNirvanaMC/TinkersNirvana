@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/inner_stairs",
-  "textures": {
-    "bottom": "tconstruct:block/gadgets/dried_clay",
-    "side": "tconstruct:block/gadgets/dried_clay",
-    "top": "tconstruct:block/gadgets/dried_clay"
-  }
-}

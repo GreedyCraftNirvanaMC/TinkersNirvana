@@ -51,7 +51,7 @@ final class BookDocument {
         for (var source : sources) { sections.computeIfAbsent(source.section(), ignored -> new ArrayList<>()).add(source); }
         List<Section> indexEntries = new ArrayList<>();
         for (var section : sections.entrySet()) {
-            indexEntries.add(new Section(0, 0, Component.translatable("book.tconstruct.section." + section.getKey()), "section:" + section.getKey(), sectionIcon(section.getKey(), section.getValue())));
+            indexEntries.add(new Section(0, 0, Component.translatable("book.tconsnirvana.section." + section.getKey()), "section:" + section.getKey(), sectionIcon(section.getKey(), section.getValue())));
         }
         for (var shortcut : BookContents.shortcuts()) {
             var page = sourceById.get(shortcut.page());
@@ -78,7 +78,7 @@ final class BookDocument {
         return defined.isEmpty() ? entries.stream().flatMap(page -> page.icons().stream()).findFirst().orElse(new ItemStack(Items.BOOK)) : defined;
     }
     private void contents(String section, List<BookContents.Page> entries) {
-        if (section.equals("materials")) { materialContents("section:" + section, section, Component.translatable("book.tconstruct.section." + section), entries, 2.5F); return; }
+        if (section.equals("materials")) { materialContents("section:" + section, section, Component.translatable("book.tconsnirvana.section." + section), entries, 2.5F); return; }
         entries = entries.stream().filter(page -> !page.data().has("show_in_contents") || page.data().get("show_in_contents").getAsBoolean()).toList();
         for (int start = 0; start < entries.size(); start += 30) {
             List<Element> links = new ArrayList<>();
@@ -87,7 +87,7 @@ final class BookDocument {
                 var source = entries.get(start + row); int x = row / 15 * WIDTH / columns, y = 20 + row % 15 * 9;
                 links.add(new Link(x, y, WIDTH / columns, listingTitle(source), source.id(), ItemStack.EMPTY));
             }
-            add(new Leaf("section:" + section + (start == 0 ? "" : ":" + start / 30), section, Component.translatable("book.tconstruct.section." + section), links, "section:" + section));
+            add(new Leaf("section:" + section + (start == 0 ? "" : ":" + start / 30), section, Component.translatable("book.tconsnirvana.section." + section), links, "section:" + section));
         }
     }
     private static Component listingTitle(BookContents.Page page) {
@@ -114,7 +114,7 @@ final class BookDocument {
                 listing.add(new Link(0, 20 + row++ * 9, WIDTH, Component.translatable("stat." + BookMaterialLayout.type(role) + ".name"), "ranged:" + role, ItemStack.EMPTY));
             }
         }
-        add(new Leaf("section:bowmaterials", "bowmaterials", Component.translatable("book.tconstruct.section.bowmaterials"), listing, "section:bowmaterials"));
+        add(new Leaf("section:bowmaterials", "bowmaterials", Component.translatable("book.tconsnirvana.section.bowmaterials"), listing, "section:bowmaterials"));
         for (String role : BookMaterialLayout.RANGED) {
             var valid = entries.stream().filter(page -> TinkerMaterials.getMaterial(page.data().get("material").getAsString()).hasStats(role)).toList();
             List<BookContents.Page> icons = new ArrayList<>();
@@ -205,7 +205,7 @@ final class BookDocument {
         String field = modifier ? "effects" : "properties";
         List<Component> properties = new ArrayList<>();
         if (source.data().has(field)) {
-            properties.add((source.data().has("properties_label") ? Component.literal(source.data().get("properties_label").getAsString()) : Component.translatable("book.tconstruct.properties")).withStyle(ChatFormatting.UNDERLINE));
+            properties.add((source.data().has("properties_label") ? Component.literal(source.data().get("properties_label").getAsString()) : Component.translatable("book.tconsnirvana.properties")).withStyle(ChatFormatting.UNDERLINE));
             flow.lines(properties, modifier ? 10 : 5, modifier ? 70 : 82, modifier ? WIDTH / 2 - 5 : 81, HEIGHT);
             properties.clear();
             for (var property : source.data().getAsJsonArray(field)) { properties.add(Component.literal("●\u00a0" + property.getAsString())); }

@@ -28,7 +28,10 @@ public final class DualToolHarvest {
     }
     public static boolean active(Player player) { var active = ACTIVE.get(); return active != null && active.contains(player); }
     public static <T> T withTool(Player player, BlockState state, Supplier<T> action) {
-        if (player == null || active(player) || !shouldUseOffhand(player, state)) { return action.get(); }
+        return player != null && shouldUseOffhand(player, state) ? withOffhandTool(player, action) : action.get();
+    }
+    static <T> T withOffhandTool(Player player, Supplier<T> action) {
+        if (active(player)) { return action.get(); }
         int selected = player.getInventory().selected;
         ItemStack main = player.getInventory().items.get(selected), off = player.getInventory().offhand.getFirst();
         if (ACTIVE.get() == null) { ACTIVE.set(Collections.newSetFromMap(new IdentityHashMap<>())); }

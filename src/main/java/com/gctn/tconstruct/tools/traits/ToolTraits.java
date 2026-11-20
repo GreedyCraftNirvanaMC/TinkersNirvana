@@ -2,6 +2,8 @@ package com.gctn.tconstruct.tools.traits;
 
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,7 +14,9 @@ import net.minecraft.world.level.Level;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -22,7 +26,7 @@ public final class ToolTraits {
 
     public static List<AbstractTraits.TraitEntry> entriesFrom(CompoundTag tag) {
         List<AbstractTraits.TraitEntry> entries = new ArrayList<>();
-        for (String id : tag.getAllKeys()) {
+        for (String id : orderedIds(tag)) {
             AbstractTraits trait = TinkerTraits.getTrait(id);
             if (trait == null) { continue; }
             CompoundTag data = tag.getCompound(id);
@@ -36,6 +40,7 @@ public final class ToolTraits {
     }
 
     public static void addTraits(CompoundTag tag, List<AbstractTraits.TraitEntry> traits) {
+        Set<String> order = orderedIds(tag);
         for (AbstractTraits.TraitEntry entry : traits) {
             AbstractTraits trait = TinkerTraits.getTrait(entry.trait().identifier);
             if (trait == null) { continue; }
@@ -43,6 +48,10 @@ public final class ToolTraits {
             CompoundTag data = tag.getCompound(trait.identifier);
             if (trait instanceof LeveledTraits leveled && !leveled.stacksRepeatedLevels()) {
                 int[] applied = data.getIntArray("AppliedLevels");
+                if (applied.length == 0 && data.getInt("Level") > 0) {
+                    applied = new int[]{data.getInt("Level")};
+                    data.putIntArray("AppliedLevels", applied);
+                }
                 if (Arrays.stream(applied).anyMatch(value -> value == level)) {
                     continue;
                 }
@@ -54,13 +63,54 @@ public final class ToolTraits {
             data.putInt("Level", Math.clamp(combinedLevel, 1, trait.maxLevel));
             data.putInt("StrengthenNumber", trait.strengthenNumber);
             tag.put(trait.identifier, data);
+            order.add(trait.identifier);
         }
+        saveOrder(tag, order);
+    }
+
+    private static void saveOrder(CompoundTag tag, Set<String> order) {
+        if (order.isEmpty()) {
+            tag.remove("Order");
+            return;
+        }
+        ListTag stored = new ListTag();
+        for (String id : order) { stored.add(StringTag.valueOf(id)); }
+        tag.put("Order", stored);
+    }
+
+    private static Set<String> orderedIds(CompoundTag tag) {
+        Set<String> order = new LinkedHashSet<>();
+        for (Tag id : tag.getList("Order", Tag.TAG_STRING)) {
+            if (tag.contains(id.getAsString(), Tag.TAG_COMPOUND)) { order.add(id.getAsString()); }
+        }
+        // 旧工具只保存了无序的复合标签，继续以字母顺序读取这些旧词条。
+        tag.getAllKeys().stream().filter(id -> tag.contains(id, Tag.TAG_COMPOUND)).sorted().forEach(order::add);
+        return order;
+    }
+
+    public static void replaceMaterialTraits(CompoundTag actual, CompoundTag previous, CompoundTag replacement,
+                                             boolean legacyEmbossing) {
+        Set<String> order = orderedIds(replacement);
+        if (!legacyEmbossing) {
+            for (String id : orderedIds(previous)) {
+                if (!order.contains(id)) { actual.remove(id); }
+            }
+        }
+        for (String id : order) {
+            CompoundTag installed = replacement.getCompound(id);
+            CompoundTag state = actual.getCompound(id).copy();
+            state.merge(installed);
+            if (!installed.contains("AppliedLevels")) { state.remove("AppliedLevels"); }
+            actual.put(id, state);
+        }
+        order.addAll(orderedIds(actual));
+        saveOrder(actual, order);
     }
 
     public static List<Entry> getTraits(ItemStack tool) {
         CompoundTag tag = TinkerDataComponents.getTraitsTag(tool);
         List<Entry> entries = new ArrayList<>();
-        for (String id : tag.getAllKeys()) {
+        for (String id : orderedIds(tag)) {
             AbstractTraits trait = TinkerTraits.getTrait(id);
             if (trait == null || !tag.contains(id, Tag.TAG_COMPOUND)) {
                 continue;
@@ -70,8 +120,8 @@ public final class ToolTraits {
                 entries.add(new Entry(trait, Math.min(data.getInt("Level"), trait.maxLevel)));
             }
         }
-        entries.sort(Comparator.<Entry>comparingInt(entry -> entry.trait().getPriority()).reversed()
-                .thenComparing(entry -> entry.trait().identifier));
+        // 怀古对同优先级的词条保留安装顺序，例如挖掘速度的乘数和加数。
+        entries.sort(Comparator.<Entry>comparingInt(entry -> entry.trait().getPriority()).reversed());
         return List.copyOf(entries);
     }
 

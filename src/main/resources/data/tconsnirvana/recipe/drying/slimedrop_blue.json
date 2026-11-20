@@ -1,0 +1,10 @@
+{
+  "type": "tconsnirvana:drying",
+  "ingredient": {
+    "item": "tconsnirvana:slimeball_blue"
+  },
+  "result": {
+    "id": "tconsnirvana:slimedrop_blue"
+  },
+  "time": 6000
+}

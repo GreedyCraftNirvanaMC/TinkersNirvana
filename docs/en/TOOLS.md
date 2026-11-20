@@ -2,7 +2,7 @@
 
 [README](../../README.md) · [简体中文](../zh-CN/TOOLS.md)
 
-For Minecraft 1.21.1 / NeoForge. Tools share the material components, trait system, Tool Station, and Smeltery. The existing pickaxe ID is `tconstruct:pickaxe/pickaxe`.
+For Minecraft 1.21.1 / NeoForge. Tools share the material components, trait system, Tool Station, and Smeltery. The pickaxe ID is `tconsnirvana:pickaxe/pickaxe`.
 
 ## Crafting workflow
 
@@ -11,11 +11,11 @@ For Minecraft 1.21.1 / NeoForge. Tools share the material components, trait syst
 3. Wood, stone, flint, bone, and cactus can be worked directly. For metal parts, pour molten metal into a cast on the Casting Table. Make the metal cast over an existing part. Clay casts are consumed on use.
 4. In an assembly mode, place parts where the slot icons show and take the finished tool. Three Seared Bricks blocks, four metal blocks, and a Tool Station make a Tool Forge. Fourteen metal types, including iron, are supported.
 
-Processing uses the full material value. High-value ingredients such as logs can produce multiple parts. If the value cannot be divided evenly, the recipe leaves the input intact. Use smaller ingredients such as planks or shards. Repair mode puts the tool in the center. Assembly slots follow each tool's part layout.
+The Part Builder takes enough material for one part and returns usable surplus as shards. The Tool Station can produce multiple parts in a batch when the value consumed is an exact multiple of the part cost. Repair mode puts the tool in the center. Assembly slots follow each tool's part layout.
 
 ## Workshops, storage, and repair
 
-The Crafting Station has nine inputs, a vanilla recipe book, and access to adjacent storage. Use the top tabs to switch between adjacent stations. The Pattern Chest stores one of each pattern or cast. The Part Chest separates parts by material and component. Both chests have 256 slots and pagination.
+The Crafting Station has nine inputs, a vanilla recipe book, and access to adjacent storage. Workstations connected horizontally to a Crafting Station show tabs at the top. The Pattern Chest stores one of each pattern or cast. The Part Chest separates parts by material and component. Both chests have 256 slots and show extra pages as the displayed inventory fills.
 
 With a Pattern Chest attached, left-click a pattern in the Part Builder sidebar to swap it with the current pattern. The Tool Station can access a connected Part Chest. By default, breaking a chest retains its inventory, controlled by `general.chestsKeepInventory`. Workshop wood and metal finishes follow the crafting ingredients and persist through placement, drops, and pick block.
 
@@ -50,16 +50,16 @@ The table lists parts in material-data order. In-game slot icons indicate where 
 | Cleaver | Tough tool rod, large sword blade, large plate, tough tool rod | Tool Forge | Heavy hits, built-in beheading, and offhand restrictions |
 | Shortbow | Two bow limbs, bowstring | Tool Station | Material-dependent draw and range |
 | Longbow | Two bow limbs, large plate, bowstring | Tool Forge | Higher-powered bow |
-| Crossbow | Tough tool rod, bow limb, tough binding, bowstring | Tool Forge | Stores ammunition when loaded and fires on the next use |
+| Crossbow | Tough tool rod, bow limb, tough binding, bowstring | Tool Forge | Release at full draw to load. The next use fires a bolt from your inventory. |
 | Arrow | Arrow shaft, arrowhead, fletching | Tool Station | Repairable ammunition |
 | Bolt | Coated bolt core, fletching | Tool Forge | Repairable ammunition |
 | Shuriken | Four knife blades | Tool Forge | Throwable and recoverable |
 
 Make a bolt core by coating an arrow shaft with two units of castable material on a Casting Table. Assembly and disassembly preserve both shaft and coating materials. Sharpening kits and shards are also listed in the parts catalog.
 
-Sneak to harvest one block with an area tool. Each extra block uses the vanilla player break flow and respects protection events and drops. Unsuitable or unbreakable blocks, block entities, and unloaded chunks are skipped. Connected-log harvesting has distance and count limits.
+Each extra block uses the vanilla player break flow and respects protection events and drops. Unsuitable or unbreakable blocks, block entities, and unloaded chunks are skipped. The Lumber Axe identifies trees by their canopy and fells their connected logs over successive ticks.
 
-Ammunition is stored as durability, and each shot uses ten points. Recovery first refills a stack with the same materials and modifiers. Otherwise, it gives a new item with one shot remaining. Extra split projectiles cannot be recovered. Vanilla and tipped arrows use vanilla arrow entities.
+Ammunition is stored as durability, and each shot uses ten points. To recover a projectile, keep a damaged ammo stack with the same materials and modifiers in your inventory. Extra split projectiles cannot be recovered. Vanilla and tipped arrows use vanilla arrow entities.
 
 ## Repair, modifiers, and disassembly
 
@@ -72,7 +72,7 @@ Ammunition is stored as durability, and each shot uses ten points. Recovery firs
 - Disassemble a fully repaired tool to recover parts. Taking the first part commits the operation. Changing modes before that returns the original tool. A broken tool remains as an item and can be repaired.
 - Soulbound returns the tool after death. Other drops follow vanilla rules.
 
-Hold Shift for stats, materials, and free modifier slots. Hold Alt for trait descriptions. Stats follow Antique definitions. Existing tools retain saved stats and unknown components survive repair, modification, and recalculation.
+Hold Shift for tool stats and free modifier slots. Hold Ctrl for each part's material, stats, and traits. Hold Alt for trait descriptions. Stats follow Antique definitions. Existing tools retain saved stats and unknown components survive repair, modification, and recalculation.
 
 ## Extensions and resources
 
@@ -87,7 +87,7 @@ Textures retain Antique silhouettes, part layers, broken states, and draw stages
 
 ## Tool and crafting settings
 
-Edit `config/tconstruct-common.toml`.
+Edit `config/tconsnirvana-common.toml`.
 
 | Key | Default | Effect |
 | --- | --- | --- |

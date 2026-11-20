@@ -11,13 +11,14 @@ parser.add_argument("--antique", type=Path, required=True)
 args = parser.parse_args()
 project = Path(__file__).resolve().parents[1]
 root = project / "src/main/resources"
-assets = root / "assets/tconstruct"
+assets = root / "assets/tconsnirvana"
 old = args.antique / "src/main/resources/assets/tconstruct"
 
 
 def write(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    text = json.dumps(value, ensure_ascii=False, indent=2).replace('"tconstruct:', '"tconsnirvana:')
+    path.write_text(text + "\n", encoding="utf-8")
 
 
 manifest = []
@@ -47,21 +48,21 @@ for side in ["down", "up", "north", "south", "west", "east"]:
                 textures.update(source["variants"]["powered"][powered].get("textures", {}))
                 textures = {key: value.replace(":blocks/", ":block/") for key, value in textures.items()}
                 name = f"{side}_{connection}_{direction}_{powered}"
-                model = {"parent": f"tconstruct:block/slime_channel/{kind}", "textures": textures}
+                model = {"parent": f"tconsnirvana:block/slime_channel/{kind}", "textures": textures}
                 if "transform" in override:
                     model["transform"] = dict(override["transform"], origin="center")
                 write(assets / f"models/block/slime_channel/{name}.json", model)
-                variants[f"side={side},connected={connection},direction={direction},powered={powered}"] = dict({"model": f"tconstruct:block/slime_channel/{name}"}, **{key: override[key] for key in ["x", "y"] if key in override})
+                variants[f"side={side},connected={connection},direction={direction},powered={powered}"] = dict({"model": f"tconsnirvana:block/slime_channel/{name}"}, **{key: override[key] for key in ["x", "y"] if key in override})
 
 names = {}
 for color, zh, en in [("green", "绿", "Green"), ("blue", "蓝", "Blue"), ("purple", "紫", "Purple"), ("blood", "血", "Blood"), ("magma", "岩浆", "Magma"), ("pink", "混色", "Mixed")]:
     name = f"slime_channel_{color}"
     write(assets / f"blockstates/{name}.json", {"variants": variants})
-    write(assets / f"models/item/{name}.json", {"parent": "tconstruct:block/slime_channel/slime_channel", "textures": {"slime": "tconstruct:block/fluids/liquid_flow"}})
-    write(root / f"data/tconstruct/recipe/gadgets/{name}.json", {"type": "minecraft:smelting", "ingredient": {"item": f"tconstruct:slime_congealed_{color}"}, "result": {"id": f"tconstruct:{name}", "count": 3}, "experience": .15, "cookingtime": 200})
-    write(root / f"data/tconstruct/loot_table/blocks/{name}.json", {"type": "minecraft:block", "pools": [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": f"tconstruct:{name}"}], "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
-    names[f"block.tconstruct.{name}"] = [zh + "黏液通道", en + " Slime Channel"]
-names["tooltip.tconstruct.slime_channel"] = ["按落点选择流向，潜行反转；红石信号停止流动。", "Placement selects flow direction; sneak to reverse it. Redstone stops the flow."]
+    write(assets / f"models/item/{name}.json", {"parent": "tconsnirvana:block/slime_channel/slime_channel", "textures": {"slime": "tconsnirvana:block/fluids/liquid_flow"}})
+    write(root / f"data/tconsnirvana/recipe/gadgets/{name}.json", {"type": "minecraft:smelting", "ingredient": {"item": f"tconsnirvana:slime_congealed_{color}"}, "result": {"id": f"tconsnirvana:{name}", "count": 3}, "experience": .15, "cookingtime": 200})
+    write(root / f"data/tconsnirvana/loot_table/blocks/{name}.json", {"type": "minecraft:block", "pools": [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": f"tconsnirvana:{name}"}], "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+    names[f"block.tconsnirvana.{name}"] = [zh + "黏液通道", en + " Slime Channel"]
+names["tooltip.tconsnirvana.slime_channel"] = ["按落点选择流向，潜行反转；红石信号停止流动。", "Placement selects flow direction; sneak to reverse it. Redstone stops the flow."]
 for lang, column in [("zh_cn", 0), ("en_us", 1)]:
     target = assets / f"lang/{lang}.json"
     data = json.loads(target.read_text(encoding="utf-8-sig"))

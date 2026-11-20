@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:cobalt_nugget"
+    },
+    {
+      "item": "tconsnirvana:cobalt_nugget"
+    },
+    {
+      "item": "tconsnirvana:cobalt_nugget"
+    },
+    {
+      "item": "tconsnirvana:cobalt_nugget"
+    },
+    {
+      "item": "tconsnirvana:cobalt_nugget"
+    },
+    {
+      "item": "tconsnirvana:cobalt_nugget"
+    },
+    {
+      "item": "tconsnirvana:cobalt_nugget"
+    },
+    {
+      "item": "tconsnirvana:cobalt_nugget"
+    },
+    {
+      "item": "tconsnirvana:cobalt_nugget"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:cobalt_ingot"
+  }
+}

@@ -2,13 +2,13 @@
 
 [README](../../README.md) · [KubeJS](KUBEJS.md) · [简体中文](../zh-CN/TOOL_API.md)
 
-Target Minecraft 1.21.1, NeoForge and JDK 21. Add the mod JAR as a compile and development runtime dependency, for example `implementation files('libs/TinkersNirvana-1.21.1-1.0.4.jar')`. Declare a required dependency on mod ID `tconstruct` in the addon's `neoforge.mods.toml`. The API in `com.gctn.tconstruct.api` works independently of KubeJS.
+Target Minecraft 1.21.1, NeoForge and JDK 21. Add the mod JAR as a compile and development runtime dependency, for example `implementation files('libs/TinkersNirvana-1.21.1-1.0.5.jar')`. Declare a required dependency on mod ID `tconsnirvana` in the addon's `neoforge.mods.toml`. The API in `com.gctn.tconstruct.api` works independently of KubeJS.
 
 Development dependency example.
 
 ```groovy
 dependencies {
-    implementation files('libs/TinkersNirvana-1.21.1-1.0.4.jar')
+    implementation files('libs/TinkersNirvana-1.21.1-1.0.5.jar')
 }
 ```
 
@@ -16,9 +16,9 @@ In addition to the addon's own mod declaration, add this block to `META-INF/neof
 
 ```toml
 [[dependencies.exampleaddon]]
-modId = "tconstruct"
+modId = "tconsnirvana"
 type = "required"
-versionRange = "[1.21.1-1.0.4,)"
+versionRange = "[1.21.1-1.0.5,)"
 ordering = "AFTER"
 side = "BOTH"
 ```
@@ -74,16 +74,16 @@ public final class ExampleAddon {
 ## Modify and remove content
 
 ```java
-var previous = TinkerTraits.getTrait("tconstruct:fractured");
+var previous = TinkerTraits.getTrait("tconsnirvana:fractured");
 var replacement = new TraitDefinition(previous.identifier, previous)
         .replaceHandler("modifyStats", ctx -> ctx.stats.attack += 3);
 TinkerTraits.replaceTrait(replacement);
 
-TinkerTraits.removeTrait("tconstruct:slimey_blue");
+TinkerTraits.removeTrait("tconsnirvana:slimey_blue");
 
 var wood = com.gctn.tconstruct.library.TinkerMaterials.getMaterial("wood");
 new MaterialDefinition(wood)
-        .removeTrait("tconstruct:ecological")
+        .removeTrait("tconsnirvana:ecological")
         .addTrait("exampleaddon:edge", 1)
         .install();
 ```
@@ -130,4 +130,8 @@ For custom spawns, use `new AntiqueProjectile(level, owner, pickup, mergedTraits
 
 `TinkerContent` retains material ingredients, stats, traits, modifier ingredients, native attributes, head drops and casting entry points. `castingMaterial(material, fluidId)` binds an existing fluid; the server installs the derived rules at startup.
 
-Custom modifiers use `ToolModifiers.Definition` and `ToolModifiers.register`. Register their inputs through `TinkerContent.modifierItem` or `modifierTag`. Native drying recipes use type `tconstruct:drying` with `ingredient`, `result` and `time`. Reuse existing native recipe and component workflows for additional integrations.
+Custom modifiers use `ToolModifiers.Definition` and `ToolModifiers.register`. Register their inputs through `TinkerContent.modifierItem` or `modifierTag`. Native drying recipes use type `tconsnirvana:drying` with `ingredient`, `result` and `time`. Reuse existing native recipe and component workflows for additional integrations.
+
+## Smeltery queries
+
+On the logical server, `SmelteryApi.meltingOutput(input)` returns the fluid produced by one item, using current tags, recipes and ore yield settings. `SmelteryApi.castingOutput(basin, cast, fluid)` previews the result if the supplied fluid amount is sufficient. Use `true` for a basin and `ItemStack.EMPTY` for a recipe without a cast. Both methods return copies on success and an empty stack for an unmatched input. They leave inputs and registered recipes intact.

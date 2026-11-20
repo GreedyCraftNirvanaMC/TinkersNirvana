@@ -82,7 +82,8 @@ public final class TinkerContent {
     }
     public static void modifierItem(String modifier, String item, int value) {
         ResourceLocation id = ResourceLocation.parse(item);
-        ToolModifiers.ingredient(modifier, stack -> net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(id), value);
+        var registry = net.minecraft.core.registries.BuiltInRegistries.ITEM;
+        ToolModifiers.ingredient(modifier, stack -> registry.getKey(stack.getItem()).equals(registry.resolve(id)), value);
     }
     public static void modifierTag(String modifier, String tag, int value) {
         var id = net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM, ResourceLocation.parse(tag));

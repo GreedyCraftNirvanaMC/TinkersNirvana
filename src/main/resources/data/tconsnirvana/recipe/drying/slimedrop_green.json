@@ -1,0 +1,10 @@
+{
+  "type": "tconsnirvana:drying",
+  "ingredient": {
+    "item": "minecraft:slime_ball"
+  },
+  "result": {
+    "id": "tconsnirvana:slimedrop_green"
+  },
+  "time": 6000
+}

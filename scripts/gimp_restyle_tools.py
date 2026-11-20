@@ -24,7 +24,7 @@ def export_png(image, path):
 def restyle_tools(antique_root, output_root, start=0, end=None, manifest_name="antique_tool_textures.json"):
     root = Path(output_root)
     source_root = Path(antique_root) / "src/main/resources/assets/tconstruct"
-    output = root / "src/main/resources/assets/tconstruct"
+    output = root / "src/main/resources/assets/tconsnirvana"
     rows = json.loads((root / "scripts" / manifest_name).read_text(encoding="utf-8"))
     for row in rows[start:end]:
         if row["source"] is None:
@@ -123,7 +123,7 @@ def preview_tools(antique_root, output_root, start=0, end=21):
     global _tool_preview_sheet, _tool_preview_layer, _tool_preview_pixels
     root = Path(output_root)
     old = Path(antique_root) / "src/main/resources/assets/tconstruct"
-    new = root / "src/main/resources/assets/tconstruct"
+    new = root / "src/main/resources/assets/tconsnirvana"
     ids = "pickaxe shovel hatchet mattock kama hammer excavator lumberaxe scythe broadsword longsword rapier frypan battlesign cleaver shortbow longbow crossbow arrow bolt shuriken".split()
     width, height = 7 * 20, 6 * 20 + 4
     if start == 0:

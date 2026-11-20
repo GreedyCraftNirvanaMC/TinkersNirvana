@@ -66,25 +66,25 @@ public final class BookContents {
             });
         }
         List<Page> pages = new ArrayList<>();
-        var definition = resources.get(ResourceLocation.fromNamespaceAndPath("tconstruct", "book/definition.json"));
+        var definition = resources.get(ResourceLocation.fromNamespaceAndPath("tconsnirvana", "book/definition.json"));
         Set<String> active = new HashSet<>();
-        if (definition != null) { for (var section : definition.getAsJsonArray("sections")) { for (var id : section.getAsJsonObject().getAsJsonArray("pages")) { active.add("tconstruct:" + id.getAsString()); } } }
+        if (definition != null) { for (var section : definition.getAsJsonArray("sections")) { for (var id : section.getAsJsonObject().getAsJsonArray("pages")) { active.add("tconsnirvana:" + id.getAsString()); } } }
         List<ItemStack> catalog = BuiltInRegistries.ITEM.stream().filter(item -> item != net.minecraft.world.item.Items.AIR).map(ItemStack::new).toList();
         Map<Material, List<Input>> inputs = new IdentityHashMap<>();
         for (ItemStack stack : catalog) { var match = MaterialInputs.match(stack); if (match != null) { inputs.computeIfAbsent(match.material(), ignored -> new ArrayList<>()).add(new Input(stack, match.value())); } }
         for (var entry : localized.entrySet()) {
-            if (definition != null && entry.getKey().startsWith("tconstruct:") && !active.contains(entry.getKey())) { continue; }
+            if (definition != null && entry.getKey().startsWith("tconsnirvana:") && !active.contains(entry.getKey())) { continue; }
             JsonObject data = entry.getValue().deepCopy(); String section = string(data, "section", "intro"), title = string(data, "title", "");
             List<Component> text = text(data, "text"), iconsText = new ArrayList<>(); List<ItemStack> icons = new ArrayList<>();
             if (data.has("tool")) {
                 String id = data.get("tool").getAsString(); var tool = AntiqueTools.get(id);
-                title = title.isBlank() ? Component.translatable("item.tconstruct." + id + ".name").getString() : title;
+                title = title.isBlank() ? Component.translatable("item.tconsnirvana." + id + ".name").getString() : title;
                 if (tool != null) { addTool(tool, icons, iconsText); }
             }
             if (data.has("modifier")) {
                 String id = data.get("modifier").getAsString(); id = switch (id) { case "extramodifier" -> "creative"; case "extratrait" -> "embossment"; case "mod_autosmelt" -> "autosmelt"; case "bane_of_arthopods" -> "bane_of_arthropods"; default -> id; };
                 data.addProperty("modifier", id);
-                title = title.isBlank() ? Component.translatable("modifier.tconstruct." + id).getString() : title;
+                title = title.isBlank() ? Component.translatable("modifier.tconsnirvana." + id).getString() : title;
                 addModifier(id, icons, iconsText, catalog);
             }
             for (String key : List.of("properties", "effects")) {
@@ -101,21 +101,21 @@ public final class BookContents {
     }
     private static void addTool(AntiqueTools.Entry tool, List<ItemStack> icons, List<Component> text) {
         List<Material> materials = new ArrayList<>();
-        text.add(Component.translatable("book.tconstruct.parts"));
+        text.add(Component.translatable("book.tconsnirvana.parts"));
         for (int index = 0; index < tool.definition().parts().size(); index++) {
             var part = tool.definition().parts().get(index);
             Material preferred = switch (part.stat()) { case "BowString" -> TinkerMaterials.string; case "Shaft" -> TinkerMaterials.wood; case "Fletching" -> TinkerMaterials.feather; default -> List.of(TinkerMaterials.wood, TinkerMaterials.iron, TinkerMaterials.cobalt, TinkerMaterials.manyullyn).get(index % 4); };
             Material material = preferred.hasStats(part.stat()) ? preferred : TinkerMaterials.materials.stream().filter(value -> !value.isHidden() && value.hasStats(part.stat()) && (!part.stat().equals("Bow") || value.hasStats("Head")) && (!part.stat().equals("Handle") || tool.definition().action() != com.gctn.tconstruct.tools.ToolDefinition.Action.CROSSBOW || value.hasStats("Extra"))).findFirst().orElse(null);
             if (material == null) { return; } materials.add(material);
             if (part.definition() != null) { ItemStack icon = part.definition().create(material); if (!icon.isEmpty()) { icons.add(icon); } }
-            text.add(Component.literal("• ").append(Component.translatable("item.tconstruct." + part.part() + ".name")));
+            text.add(Component.literal("• ").append(Component.translatable("item.tconsnirvana." + part.part() + ".name")));
         }
         ItemStack example = ToolBuilder.assemble(tool, materials); if (!example.isEmpty()) { icons.addFirst(example); }
     }
     private static void addModifier(String id, List<ItemStack> icons, List<Component> text, List<ItemStack> catalog) {
         var definition = ToolModifiers.entries().get(id);
         if (definition == null) { return; }
-        text.add(Component.translatable("book.tconstruct.modifier_limits", definition.maxLevel(), definition.unitsPerLevel()));
+        text.add(Component.translatable("book.tconsnirvana.modifier_limits", definition.maxLevel(), definition.unitsPerLevel()));
         // Predicates are shared with crafting, including addon/tag ingredients. Only create stacks when needed.
         catalog.stream().filter(stack -> ToolModifiers.ingredientValue(definition, stack) > 0).limit(12).forEach(icons::add);
     }
@@ -128,7 +128,7 @@ public final class BookContents {
             if (!representative.isEmpty()) { icons.add(representative); }
             for (String position : List.of("Head", "Handle", "Extra", "Bow", "BowString", "Shaft", "Fletching")) {
                 if (ranged != Set.of("Bow", "BowString", "Shaft", "Fletching").contains(position) || !material.hasStats(position)) { continue; }
-                text.add(Component.translatable("book.tconstruct.group." + position)); AbstractMaterialStats stats = material.stats.get(position);
+                text.add(Component.translatable("book.tconsnirvana.group." + position)); AbstractMaterialStats stats = material.stats.get(position);
                 if (stats instanceof HeadMaterialStats head) { stat(text, "durability", head.durability); stat(text, "speed", head.miningspeed); stat(text, "attack", head.attack); stat(text, "tier", head.harvestLevel); }
                 else if (stats instanceof HandleMaterialStats handle) { stat(text, "modifier", handle.modifer); stat(text, "durability", handle.durability); }
                 else if (stats instanceof ExtraMaterialStats extra) { stat(text, "durability", extra.durability); }
@@ -141,9 +141,9 @@ public final class BookContents {
             }
             if (text.isEmpty()) { continue; }
             if (labels.containsKey(material.identifier + ".flavour")) { text.addFirst(Component.literal(labels.get(material.identifier + ".flavour"))); }
-            if (material.isCraftable()) { text.add(Component.translatable("book.tconstruct.craftable")); }
-            if (material.isCastable()) { text.add(Component.translatable("book.tconstruct.castable")); }
-            if (!inputs.isEmpty()) { text.add(Component.translatable("book.tconstruct.ingredients")); for (Input input : inputs) { if (!ItemStack.isSameItemSameComponents(input.stack, representative)) { icons.add(input.stack); } String value = java.math.BigDecimal.valueOf(input.value).setScale(3, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString(); text.add(Component.translatable("book.tconstruct.material_value", input.stack.getHoverName(), value)); } }
+            if (material.isCraftable()) { text.add(Component.translatable("book.tconsnirvana.craftable")); }
+            if (material.isCastable()) { text.add(Component.translatable("book.tconsnirvana.castable")); }
+            if (!inputs.isEmpty()) { text.add(Component.translatable("book.tconsnirvana.ingredients")); for (Input input : inputs) { if (!ItemStack.isSameItemSameComponents(input.stack, representative)) { icons.add(input.stack); } String value = java.math.BigDecimal.valueOf(input.value).setScale(3, java.math.RoundingMode.HALF_UP).stripTrailingZeros().toPlainString(); text.add(Component.translatable("book.tconsnirvana.material_value", input.stack.getHoverName(), value)); } }
             if (icons.isEmpty()) {
                 AntiqueParts.entries().values().stream().filter(part -> material.hasStats(part.stat()))
                         .map(part -> part.create(material)).filter(stack -> !stack.isEmpty()).findFirst().ifPresent(icons::add);
@@ -157,7 +157,7 @@ public final class BookContents {
         return text.copy().withStyle(style -> style.withFont(ResourceLocation.withDefaultNamespace("uniform")));
     }
     static ItemStack sectionIcon(String section) {
-        var definition = resources.get(ResourceLocation.fromNamespaceAndPath("tconstruct", "book/definition.json"));
+        var definition = resources.get(ResourceLocation.fromNamespaceAndPath("tconsnirvana", "book/definition.json"));
         if (definition != null) { for (var entry : definition.getAsJsonArray("sections")) {
             var data = entry.getAsJsonObject(); if (!data.get("id").getAsString().equals(section)) { continue; }
             return icon(data.get("icon").getAsString());
@@ -165,7 +165,7 @@ public final class BookContents {
         return ItemStack.EMPTY;
     }
     static List<Shortcut> shortcuts() {
-        var definition = resources.get(ResourceLocation.fromNamespaceAndPath("tconstruct", "book/definition.json"));
+        var definition = resources.get(ResourceLocation.fromNamespaceAndPath("tconsnirvana", "book/definition.json"));
         if (definition == null || !definition.has("shortcuts")) { return List.of(); }
         List<Shortcut> result = new ArrayList<>();
         for (var entry : definition.getAsJsonArray("shortcuts")) {
@@ -183,7 +183,7 @@ public final class BookContents {
                 && (tag.location().getPath().equals("ingots") || tag.location().getPath().startsWith("ingots/")));
         return ingot ? 0 : Math.abs(input.value - 1) < 0.00001F ? 1 : 2;
     }
-    private static void stat(List<Component> text, String name, Object value) { text.add(Component.translatable("book.tconstruct.stat." + name, value)); }
+    private static void stat(List<Component> text, String name, Object value) { text.add(Component.translatable("book.tconsnirvana.stat." + name, value)); }
     static List<Component> text(JsonObject data, String name) {
         List<Component> result = new ArrayList<>();
         var paragraph = Component.empty();

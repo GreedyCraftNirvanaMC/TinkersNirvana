@@ -1,7 +1,0 @@
-{
-  "parent": "tconstruct:item/tools/battlesign",
-  "textures": {
-    "layer0": "tconstruct:item/antique/battlesign/handle",
-    "layer1": "tconstruct:item/antique/battlesign/broken_head"
-  }
-}

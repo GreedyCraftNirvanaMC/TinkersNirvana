@@ -42,7 +42,7 @@ hunger. Nutrition, saturation, and effects match Antique:
 Tooltips use translated effect names. New game text supports English and
 Simplified Chinese.
 
-In `tconstruct-common.toml`, `general.matchVanillaSlimeblock` defaults to `false`:
+In `tconsnirvana-common.toml`, `general.matchVanillaSlimeblock` defaults to `false`:
 nine mixed slimeballs make a vanilla slime block. Set it to `true` to make the
 hidden pink slime block instead. Uniform blue, purple, blood, and magma grids
 always use their own block recipes. Uniform green remains the vanilla result;
@@ -75,5 +75,5 @@ stores their type, size, health, and other state. In the Smeltery, either colore
 mob produces 25 mB of its matching slime fluid per heart of melting damage.
 
 Spawn predicates recognize their own source or flowing slime fluid and the
-block tags `tconstruct:slime_spawnable/blue` and
-`tconstruct:slime_spawnable/purple`. Blue's tag corresponds to non-purple slime grass, and purple's tag corresponds to purple slime grass. See [world generation](WORLD.md) for natural spawning. Spawn eggs and summon commands are also available.
+block tags `tconsnirvana:slime_spawnable/blue` and
+`tconsnirvana:slime_spawnable/purple`. Blue's tag corresponds to non-purple slime grass, and purple's tag corresponds to purple slime grass. See [world generation](WORLD.md) for natural spawning. Spawn eggs and summon commands are also available.

@@ -1,0 +1,10 @@
+{
+  "type": "tconsnirvana:drying",
+  "ingredient": {
+    "item": "minecraft:porkchop"
+  },
+  "result": {
+    "id": "tconsnirvana:jerky_pork"
+  },
+  "time": 6000
+}

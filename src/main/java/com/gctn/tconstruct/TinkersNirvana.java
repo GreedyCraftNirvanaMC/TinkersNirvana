@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 @Mod(TinkersNirvana.MODID)
 public class TinkersNirvana {
     // Define mod id in a common place for everything to reference
-    public static final String MODID = "tconstruct";
+    public static final String MODID = "tconsnirvana";
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -47,8 +47,10 @@ public class TinkersNirvana {
         BlockRegister.register(modEventBus);
         ItemRegister.register(modEventBus);
         com.gctn.tconstruct.api.ContentRegistries.register(modEventBus);
+        modEventBus.addListener(net.neoforged.bus.api.EventPriority.LOWEST, LegacyIds::registerAliases);
         MaterialList.init();
         new TinkerMaterials();
+        LegacyIds.migrateConfig();
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
     

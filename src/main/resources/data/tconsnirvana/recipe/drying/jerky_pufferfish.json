@@ -1,0 +1,10 @@
+{
+  "type": "tconsnirvana:drying",
+  "ingredient": {
+    "item": "minecraft:pufferfish"
+  },
+  "result": {
+    "id": "tconsnirvana:jerky_pufferfish"
+  },
+  "time": 6000
+}

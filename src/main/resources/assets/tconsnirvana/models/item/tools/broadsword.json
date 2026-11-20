@@ -1,0 +1,16 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/broadsword/handle",
+    "layer1": "tconsnirvana:item/antique/broadsword/blade",
+    "layer2": "tconsnirvana:item/antique/broadsword/guard"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "tconsnirvana:broken": 1
+      },
+      "model": "tconsnirvana:item/tools/broadsword_broken"
+    }
+  ]
+}

@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/cube_bottom_top",
-  "textures": {
-    "top": "tconstruct:block/brownstone/paver",
-    "bottom": "tconstruct:block/brownstone/paver",
-    "side": "tconstruct:block/brownstone/creeper"
-  }
-}

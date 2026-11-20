@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconsnirvana:block/brownstone_tile_slab"
+    },
+    "type=double": {
+      "model": "tconsnirvana:block/brownstone_tile"
+    },
+    "type=top": {
+      "model": "tconsnirvana:block/brownstone_tile_slab_top"
+    }
+  }
+}

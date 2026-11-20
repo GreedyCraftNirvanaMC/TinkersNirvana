@@ -3,6 +3,8 @@ package com.gctn.tconstruct.tables.recipe;
 import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.Material;
+import com.gctn.tconstruct.tables.data.Mode;
+import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
@@ -11,15 +13,24 @@ public final class ToolStationDisassemblyRecipes {
     }
 
     public static boolean canDisassemble(ItemStack stack) {
-        return !createParts(stack).isEmpty();
+        return canDisassemble(stack, true);
     }
 
     public static PartList createParts(ItemStack stack) {
+        return createParts(stack, true);
+    }
+
+    public static boolean canDisassemble(ItemStack stack, boolean forge) {
+        return !createParts(stack, forge).isEmpty();
+    }
+
+    public static PartList createParts(ItemStack stack, boolean forge) {
         if (!com.gctn.tconstruct.Config.DECONSTRUCT_TOOLS.get() || !isFullDurabilityTool(stack)) {
             return PartList.EMPTY;
         }
 
-        if (!(stack.getItem() instanceof com.gctn.tconstruct.tools.tools.AntiqueTool item)) { return PartList.EMPTY; }
+        if (!(stack.getItem() instanceof AntiqueTool item)
+                || !forge && Mode.valueOf(item.definition().action().name()).requiresForge()) { return PartList.EMPTY; }
         CompoundTag materials = TinkerDataComponents.getMaterialTag(stack);
         if (item.definition().action() == com.gctn.tconstruct.tools.ToolDefinition.Action.BOLT) {
             Material shaft = getMaterial(materials, "Shaft", "Shaft");
@@ -48,15 +59,8 @@ public final class ToolStationDisassemblyRecipes {
     }
 
     private static Material getMaterial(CompoundTag materials, String materialKey, String requiredStat) {
-        String materialId = materials.getString(materialKey);
-        for (Material material : TinkerMaterials.materials) {
-            if (material.identifier.equals(materialId)
-                    && material.getStats() != null
-                    && material.getStats().containsKey(requiredStat)) {
-                return material;
-            }
-        }
-        return null;
+        Material material = TinkerMaterials.getMaterial(materials.getString(materialKey));
+        return material != null && material.hasStats(requiredStat) ? material : null;
     }
 
     public record PartList(ItemStack[] parts) {

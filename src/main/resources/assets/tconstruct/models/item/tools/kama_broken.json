@@ -1,8 +1,0 @@
-{
-  "parent": "tconstruct:item/tools/kama",
-  "textures": {
-    "layer0": "tconstruct:item/antique/pickaxe/handle",
-    "layer1": "tconstruct:item/antique/kama/broken_head",
-    "layer2": "tconstruct:item/antique/kama/binding"
-  }
-}

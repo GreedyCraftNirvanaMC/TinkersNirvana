@@ -1,0 +1,9 @@
+{
+  "parent": "tconsnirvana:item/tools/excavator",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/excavator/handle",
+    "layer1": "tconsnirvana:item/antique/excavator/broken_head",
+    "layer2": "tconsnirvana:item/antique/excavator/binding",
+    "layer3": "tconsnirvana:item/antique/excavator/grip"
+  }
+}

@@ -1,8 +1,0 @@
-{
-  "parent": "tconstruct:item/tools/hatchet",
-  "textures": {
-    "layer0": "tconstruct:item/antique/pickaxe/handle",
-    "layer1": "tconstruct:item/antique/hatchet/broken_head",
-    "layer2": "tconstruct:item/antique/hatchet/binding"
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/item_frame_map",
-  "textures": {
-    "wood": "tconstruct:block/block_manyullyn",
-    "back": "tconstruct:block/gadgets/frame_background",
-    "particle": "#wood"
-  }
-}

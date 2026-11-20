@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconsnirvana:block/firewood_slab"
+    },
+    "type=double": {
+      "model": "tconsnirvana:block/firewood"
+    },
+    "type=top": {
+      "model": "tconsnirvana:block/firewood_slab_top"
+    }
+  }
+}

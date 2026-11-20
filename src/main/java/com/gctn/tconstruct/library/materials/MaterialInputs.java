@@ -32,7 +32,7 @@ public final class MaterialInputs {
 
     public static void item(Material material, String id, float value) {
         ResourceLocation key = ResourceLocation.parse(id);
-        register(material, stack -> BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(key), value);
+        register(material, stack -> BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(BuiltInRegistries.ITEM.resolve(key)), value);
     }
 
     public static void tag(Material material, String id, float value) {
@@ -63,6 +63,7 @@ public final class MaterialInputs {
     public static void init() {
         if (initialized) { return; }
         initialized = true;
+        item(TinkerMaterials.wood, "minecraft:stick", .5F);
         tag(TinkerMaterials.wood, "minecraft:planks", 1);
         tag(TinkerMaterials.wood, "minecraft:logs", 4);
         tag(TinkerMaterials.stone, "c:cobblestones", 1);
@@ -70,25 +71,29 @@ public final class MaterialInputs {
         item(TinkerMaterials.flint, "minecraft:flint", 1);
         item(TinkerMaterials.cactus, "minecraft:cactus", 1);
         item(TinkerMaterials.bone, "minecraft:bone", 1);
-        item(TinkerMaterials.bloodbone, "tconstruct:bloodbone", 1);
+        item(TinkerMaterials.bone, "minecraft:bone_meal", .25F);
+        item(TinkerMaterials.bloodbone, "tconsnirvana:bloodbone", 1);
         item(TinkerMaterials.obsidian, "minecraft:obsidian", 1);
-        item(TinkerMaterials.prismarine, "minecraft:prismarine_shard", 1);
+        item(TinkerMaterials.prismarine, "minecraft:prismarine_shard", .25F);
+        item(TinkerMaterials.prismarine, "minecraft:prismarine", 1);
+        item(TinkerMaterials.prismarine, "minecraft:prismarine_bricks", 2.25F);
+        item(TinkerMaterials.prismarine, "minecraft:dark_prismarine", 2);
         item(TinkerMaterials.endstone, "minecraft:end_stone", 1);
         item(TinkerMaterials.netherrack, "minecraft:netherrack", 1);
-        item(TinkerMaterials.paper, "minecraft:paper", 1);
+        item(TinkerMaterials.paper, "minecraft:paper", .25F);
         item(TinkerMaterials.sponge, "minecraft:sponge", 1);
-        item(TinkerMaterials.firewood, "tconstruct:firewood", 1);
-        item(TinkerMaterials.slime, "tconstruct:slimecrystal_green", 1);
-        item(TinkerMaterials.blueslime, "tconstruct:slimecrystal_blue", 1);
-        item(TinkerMaterials.magmaslime, "tconstruct:slimecrystal_magma", 1);
+        item(TinkerMaterials.firewood, "tconsnirvana:firewood", 1);
+        item(TinkerMaterials.slime, "tconsnirvana:slimecrystal_green", 1);
+        item(TinkerMaterials.blueslime, "tconsnirvana:slimecrystal_blue", 1);
+        item(TinkerMaterials.magmaslime, "tconsnirvana:slimecrystal_magma", 1);
         for (String id : new String[]{"iron", "pigiron", "knightslime", "cobalt", "ardite", "manyullyn",
                 "copper", "bronze", "lead", "silver", "electrum", "steel", "alubrass", "alumite"}) {
             Material material = TinkerMaterials.getMaterial(id);
             tag(material, "c:ingots/" + id, 1);
             tag(material, "c:nuggets/" + id, 1F / 9);
             tag(material, "c:storage_blocks/" + id, 9);
-            item(material, (id.equals("iron") || id.equals("copper") ? "minecraft:" : "tconstruct:") + id + "_ingot", 1);
-            item(material, (id.equals("iron") ? "minecraft:" : "tconstruct:") + id + "_nugget", 1F / 9);
+            item(material, (id.equals("iron") || id.equals("copper") ? "minecraft:" : "tconsnirvana:") + id + "_ingot", 1);
+            item(material, (id.equals("iron") ? "minecraft:" : "tconsnirvana:") + id + "_nugget", 1F / 9);
         }
         tag(TinkerMaterials.string, "c:strings", 1);
         item(TinkerMaterials.string, "minecraft:string", 1);
@@ -100,11 +105,11 @@ public final class MaterialInputs {
         item(TinkerMaterials.feather, "minecraft:feather", 1);
         for (String color : new String[]{"blue", "purple"}) {
             Material material = color.equals("blue") ? TinkerMaterials.slimevine_blue : TinkerMaterials.slimevine_purple;
-            for (String stage : new String[]{"", "_mid", "_end"}) { item(material, "tconstruct:slime_vine_" + color + stage, 1); }
+            for (String stage : new String[]{"", "_mid", "_end"}) { item(material, "tconsnirvana:slime_vine_" + color + stage, 1); }
         }
-        item(TinkerMaterials.slimeleaf_blue, "tconstruct:slime_leaves_blue", .5f);
-        item(TinkerMaterials.slimeleaf_purple, "tconstruct:slime_leaves_purple", .5f);
-        item(TinkerMaterials.slimeleaf_orange, "tconstruct:slime_leaves_orange", .5f);
+        item(TinkerMaterials.slimeleaf_blue, "tconsnirvana:slime_leaves_blue", .5f);
+        item(TinkerMaterials.slimeleaf_purple, "tconsnirvana:slime_leaves_purple", .5f);
+        item(TinkerMaterials.slimeleaf_orange, "tconsnirvana:slime_leaves_orange", .5f);
         tag(TinkerMaterials.leaf, "minecraft:leaves", .5f);
     }
 

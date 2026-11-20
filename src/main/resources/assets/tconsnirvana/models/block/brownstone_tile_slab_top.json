@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "tconsnirvana:block/brownstone/tile",
+    "top": "tconsnirvana:block/brownstone/tile",
+    "side": "tconsnirvana:block/brownstone/tile"
+  }
+}

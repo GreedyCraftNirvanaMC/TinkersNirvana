@@ -59,10 +59,12 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     @Override
     protected void init() {
         super.init();
+        var tabs = WorkshopNavigation.tabs(menu.position());
+        topPos = WorkshopNavigation.panelTop(topPos, tabs);
         this.modeButtons.clear();
         this.modeButtonColumns = Math.clamp(leftPos / MODE_BUTTON_SPACING, 1, MAX_MODE_BUTTON_COLUMNS);
         nearbyPanel.init(leftPos, topPos, menu.containerId, this::addRenderableWidget);
-        nameField = new net.minecraft.client.gui.components.EditBox(font, leftPos + 70, topPos + 8, 98, 10, Component.translatable("gui.tconstruct.tool_name"));
+        nameField = new net.minecraft.client.gui.components.EditBox(font, leftPos + 70, topPos + 8, 98, 10, Component.translatable("gui.tconsnirvana.tool_name"));
         nameField.setMaxLength(50);
         nameField.setBordered(false);
         nameField.setTextColor(0x202020);
@@ -75,7 +77,7 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
             }
         });
         addRenderableWidget(nameField);
-        WorkshopNavigation.add(menu.position(), menu.containerId, leftPos + 8, topPos - 20, this::addRenderableWidget);
+        WorkshopNavigation.add(tabs, menu.position(), menu.containerId, leftPos, topPos, this::addRenderableWidget);
         this.addModeButton(Mode.DEFAULT, ICON_TEXTURE, 55, 1, 16, 16);
         this.addModeButton(Mode.DISASSEMBLE, new ItemStack(Items.SHEARS));
         this.addModeButton(Mode.PICKAXE, new ItemStack(Items.WOODEN_PICKAXE));

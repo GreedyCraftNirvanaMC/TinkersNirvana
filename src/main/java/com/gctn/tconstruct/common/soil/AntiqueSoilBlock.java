@@ -46,9 +46,13 @@ public final class AntiqueSoilBlock extends Block {
         return simpleCodec(properties -> new AntiqueSoilBlock(kind, properties));
     }
 
+    public boolean isSlimyMud() {
+        return kind == Kind.SLIMY_MUD_GREEN || kind == Kind.SLIMY_MUD_BLUE;
+    }
+
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
-        if (kind == Kind.SLIMY_MUD_GREEN || kind == Kind.SLIMY_MUD_BLUE) {
+        if (isSlimyMud()) {
             // 只减慢水平速度，保持跳跃和坠落分量；熔岩泥泞在原版没有这项效果。
             entity.setDeltaMovement(entity.getDeltaMovement().multiply(0.4, 1, 0.4));
             if (!level.isClientSide && entity instanceof LivingEntity living) {
@@ -68,7 +72,7 @@ public final class AntiqueSoilBlock extends Block {
 
     @Override
     public TriState canSustainPlant(BlockState state, BlockGetter level, BlockPos pos, Direction direction, BlockState plant) {
-        if (kind == Kind.SLIMY_MUD_GREEN || kind == Kind.SLIMY_MUD_BLUE) {
+        if (isSlimyMud()) {
             // 世界模块可通过此标签声明史莱姆植物，普通花草不能借此在泥泞上生长。
             return plant.is(SLIME_PLANTS) ? TriState.TRUE : TriState.FALSE;
         }

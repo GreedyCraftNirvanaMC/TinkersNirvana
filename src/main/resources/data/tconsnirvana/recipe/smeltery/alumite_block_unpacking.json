@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:alumite_block"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:alumite_ingot",
+    "count": 9
+  }
+}

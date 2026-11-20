@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "tconsnirvana:stained_clear_glass",
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconsnirvana:clear_glass"
+    },
+    "B": {
+      "tag": "c:dyes/cyan"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:clear_stained_glass_cyan",
+    "count": 8
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "tconsnirvana:block/brownstone/paver",
+    "top": "tconsnirvana:block/brownstone/paver",
+    "side": "tconsnirvana:block/brownstone/creeper"
+  }
+}

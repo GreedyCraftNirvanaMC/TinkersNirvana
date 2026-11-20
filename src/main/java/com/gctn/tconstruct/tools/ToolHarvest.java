@@ -5,79 +5,251 @@
  */
 package com.gctn.tconstruct.tools;
 
+import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.NetherWartBlock;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.Set;
 
 /** 每个额外方块都走原版玩家破坏流程，包括领地保护、掉落、事件和耐久。 */
+@EventBusSubscriber(modid = TinkersNirvana.MODID)
 public final class ToolHarvest {
     private static final ThreadLocal<Boolean> HARVESTING = ThreadLocal.withInitial(() -> false);
-    private static final int TREE_LIMIT = 256;
+    private static final Map<ServerPlayer, ArrayDeque<TreeHarvest>> TREES = new IdentityHashMap<>();
     private static final ThreadLocal<net.minecraft.core.BlockPos> REPLANTING = new ThreadLocal<>();
     private static final ThreadLocal<Boolean> SEED_RESERVED = ThreadLocal.withInitial(() -> false);
     private ToolHarvest() {}
     public static void afterBreak(AntiqueTool item, ItemStack tool, Level level, BlockState original, BlockPos pos, LivingEntity entity) {
-        if (!(entity instanceof ServerPlayer player) || player.isShiftKeyDown() || HARVESTING.get() || TinkerTools.isBroken(tool)) { return; }
+        if (!(entity instanceof ServerPlayer player) || HARVESTING.get() || REPLANTING.get() != null
+                || TinkerTools.isBroken(tool) || !tool.isCorrectToolForDrops(original)) {
+            return;
+        }
         var action = item.definition().action();
-        if (action != ToolDefinition.Action.HAMMER && action != ToolDefinition.Action.EXCAVATOR
-                && action != ToolDefinition.Action.LUMBERAXE && action != ToolDefinition.Action.SCYTHE) { return; }
+        if (!supportsExpanders(action)) {
+            return;
+        }
+        boolean expandedWidth = ToolModifiers.level(tool, "harvestwidth") > 0;
+        boolean expandedHeight = ToolModifiers.level(tool, "harvestheight") > 0;
+        boolean large = switch (action) {
+            case HAMMER, EXCAVATOR, LUMBERAXE, SCYTHE -> true;
+            default -> false;
+        };
         HARVESTING.set(true);
         try {
-            if (action == ToolDefinition.Action.LUMBERAXE && original.is(BlockTags.LOGS)) { tree(player, tool, pos, original); }
-            else {
-                Direction.Axis axis = Direction.getNearest(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z).getAxis();
-                int width = 1 + Math.min(1, ToolModifiers.level(tool, "harvestwidth"));
-                int height = 1 + Math.min(1, ToolModifiers.level(tool, "harvestheight"));
-                for (int u = -width; u <= width; u++) {
-                    for (int v = -height; v <= height; v++) {
-                        if (u == 0 && v == 0) { continue; }
-                        BlockPos next = switch (axis) { case X -> pos.offset(0, v, u); case Y -> pos.offset(u, 0, v); case Z -> pos.offset(u, v, 0); };
-                        harvest(player, tool, next, original);
-                    }
+            if (action == ToolDefinition.Action.LUMBERAXE && isTree(level, pos)) {
+                InteractionHand hand = DualToolHarvest.active(player) ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+                var task = new TreeHarvest(player.serverLevel(), tool, hand, expandedWidth || expandedHeight ? 4 : 1);
+                task.addBranches(pos);
+                if (!task.queue.isEmpty()) {
+                    TREES.computeIfAbsent(player, ignored -> new ArrayDeque<>()).addLast(task);
                 }
+                return;
             }
-        } finally { HARVESTING.set(false); }
+            if (!large && !expandedWidth && !expandedHeight) {
+                return;
+            }
+            int width = (large ? 3 : 1) + (expandedWidth ? (large ? 2 : 1) : 0);
+            int height = (large ? 3 : 1) + (expandedHeight ? (large ? 2 : 1) : 0);
+            if (action == ToolDefinition.Action.MATTOCK) {
+                width = height = width + height - 1;
+            }
+            int depth = action == ToolDefinition.Action.LUMBERAXE || action == ToolDefinition.Action.SCYTHE ? 3 : 1;
+            int distance = large && (expandedWidth || expandedHeight) ? 3 : 0;
+            harvestVolume(player, tool, pos, original, width, height, depth, distance);
+        } finally {
+            HARVESTING.remove();
+        }
     }
 
-    public static boolean harvestCrops(AntiqueTool item, ItemStack tool, net.minecraft.world.item.context.UseOnContext context) {
-        Level level = context.getLevel();
-        BlockState center = level.getBlockState(context.getClickedPos());
-        if (!(center.getBlock() instanceof net.minecraft.world.level.block.CropBlock crop) || !crop.isMaxAge(center)) { return false; }
-        if (level.isClientSide) { return true; }
-        if (!(context.getPlayer() instanceof ServerPlayer player)) { return false; }
-        int radius = item.definition().action() == ToolDefinition.Action.SCYTHE && !player.isShiftKeyDown() ? 1 : 0;
-        boolean harvested = false;
-        for (BlockPos candidate : BlockPos.betweenClosed(context.getClickedPos().offset(-radius, 0, -radius), context.getClickedPos().offset(radius, 0, radius))) {
-            BlockPos pos = candidate.immutable();
-            BlockState state = level.getBlockState(pos);
-            if (TinkerTools.isBroken(tool) || !(state.getBlock() instanceof net.minecraft.world.level.block.CropBlock plant)
-                    || !plant.isMaxAge(state) || !player.mayInteract(level, pos)) { continue; }
-            REPLANTING.set(pos);
-            SEED_RESERVED.set(false);
-            try {
-                if (player.gameMode.destroyBlock(pos)) {
-                    if (state.getDestroySpeed(level, pos) == 0) { item.damage(tool, 1, player, net.minecraft.world.entity.EquipmentSlot.MAINHAND); }
-                    if (SEED_RESERVED.get() && level.isEmptyBlock(pos)) { level.setBlockAndUpdate(pos, plant.getStateForAge(0)); }
-                    harvested = true;
-                }
-            } finally { REPLANTING.remove(); SEED_RESERVED.remove(); }
+    static boolean supportsExpanders(ToolDefinition.Action action) {
+        return switch (action) {
+            case PICKAXE, SHOVEL, AXE, MATTOCK, KAMA, HAMMER, EXCAVATOR, LUMBERAXE, SCYTHE -> true;
+            default -> false;
+        };
+    }
+
+    private static void harvestVolume(ServerPlayer player, ItemStack tool, BlockPos origin, BlockState original,
+                                      int width, int height, int depth, int distance) {
+        HitResult hit = player.pick(player.blockInteractionRange(), 1, false);
+        BlockHitResult blockHit = hit instanceof BlockHitResult block && hit.getType() == HitResult.Type.BLOCK
+                && block.getBlockPos().equals(origin) ? block : null;
+        Direction side = blockHit == null ? player.getDirection().getOpposite() : blockHit.getDirection();
+        Vec3 offset = blockHit == null ? new Vec3(.5, .5, .5) : blockHit.getLocation().subtract(Vec3.atLowerCornerOf(origin));
+        for (BlockPos next : harvestBounds(origin, side, offset, player.getDirection(), width, height, depth)) {
+            if (!next.equals(origin) && (distance == 0 || next.distManhattan(origin) <= distance)) {
+                harvest(player, tool, next.immutable(), origin, original);
+            }
         }
-        return harvested;
+    }
+
+    private static Iterable<BlockPos> harvestBounds(BlockPos origin, Direction side, Vec3 offset, Direction horizontal,
+                                                    int width, int height, int depth) {
+        int x = side.getAxis() == Direction.Axis.X ? -side.getStepX() * depth
+                : side.getAxis() == Direction.Axis.Y ? horizontal.getStepX() * height + horizontal.getStepZ() * width : width;
+        int y = side.getAxis() == Direction.Axis.Y ? -side.getStepY() * depth : height;
+        int z = side.getAxis() == Direction.Axis.Z ? -side.getStepZ() * depth
+                : side.getAxis() == Direction.Axis.Y ? horizontal.getStepX() * width + horizontal.getStepZ() * height : width;
+        // 偶数宽高没有中心格，按玩家击中的半侧决定向哪一边扩展。
+        int startX = side.getAxis() == Direction.Axis.X ? 0 : startOffset(x, offset.x);
+        int startY = side.getAxis() == Direction.Axis.Y ? 0 : startOffset(y, offset.y);
+        int startZ = side.getAxis() == Direction.Axis.Z ? 0 : startOffset(z, offset.z);
+        return BlockPos.betweenClosed(origin.offset(startX, startY, startZ),
+                origin.offset(startX + x - Integer.signum(x), startY + y - Integer.signum(y), startZ + z - Integer.signum(z)));
+    }
+
+    private static int startOffset(int size, double hit) {
+        int step = Integer.signum(size);
+        boolean nearEnd = step > 0 ? hit > .5 : hit < .5;
+        return -size / 2 + (size % 2 == 0 && nearEnd ? step : 0);
+    }
+
+    private static boolean isTree(Level level, BlockPos origin) {
+        BlockPos aboveTrunk = null;
+        ArrayDeque<BlockPos> candidates = new ArrayDeque<>();
+        candidates.push(origin);
+        while (!candidates.isEmpty()) {
+            BlockPos candidate = candidates.pop();
+            if ((aboveTrunk == null || candidate.getY() > aboveTrunk.getY()) && isLog(level, candidate)) {
+                aboveTrunk = candidate.above();
+                while (isLog(level, aboveTrunk)) {
+                    aboveTrunk = aboveTrunk.above();
+                }
+                for (Direction direction : Direction.Plane.HORIZONTAL) {
+                    candidates.push(aboveTrunk.relative(direction));
+                }
+            }
+        }
+        if (aboveTrunk == null) {
+            return false;
+        }
+        // 树冠附近至少有五片树叶才启动连锁砍伐，避免把建筑中的整排原木当树。
+        int leaves = 0;
+        for (BlockPos pos : BlockPos.betweenClosed(aboveTrunk.offset(-1, -1, -1), aboveTrunk.offset(1, 1, 1))) {
+            if (level.hasChunkAt(pos) && level.getBlockState(pos).is(BlockTags.LEAVES) && ++leaves >= 5) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isLog(Level level, BlockPos pos) {
+        return !level.isOutsideBuildHeight(pos) && level.hasChunkAt(pos) && level.getBlockState(pos).is(BlockTags.LOGS);
+    }
+
+    public static boolean harvestCrops(AntiqueTool item, ItemStack tool, UseOnContext context) {
+        Level level = context.getLevel();
+        BlockPos origin = context.getClickedPos();
+        if (context.getPlayer() == null || !canHarvestCrop(level, origin, level.getBlockState(origin))) {
+            return false;
+        }
+        if (level.isClientSide) {
+            return true;
+        }
+        if (!(context.getPlayer() instanceof ServerPlayer player)) {
+            return false;
+        }
+        boolean scythe = item.definition().action() == ToolDefinition.Action.SCYTHE;
+        boolean wide = ToolModifiers.level(tool, "harvestwidth") > 0;
+        boolean tall = ToolModifiers.level(tool, "harvestheight") > 0;
+        int width = scythe ? (wide ? 5 : 3) : (wide ? 2 : 1);
+        int height = scythe ? (tall ? 5 : 3) : (tall ? 2 : 1);
+        Vec3 offset = context.getClickLocation().subtract(Vec3.atLowerCornerOf(origin));
+        var positions = harvestBounds(origin, context.getClickedFace(), offset, player.getDirection(), width, height, scythe ? 3 : 1);
+        java.util.function.Supplier<Boolean> action = () -> {
+            boolean harvested = false;
+            for (BlockPos candidate : positions) {
+                if (!candidate.equals(origin) && (!scythe || (!wide && !tall) || candidate.distManhattan(origin) <= 3)) {
+                    harvested |= harvestCrop(player, item, tool, candidate.immutable());
+                }
+            }
+            return harvestCrop(player, item, tool, origin) || harvested;
+        };
+        return context.getHand() == InteractionHand.OFF_HAND ? DualToolHarvest.withOffhandTool(player, action) : action.get();
+    }
+
+    private static boolean canHarvestCrop(Level level, BlockPos pos, BlockState state) {
+        if (state.getBlock() instanceof CropBlock crop) {
+            return crop.isMaxAge(state);
+        }
+        if (state.is(Blocks.NETHER_WART)) {
+            return state.getValue(NetherWartBlock.AGE) == 3;
+        }
+        return state.is(Blocks.SUGAR_CANE) && level.getBlockState(pos.below()).is(Blocks.SUGAR_CANE);
+    }
+
+    private static boolean harvestCrop(ServerPlayer player, AntiqueTool item, ItemStack tool, BlockPos pos) {
+        Level level = player.level();
+        if (TinkerTools.isBroken(tool) || player.getMainHandItem() != tool || !level.hasChunkAt(pos)
+                || !player.mayInteract(level, pos)) {
+            return false;
+        }
+        BlockState state = level.getBlockState(pos);
+        if (!canHarvestCrop(level, pos, state)) {
+            return false;
+        }
+        REPLANTING.set(pos);
+        SEED_RESERVED.set(false);
+        try {
+            if (!player.gameMode.destroyBlock(pos) || !level.isEmptyBlock(pos)) {
+                return false;
+            }
+            if (state.getDestroySpeed(level, pos) == 0) {
+                item.damage(tool, 1, player, EquipmentSlot.MAINHAND);
+            }
+            if (SEED_RESERVED.get()) {
+                BlockState seedling = state.getBlock() instanceof CropBlock crop ? crop.getStateForAge(0)
+                        : state.setValue(NetherWartBlock.AGE, 0);
+                if (seedling.canSurvive(level, pos)) {
+                    level.setBlockAndUpdate(pos, seedling);
+                } else {
+                    net.minecraft.world.level.block.Block.popResource(level, pos, seedling.getBlock().getCloneItemStack(level, pos, seedling));
+                }
+            }
+            return true;
+        } finally {
+            REPLANTING.remove();
+            SEED_RESERVED.remove();
+        }
     }
 
     public static void reserveSeed(net.neoforged.neoforge.event.level.BlockDropsEvent event) {
-        if (!event.getPos().equals(REPLANTING.get()) || !(event.getState().getBlock() instanceof net.minecraft.world.level.block.CropBlock crop)) { return; }
-        ItemStack seed = crop.getCloneItemStack(event.getLevel(), event.getPos(), event.getState());
+        if (!event.getPos().equals(REPLANTING.get())) {
+            return;
+        }
+        ItemStack seed;
+        if (event.getState().getBlock() instanceof CropBlock crop) {
+            seed = crop.getCloneItemStack(event.getLevel(), event.getPos(), event.getState());
+        } else if (event.getState().is(Blocks.NETHER_WART)) {
+            seed = new ItemStack(net.minecraft.world.item.Items.NETHER_WART);
+        } else {
+            return;
+        }
         for (var iterator = event.getDrops().iterator(); iterator.hasNext();) {
             ItemStack drop = iterator.next().getItem();
             if (drop.is(seed.getItem()) && !drop.isEmpty()) {
@@ -88,32 +260,104 @@ public final class ToolHarvest {
             }
         }
     }
-    private static void tree(ServerPlayer player, ItemStack tool, BlockPos origin, BlockState original) {
-        ArrayDeque<BlockPos> queue = new ArrayDeque<>();
-        Set<BlockPos> visited = new HashSet<>();
-        queue.add(origin);
-        visited.add(origin);
-        while (!queue.isEmpty() && visited.size() <= TREE_LIMIT && !TinkerTools.isBroken(tool)) {
-            BlockPos current = queue.removeFirst();
-            for (int x = -1; x <= 1; x++) {
-                for (int y = 0; y <= 1; y++) {
-                    for (int z = -1; z <= 1; z++) {
-                        BlockPos next = current.offset(x, y, z);
-                        if (!player.level().hasChunkAt(next) || next.distSqr(origin) > 32 * 32
-                                || !player.level().getBlockState(next).is(BlockTags.LOGS) || !visited.add(next)) { continue; }
-                        if (harvest(player, tool, next, original)) { queue.addLast(next); }
-                        if (visited.size() >= TREE_LIMIT) { return; }
+    @SubscribeEvent
+    private static void tickTrees(PlayerTickEvent.Post event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) {
+            return;
+        }
+        var tasks = TREES.get(player);
+        if (tasks == null) {
+            return;
+        }
+        TreeHarvest task = tasks.getFirst();
+        if (task.level != player.level() || !player.isAlive() || player.isSpectator()
+                || player.getItemInHand(task.hand) != task.tool || TinkerTools.isBroken(task.tool) || task.tool.isEmpty()) {
+            tasks.removeFirst();
+        } else {
+            // 每刻处理有限数量的原木。副手伐木也沿用原版破坏事件和已有的副手耐久逻辑。
+            HARVESTING.set(true);
+            try {
+                if (task.hand == InteractionHand.OFF_HAND) {
+                    DualToolHarvest.withOffhandTool(player, () -> {
+                        task.step(player);
+                        return null;
+                    });
+                } else {
+                    task.step(player);
+                }
+            } finally {
+                HARVESTING.remove();
+            }
+            if (task.queue.isEmpty()) {
+                tasks.removeFirst();
+            }
+        }
+        if (tasks.isEmpty()) {
+            TREES.remove(player);
+        }
+    }
+
+    @SubscribeEvent
+    private static void stopTrees(PlayerEvent.PlayerLoggedOutEvent event) {
+        TREES.remove(event.getEntity());
+    }
+
+    @SubscribeEvent
+    private static void stopTrees(ServerStoppingEvent event) {
+        TREES.keySet().removeIf(player -> player.getServer() == event.getServer());
+    }
+
+    private static final class TreeHarvest {
+        private final ServerLevel level;
+        private final ItemStack tool;
+        private final InteractionHand hand;
+        private final int blocksPerTick;
+        private final ArrayDeque<BlockPos> queue = new ArrayDeque<>();
+        private final Set<BlockPos> visited = new HashSet<>();
+
+        private TreeHarvest(ServerLevel level, ItemStack tool, InteractionHand hand, int blocksPerTick) {
+            this.level = level;
+            this.tool = tool;
+            this.hand = hand;
+            this.blocksPerTick = blocksPerTick;
+        }
+
+        private void addBranches(BlockPos origin) {
+            visited.add(origin);
+            for (BlockPos candidate : BlockPos.betweenClosed(origin.offset(-1, 0, -1), origin.offset(1, 1, 1))) {
+                if (isLog(level, candidate)) {
+                    BlockPos pos = candidate.immutable();
+                    if (visited.add(pos)) {
+                        queue.addLast(pos);
                     }
                 }
             }
         }
+
+        private void step(ServerPlayer player) {
+            for (int i = 0; i < blocksPerTick && !queue.isEmpty() && !TinkerTools.isBroken(tool) && !tool.isEmpty(); i++) {
+                BlockPos pos = queue.removeFirst();
+                if (isLog(level, pos) && harvest(player, tool, pos, pos, level.getBlockState(pos))) {
+                    addBranches(pos);
+                }
+            }
+        }
     }
-    private static boolean harvest(ServerPlayer player, ItemStack tool, BlockPos pos, BlockState original) {
+
+    private static boolean harvest(ServerPlayer player, ItemStack tool, BlockPos pos, BlockPos origin, BlockState original) {
         if (TinkerTools.isBroken(tool) || player.getMainHandItem() != tool || !player.level().hasChunkAt(pos)) { return false; }
         BlockState state = player.level().getBlockState(pos);
         float hardness = state.getDestroySpeed(player.level(), pos);
-        if (state.isAir() || state.hasBlockEntity() || hardness < 0 || hardness > Math.max(1, original.getDestroySpeed(player.level(), pos)) * 3
-                || tool.getDestroySpeed(state) <= 1 || (state.requiresCorrectToolForDrops() && !tool.isCorrectToolForDrops(state)) || !player.mayInteract(player.level(), pos)) { return false; }
+        if (state.isAir() || state.hasBlockEntity() || hardness < 0
+                || !tool.isCorrectToolForDrops(state) || !player.mayInteract(player.level(), pos)) {
+            return false;
+        }
+        float referenceSpeed = tool.getDestroySpeed(original);
+        float referenceHardness = original.getDestroySpeed(player.level(), origin);
+        // 比较相对挖掘时间，避免低速工具借范围挖掘秒破远比中心方块难挖的方块。
+        if (hardness > 0 && referenceSpeed * hardness > 10 * tool.getDestroySpeed(state) * referenceHardness) {
+            return false;
+        }
         return player.gameMode.destroyBlock(pos);
     }
 }

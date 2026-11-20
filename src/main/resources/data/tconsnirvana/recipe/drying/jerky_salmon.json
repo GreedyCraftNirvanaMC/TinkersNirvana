@@ -1,0 +1,10 @@
+{
+  "type": "tconsnirvana:drying",
+  "ingredient": {
+    "item": "minecraft:salmon"
+  },
+  "result": {
+    "id": "tconsnirvana:jerky_salmon"
+  },
+  "time": 6000
+}

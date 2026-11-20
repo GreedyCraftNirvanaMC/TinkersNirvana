@@ -57,7 +57,7 @@ public final class SlimeModule {
                             .isSuffocating((state, level, pos) -> true)
                             .isViewBlocking((state, level, pos) -> true))));
         }
-        TABS.register("slime", () -> CreativeModeTab.builder().title(Component.translatable("tab.tconstruct.slime"))
+        TABS.register("slime", () -> CreativeModeTab.builder().title(Component.translatable("tab.tconsnirvana.slime"))
                 .icon(() -> BALLS.get("blue").get().getDefaultInstance())
                 .displayItems((parameters, output) -> {
                     // 粉色方块与原版一样隐藏，粉色史莱姆球仍可用于搜索与调试。

@@ -76,8 +76,9 @@ public final class SlimeLakeShape {
         }
         for (BlockPos pos : fluidPositions) { var fluid = level.getFluidState(pos); level.scheduleTick(pos, fluid.getType(), fluid.getType().getTickDelay(level)); }
         if (spawns != null && !fluidPositions.isEmpty() && level.getDifficulty() != Difficulty.PEACEFUL) {
-            for (int i = fluidPositions.size() - 1; i > 0; i--) { int selected = random.nextInt(i + 1); BlockPos previous = fluidPositions.set(i, fluidPositions.get(selected)); fluidPositions.set(selected, previous); }
+            // 怀古先抽取尝试次数，再洗牌候选液面，避免固定随机序列产生不同分布。
             int count = Math.min(random.nextInt(5) + 2, fluidPositions.size());
+            for (int i = fluidPositions.size() - 1; i > 0; i--) { int selected = random.nextInt(i + 1); BlockPos previous = fluidPositions.set(i, fluidPositions.get(selected)); fluidPositions.set(selected, previous); }
             for (int i = 0; i < count; i++) {
                 BlockPos pos = fluidPositions.get(i);
                 if (!level.isEmptyBlock(pos.above())) { continue; }

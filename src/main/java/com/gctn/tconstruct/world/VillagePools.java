@@ -5,33 +5,63 @@ import com.gctn.tconstruct.Config;
 import com.gctn.tconstruct.TinkersNirvana;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
-import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = TinkersNirvana.MODID)
 public final class VillagePools {
+    private static final Set<String> BIOMES = Set.of("plains", "desert", "savanna", "snowy", "taiga");
+    private static final Set<ResourceLocation> SMELTERIES = templates("smeltery");
+    private static final Set<ResourceLocation> WORKSHOPS = templates("tool_workshop");
+
     private VillagePools() {}
     @SubscribeEvent private static void add(ServerAboutToStartEvent event) {
         if (!Config.GEN_VILLAGE_STRUCTURES.get()) { return; }
         var registry = event.getServer().registryAccess().registryOrThrow(Registries.TEMPLATE_POOL);
-        for (String biome : new String[]{"plains", "desert", "savanna", "snowy", "taiga"}) {
-            var pool = registry.get(net.minecraft.resources.ResourceLocation.withDefaultNamespace("village/" + biome + "/houses"));
+        for (String biome : BIOMES) {
+            var pool = registry.get(ResourceLocation.withDefaultNamespace("village/" + biome + "/houses"));
             var additions = registry.get(WorldModule.id("village/" + biome + "/antique"));
             if (pool == null || additions == null) { continue; }
-            // A registry instance may be reused by an integrated server. Element identity makes this idempotent.
+            ResourceLocation workshop = WorldModule.id("village/" + biome + "/tool_workshop");
+            ResourceLocation smeltery = WorldModule.id("village/" + biome + "/smeltery");
             pool.rawTemplates = new ArrayList<>(pool.rawTemplates);
             for (var pair : additions.rawTemplates) {
-                if (pool.rawTemplates.stream().anyMatch(existing -> existing.getFirst() == pair.getFirst())) { continue; }
-                int weight = pair.getSecond() == 30 ? Config.VILLAGE_WORKSHOP_WEIGHT.get() : Config.VILLAGE_SMELTERY_WEIGHT.get();
+                ResourceLocation template = location(pair.getFirst());
+                // 数据包可以改权重或预先向原版池加入同一模板。按模板 ID 区分建筑并避免重复。
+                if (pool.rawTemplates.stream().anyMatch(existing -> existing.getFirst() == pair.getFirst()
+                        || template != null && template.equals(location(existing.getFirst())))) { continue; }
+                int weight = workshop.equals(template) ? Config.VILLAGE_WORKSHOP_WEIGHT.get()
+                        : smeltery.equals(template) ? Config.VILLAGE_SMELTERY_WEIGHT.get() : pair.getSecond();
                 pool.rawTemplates.add(Pair.of(pair.getFirst(), weight));
                 for (int i = 0; i < weight; i++) { pool.templates.add(pair.getFirst()); }
             }
             pool.maxSize = Integer.MIN_VALUE;
         }
+    }
+
+    private static ResourceLocation location(StructurePoolElement element) {
+        return element instanceof SinglePoolElement single ? single.template.left().orElse(null) : null;
+    }
+
+    public static boolean isSmeltery(StructurePoolElement element) {
+        ResourceLocation template = location(element);
+        return template != null && SMELTERIES.contains(template);
+    }
+
+    public static boolean isWorkshop(StructurePoolElement element) {
+        ResourceLocation template = location(element);
+        return template != null && WORKSHOPS.contains(template);
+    }
+
+    private static Set<ResourceLocation> templates(String name) {
+        return BIOMES.stream().map(biome -> WorldModule.id("village/" + biome + "/" + name)).collect(Collectors.toUnmodifiableSet());
     }
 }

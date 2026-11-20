@@ -9,8 +9,8 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 
 /** Startup definition registries. Existing material and trait lookups stay authoritative at runtime. */
 public final class ContentRegistries {
-    public static final ResourceKey<Registry<MaterialDefinition>> MATERIAL = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("tconstruct", "material"));
-    public static final ResourceKey<Registry<TraitDefinition>> TRAIT = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("tconstruct", "trait"));
+    public static final ResourceKey<Registry<MaterialDefinition>> MATERIAL = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("tconsnirvana", "material"));
+    public static final ResourceKey<Registry<TraitDefinition>> TRAIT = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("tconsnirvana", "trait"));
     public static final Registry<MaterialDefinition> MATERIALS = new RegistryBuilder<>(MATERIAL).create();
     public static final Registry<TraitDefinition> TRAITS = new RegistryBuilder<>(TRAIT).create();
 

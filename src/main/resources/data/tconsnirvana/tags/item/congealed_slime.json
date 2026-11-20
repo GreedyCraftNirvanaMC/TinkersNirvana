@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "tconsnirvana:slime_congealed_green",
+    "tconsnirvana:slime_congealed_blue",
+    "tconsnirvana:slime_congealed_purple",
+    "tconsnirvana:slime_congealed_blood",
+    "tconsnirvana:slime_congealed_magma",
+    "tconsnirvana:slime_congealed_pink"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "A  ",
+    "AA ",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconsnirvana:mud_bricks"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:mud_bricks_stairs",
+    "count": 4
+  }
+}

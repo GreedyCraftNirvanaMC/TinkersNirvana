@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "tconsnirvana:slime_boots",
+  "pattern": [
+    "A A",
+    "B B"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:slime_balls/purple"
+    },
+    "B": {
+      "item": "tconsnirvana:slime_congealed_purple"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:slime_boots_purple"
+  }
+}

@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab_top",
-  "textures": {
-    "bottom": "tconstruct:block/brownstone/brick_small",
-    "top": "tconstruct:block/brownstone/brick_small",
-    "side": "tconstruct:block/brownstone/brick_small"
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "bottom": "tconstruct:block/smeltery/seared_brick",
-    "top": "tconstruct:block/smeltery/seared_brick",
-    "side": "tconstruct:block/smeltery/seared_brick"
-  }
-}

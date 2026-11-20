@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "tconsnirvana:block/gadgets/dried_clay",
+    "side": "tconsnirvana:block/gadgets/dried_clay",
+    "top": "tconsnirvana:block/gadgets/dried_clay"
+  }
+}

@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "tconstruct:smeltery",
-    "tconstruct:fiery"
+    "tconsnirvana:smeltery",
+    "tconsnirvana:fiery"
   ]
 }

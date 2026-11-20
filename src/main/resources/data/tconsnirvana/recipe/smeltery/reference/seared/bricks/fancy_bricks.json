@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "result": {
+    "id": "tconsnirvana:seared_brick_fancy",
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "item": "tconsnirvana:seared_bricks"
+    }
+  ]
+}

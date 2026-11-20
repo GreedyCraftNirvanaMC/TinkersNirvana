@@ -1,8 +1,0 @@
-{
-  "parent": "tconstruct:block/tank",
-  "textures": {
-    "side": "tconstruct:block/smeltery/seared_window_side",
-    "top": "tconstruct:block/smeltery/seared_window_top"
-  },
-  "render_type": "minecraft:cutout"
-}

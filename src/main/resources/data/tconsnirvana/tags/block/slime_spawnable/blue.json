@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "tconsnirvana:slime_grass_blue_vanilla",
+    "tconsnirvana:slime_grass_blue_green",
+    "tconsnirvana:slime_grass_blue_blue",
+    "tconsnirvana:slime_grass_blue_magma",
+    "tconsnirvana:slime_grass_purple_vanilla",
+    "tconsnirvana:slime_grass_purple_green",
+    "tconsnirvana:slime_grass_purple_blue",
+    "tconsnirvana:slime_grass_purple_magma",
+    "tconsnirvana:slime_grass_orange_vanilla",
+    "tconsnirvana:slime_grass_orange_green",
+    "tconsnirvana:slime_grass_orange_blue",
+    "tconsnirvana:slime_grass_orange_magma"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "tconsnirvana:brownstone_brick_small",
+    "count": 1
+  },
+  "group": "tconsnirvana:brownstone",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:brownstone_creeper"
+    }
+  ]
+}

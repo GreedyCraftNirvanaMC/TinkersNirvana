@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "tconsnirvana:slime_congealed_blue"
+  },
+  "result": {
+    "id": "tconsnirvana:slime_channel_blue",
+    "count": 3
+  },
+  "experience": 0.15,
+  "cookingtime": 200
+}

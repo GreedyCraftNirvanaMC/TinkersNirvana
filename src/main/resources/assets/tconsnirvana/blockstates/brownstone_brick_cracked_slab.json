@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconsnirvana:block/brownstone_brick_cracked_slab"
+    },
+    "type=double": {
+      "model": "tconsnirvana:block/brownstone_brick_cracked"
+    },
+    "type=top": {
+      "model": "tconsnirvana:block/brownstone_brick_cracked_slab_top"
+    }
+  }
+}

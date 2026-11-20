@@ -1,9 +1,0 @@
-{
-  "feature": "tconstruct:magma_island",
-  "placement": [
-    {
-      "type": "tconstruct:antique_worldgen",
-      "setting": "magma_island"
-    }
-  ]
-}

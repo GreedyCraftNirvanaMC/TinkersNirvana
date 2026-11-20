@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:pigiron_block"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:pigiron_ingot",
+    "count": 9
+  }
+}

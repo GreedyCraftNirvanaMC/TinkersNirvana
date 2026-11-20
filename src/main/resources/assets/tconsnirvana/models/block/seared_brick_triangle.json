@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "tconsnirvana:block/smeltery/seared_brick_triangle"
+  }
+}

@@ -1,24 +1,24 @@
 {
   "values": {
-    "tconstruct:wooden_hopper": {
+    "tconsnirvana:wooden_hopper": {
       "burn_time": 300
     },
-    "tconstruct:firewood": {
+    "tconsnirvana:firewood": {
       "burn_time": 300
     },
-    "tconstruct:lavawood": {
+    "tconsnirvana:lavawood": {
       "burn_time": 300
     },
-    "tconstruct:firewood_slab": {
+    "tconsnirvana:firewood_slab": {
       "burn_time": 300
     },
-    "tconstruct:firewood_stairs": {
+    "tconsnirvana:firewood_stairs": {
       "burn_time": 300
     },
-    "tconstruct:lavawood_slab": {
+    "tconsnirvana:lavawood_slab": {
       "burn_time": 300
     },
-    "tconstruct:lavawood_stairs": {
+    "tconsnirvana:lavawood_stairs": {
       "burn_time": 300
     }
   }

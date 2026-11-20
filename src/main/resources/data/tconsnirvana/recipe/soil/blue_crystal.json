@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": {
+    "item": "tconsnirvana:slimy_mud_blue"
+  },
+  "result": {
+    "id": "tconsnirvana:slimecrystal_blue"
+  },
+  "experience": 0.75,
+  "cookingtime": 200
+}

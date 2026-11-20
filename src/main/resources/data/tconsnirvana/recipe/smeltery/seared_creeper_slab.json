@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "tconsnirvana:seared_slab",
+  "pattern": [
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconsnirvana:seared_creeper"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:seared_creeper_slab",
+    "count": 6
+  }
+}

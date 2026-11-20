@@ -1,9 +1,0 @@
-{
-  "parent": "tconstruct:item/tools/excavator",
-  "textures": {
-    "layer0": "tconstruct:item/antique/excavator/handle",
-    "layer1": "tconstruct:item/antique/excavator/broken_head",
-    "layer2": "tconstruct:item/antique/excavator/binding",
-    "layer3": "tconstruct:item/antique/excavator/grip"
-  }
-}

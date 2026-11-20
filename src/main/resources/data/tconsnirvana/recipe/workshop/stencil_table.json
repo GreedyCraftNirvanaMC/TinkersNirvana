@@ -1,0 +1,21 @@
+{
+  "type": "tconsnirvana:table",
+  "pattern": [
+    "P",
+    "W"
+  ],
+  "key": {
+    "P": {
+      "item": "tconsnirvana:pattern"
+    },
+    "W": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:stencil_table"
+  },
+  "material": {
+    "tag": "minecraft:planks"
+  }
+}

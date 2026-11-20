@@ -1,0 +1,10 @@
+{
+  "type": "tconsnirvana:drying",
+  "ingredient": {
+    "item": "tconsnirvana:slimeball_blood"
+  },
+  "result": {
+    "id": "tconsnirvana:slimedrop_blood"
+  },
+  "time": 6000
+}

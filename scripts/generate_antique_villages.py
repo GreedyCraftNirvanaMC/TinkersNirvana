@@ -75,7 +75,7 @@ class Template:
                 palette.append(state)
             blocks.append({"pos": list(pos), "state": palette.index(state), **({"nbt": nbt} if nbt else {})})
         data = {"DataVersion": 3955, "size": list(self.size), "palette": palette, "blocks": blocks, "entities": self.entities}
-        output = root / f"data/tconstruct/structure/village/{name}.nbt"
+        output = root / f"data/tconsnirvana/structure/village/{name}.nbt"
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_bytes(gzip.compress(b"\x0a\0\0" + payload(data), mtime=0))
 
@@ -92,7 +92,12 @@ for biome, (wood, log, cobble, bricks) in themes.items():
     log, cobble, bricks = ["minecraft:" + value for value in [log, cobble, bricks]]
     table = Template((7, 6, 7))
     table.fill((0, 0, 0), (6, 0, 6), cobble)
-    table.fill((0, 5, 0), (6, 5, 6), f"minecraft:{wood}_fence")
+    # 怀古先铺栅栏，再清空屋内直至 y=5，屋顶最终只剩外围栏杆。
+    railing = {(x, z) for x in range(7) for z in range(7) if x in (0, 6) or z in (0, 6)}
+    directions = {"north": (0, -1), "east": (1, 0), "south": (0, 1), "west": (-1, 0)}
+    for x, z in sorted(railing):
+        connections = {side: str((x + dx, z + dz) in railing).lower() for side, (dx, dz) in directions.items()}
+        table.set(x, 5, z, f"minecraft:{wood}_fence", connections | {"waterlogged": "false"})
     table.fill((1, 0, 1), (5, 0, 5), planks)
     table.fill((2, 0, 2), (4, 0, 4), "minecraft:white_wool")
     for x in [0, 6]:
@@ -106,8 +111,10 @@ for biome, (wood, log, cobble, bricks) in themes.items():
     for side in [0, 6]:
         for pos in range(1, 6):
             block = planks if pos == 3 else "minecraft:glass_pane"
-            table.set(side, 2, pos, block)
-            table.set(pos, 2, side, block)
+            pane_along_z = {"north": "true", "south": "true", "east": "false", "west": "false", "waterlogged": "false"}
+            pane_along_x = {"north": "false", "south": "false", "east": "true", "west": "true", "waterlogged": "false"}
+            table.set(side, 2, pos, block, pane_along_z if block == "minecraft:glass_pane" else None)
+            table.set(pos, 2, side, block, pane_along_x if block == "minecraft:glass_pane" else None)
     table.set(2, 2, 0, planks)
     table.set(4, 2, 0, planks)
     for y, half in [(1, "lower"), (2, "upper")]:
@@ -115,11 +122,11 @@ for biome, (wood, log, cobble, bricks) in themes.items():
     for y in range(1, 5):
         table.set(3, y, 5, "minecraft:ladder", {"facing": "north", "waterlogged": "false"})
     for z, kind in [(1, "toolstation"), (2, "pattern_chest"), (3, "part_builder"), (4, "crafting_station"), (5, "stencil_table")]:
-        nbt = {"id": "tconstruct:toolstation_blockentity" if kind == "toolstation" else "tconstruct:workshop"}
+        nbt = {"id": "tconsnirvana:toolstation_blockentity" if kind == "toolstation" else "tconsnirvana:workshop"}
         if kind in ["pattern_chest", "crafting_station"]:
-            nbt["LootTable"] = "tconstruct:chests/workshop_" + ("patterns" if kind == "pattern_chest" else "parts")
-        table.set(1, 1, z, "tconstruct:" + kind, {"facing": "east"}, nbt)
-    table.set(4, 1, 5, "minecraft:chest", {"facing": "north", "type": "single", "waterlogged": "false"}, {"id": "minecraft:chest", "LootTable": "tconstruct:chests/workshop_parts"})
+            nbt["LootTable"] = "tconsnirvana:chests/workshop_" + ("patterns" if kind == "pattern_chest" else "parts")
+        table.set(1, 1, z, "tconsnirvana:" + kind, {"facing": "east"}, nbt)
+    table.set(4, 1, 5, "minecraft:chest", {"facing": "north", "type": "single", "waterlogged": "false"}, {"id": "minecraft:chest", "LootTable": "tconsnirvana:chests/workshop_parts"})
     table.set(5, 1, 5, "minecraft:piston", {"facing": "north", "extended": "false"})
     table.jigsaw(3, 0, 0, biome, final_state=f"minecraft:{wood}_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]")
     table.jigsaw(3, 0, 3, biome, villager=True, final_state="minecraft:white_wool")
@@ -129,15 +136,15 @@ for biome, (wood, log, cobble, bricks) in themes.items():
     smeltery.fill((1, 0, 0), (7, 0, 6), bricks)
     smeltery.fill((0, 0, 1), (0, 0, 5), bricks)
     smeltery.fill((8, 0, 1), (8, 0, 5), bricks)
-    smeltery.fill((2, 0, 1), (6, 2, 5), "tconstruct:seared_bricks")
+    smeltery.fill((2, 0, 1), (6, 2, 5), "tconsnirvana:seared_bricks")
     smeltery.fill((3, 1, 2), (5, 2, 4), "minecraft:air")
     for x in [1, 7]:
         for z, block in [(2, "casting_table"), (4, "casting_basin")]:
-            smeltery.set(x, 1, z, "tconstruct:" + block, nbt={"id": "tconstruct:smeltery_component"})
+            smeltery.set(x, 1, z, "tconsnirvana:" + block, nbt={"id": "tconsnirvana:smeltery_component"})
     smeltery.jigsaw(4, 0, 0, biome, final_state=bricks)
     smeltery.save(f"{biome}/smeltery")
-    write(root / f"data/tconstruct/worldgen/template_pool/village/{biome}/antique.json", {"fallback": "minecraft:empty", "elements": [
-        {"weight": weight, "element": {"element_type": "minecraft:single_pool_element", "location": f"tconstruct:village/{biome}/{name}", "processors": "minecraft:empty", "projection": "rigid"}}
+    write(root / f"data/tconsnirvana/worldgen/template_pool/village/{biome}/antique.json", {"fallback": "minecraft:empty", "elements": [
+        {"weight": weight, "element": {"element_type": "minecraft:single_pool_element", "location": f"tconsnirvana:village/{biome}/{name}", "processors": "minecraft:empty", "projection": "rigid"}}
         for name, weight in [("tool_workshop", 30), ("smeltery", 9)]]})
 
 # Antique's original part types/materials and roll counts. All item components remain translatable.
@@ -146,13 +153,18 @@ materials = "wood stone iron flint cactus bone obsidian netherrack slime paper p
 entries = []
 for part in parts:
     for material in materials:
-        entries.append({"type": "minecraft:item", "name": "tconstruct:parts/" + part, "weight": 15, "functions": [{"function": "minecraft:set_components", "components": {
-            "tconstruct:tinker_material": {"Material": material}, "minecraft:item_name": json.dumps({"translate": "item.tconstruct.material_part", "with": [
-                {"translate": f"material.{material}.name"}, {"translate": f"item.tconstruct.{part}.name"}]}, ensure_ascii=False)}}]})
-write(root / "data/tconstruct/loot_table/chests/workshop_parts.json", {"type": "minecraft:chest", "pools": [{"rolls": {"type": "minecraft:uniform", "min": 3, "max": 27}, "entries": entries}]})
+        entries.append({"type": "minecraft:item", "name": "tconsnirvana:parts/" + part, "weight": 15, "functions": [{"function": "minecraft:set_components", "components": {
+            "tconsnirvana:tinker_material": {"Material": material}, "minecraft:item_name": json.dumps({"translate": "item.tconsnirvana.material_part", "with": [
+                {"translate": f"material.{material}.name"}, {"translate": f"item.tconsnirvana.{part}.name"}]}, ensure_ascii=False)}}]})
+write(root / "data/tconsnirvana/loot_table/chests/workshop_parts.json", {"type": "minecraft:chest", "pools": [{"rolls": {"type": "minecraft:uniform", "min": 3, "max": 27}, "entries": entries}]})
 patterns = "tool_rod pickaxe_head binding shovel_head axe_head sword_blade kama_head arrow_head broad_axe_head large_sword_blade hammer_head excavator_head scythe_head large_plate pan_head sign_head knife_blade tough_tool_rod tough_binding wide_guard hand_guard cross_guard bow_limb bow_string arrow_shaft fletching sharpening_kit shard".split()
-entries = [{"type": "minecraft:item", "name": "tconstruct:pattern", "weight": 20, "functions": [
+entries = [{"type": "minecraft:item", "name": "tconsnirvana:pattern", "weight": 20, "functions": [
     {"function": "minecraft:set_count", "count": {"type": "minecraft:uniform", "min": 1, "max": 3}},
-    {"function": "minecraft:set_components", "components": {"tconstruct:tinker_material": {"Pattern": part}}}]} for part in patterns]
-write(root / "data/tconstruct/loot_table/chests/workshop_patterns.json", {"type": "minecraft:chest", "pools": [{"rolls": {"type": "minecraft:uniform", "min": 5, "max": 30}, "entries": entries}]})
+    {"function": "minecraft:set_components", "components": {"tconsnirvana:tinker_material": {"Pattern": part}}}]} for part in patterns]
+write(root / "data/tconsnirvana/loot_table/chests/workshop_patterns.json", {"type": "minecraft:chest", "pools": [{"rolls": {"type": "minecraft:uniform", "min": 5, "max": 30}, "entries": entries}]})
+for chest in ("workshop_parts", "workshop_patterns"):
+    write(root / f"data/tconstruct/loot_table/chests/{chest}.json", {
+        "type": "minecraft:chest",
+        "pools": [{"rolls": 1, "entries": [{"type": "minecraft:loot_table", "value": f"tconsnirvana:chests/{chest}"}]}],
+    })
 print("Generated 10 native village templates, 5 addition pools, and 2 loot tables")

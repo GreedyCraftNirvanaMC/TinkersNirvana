@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:tin_nugget"
+    },
+    {
+      "item": "tconsnirvana:tin_nugget"
+    },
+    {
+      "item": "tconsnirvana:tin_nugget"
+    },
+    {
+      "item": "tconsnirvana:tin_nugget"
+    },
+    {
+      "item": "tconsnirvana:tin_nugget"
+    },
+    {
+      "item": "tconsnirvana:tin_nugget"
+    },
+    {
+      "item": "tconsnirvana:tin_nugget"
+    },
+    {
+      "item": "tconsnirvana:tin_nugget"
+    },
+    {
+      "item": "tconsnirvana:tin_nugget"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:tin_ingot"
+  }
+}

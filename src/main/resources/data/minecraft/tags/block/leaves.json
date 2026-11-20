@@ -1,8 +1,8 @@
 {
   "replace": false,
   "values": [
-    "tconstruct:slime_leaves_blue",
-    "tconstruct:slime_leaves_purple",
-    "tconstruct:slime_leaves_orange"
+    "tconsnirvana:slime_leaves_blue",
+    "tconsnirvana:slime_leaves_purple",
+    "tconsnirvana:slime_leaves_orange"
   ]
 }

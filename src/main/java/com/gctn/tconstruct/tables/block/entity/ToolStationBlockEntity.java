@@ -1,5 +1,7 @@
 package com.gctn.tconstruct.tables.block.entity;
 
+import com.gctn.tconstruct.init.TinkerDataComponents;
+import com.gctn.tconstruct.library.utils.Tags;
 import com.gctn.tconstruct.tables.data.Mode;
 import com.gctn.tconstruct.tables.menu.ToolStationMenu;
 import com.gctn.tconstruct.tables.recipe.ToolAssemblyRecipe;
@@ -138,14 +140,23 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
                 && this.disassemblyState == DISASSEMBLY_NONE
                 && this.getItem(RESULT_SLOT).isEmpty()
                 && this.areInputSlotsEmpty()
-                && ToolStationDisassemblyRecipes.canDisassemble(stack);
+                && ToolStationDisassemblyRecipes.canDisassemble(stack, isForge());
     }
 
     public boolean canTakeResult() {
         if (this.mode == Mode.DISASSEMBLE) {
             return this.isDisassemblyPreview() && !this.getItem(RESULT_SLOT).isEmpty();
         }
-        return !this.getItem(RESULT_SLOT).isEmpty();
+        ItemStack shown = this.getItem(RESULT_SLOT);
+        if (shown.isEmpty()) { return false; }
+        ItemStack current = this.createCraftingResult();
+        // 共享输入可能已由漏斗或其他菜单改动，必须先核对预览再允许物品离开结果槽。
+        if (!ItemStack.matches(shown, current)) {
+            this.items.set(RESULT_SLOT, current);
+            this.setChanged();
+            return false;
+        }
+        return true;
     }
 
     public void resultSlotChanged(ItemStack newStack) {
@@ -265,7 +276,10 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         return true;
     }
 
-    private static boolean canRenameItem(ItemStack stack) { return stack.getItem() instanceof com.gctn.tconstruct.tools.TinkerTools || com.gctn.tconstruct.tables.recipe.StationProcessingRecipes.supports(stack); }
+    private static boolean canRenameItem(ItemStack stack) {
+        return !TinkerDataComponents.getMaterialTag(stack).getBoolean(Tags.NO_RENAME)
+                && (stack.getItem() instanceof com.gctn.tconstruct.tools.TinkerTools || com.gctn.tconstruct.tables.recipe.StationProcessingRecipes.supports(stack));
+    }
 
     private void takeCraftingResult() {
         if (this.createCraftingResult().isEmpty()) {
@@ -288,7 +302,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     }
 
     private void startDisassembly(ItemStack sourceTool) {
-        PartList parts = ToolStationDisassemblyRecipes.createParts(sourceTool);
+        PartList parts = ToolStationDisassemblyRecipes.createParts(sourceTool, isForge());
         if (parts.isEmpty() || !this.areInputSlotsEmpty()) {
             return;
         }
@@ -366,7 +380,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable(isForge() ? "block.tconstruct.toolforge" : "container.tconstruct.toolstation.name");
+        return Component.translatable(isForge() ? "block.tconsnirvana.toolforge" : "container.tconsnirvana.toolstation.name");
     }
 
     public boolean isForge() { return getBlockState().is(com.gctn.tconstruct.tables.block.TableBlocks.TOOL_FORGE.get()); }

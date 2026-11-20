@@ -12,6 +12,6 @@
 
 漏斗与其他物品处理器可通过控制器输入或取出物品。燃料罐保留独立内容和正常的物品形态行为。成形后替换墙体或排液口可恢复归属，无需改变尺寸。结构失效时，前九格留在控制器中，溢出物品掉到控制器外。修复外壳后容量恢复，拆除控制器会掉出全部存货。
 
-配置位于 `config/tconstruct-common.toml` 的 `[smeltery]`。焦黑熔炉加热间隔 `heatItemsTickrateSearedFurnace` 默认为 `4`，独立于冶炼炉的加热间隔。界面、物品、状态和设置名称提供简体中文与英文。
+配置位于 `config/tconsnirvana-common.toml` 的 `[smeltery]`。焦黑熔炉加热间隔 `heatItemsTickrateSearedFurnace` 默认为 `4`，独立于冶炼炉的加热间隔。界面、物品、状态和设置名称提供简体中文与英文。
 
 `HeatingContainer` 提供通用菜单及燃料同步。结构归属由 `SmelteryMaster` 管理，`FluidSmelteryMaster` 另外为排液口提供共享流体。焦黑熔炉实现结构归属和加热，不提供共享熔液储存。大容量库存用整数保存槽号，同时兼容旧的无符号字节槽号。超过原版有符号短整型槽号范围时，仅同步可见的七行，滚动、全库存快捷放入和双击收集仍可访问完整库存。

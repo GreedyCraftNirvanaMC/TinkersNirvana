@@ -12,6 +12,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.level.material.Fluid;
@@ -45,56 +46,59 @@ public final class SmelteryRecipeEvents {
         SmelteryRecipes.initialize();
         com.gctn.tconstruct.api.TinkerContent.installCastingRecipes();
         SmelteryRecipes.AUTOMATIC_MELTING.clear();
+        Map<Item, FluidStack> inferred = new HashMap<>();
         for (var holder : server.getRecipeManager().getRecipes()) {
             if (!(holder.value() instanceof CraftingRecipe recipe)) {
                 continue;
             }
             ItemStack output = recipe.getResultItem(server.registryAccess());
-            if (output.isEmpty() || SmelteryRecipes.findMelting(output) != null) {
+            if (output.isEmpty() || !output.getComponentsPatch().isEmpty()
+                    || SmelteryRecipes.findMelting(output) != null || recipe.isIncomplete()) {
                 continue;
             }
-            Map<Fluid, Integer> amounts = new HashMap<>();
-            boolean valid = true;
-            for (var ingredient : recipe.getIngredients()) {
-                ItemStack[] alternatives = ingredient.getItems();
-                if (alternatives.length == 0) {
-                    continue;
+            FluidStack value = infer(recipe, output.getCount());
+            // 产物没有配方来源。同一物品的所有合成途径必须给出相同的回收量。
+            inferred.merge(output.getItem(), value, (previous, next) ->
+                    FluidStack.matches(previous, next) ? previous : FluidStack.EMPTY);
+        }
+        inferred.forEach((item, value) -> {
+            if (value.isEmpty()) { return; }
+            ItemStack plain = new ItemStack(item);
+            SmelteryRecipes.AUTOMATIC_MELTING.put(item, SmelteryRecipes.melting(
+                    stack -> ItemStack.isSameItemSameComponents(plain, stack), value.getFluid(), value.getAmount()));
+        });
+    }
+
+    private static FluidStack infer(CraftingRecipe recipe, int outputCount) {
+        Fluid fluid = null;
+        int amount = 0;
+        for (var ingredient : recipe.getIngredients()) {
+            if (ingredient.isEmpty()) { continue; }
+            FluidStack slot = null;
+            for (ItemStack input : ingredient.getItems()) {
+                boolean ignore = ignored(input);
+                FluidStack value = ignore ? FluidStack.EMPTY : materialValue(input);
+                // 标签可以匹配多种材料；按首个备选项计价会让低价原料变成另一种流体。
+                if (!ignore && value.isEmpty() || slot != null && !FluidStack.matches(slot, value)) {
+                    return FluidStack.EMPTY;
                 }
-                boolean found = false;
-                for (ItemStack input : alternatives) {
-                    if (ignored(input)) {
-                        found = true;
-                        break;
-                    }
-                    FluidStack material = materialValue(input);
-                    if (!material.isEmpty()) {
-                        amounts.merge(material.getFluid(), material.getAmount(), Integer::sum);
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    valid = false;
-                    break;
-                }
+                slot = value;
             }
-            // Ignore wood/sticks/etc., but reject recipes mixing two distinct meltable materials.
-            if (valid && amounts.size() == 1) {
-                var material = amounts.entrySet().iterator().next();
-                int amount = material.getValue() / output.getCount();
-                if (amount > 0) {
-                    SmelteryRecipes.AUTOMATIC_MELTING.put(output.getItem(), SmelteryRecipes.melting(
-                            stack -> stack.is(output.getItem()), material.getKey(), amount));
-                }
+            if (slot == null) { return FluidStack.EMPTY; }
+            if (!slot.isEmpty()) {
+                if (fluid != null && fluid != slot.getFluid()) { return FluidStack.EMPTY; }
+                fluid = slot.getFluid();
+                amount += slot.getAmount();
             }
         }
+        return fluid != null && amount >= outputCount ? new FluidStack(fluid, amount / outputCount) : FluidStack.EMPTY;
     }
 
     private static boolean ignored(ItemStack stack) {
         ResourceLocation item = BuiltInRegistries.ITEM.getKey(stack.getItem());
         for (String entry : Config.MELTING_IGNORE.get()) {
             ResourceLocation id = ResourceLocation.tryParse(entry.startsWith("#") ? entry.substring(1) : entry);
-            if (id != null && (entry.startsWith("#") ? stack.is(TagKey.create(Registries.ITEM, id)) : item.equals(id))) {
+            if (id != null && (entry.startsWith("#") ? stack.is(TagKey.create(Registries.ITEM, id)) : item.equals(BuiltInRegistries.ITEM.resolve(id)))) {
                 return true;
             }
         }

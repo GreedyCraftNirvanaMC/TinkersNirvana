@@ -22,7 +22,7 @@ public final class FancyFrames {
     }
     private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, TinkersNirvana.MODID);
     public static final Supplier<EntityType<FancyItemFrame>> ENTITY = ENTITIES.register("fancy_frame", () -> EntityType.Builder.<FancyItemFrame>of(FancyItemFrame::new, MobCategory.MISC)
-            .sized(.5f, .5f).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE).build("tconstruct:fancy_frame"));
+            .sized(.5f, .5f).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE).build("tconsnirvana:fancy_frame"));
     public static final Map<Kind, Supplier<FancyFrameItem>> ITEMS = new LinkedHashMap<>();
     static { for (Kind kind : Kind.values()) { ITEMS.put(kind, ItemRegister.ITEMS.register("fancy_frame_" + kind.id(), () -> new FancyFrameItem(kind))); } }
     private FancyFrames() {}

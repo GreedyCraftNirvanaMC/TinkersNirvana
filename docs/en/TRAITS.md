@@ -6,7 +6,7 @@
 
 - `AbstractTraits` is an immutable behavior definition registered once. It stores neither material starting levels nor per-tool state.
 - `AbstractTraits.TraitEntry(trait, level)` identifies a material trait and its starting level, with range validation.
-- The tool component `tconstruct:tinker_traits` stores actual `Level`, `StrengthenNumber`, and per-trait state. Existing saves retain their saved traits and stats.
+- The tool component `tconsnirvana:tinker_traits` stores actual `Level`, `StrengthenNumber`, and per-trait state. Existing saves retain their saved traits and stats.
 - `ToolTraits` assembles and reads traits. Unknown identifiers, invalid types, and nonpositive levels are retained in the save but skipped at runtime. Runtime levels are capped at `maxLevel`.
 
 ## Add a trait

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconsnirvana:block/brownstone_road_slab"
+    },
+    "type=double": {
+      "model": "tconsnirvana:block/brownstone_road"
+    },
+    "type=top": {
+      "model": "tconsnirvana:block/brownstone_road_slab_top"
+    }
+  }
+}

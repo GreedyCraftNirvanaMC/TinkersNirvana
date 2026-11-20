@@ -43,6 +43,7 @@ public abstract class TinkerTools extends Item {
     }
 
     public final int getTotalModifierSlots(ItemStack stack) {
+        if (ToolBuilder.isInfiTool(stack)) { return 0; }
         // 升级奖励独立于材料词条，替换部件或重算属性时仍按保存的等级提供槽位。
         return (int) Math.clamp((long) getBaseModifierSlots(stack) + getMaterialModifierSlotAdjustment(stack)
                 + ToolUpgradeApi.getLevel(stack), 0, Integer.MAX_VALUE);
@@ -82,7 +83,7 @@ public abstract class TinkerTools extends Item {
 
     protected final void damageTool(ItemStack stack, int amount, LivingEntity entity, EquipmentSlot slot) {
         if (slot == EquipmentSlot.MAINHAND && entity instanceof net.minecraft.world.entity.player.Player player && com.gctn.tconstruct.tools.DualToolHarvest.active(player)) { slot = EquipmentSlot.OFFHAND; }
-        if (entity.level().isClientSide || amount <= 0 || isBroken(stack)) {
+        if (entity.level().isClientSide || amount <= 0 || isBroken(stack) || ToolBuilder.isInfiTool(stack)) {
             return;
         }
         if (entity.getRandom().nextFloat() < ToolModifiers.level(stack, "reinforced") * .2F) { return; }
@@ -125,11 +126,11 @@ public abstract class TinkerTools extends Item {
     }
 
     public static Component shiftTip = Component.translatable(
-            "tooltip.tconstruct.hold_for_stats",
+            "tooltip.tconsnirvana.hold_for_stats",
             Component.literal("Shift").withColor(0xFFFFFF55)
     ).withColor(0xFFAAAAAA);
     public static Component controlTip = Component.translatable(
-            "tooltip.tconstruct.hold_for_more",
+            "tooltip.tconsnirvana.hold_for_more",
             Component.literal("Ctrl").withColor(0xFF55FFFF)
     ).withColor(0xFFAAAAAA);
 
@@ -149,13 +150,13 @@ public abstract class TinkerTools extends Item {
         int maxDurability = stack.getMaxDamage();
         int remainingDurability = Math.max(0, maxDurability - stack.getDamageValue());
         Component durabilityTip = Component.translatable(
-                "tooltip.tconstruct.tool.durability",
+                "tooltip.tconsnirvana.tool.durability",
                 Component.literal(String.valueOf(remainingDurability)).withColor(ToolHelper.getDurabilityColor(stack)),
                 Component.literal(String.valueOf(maxDurability)).withColor(0xFF47CC47)
         ).withColor(0xFFAAAAAA);
         Component brokenTip = Component.translatable(
-                "tooltip.tconstruct.tool.durability.broken",
-                Component.translatable("tooltip.tconstruct.tool.broken").withColor(0xFFCC4747)
+                "tooltip.tconsnirvana.tool.durability.broken",
+                Component.translatable("tooltip.tconsnirvana.tool.broken").withColor(0xFFCC4747)
         ).withColor(0xFFAAAAAA);
         return isBroken(stack) ? brokenTip : durabilityTip;
     }

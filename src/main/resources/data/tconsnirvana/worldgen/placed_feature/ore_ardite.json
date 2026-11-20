@@ -1,0 +1,12 @@
+{
+  "feature": "tconsnirvana:ore_ardite",
+  "placement": [
+    {
+      "type": "tconsnirvana:antique_height",
+      "setting": "ardite"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

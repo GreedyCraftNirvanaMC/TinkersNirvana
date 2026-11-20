@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "tconsnirvana:seared_stairs",
+  "pattern": [
+    "A  ",
+    "AA ",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "tconsnirvana:seared_creeper"
+    }
+  },
+  "result": {
+    "id": "tconsnirvana:seared_creeper_stairs",
+    "count": 4
+  }
+}

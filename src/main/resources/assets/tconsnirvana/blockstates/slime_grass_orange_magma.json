@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "snowy=false": {
+      "model": "tconsnirvana:block/slime_grass_orange_magma"
+    },
+    "snowy=true": {
+      "model": "tconsnirvana:block/slime_grass_orange_magma_snow"
+    }
+  }
+}

@@ -2,14 +2,19 @@
 
 [README](../../README.md) · [简体中文](../zh-CN/ORES.md)
 
-The Blocks creative tab includes Antique's Copper Ore, Tin Ore, and Aluminum
-Ore at `tconstruct:copper_ore`, `tconstruct:tin_ore`, and
-`tconstruct:aluminum_ore`. Each uses artwork restyled from its Antique texture and cutout rendering,
+The Blocks creative tab includes Antique's Tin Ore and Aluminum Ore at
+`tconsnirvana:tin_ore` and `tconsnirvana:aluminum_ore`. Each uses artwork restyled from its Antique texture and cutout rendering,
 hardness 3, stone sounds, and stone-pickaxe mining level. Their original common
 ore class leaves blast resistance at zero. A valid pickaxe drops the ore block
 itself; Fortune and Silk Touch keep that one-block quantity.
 
-The tab also includes `tconstruct:ardite_ore` (Ardite Ore / 阿迪特矿石). Its GIMP
+Copper uses vanilla ore generation and loot. Legacy `tconstruct:copper_ore`
+blocks and items load as vanilla Copper Ore. Raw iron, gold, and copper blocks
+melt for the same amount as nine individual raw ores. Oxidation and waxing do
+not change copper recovery. Cut variants use the lowest copper cost available
+through crafting or stonecutting.
+
+The tab also includes `tconsnirvana:ardite_ore` (Ardite Ore / 阿迪特矿石). Its GIMP
 artwork retains Antique's mineral layout over modern netherrack. It keeps
 Antique's hardness 10, blast resistance 10, stone sounds, and default cobalt
 harvest tier 4, represented by NeoForge's `needs_netherite_tool` tag. Native

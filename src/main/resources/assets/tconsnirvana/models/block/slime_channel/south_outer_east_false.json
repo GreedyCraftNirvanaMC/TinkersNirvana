@@ -1,0 +1,16 @@
+{
+  "parent": "tconsnirvana:block/slime_channel/slime_channel_outer",
+  "textures": {
+    "slime": "tconsnirvana:block/fluids/liquid_flow",
+    "diagonal": "tconsnirvana:block/fluids/slime_channel_diagonal"
+  },
+  "transform": {
+    "post-rotation": {
+      "x": -90
+    },
+    "rotation": {
+      "z": 270
+    },
+    "origin": "center"
+  }
+}

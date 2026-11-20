@@ -38,9 +38,9 @@ public class MomsSpaghettiItem extends Item {
     @Override public boolean isEnchantable(ItemStack stack) { return false; }
     @Override public boolean isValidRepairItem(ItemStack stack, ItemStack repair) { return false; }
     @Override public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("tooltip.tconstruct.spaghetti.uses", Math.max(0, stack.getMaxDamage() - stack.getDamageValue()), stack.getMaxDamage()));
-        if (seasoning(stack) > 0) { tooltip.add(Component.translatable("modifier.tconstruct.spaghetti_sauce")); }
-        if (seasoning(stack) > 1) { tooltip.add(Component.translatable("modifier.tconstruct.spaghetti_meat")); }
-        tooltip.add(Component.translatable("tooltip.tconstruct.spaghetti"));
+        tooltip.add(Component.translatable("tooltip.tconsnirvana.spaghetti.uses", Math.max(0, stack.getMaxDamage() - stack.getDamageValue()), stack.getMaxDamage()));
+        if (seasoning(stack) > 0) { tooltip.add(Component.translatable("modifier.tconsnirvana.spaghetti_sauce")); }
+        if (seasoning(stack) > 1) { tooltip.add(Component.translatable("modifier.tconsnirvana.spaghetti_meat")); }
+        tooltip.add(Component.translatable("tooltip.tconsnirvana.spaghetti"));
     }
 }

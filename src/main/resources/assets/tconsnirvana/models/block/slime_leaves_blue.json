@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/leaves",
+  "textures": {
+    "all": "tconsnirvana:block/world/slimeleaves"
+  }
+}

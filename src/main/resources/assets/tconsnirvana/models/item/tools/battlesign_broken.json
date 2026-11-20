@@ -1,0 +1,7 @@
+{
+  "parent": "tconsnirvana:item/tools/battlesign",
+  "textures": {
+    "layer0": "tconsnirvana:item/antique/battlesign/handle",
+    "layer1": "tconsnirvana:item/antique/battlesign/broken_head"
+  }
+}

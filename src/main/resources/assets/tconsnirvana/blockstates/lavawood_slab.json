@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "tconsnirvana:block/lavawood_slab"
+    },
+    "type=double": {
+      "model": "tconsnirvana:block/lavawood"
+    },
+    "type=top": {
+      "model": "tconsnirvana:block/lavawood_slab_top"
+    }
+  }
+}

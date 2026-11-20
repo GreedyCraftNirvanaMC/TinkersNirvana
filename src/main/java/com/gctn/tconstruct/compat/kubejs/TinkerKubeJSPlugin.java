@@ -1,12 +1,15 @@
 package com.gctn.tconstruct.compat.kubejs;
 
 import com.gctn.tconstruct.api.ContentRegistries;
+import com.gctn.tconstruct.api.SmelteryApi;
+import com.gctn.tconstruct.api.ToolUpgradeApi;
 import com.gctn.tconstruct.tools.traits.TinkerTraits;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventGroupRegistry;
 import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
 import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
+import dev.latvian.mods.kubejs.script.BindingRegistry;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.registry.RegistryType;
 import dev.latvian.mods.rhino.type.TypeInfo;
@@ -24,6 +27,13 @@ public final class TinkerKubeJSPlugin implements KubeJSPlugin {
     }
 
     @Override public void registerEvents(EventGroupRegistry registry) { registry.register(EVENTS); }
+
+    @Override public void registerBindings(BindingRegistry registry) {
+        if (registry.type() == ScriptType.SERVER) {
+            registry.add("TinkerSmeltery", SmelteryApi.class);
+            registry.add("TinkerToolUpgrades", ToolUpgradeApi.class);
+        }
+    }
 
     @Override public void registerBuilderTypes(BuilderTypeRegistry registry) {
         registry.addDefault(ContentRegistries.MATERIAL, MaterialKubeBuilder.class, MaterialKubeBuilder::new);

@@ -124,7 +124,7 @@ public final class GadgetModule {
 
     private static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TinkersNirvana.MODID);
     public static final Supplier<CreativeModeTab> TAB = TABS.register("gadgets", () -> CreativeModeTab.builder()
-            .title(Component.translatable("tab.tconstruct.gadgets"))
+            .title(Component.translatable("tab.tconsnirvana.gadgets"))
             .icon(() -> STONE_TORCH_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 BLOCKS.forEach((name, block) -> {
