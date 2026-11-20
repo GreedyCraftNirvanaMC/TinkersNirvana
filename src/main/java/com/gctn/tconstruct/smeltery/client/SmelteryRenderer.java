@@ -10,14 +10,16 @@ import com.gctn.tconstruct.smeltery.block.SmelteryBlock;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryBlockEntity;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryComponentBlockEntity;
 import com.gctn.tconstruct.smeltery.block.entity.SearedFurnaceBlockEntity;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -75,11 +77,11 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
                 }
             }
         } else if (entity instanceof SmelteryComponentBlockEntity component) {
-            renderComponent(component, pose, buffers, light);
+            renderComponent(component, partialTick, pose, buffers, light);
         }
     }
 
-    private void renderComponent(SmelteryComponentBlockEntity entity, PoseStack pose, MultiBufferSource buffers, int light) {
+    private void renderComponent(SmelteryComponentBlockEntity entity, float partialTick, PoseStack pose, MultiBufferSource buffers, int light) {
         FluidStack fluid = entity.tank.getFluid();
         switch (entity.kind()) {
             case TANK -> {
@@ -88,7 +90,7 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
                             0.005F + 0.99F * entity.tank.getFluidAmount() / entity.tank.getCapacity(), 0.995F, light);
                 }
             }
-            case TABLE, BASIN -> renderCasting(entity, pose, buffers, fluid, light);
+            case TABLE, BASIN -> renderCasting(entity, partialTick, pose, buffers, fluid, light);
             case FAUCET -> {
                 SmelterySounds.ensure(entity);
                 if (entity.pouring && !entity.buffered.isEmpty()) {
@@ -128,7 +130,7 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
         }
     }
 
-    private static void renderCasting(SmelteryComponentBlockEntity entity, PoseStack pose, MultiBufferSource buffers,
+    private static void renderCasting(SmelteryComponentBlockEntity entity, float partialTick, PoseStack pose, MultiBufferSource buffers,
                                       FluidStack fluid, int light) {
         boolean basin = entity.kind() == SmelteryBlock.Kind.BASIN;
         ItemStack input = entity.inventory.getStackInSlot(0);
@@ -139,12 +141,13 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
         Direction facing = entity.getBlockState().getValue(SmelteryBlock.FACING);
         float itemY = basin ? 0.625F : TABLE_ITEM_Y;
         float scale = basin ? 0.751F : TABLE_ITEM_SCALE;
-        float progress = entity.progress();
+        float progress = entity.castingRenderProgress(partialTick);
         boolean maskedFluid = false;
 
         if (!fluid.isEmpty()) {
-            float fill = Mth.clamp((float) fluid.getAmount() / Math.max(1, entity.tank.getCapacity()), 0.0F, 1.0F);
-            float alpha = 1.0F - progress / 3.0F;
+            float fill = entity.castingRenderFill(partialTick);
+            // 对照怀古的冷却阶段，前段保持熔液颜色，最后三分之一才降低熔液不透明度。
+            float alpha = 1.0F - Math.max(0.0F, progress - 2.0F / 3.0F);
             maskedFluid = tableCast && renderCastFluid(entity, input, pose, buffers, fluid, fill, facing, light, alpha);
             if (!maskedFluid) {
                 float bottom = basin ? 0.25F : 0.9375F;
@@ -164,7 +167,7 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
         } else if (progress > 0) {
             ItemStack result = entity.castingResult();
             if (!maskedFluid || !renderFlatCastingPreview(pose, buffers, result, resultY, facing, light, progress)) {
-                MultiBufferSource translucent = type -> new AlphaConsumer(buffers.getBuffer(RenderType.entityTranslucent(InventoryMenu.BLOCK_ATLAS)), progress);
+                MultiBufferSource translucent = type -> new AlphaConsumer(buffers.getBuffer(CastingPreviewLayer.TYPE), progress);
                 item(pose, translucent, result, 0.5F, resultY, 0.5F, scale, facing, light);
             }
         }
@@ -190,7 +193,7 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
         model = model.applyTransform(ItemDisplayContext.NONE, pose, false);
         pose.translate(-0.5F, -0.5F, -0.5F);
 
-        // 液面用共享批次，冷却预览用随后提交的固定批次。只混合朝上的面，避免物品的侧面和背面与液面交叉。
+        // 冷却时只混合顶面，避免物品的侧面和背面与液面交叉。
         boolean rendered = false;
         var random = RandomSource.create(42L);
         for (var pass : model.getRenderPasses(result, true)) {
@@ -198,7 +201,7 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
             var top = pass.getQuads(null, null, random).stream()
                     .filter(quad -> quad.getDirection() == Direction.SOUTH).toList();
             if (!top.isEmpty()) {
-                var vertices = new AlphaConsumer(buffers.getBuffer(Sheets.translucentCullBlockSheet()), progress);
+                var vertices = new AlphaConsumer(buffers.getBuffer(CastingPreviewLayer.TYPE), progress);
                 renderer.renderQuadList(pose, vertices, top, result, light, OverlayTexture.NO_OVERLAY);
                 rendered = true;
             }
@@ -330,6 +333,23 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
     private static int fluidColor(FluidStack fluid, float alpha) {
         int tint = IClientFluidTypeExtensions.of(fluid.getFluid()).getTintColor(fluid);
         return tint & 0x00ffffff | (int) ((tint >>> 24) * alpha) << 24;
+    }
+
+    private static final class CastingPreviewLayer extends RenderStateShard {
+        // 切换到独立的半透明批次会先提交熔液。与怀古一样，预览参与深度测试，但只写颜色。
+        private static final RenderType TYPE = RenderType.create("tconsnirvana_casting_preview", DefaultVertexFormat.NEW_ENTITY,
+                VertexFormat.Mode.QUADS, 1536, false, true, RenderType.CompositeState.builder()
+                        .setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
+                        .setTextureState(new TextureStateShard(InventoryMenu.BLOCK_ATLAS, false, false))
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setLightmapState(LIGHTMAP)
+                        .setOverlayState(OVERLAY)
+                        .setWriteMaskState(COLOR_WRITE)
+                        .createCompositeState(false));
+
+        private CastingPreviewLayer() {
+            super("tconsnirvana_casting_preview", () -> {}, () -> {});
+        }
     }
 
     private record AlphaConsumer(VertexConsumer target, float alpha) implements VertexConsumer {

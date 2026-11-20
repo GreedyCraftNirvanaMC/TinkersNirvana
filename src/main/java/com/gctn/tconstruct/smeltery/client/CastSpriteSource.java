@@ -44,6 +44,10 @@ public record CastSpriteSource(ResourceLocation sprite, ResourceLocation mask, i
                  var maskStream = manager.getResourceOrThrow(TEXTURE_ID_CONVERTER.idToFile(mask)).open();
                  NativeImage part = NativeImage.read(maskStream)) {
                 cast = NativeImage.read(baseStream);
+                if (woodenPattern) {
+                    engravePattern(cast, part);
+                    return new SpriteContents(sprite, new FrameSize(cast.getWidth(), cast.getHeight()), cast, ResourceMetadata.EMPTY);
+                }
                 for (int y = 0; y < cast.getHeight(); y++) {
                     for (int x = 0; x < cast.getWidth(); x++) {
                         int pixel = cast.getPixelRGBA(x, y);
@@ -55,16 +59,6 @@ public record CastSpriteSource(ResourceLocation sprite, ResourceLocation mask, i
                         int px = sx - offsetX;
                         int py = sy - offsetY;
                         if (px < 0 || py < 0 || px >= part.getWidth() || py >= part.getHeight()) {
-                            continue;
-                        }
-                        if (woodenPattern) {
-                            if (sx >= part.getWidth() / 8 && sx <= part.getWidth() * 7 / 8
-                                    && sy >= part.getHeight() / 8 && sy <= part.getHeight() * 7 / 8
-                                    && alpha(part, px, py) >= 64) {
-                                boolean edge = alpha(part, px - 1, py) < 64 || alpha(part, px + 1, py) < 64
-                                        || alpha(part, px, py - 1) < 64 || alpha(part, px, py + 1) < 64;
-                                cast.setPixelRGBA(x, y, shade(pixel, edge ? 0.6F : 0.5F));
-                            }
                             continue;
                         }
                         if (alpha(part, px, py) > 64 && sx != 0 && sx != part.getWidth() - 1 && sy != 0 && sy != part.getHeight() - 1) {
@@ -90,6 +84,47 @@ public record CastSpriteSource(ResourceLocation sprite, ResourceLocation mask, i
                 return null;
             }
         });
+    }
+
+    private void engravePattern(NativeImage pattern, NativeImage part) {
+        int left = part.getWidth(), right = -1, top = part.getHeight(), bottom = -1;
+        for (int y = 0; y < part.getHeight(); y++) {
+            for (int x = 0; x < part.getWidth(); x++) {
+                if (alpha(part, x, y) >= 64) {
+                    left = Math.min(left, x);
+                    right = Math.max(right, x);
+                    top = Math.min(top, y);
+                    bottom = Math.max(bottom, y);
+                }
+            }
+        }
+        if (right < left) {
+            return;
+        }
+
+        int sourceWidth = right - left + 1, sourceHeight = bottom - top + 1;
+        int marginX = pattern.getWidth() / 8, marginY = pattern.getHeight() / 8;
+        // 以部件的实际轮廓为中心，等比缩小过大的轮廓，避免单侧裁切压住模板边框。
+        float scale = Math.min(Math.min((float) pattern.getWidth() / part.getWidth(),
+                        (float) pattern.getHeight() / part.getHeight()),
+                Math.min((float) (pattern.getWidth() - 2 * marginX) / sourceWidth,
+                        (float) (pattern.getHeight() - 2 * marginY) / sourceHeight));
+        int width = Math.max(1, Math.round(sourceWidth * scale));
+        int height = Math.max(1, Math.round(sourceHeight * scale));
+        int startX = (pattern.getWidth() - width) / 2 + Math.round(offsetX * scale);
+        int startY = (pattern.getHeight() - height) / 2 + Math.round(offsetY * scale);
+        for (int y = Math.max(startY, marginY); y < Math.min(startY + height, pattern.getHeight() - marginY); y++) {
+            for (int x = Math.max(startX, marginX); x < Math.min(startX + width, pattern.getWidth() - marginX); x++) {
+                int px = left + (int) ((x - startX + 0.5F) * sourceWidth / width);
+                int py = top + (int) ((y - startY + 0.5F) * sourceHeight / height);
+                int pixel = pattern.getPixelRGBA(x, y);
+                if (pixel >>> 24 != 0 && alpha(part, px, py) >= 64) {
+                    boolean edge = alpha(part, px - 1, py) < 64 || alpha(part, px + 1, py) < 64
+                            || alpha(part, px, py - 1) < 64 || alpha(part, px, py + 1) < 64;
+                    pattern.setPixelRGBA(x, y, shade(pixel, edge ? 0.6F : 0.5F));
+                }
+            }
+        }
     }
 
     private static int shade(int pixel, float multiplier) {

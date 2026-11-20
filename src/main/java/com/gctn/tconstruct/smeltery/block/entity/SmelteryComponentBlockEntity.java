@@ -45,6 +45,8 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
     private boolean stopPouring;
     public FluidStack buffered = FluidStack.EMPTY;
     private int timer;
+    private float previousCastingFill;
+    private float castingFill;
     private SmelteryRecipes.Casting recipe;
     // Connections use NONE=0, OUT=1, IN=2. Up is always input; down is an independent gate.
     private int[] connections = new int[6];
@@ -160,7 +162,16 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
 
     public void clientTick() {
         updateLight();
-        if ((kind() == SmelteryBlock.Kind.TABLE || kind() == SmelteryBlock.Kind.BASIN) && !tank.isEmpty()) {
+        if (kind() != SmelteryBlock.Kind.TABLE && kind() != SmelteryBlock.Kind.BASIN) {
+            return;
+        }
+        if (tank.isEmpty()) {
+            previousCastingFill = castingFill = 0;
+        } else {
+            // 液量按批次同步，客户端插值让液面在两次同步之间逐渐上升。
+            previousCastingFill = castingFill;
+            float target = (float) tank.getFluidAmount() / Math.max(1, tank.getCapacity());
+            castingFill = Math.abs(target - castingFill) < 0.005F ? target : castingFill + (target - castingFill) * 0.5F;
             if (recipe == null) {
                 recipe = SmelteryRecipes.findCasting(kind() == SmelteryBlock.Kind.BASIN, inventory.getStackInSlot(0), tank.getFluid().getFluid());
             }
@@ -186,6 +197,15 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
 
     public float progress() {
         return recipe == null || tank.isEmpty() ? 0 : Math.min(1, (float) timer / Math.max(1, recipe.time()));
+    }
+
+    public float castingRenderProgress(float partialTick) {
+        return timer <= 0 || recipe == null || tank.isEmpty() ? 0
+                : Math.min(1, (timer - 1 + partialTick) / Math.max(1, recipe.time()));
+    }
+
+    public float castingRenderFill(float partialTick) {
+        return net.minecraft.util.Mth.clamp(net.minecraft.util.Mth.lerp(partialTick, previousCastingFill, castingFill), 0, 1);
     }
 
     public ItemStack castingResult() {
