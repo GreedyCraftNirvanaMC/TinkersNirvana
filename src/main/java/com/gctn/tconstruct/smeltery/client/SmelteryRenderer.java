@@ -146,10 +146,9 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
 
         if (!fluid.isEmpty()) {
             float fill = entity.castingRenderFill(partialTick);
-            // 对照怀古的冷却阶段，前段保持熔液颜色，最后三分之一才降低熔液不透明度。
-            float alpha = 1.0F - Math.max(0.0F, progress - 2.0F / 3.0F);
-            maskedFluid = tableCast && renderCastFluid(entity, input, pose, buffers, fluid, fill, facing, light, alpha);
+            maskedFluid = tableCast && renderCastFluid(entity, input, pose, buffers, fluid, fill, facing, light, 1.0F - progress);
             if (!maskedFluid) {
+                float alpha = 1.0F - Math.max(0.0F, progress - 2.0F / 3.0F);
                 float bottom = basin ? 0.25F : 0.9375F;
                 float inset = basin ? 0.125F : 0.0625F;
                 float top = tableCast ? Mth.lerp(fill, bottom, TABLE_ITEM_Y) : Mth.lerp(fill, bottom, 1.0F) + 0.001F;
@@ -166,15 +165,17 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
             item(pose, buffers, output, 0.5F, resultY, 0.5F, scale, facing, light);
         } else if (progress > 0) {
             ItemStack result = entity.castingResult();
-            if (!maskedFluid || !renderFlatCastingPreview(pose, buffers, result, resultY, facing, light, progress)) {
-                MultiBufferSource translucent = type -> new AlphaConsumer(buffers.getBuffer(CastingPreviewLayer.TYPE), progress);
+            // 孔型中的熔液从冷却开始退色，成品颜色在前半段更快显现，末段平滑接到成品。
+            float previewAlpha = maskedFluid ? progress * (2.0F - progress) : progress;
+            if (!maskedFluid || !renderFlatCastingPreview(pose, buffers, result, resultY, facing, light, previewAlpha)) {
+                MultiBufferSource translucent = type -> new AlphaConsumer(buffers.getBuffer(CastingPreviewLayer.TYPE), previewAlpha);
                 item(pose, translucent, result, 0.5F, resultY, 0.5F, scale, facing, light);
             }
         }
     }
 
     private static boolean renderFlatCastingPreview(PoseStack pose, MultiBufferSource buffers, ItemStack result,
-                                                    float y, Direction facing, int light, float progress) {
+                                                    float y, Direction facing, int light, float alpha) {
         if (result.isEmpty() || result.getItem() instanceof BlockItem) {
             return false;
         }
@@ -201,7 +202,7 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
             var top = pass.getQuads(null, null, random).stream()
                     .filter(quad -> quad.getDirection() == Direction.SOUTH).toList();
             if (!top.isEmpty()) {
-                var vertices = new AlphaConsumer(buffers.getBuffer(CastingPreviewLayer.TYPE), progress);
+                var vertices = new AlphaConsumer(buffers.getBuffer(CastingPreviewLayer.TYPE), alpha);
                 renderer.renderQuadList(pose, vertices, top, result, light, OverlayTexture.NO_OVERLAY);
                 rendered = true;
             }
@@ -218,6 +219,9 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
                 .getParticleIcon().contents();
         if (mask.name().equals(MissingTextureAtlasSprite.getLocation())) {
             return false;
+        }
+        if (alpha <= 0.0F) {
+            return true;
         }
         int width = mask.width();
         int height = mask.height();
