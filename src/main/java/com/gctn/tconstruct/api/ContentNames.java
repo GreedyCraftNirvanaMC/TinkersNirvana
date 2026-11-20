@@ -13,7 +13,9 @@ public final class ContentNames {
     }
 
     public static Component translated(String key, Component fallback) {
-        return Component.translatableWithFallback(key, "%s", fallback);
+        // 原版解码时会将纯文本参数折叠成字符串。创建时使用相同格式，避免物品读档或同步后无法堆叠。
+        String literal = fallback.tryCollapseToString();
+        return Component.translatableWithFallback(key, "%s", literal == null ? fallback : literal);
     }
 
     public static String traitId(String id) {

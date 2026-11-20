@@ -8,6 +8,7 @@
 - Add optional Jade tooltips for multiblock status, stored fluids, heating, casting, and drying progress.
 - Keep recipe stack counts behind JEI tooltips.
 - Keep casts visible during cooling and beneath finished parts. Smooth the transition from molten fluid to the finished part. Give blank wooden patterns a clean surface and center the part imprints.
+- Stack newly cast tool parts with identical parts already in the inventory, including parts loaded from a save.
 
 ## 1.21.1-1.0.5
 
