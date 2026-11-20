@@ -147,7 +147,16 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         if (this.mode == Mode.DISASSEMBLE) {
             return this.isDisassemblyPreview() && !this.getItem(RESULT_SLOT).isEmpty();
         }
-        return !this.getItem(RESULT_SLOT).isEmpty();
+        ItemStack shown = this.getItem(RESULT_SLOT);
+        if (shown.isEmpty()) { return false; }
+        ItemStack current = this.createCraftingResult();
+        // 共享输入可能已由漏斗或其他菜单改动，必须先核对预览再允许物品离开结果槽。
+        if (!ItemStack.matches(shown, current)) {
+            this.items.set(RESULT_SLOT, current);
+            this.setChanged();
+            return false;
+        }
+        return true;
     }
 
     public void resultSlotChanged(ItemStack newStack) {

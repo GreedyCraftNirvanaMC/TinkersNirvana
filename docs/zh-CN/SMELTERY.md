@@ -28,6 +28,6 @@
 | `maxSmelteryItemRenders` | `-1`（不限） |
 | `temperatureCelsius` | `true` |
 
-`oredictMeltingIgnore` 支持物品 ID 或 `#物品标签`。从合成原料推导熔化配方时，可忽略列出的原料；默认允许忽略木材、木棍、线、红石和箱子。数据包重载后会重新推导。
+`oredictMeltingIgnore` 支持物品 ID 或 `#物品标签`。从合成原料推导熔化配方时，可忽略列出的原料，默认包括木材、木棍、线、红石和箱子。同一物品的各条合成路线及其备选原料都必须得到相同流体和单位回收量，才能自动生成熔化配方。显式熔化配方优先。数据包重载后会重新推导。
 
 集成时在物品和流体注册后初始化 `SmelteryRecipes`，向公开注册表添加熔化、浇铸、燃料、合金或实体熔炼配方。支持通用 `c:ingots`、`c:nuggets`、`c:storage_blocks` 和 `c:ores` 材料标签，浇铸也能识别板和齿轮标签。可在 NeoForge 游戏事件总线上监听 `SmelteryEvents.Melting`、`Casting` 和 `Casted` 来调整结果或拒绝操作。回调在服务端执行，被拒绝的操作保留原料。

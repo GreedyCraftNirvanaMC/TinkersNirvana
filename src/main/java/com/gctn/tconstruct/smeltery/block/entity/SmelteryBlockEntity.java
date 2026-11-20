@@ -358,7 +358,13 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity implements Hea
 
     private void updateRequired(int slot) {
         SmelteryRecipes.Melting recipe = items.get(slot).isEmpty() ? null : SmelteryRecipes.findMelting(items.get(slot));
-        required[slot] = recipe == null ? 0 : recipe.heat() * 8;
+        int next = recipe == null ? 0 : recipe.heat() * 8;
+        if (required[slot] != next) {
+            // 重载数据包后可能换了熔化配方，旧的加热进度不能带进新的要求。
+            required[slot] = next;
+            heat[slot] = 0;
+            changed();
+        }
     }
 
     public int heat(int slot) {

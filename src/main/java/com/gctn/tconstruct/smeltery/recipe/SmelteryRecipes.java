@@ -26,7 +26,9 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 /** The original quantities and temperature/cooling rules, independent of a recipe's item source. */
@@ -41,6 +43,7 @@ public final class SmelteryRecipes {
     public static final List<Fuel> FUELS = new ArrayList<>();
     public static final List<EntityMelting> ENTITY_MELTING = new ArrayList<>();
     public static final java.util.Map<Item, Melting> AUTOMATIC_MELTING = new java.util.HashMap<>();
+    private static final Map<Casting, StandardCast> STANDARD_CASTS = new IdentityHashMap<>();
     private static boolean initialized;
 
     private SmelteryRecipes() {
@@ -72,7 +75,9 @@ public final class SmelteryRecipes {
                     ItemStack output = preferred(name, form.suffix);
                     if (!output.isEmpty()) {
                         String cast = form.suffix.equals("block") ? "" : "cast_" + form.suffix;
-                        CASTING.add(casting(form.suffix.equals("block"), castPredicate(cast), fluid, form.amount, output, false, false));
+                        Casting standard = casting(form.suffix.equals("block"), castPredicate(cast), fluid, form.amount, output, false, false);
+                        CASTING.add(standard);
+                        STANDARD_CASTS.put(standard, new StandardCast(name, form.suffix));
                     }
                 }
             }
@@ -260,7 +265,8 @@ public final class SmelteryRecipes {
                 return recipe;
             }
         }
-        return AUTOMATIC_MELTING.get(stack.getItem());
+        Melting inferred = AUTOMATIC_MELTING.get(stack.getItem());
+        return inferred != null && inferred.input.test(stack) ? inferred : null;
     }
 
     public static Fuel fuel(FluidStack stack) {
@@ -288,7 +294,15 @@ public final class SmelteryRecipes {
         for (int i = CASTING.size() - 1; i >= 0; i--) {
             Casting recipe = CASTING.get(i);
             if (recipe.basin == basin && recipe.fluid == fluid && recipe.cast.test(cast)) {
-                return recipe;
+                StandardCast standard = STANDARD_CASTS.get(recipe);
+                if (standard == null) { return recipe; }
+                // 标准铸模的标签产物会随数据包重载改变。显式浇铸配方仍保留注册时的优先级。
+                ItemStack output = preferred(standard.material, standard.form);
+                if (!output.isEmpty()) {
+                    return ItemStack.matches(recipe.output, output) ? recipe
+                            : new Casting(recipe.basin, recipe.cast, recipe.fluid, recipe.amount, output,
+                                    recipe.time, recipe.consumeCast, recipe.switchOutputs);
+                }
             }
         }
         if (!basin && (fluid == SmelteryFluids.get("gold") || fluid == SmelteryFluids.get("alubrass") || fluid == SmelteryFluids.get("brass"))) {
@@ -337,10 +351,14 @@ public final class SmelteryRecipes {
             default -> "";
         };
         if (!tag.isEmpty()) {
-            var items = BuiltInRegistries.ITEM.getTag(TagKey.create(net.minecraft.core.registries.Registries.ITEM,
-                    ResourceLocation.fromNamespaceAndPath("c", tag + "/" + material)));
-            if (items.isPresent() && items.get().size() > 0) {
-                return new ItemStack(items.get().get(0).value());
+            var key = TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                    ResourceLocation.fromNamespaceAndPath("c", tag + "/" + material));
+            var items = BuiltInRegistries.ITEM.getTag(key);
+            if (items.isPresent()) {
+                // 1.21.1 重载后可能仍保留已删除标签的集合，持有者的成员关系才会被重绑。
+                for (var holder : items.get()) {
+                    if (holder.is(key)) { return new ItemStack(holder.value()); }
+                }
             }
         }
         return ItemStack.EMPTY;
@@ -445,5 +463,8 @@ public final class SmelteryRecipes {
     }
 
     private record Form(String tag, int amount, String suffix) {
+    }
+
+    private record StandardCast(String material, String form) {
     }
 }

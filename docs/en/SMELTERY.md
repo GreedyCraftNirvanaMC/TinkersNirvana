@@ -53,6 +53,8 @@ Configuration is in `config/tconstruct-common.toml`, under `[smeltery]`:
 when deriving melting recipes from crafting ingredients. Its defaults allow
 wood, sticks, string, redstone, and chests to be omitted, matching Antique's
 crafting-to-melting scan. Derived recipes are rebuilt after datapack reloads.
+Automatic melting requires every crafting route and ingredient alternative to yield
+the same fluid and amount per item. Explicit melting recipes take precedence.
 
 For mod integrations, initialize `SmelteryRecipes` after item/fluid registration,
 then append melting, casting, fuel, alloy, or entity-melting entries to its public
