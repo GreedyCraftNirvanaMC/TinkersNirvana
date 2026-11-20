@@ -63,6 +63,7 @@ public final class MaterialInputs {
     public static void init() {
         if (initialized) { return; }
         initialized = true;
+        item(TinkerMaterials.wood, "minecraft:stick", .5F);
         tag(TinkerMaterials.wood, "minecraft:planks", 1);
         tag(TinkerMaterials.wood, "minecraft:logs", 4);
         tag(TinkerMaterials.stone, "c:cobblestones", 1);
@@ -70,12 +71,16 @@ public final class MaterialInputs {
         item(TinkerMaterials.flint, "minecraft:flint", 1);
         item(TinkerMaterials.cactus, "minecraft:cactus", 1);
         item(TinkerMaterials.bone, "minecraft:bone", 1);
+        item(TinkerMaterials.bone, "minecraft:bone_meal", .25F);
         item(TinkerMaterials.bloodbone, "tconstruct:bloodbone", 1);
         item(TinkerMaterials.obsidian, "minecraft:obsidian", 1);
-        item(TinkerMaterials.prismarine, "minecraft:prismarine_shard", 1);
+        item(TinkerMaterials.prismarine, "minecraft:prismarine_shard", .25F);
+        item(TinkerMaterials.prismarine, "minecraft:prismarine", 1);
+        item(TinkerMaterials.prismarine, "minecraft:prismarine_bricks", 2.25F);
+        item(TinkerMaterials.prismarine, "minecraft:dark_prismarine", 2);
         item(TinkerMaterials.endstone, "minecraft:end_stone", 1);
         item(TinkerMaterials.netherrack, "minecraft:netherrack", 1);
-        item(TinkerMaterials.paper, "minecraft:paper", 1);
+        item(TinkerMaterials.paper, "minecraft:paper", .25F);
         item(TinkerMaterials.sponge, "minecraft:sponge", 1);
         item(TinkerMaterials.firewood, "tconstruct:firewood", 1);
         item(TinkerMaterials.slime, "tconstruct:slimecrystal_green", 1);

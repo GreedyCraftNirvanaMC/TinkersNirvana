@@ -51,7 +51,7 @@ public final class AntiqueTools {
         add("longbow", 1.4F, .7F, 0, 1.3F, Action.LONGBOW, List.of(), limb("Limb"), limb("Limb2"), new Part("Plate", "large_plate", "Extra"), string());
         add("crossbow", 1, .8F, 0, 2, Action.CROSSBOW, List.of(), toughHandle(), limb("Limb"), extra("tough_binding"), string());
         add("arrow", 1, 1, 0, 1, Action.ARROW, List.of(), new Part("Shaft", "arrow_shaft", "Shaft"), head("arrow_head"), new Part("Fletching", "fletching", "Fletching"));
-        add("bolt", 1, 1, 0, 1, Action.BOLT, List.of(), new Part("Shaft", "bolt_core", "Shaft"), new Part("Head", "bolt_core", "Head"), new Part("Fletching", "fletching", "Fletching"));
+        add("bolt", .8F, 1, 0, 1, Action.BOLT, List.of(), new Part("Shaft", "bolt_core", "Shaft"), new Part("Head", "bolt_core", "Head"), new Part("Fletching", "fletching", "Fletching"));
         add("shuriken", 1, .7F, 0, 1, Action.SHURIKEN, List.of(), head("knife_blade"),
                 new Part("Blade2", "knife_blade", "Head"), new Part("Blade3", "knife_blade", "Head"), new Part("Blade4", "knife_blade", "Head"));
     }

@@ -50,16 +50,16 @@ The table lists parts in material-data order. In-game slot icons indicate where 
 | Cleaver | Tough tool rod, large sword blade, large plate, tough tool rod | Tool Forge | Heavy hits, built-in beheading, and offhand restrictions |
 | Shortbow | Two bow limbs, bowstring | Tool Station | Material-dependent draw and range |
 | Longbow | Two bow limbs, large plate, bowstring | Tool Forge | Higher-powered bow |
-| Crossbow | Tough tool rod, bow limb, tough binding, bowstring | Tool Forge | Stores ammunition when loaded and fires on the next use |
+| Crossbow | Tough tool rod, bow limb, tough binding, bowstring | Tool Forge | Release at full draw to load. The next use fires a bolt from your inventory. |
 | Arrow | Arrow shaft, arrowhead, fletching | Tool Station | Repairable ammunition |
 | Bolt | Coated bolt core, fletching | Tool Forge | Repairable ammunition |
 | Shuriken | Four knife blades | Tool Forge | Throwable and recoverable |
 
 Make a bolt core by coating an arrow shaft with two units of castable material on a Casting Table. Assembly and disassembly preserve both shaft and coating materials. Sharpening kits and shards are also listed in the parts catalog.
 
-Sneak to harvest one block with an area tool. Each extra block uses the vanilla player break flow and respects protection events and drops. Unsuitable or unbreakable blocks, block entities, and unloaded chunks are skipped. Connected-log harvesting has distance and count limits.
+Each extra block uses the vanilla player break flow and respects protection events and drops. Unsuitable or unbreakable blocks, block entities, and unloaded chunks are skipped. The Lumber Axe identifies trees by their canopy and fells their connected logs over successive ticks.
 
-Ammunition is stored as durability, and each shot uses ten points. Recovery first refills a stack with the same materials and modifiers. Otherwise, it gives a new item with one shot remaining. Extra split projectiles cannot be recovered. Vanilla and tipped arrows use vanilla arrow entities.
+Ammunition is stored as durability, and each shot uses ten points. To recover a projectile, keep a damaged ammo stack with the same materials and modifiers in your inventory. Extra split projectiles cannot be recovered. Vanilla and tipped arrows use vanilla arrow entities.
 
 ## Repair, modifiers, and disassembly
 

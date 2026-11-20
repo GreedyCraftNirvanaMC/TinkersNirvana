@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,6 +27,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.IShearable;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 
@@ -53,7 +55,7 @@ public class AntiqueTool extends TinkerTools {
             case AXE, LUMBERAXE -> ItemAbilities.DEFAULT_AXE_ACTIONS.contains(ability);
             case MATTOCK -> ItemAbilities.DEFAULT_AXE_ACTIONS.contains(ability) || ability == (com.gctn.tconstruct.Config.OLD_MATTOCK_AND_KAMA.get() ? ItemAbilities.HOE_TILL : ItemAbilities.SHOVEL_FLATTEN);
             case KAMA -> ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(ability) || ability == ItemAbilities.HOE_TILL && !com.gctn.tconstruct.Config.OLD_MATTOCK_AND_KAMA.get();
-            case SCYTHE -> ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(ability);
+            case SCYTHE -> ToolModifiers.level(stack, "silktouch") > 0 && ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(ability);
             case BROADSWORD -> ItemAbilities.DEFAULT_SWORD_ACTIONS.contains(ability);
             case BATTLESIGN -> ability == ItemAbilities.SHIELD_BLOCK;
             default -> false;
@@ -65,7 +67,7 @@ public class AntiqueTool extends TinkerTools {
         ItemStack stack = context.getItemInHand();
         if (isBroken(stack) || context.getPlayer() == null) { return InteractionResult.PASS; }
         if ((definition.action() == Action.KAMA || definition.action() == Action.SCYTHE)
-                && context.getHand() == InteractionHand.MAIN_HAND && ToolHarvest.harvestCrops(this, stack, context)) {
+                && ToolHarvest.harvestCrops(this, stack, context)) {
             return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
         }
         BlockState state = context.getLevel().getBlockState(context.getClickedPos());
@@ -93,17 +95,42 @@ public class AntiqueTool extends TinkerTools {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
-        if (isBroken(stack) || (definition.action() != Action.KAMA && definition.action() != Action.SCYTHE)) { return InteractionResult.PASS; }
-        if (entity instanceof net.neoforged.neoforge.common.IShearable target && target.isShearable(player, stack, entity.level(), entity.blockPosition())) {
-            var drops = target.onSheared(player, stack, entity.level(), entity.blockPosition());
-            if (!entity.level().isClientSide) {
-                for (ItemStack drop : drops) { target.spawnShearedDrop(entity.level(), entity.blockPosition(), drop); }
-                damageTool(stack, 1, player, LivingEntity.getSlotForHand(hand));
-            }
-            entity.gameEvent(net.minecraft.world.level.gameevent.GameEvent.SHEAR, player);
-            return InteractionResult.sidedSuccess(entity.level().isClientSide);
+        if (isBroken(stack) || !(entity instanceof IShearable)
+                || (definition.action() != Action.KAMA && definition.action() != Action.SCYTHE)) {
+            return InteractionResult.PASS;
         }
-        return InteractionResult.PASS;
+        if (definition.action() == Action.KAMA) {
+            return shearEntity(stack, player, entity, hand)
+                    ? InteractionResult.sidedSuccess(entity.level().isClientSide) : InteractionResult.PASS;
+        }
+        boolean expandedWidth = ToolModifiers.level(stack, "harvestwidth") > 0;
+        boolean expandedHeight = ToolModifiers.level(stack, "harvestheight") > 0;
+        int width = expandedWidth ? 2 : 1;
+        int height = expandedHeight ? 2 : 1;
+        boolean shorn = false;
+        for (Entity candidate : entity.level().getEntities(player, entity.getBoundingBox().inflate(width, height, width))) {
+            if (isBroken(stack)) {
+                break;
+            }
+            if ((!expandedWidth && !expandedHeight) || candidate.distanceToSqr(entity) <= 9) {
+                shorn |= shearEntity(stack, player, candidate, hand);
+            }
+        }
+        return shorn ? InteractionResult.sidedSuccess(entity.level().isClientSide) : InteractionResult.PASS;
+    }
+
+    private boolean shearEntity(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
+        if (!(entity instanceof IShearable target) || !target.isShearable(player, stack, entity.level(), entity.blockPosition())) {
+            return false;
+        }
+        if (!entity.level().isClientSide) {
+            for (ItemStack drop : target.onSheared(player, stack, entity.level(), entity.blockPosition())) {
+                target.spawnShearedDrop(entity.level(), entity.blockPosition(), drop);
+            }
+            damageTool(stack, 1, player, LivingEntity.getSlotForHand(hand));
+            entity.gameEvent(net.minecraft.world.level.gameevent.GameEvent.SHEAR, player);
+        }
+        return true;
     }
 
     @Override
@@ -120,10 +147,12 @@ public class AntiqueTool extends TinkerTools {
 
     @Override
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity entity) {
-        if (!level.isClientSide && !isBroken(stack) && state.getDestroySpeed(level, pos) > 0) {
-            boolean effective = isCorrectToolForDrops(stack, state);
-            ToolTraits.forEach(stack, (trait, traitLevel) -> trait.afterBlockBreak(stack, traitLevel, level, state, pos, entity, effective));
-            damageTool(stack, 1, entity, EquipmentSlot.MAINHAND);
+        if (!level.isClientSide && !isBroken(stack)) {
+            if (state.getDestroySpeed(level, pos) > 0) {
+                boolean effective = isCorrectToolForDrops(stack, state);
+                ToolTraits.forEach(stack, (trait, traitLevel) -> trait.afterBlockBreak(stack, traitLevel, level, state, pos, entity, effective));
+                damageTool(stack, 1, entity, EquipmentSlot.MAINHAND);
+            }
             ToolHarvest.afterBreak(this, stack, level, state, pos, entity);
         }
         return true;
@@ -165,10 +194,6 @@ public class AntiqueTool extends TinkerTools {
     @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) { return 72000; }
     @Override
-    public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remaining) {
-        if (definition.action() == Action.CROSSBOW) { ToolRanged.charge(this, stack, level, entity, 72000 - remaining); }
-    }
-    @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int remaining) {
         if (isBroken(stack)) { return; }
         int used = 72000 - remaining;
@@ -193,19 +218,33 @@ public class AntiqueTool extends TinkerTools {
         if (previous.getItem() != current.getItem() || isBroken(previous) != isBroken(current)) { return true; }
         var before = TinkerDataComponents.getMaterialTag(previous);
         var after = TinkerDataComponents.getMaterialTag(current);
-        for (String transientKey : new String[]{"Stats", "MossXP", "MossLastHeal", "LoadedAmmo"}) { before.remove(transientKey); after.remove(transientKey); }
+        for (String transientKey : new String[]{"Stats", "MossXP", "MossLastHeal", "LoadedAmmo", "CrossbowLoaded"}) { before.remove(transientKey); after.remove(transientKey); }
         return !before.equals(after) || !ToolTraits.getTraits(previous).equals(ToolTraits.getTraits(current));
     }
     @Override
     public List<RepairInfo> getRepairInfo(ItemStack stack) {
         List<RepairInfo> result = new ArrayList<>();
         var data = TinkerDataComponents.getMaterialTag(stack);
-        for (ToolDefinition.Part part : definition.parts()) {
-            Material material = TinkerMaterials.getMaterial(data.getString(part.key()));
-            if (material != null && (part.stat().equals("Head") || part.stat().equals("Bow"))) {
-                HeadMaterialStats stats = material.getStats("Head", HeadMaterialStats.class);
-                if (stats != null) { result.add(new RepairInfo(material, .25F, stats.durability)); }
+        for (int index = 0; index < definition.parts().size(); index++) {
+            ToolDefinition.Part part = definition.parts().get(index);
+            boolean repairPart = switch (definition.action()) {
+                case SCYTHE -> index == 1 || index == 2;
+                default -> part.stat().equals("Head") || part.stat().equals("Bow");
+            };
+            Material material = repairPart ? TinkerMaterials.getMaterial(data.getString(part.key())) : null;
+            if (material == null || !material.hasStats("Head")) {
+                continue;
             }
+            float efficiency = switch (definition.action()) {
+                case HAMMER -> index == 1 ? 2.5F : 1.5F;
+                case EXCAVATOR -> index == 1 ? 1.75F : 1.3125F;
+                case LUMBERAXE -> index == 1 ? 2F : 1.25F;
+                case CLEAVER -> index == 1 ? 2F : 1.5F;
+                case BROADSWORD, LONGSWORD, RAPIER -> definition.durabilityMultiplier();
+                default -> 1F;
+            };
+            var stats = material.getStats("Head", HeadMaterialStats.class);
+            result.add(new RepairInfo(material, efficiency, stats.durability));
         }
         return result;
     }

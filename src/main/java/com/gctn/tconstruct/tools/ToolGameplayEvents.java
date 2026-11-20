@@ -18,8 +18,14 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWithEnchantedBonusCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.LootTableLoadEvent;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
@@ -48,7 +54,8 @@ public final class ToolGameplayEvents {
         if (ToolModifiers.level(tool, "autosmelt") > 0 && !AntiqueTraits.has(tool, "autosmelt", "onBlockDrops")) { ToolModifiers.smeltDrops(event); }
         int blasting = ToolModifiers.level(tool, "blasting");
         if (blasting > 0 && !event.getLevel().random.nextBoolean()) { event.getDrops().clear(); }
-        if (tool.getItem() instanceof AntiqueTool item && (item.definition().action() == ToolDefinition.Action.KAMA || item.definition().action() == ToolDefinition.Action.SCYTHE)
+        if (tool.getItem() instanceof AntiqueTool item && (item.definition().action() == ToolDefinition.Action.KAMA
+                || (item.definition().action() == ToolDefinition.Action.SCYTHE && ToolModifiers.level(tool, "silktouch") > 0))
                 && event.getState().is(net.minecraft.tags.BlockTags.LEAVES)) {
             event.getDrops().clear();
             event.getDrops().add(new ItemEntity(event.getLevel(), event.getPos().getX() + .5, event.getPos().getY() + .5, event.getPos().getZ() + .5,
@@ -122,11 +129,17 @@ public final class ToolGameplayEvents {
     }
 
     @SubscribeEvent
-    public static void beheadingAndSoulbound(LivingDropsEvent event) {
-        if (event.getEntity().getType() == net.minecraft.world.entity.EntityType.WITHER_SKELETON
-                && event.getSource().getEntity() instanceof Player player && player.getRandom().nextFloat() < .07F) {
-            event.getDrops().add(new ItemEntity(event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), new ItemStack(ToolSupplies.item("necrotic_bone"))));
+    public static void necroticBone(LootTableLoadEvent event) {
+        if (event.getName().equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("entities/wither_skeleton")) && event.getTable().getPool("tconstruct:necrotic_bone") == null) {
+            event.getTable().addPool(LootPool.lootPool().name("tconstruct:necrotic_bone").setRolls(ConstantValue.exactly(1))
+                    .when(LootItemKilledByPlayerCondition.killedByPlayer())
+                    .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(event.getRegistries(), .07F, .05F))
+                    .add(LootItem.lootTableItem(ToolSupplies.item("necrotic_bone"))).build());
         }
+    }
+
+    @SubscribeEvent
+    public static void beheadingAndSoulbound(LivingDropsEvent event) {
         if (event.getEntity() instanceof Player player) {
             ListTag kept = new ListTag();
             event.getDrops().removeIf(drop -> {

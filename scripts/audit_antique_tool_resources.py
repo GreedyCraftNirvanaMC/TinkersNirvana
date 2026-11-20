@@ -8,11 +8,13 @@ from pathlib import Path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--antique", type=Path, required=True)
+parser.add_argument("--mantle", type=Path)
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 resources = root / "src/main/resources"
 assets = resources / "assets/tconstruct"
 source = args.antique / "src/main/resources/assets/tconstruct"
+mantle = (args.mantle or args.antique.parent / "Mantle") / "src/main/resources/assets/mantle"
 
 
 def png(path):
@@ -95,7 +97,7 @@ for entry in manifest:
     assert any(pixel[3] for pixel in pixels), (path, "empty image")
     assert not ({b"eXIf", b"iCCP", b"tEXt", b"iTXt", b"zTXt", b"tIME"} & chunks.keys()), (path, "unexpected metadata")
     if entry["source"]:
-        texture_root = source if entry.get("source_mod", "tconstruct") == "tconstruct" else args.antique.parent / "Mantle/src/main/resources/assets/mantle"
+        texture_root = source if entry.get("source_mod", "tconstruct") == "tconstruct" else mantle
         original = texture_root / entry["source"]
         assert hashlib.sha256(original.read_bytes()).hexdigest() == entry["source_sha256"], original
         sw, sh, before, _ = png(original)

@@ -285,6 +285,11 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
             ItemStack input = inventory.getStackInSlot(0);
             if (event.consumeCast) {
                 input = ItemStack.EMPTY;
+                if (level instanceof net.minecraft.server.level.ServerLevel server) {
+                    server.sendParticles(net.minecraft.core.particles.ParticleTypes.FLAME,
+                            worldPosition.getX() + .5, worldPosition.getY() + 1.1, worldPosition.getZ() + .5,
+                            5, .25, .0125, .25, .005);
+                }
             }
             if (event.switchOutputs) {
                 inventory.setStackInSlot(1, input);
@@ -505,11 +510,15 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
         }
 
         public int fill(FluidStack stack, FluidAction action) {
+            if (stack.isEmpty() || !inventory.getStackInSlot(1).isEmpty()) {
+                return 0;
+            }
             if (!tank.isEmpty() && !FluidStack.isSameFluidSameComponents(tank.getFluid(), stack)) {
                 return 0;
             }
             SmelteryRecipes.Casting candidate = recipe == null ? find(stack) : recipe;
-            if (candidate == null || NeoForge.EVENT_BUS.post(new SmelteryEvents.Casting(SmelteryComponentBlockEntity.this, candidate)).isCanceled()) {
+            if (candidate == null || (tank.isEmpty()
+                    && NeoForge.EVENT_BUS.post(new SmelteryEvents.Casting(SmelteryComponentBlockEntity.this, candidate)).isCanceled())) {
                 return 0;
             }
             int accepted = Math.max(0, Math.min(stack.getAmount(), candidate.amount() - tank.getFluidAmount()));
@@ -521,9 +530,25 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
             return accepted;
         }
 
-        // Casting is intentionally insert-only, including while a partially filled recipe is cooling.
-        public FluidStack drain(FluidStack stack, FluidAction action) { return FluidStack.EMPTY; }
-        public FluidStack drain(int amount, FluidAction action) { return FluidStack.EMPTY; }
+        @Override
+        public FluidStack drain(FluidStack stack, FluidAction action) {
+            if (!FluidStack.isSameFluidSameComponents(tank.getFluid(), stack)) {
+                return FluidStack.EMPTY;
+            }
+            return drain(stack.getAmount(), action);
+        }
+
+        @Override
+        public FluidStack drain(int amount, FluidAction action) {
+            FluidStack drained = tank.drain(amount, action);
+            // 怀古允许回收已经注入的液体。排空后要一起清除旧配方和冷却进度。
+            if (action.execute() && !drained.isEmpty() && tank.isEmpty()) {
+                timer = 0;
+                recipe = null;
+                tank.setCapacity(0);
+            }
+            return drained;
+        }
     };
 
     private final IFluidHandler extractOnlyHandler = new IFluidHandler() {

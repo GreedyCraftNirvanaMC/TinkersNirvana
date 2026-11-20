@@ -1,12 +1,14 @@
 package com.gctn.tconstruct.tables.recipe;
 
-import com.gctn.tconstruct.TinkersNirvana;
-import com.gctn.tconstruct.library.MaterialList;
-import com.gctn.tconstruct.library.materials.Material;
+import com.gctn.tconstruct.init.TinkerDataComponents;
+import com.gctn.tconstruct.library.materials.MaterialInputs;
+import com.gctn.tconstruct.tools.ToolBuilder;
+import com.gctn.tconstruct.tools.ToolModifiers;
+import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import com.gctn.tconstruct.tools.TinkerTools;
 import com.gctn.tconstruct.tools.TinkerTools.RepairInfo;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
@@ -119,98 +121,70 @@ public final class ToolStationDefaultRecipes {
         if (!isRepairableTool(sourceTool)) {
             return null;
         }
-        // 所有词条计算只作用于副本，预览不能修改输入工具。
         ItemStack tool = sourceTool.copy();
-        int remainingDamage = tool.getDamageValue();
-        int[] totalRepairAmount = new int[lastMaterialSlot];
-
-        while (remainingDamage > 0) {
-            Collection<RepairMatch> repairMatches = findRepairMatches(container, tool, totalRepairAmount, lastMaterialSlot);
-            if (repairMatches.isEmpty()) {
-                break;
-            }
-
-            int previousDamage = remainingDamage;
-            double matchEfficiency = 1 + (repairMatches.size() - 1) / 9.0;
-            for (RepairMatch repairMatch : repairMatches) {
-                if (remainingDamage == 0) {
-                    break;
-                }
-                int repairAmount = getRepairAmount(tool, repairMatch.partEfficient, repairMatch.matEfficient, matchEfficiency);
-                // 测试日志，后续删除
-                TinkersNirvana.LOGGER.debug(
-                        "Repair match: part={}, material={}, match={}",
-                        repairMatch.partEfficient(),
-                        repairMatch.matEfficient(),
-                        matchEfficiency
-                );
-
-                if (repairAmount <= 0) {
-                    continue;
-                }
-                int healedAmount = Math.min(remainingDamage, repairAmount);
-                int slot = repairMatch.slot() - FIRST_MATERIAL_SLOT;
-                totalRepairAmount[slot] += 1;
-                remainingDamage -= healedAmount;
-                tool.setDamageValue(remainingDamage);
-                ToolTraits.forEach(tool, (trait, level) -> trait.onRepair(tool, level, healedAmount));
-            }
-            if (remainingDamage == previousDamage) {
-                break;
-            }
-        }
-
-        return new RepairPlan(totalRepairAmount, tool);
-    }
-
-    // 获取修复槽位和对应材料信息
-    private static List<RepairMatch> findRepairMatches(Container container, ItemStack tool, int[] totalRepairAmount, int lastMaterialSlot) {
-        List<RepairMatch> repairMatches = new ArrayList<>();
-        TinkerTools tinkerTool = (TinkerTools) tool.getItem();
-        Set<String> checkedMaterialIds = new HashSet<>();
-        List<RepairInfo> repairInfos = tinkerTool.getRepairInfo(tool);
-
-        for (RepairInfo repairInfo : repairInfos) {
-            Material material = repairInfo.material();
-            if (material == null || material.identifier == null || repairInfo.partEfficient() <= 0.0F) {
-                continue;
-            }
-            // 每种材料只计算一次
-            if (!checkedMaterialIds.add(material.identifier)) {
-                continue;
-            }
-
-            List<RepairMatch> repairMatch = findInputMatch(container, repairInfo, totalRepairAmount, lastMaterialSlot);
-            if (!repairMatch.isEmpty()) {
-                repairMatches.addAll(repairMatch);
-            }
-        }
-
-        return repairMatches;
-    }
-
-    // 获取可用于修复的槽位和材料
-    private static List<RepairMatch> findInputMatch(Container container, RepairInfo repairInfo, int[] totalRepairAmount, int lastMaterialSlot) {
-        Material material = repairInfo.material();
-        float partEfficient = repairInfo.partEfficient();
-
-        List<RepairMatch> repairMatches = new ArrayList<>();
+        List<RepairMatch> matches = new ArrayList<>();
+        List<RepairInfo> materials = ((TinkerTools) tool.getItem()).getRepairInfo(tool);
         for (int slot = FIRST_MATERIAL_SLOT; slot <= lastMaterialSlot; slot++) {
-            ItemStack materialStack = container.getItem(slot);
-            if (materialStack.isEmpty()) {
+            ItemStack stack = container.getItem(slot);
+            if (stack.isEmpty()) {
                 continue;
             }
-            if(materialStack.getCount() <= totalRepairAmount[slot - FIRST_MATERIAL_SLOT]) {
-                continue;
+            var input = MaterialInputs.match(stack);
+            if (input == null) {
+                return null;
             }
-            String inputItemId = BuiltInRegistries.ITEM.getKey(materialStack.getItem()).toString();
-            double matEfficient = com.gctn.tconstruct.library.materials.MaterialInputs.value(materialStack, material);
-            if (matEfficient > 0.0) {
-                repairMatches.add(new RepairMatch(slot, partEfficient, matEfficient));
+            RepairInfo info = materials.stream()
+                    .filter(part -> input.material() == part.material() && part.partEfficient() > 0)
+                    .findFirst().orElse(null);
+            if (info == null) {
+                return null;
             }
+            matches.add(new RepairMatch(slot, info, input.value()));
         }
 
-        return repairMatches;
+        int[] consumed = new int[lastMaterialSlot];
+        var data = TinkerDataComponents.getMaterialTag(tool);
+        int repairCount = Math.clamp(data.getInt("RepairCount"), 0, 100);
+        int baseDurability = ToolBuilder.savedStats(tool).getInt("BaseDurability");
+        if (baseDurability <= 0 && tool.getItem() instanceof AntiqueTool antique) {
+            var stats = ToolBuilder.calculate(tool, antique.definition());
+            ToolTraits.forEach(tool, (trait, level) -> trait.modifyStats(tool, level, stats));
+            baseDurability = ToolTraits.modifyDurability(tool, stats.durability);
+        }
+        double durabilityFactor = tool.getMaxDamage() / (double) (baseDurability > 0 ? baseDurability : tool.getMaxDamage());
+        int usedModifiers = Math.min(3, ToolModifiers.usedSlots(tool));
+
+        while (tool.isDamaged()) {
+            var batch = new LinkedHashMap<RepairInfo, RepairMatch>();
+            for (RepairMatch match : matches) {
+                if (consumed[match.slot() - FIRST_MATERIAL_SLOT] < container.getItem(match.slot()).getCount()) {
+                    batch.putIfAbsent(match.info(), match);
+                }
+            }
+            if (batch.isEmpty()) {
+                break;
+            }
+            // 同种材料每轮只算一次。材料属性决定基础修复量，再计入多材料加成和修复衰减。
+            double amount = batch.values().stream()
+                    .mapToDouble(match -> match.info().durability() * match.info().partEfficient() * match.value()).sum();
+            amount *= 1 + (batch.size() - 1) / 9.0;
+            amount = Math.max((int) amount * Math.min(10, durabilityFactor), tool.getMaxDamage() / 64.0);
+            amount *= (1 - usedModifiers * .05) * (1 - (repairCount / 2) / 100.0);
+            int healed = Math.min(tool.getDamageValue(), ToolTraits.modifyHealing(tool, (int) Math.ceil(amount), null));
+            if (healed <= 0) {
+                break;
+            }
+            for (RepairMatch match : batch.values()) {
+                consumed[match.slot() - FIRST_MATERIAL_SLOT]++;
+            }
+            tool.setDamageValue(tool.getDamageValue() - healed);
+            ToolTraits.forEach(tool, (trait, level) -> trait.onRepair(tool, level, healed));
+            repairCount = Math.min(100, repairCount + 1);
+        }
+        data = TinkerDataComponents.getMaterialTag(tool);
+        data.putInt("RepairCount", repairCount);
+        tool.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
+        return new RepairPlan(consumed, tool);
     }
 
     private static boolean isTinkerTool(ItemStack stack) {
@@ -224,16 +198,6 @@ public final class ToolStationDefaultRecipes {
                 && stack.getDamageValue() > 0;
     }
 
-    private static double materialMatchesInput(Material material, String inputItemId) {
-        Map<String, Double> efficiencies = MaterialList.MATERIAL_MAP.get(material);
-        return efficiencies == null ? 0.0 : efficiencies.getOrDefault(inputItemId, 0.0);
-    }
-
-    private static int getRepairAmount(ItemStack tool, float partEfficient, double repairEfficient, double matchEfficient) {
-        int base = Math.max(1, (int) Math.ceil(tool.getMaxDamage() * partEfficient * repairEfficient * matchEfficient));
-        return ToolTraits.modifyHealing(tool, base, null);
-    }
-
     private record RepairPlan(int[] repairCount, ItemStack resultTool) {
         boolean isEmpty() {
             for (int count : repairCount) {
@@ -245,6 +209,6 @@ public final class ToolStationDefaultRecipes {
         }
     }
 
-    private record RepairMatch(int slot, float partEfficient, double matEfficient) {
+    private record RepairMatch(int slot, RepairInfo info, double value) {
     }
 }

@@ -214,7 +214,7 @@ public final class ToolModifiers {
                 || modifiers.getInt("silktouch") > 0 || AntiqueTraits.has(source, "squeaky"))) { return null; }
         if (modifiers.getInt("fins") > 0 && !item.isAmmo()) { return null; }
         if ((modifiers.getInt("harvestwidth") > 0 || modifiers.getInt("harvestheight") > 0)
-                && switch (item.definition().action()) { case HAMMER, EXCAVATOR, LUMBERAXE, SCYTHE -> false; default -> true; }) { return null; }
+                && !ToolHarvest.supportsExpanders(item.definition().action())) { return null; }
         material.put("Modifiers", modifiers);
         result.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(material));
         if (((TinkerTools) result.getItem()).getTotalModifierSlots(result) < usedSlots(result)) { return null; }

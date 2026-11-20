@@ -73,6 +73,14 @@ public final class ToolBuilder {
         stats.attack += stats.growthAttack;
         stats.miningSpeed += stats.growthSpeed;
         stats.attack *= definition.damageMultiplier();
+        // 速度倍率作用于最终挖掘速度，材料属性和强化增量使用怀古的未缩放值。
+        stats.miningSpeed *= switch (definition.action()) {
+            case HAMMER -> .4F;
+            case EXCAVATOR -> .28F;
+            case LUMBERAXE -> .35F;
+            case MATTOCK -> .95F;
+            default -> 1;
+        };
         tool.set(DataComponents.MAX_DAMAGE, Math.max(1, stats.durability));
         tool.set(DataComponents.DAMAGE, Math.min(tool.getDamageValue(), tool.getMaxDamage()));
         List<Tool.Rule> rules = new ArrayList<>();
@@ -90,6 +98,7 @@ public final class ToolBuilder {
         tool.set(DataComponents.ATTRIBUTE_MODIFIERS, attributes.build());
         CompoundTag data = TinkerDataComponents.getMaterialTag(tool);
         CompoundTag saved = new CompoundTag();
+        saved.putInt("BaseDurability", stats.baseDurability);
         saved.putFloat("MiningSpeed", stats.miningSpeed);
         saved.putInt("HarvestLevel", stats.harvestLevel);
         saved.putFloat("Attack", stats.attack);
@@ -135,6 +144,9 @@ public final class ToolBuilder {
                         heads.add(head);
                         if (definition.action() == ToolDefinition.Action.HAMMER && part.key().equals("Head")) { heads.add(head); }
                     }
+                    if (definition.action() == ToolDefinition.Action.SHURIKEN && material.hasStats("Extra")) {
+                        extras.add(material.getStats("Extra", ExtraMaterialStats.class));
+                    }
                     if (part.stat().equals("Bow")) {
                         BowMaterialStats bow = material.getStats("Bow", BowMaterialStats.class);
                         if (bow != null) { limbs.add(bow); }
@@ -152,24 +164,35 @@ public final class ToolBuilder {
             }
         }
         ToolStats stats = new ToolStats();
-        float durability = (float) heads.stream().mapToInt(head -> head.durability).average().orElse(1);
-        durability += extras.stream().mapToInt(extra -> extra.durability).average().orElse(0);
+        // 怀古在部件阶段分别取整，尤其是先按箭羽修正耐久，再加上箭杆提供的额外弹药。
+        int durability = Math.max(1, (int) heads.stream().mapToInt(head -> head.durability).average().orElse(1));
+        durability += (int) Math.round(extras.stream().mapToInt(extra -> extra.durability).average().orElse(0));
         if (!handles.isEmpty()) {
-            durability = Math.round(durability * handles.stream().mapToDouble(handle -> handle.modifer).average().orElse(1));
-            durability += Math.round(handles.stream().mapToInt(handle -> handle.durability).average().orElse(0));
+            durability = (int) Math.round(durability * handles.stream().mapToDouble(handle -> handle.modifer).average().orElse(1));
+            durability += (int) Math.round(handles.stream().mapToInt(handle -> handle.durability).average().orElse(0));
+            durability = Math.max(1, durability);
         }
-        if (shaft != null) { durability = durability * shaft.modifier + shaft.bonusAmmo * 10; }
-        if (fletching != null) { durability *= fletching.modifier; stats.accuracy = fletching.accuracy; }
-        stats.durability = Math.max(1, (int) (durability * definition.durabilityMultiplier() * stringModifier));
+        if (fletching != null) {
+            durability = Math.max(1, Math.round(durability * fletching.modifier));
+            stats.accuracy = Math.clamp(fletching.accuracy, 0, 1);
+        }
+        if (shaft != null) {
+            durability = Math.max(1, Math.round(durability * shaft.modifier) + shaft.bonusAmmo * ToolRanged.AMMO_DURABILITY);
+        }
+        durability = Math.max(1, Math.round(durability * stringModifier));
+        stats.durability = Math.max(1, (int) (durability * definition.durabilityMultiplier()));
         stats.harvestLevel = heads.stream().mapToInt(head -> head.harvestLevel).max().orElse(0);
         if (definition.action() == ToolDefinition.Action.HAMMER && !heads.isEmpty()) { stats.harvestLevel = heads.getFirst().harvestLevel; }
         stats.miningSpeed = (float) heads.stream().mapToDouble(head -> head.miningspeed).average().orElse(1);
-        stats.attack = (float) heads.stream().mapToDouble(head -> head.attack).average().orElse(0) + definition.bonusDamage();
-        if (definition.action() == ToolDefinition.Action.SHURIKEN) {
+        stats.attack = (float) heads.stream().mapToDouble(head -> head.attack).average().orElse(0);
+        if (definition.action() == ToolDefinition.Action.CLEAVER) {
+            stats.attack *= 1.3F;
+        } else if (definition.action() == ToolDefinition.Action.ARROW) {
+            stats.attack += 2;
+        } else if (definition.action() == ToolDefinition.Action.SHURIKEN) {
             stats.attack += 1;
-            stats.durability += (int) definition.parts().stream().map(part -> TinkerMaterials.getMaterial(data.getString(part.key())))
-                    .filter(java.util.Objects::nonNull).mapToInt(material -> material.getStats("Extra", ExtraMaterialStats.class).durability).average().orElse(0);
         }
+        stats.attack += definition.bonusDamage();
         stats.attackSpeed = definition.attackSpeed();
         stats.baseAttackSpeed = definition.attackSpeed();
         if (!limbs.isEmpty()) {

@@ -5,10 +5,13 @@
  */
 package com.gctn.tconstruct.tools;
 
+import com.gctn.tconstruct.init.TinkerDataComponents;
+import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -91,22 +94,38 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     protected float getWaterInertia() { return ToolModifiers.level(traitTool(), "fins") > 0 ? .992F : super.getWaterInertia(); }
 
     @Override
-    protected boolean tryPickup(net.minecraft.world.entity.player.Player player) {
-        if (pickup != Pickup.ALLOWED || !(getPickupItemStackOrigin().getItem() instanceof com.gctn.tconstruct.tools.tools.AntiqueTool)) {
+    protected boolean tryPickup(Player player) {
+        ItemStack recovered = getPickupItemStackOrigin();
+        if (pickup != Pickup.ALLOWED || !(recovered.getItem() instanceof AntiqueTool ammo)) {
             return super.tryPickup(player);
         }
-        ItemStack recovered = getPickupItemStackOrigin();
-        var expected = com.gctn.tconstruct.init.TinkerDataComponents.getMaterialTag(recovered);
-        expected.remove("Stats");
+        var expected = TinkerDataComponents.getMaterialTag(recovered);
+        if (restoreAmmo(player.getMainHandItem(), ammo, expected) || restoreAmmo(player.getOffhandItem(), ammo, expected)) {
+            return true;
+        }
         for (ItemStack candidate : player.getInventory().items) {
-            if (candidate.getItem() != recovered.getItem() || !candidate.isDamaged()) { continue; }
-            var actual = com.gctn.tconstruct.init.TinkerDataComponents.getMaterialTag(candidate);
-            actual.remove("Stats");
-            if (expected.equals(actual)) {
-                candidate.setDamageValue(Math.max(0, candidate.getDamageValue() - 10));
+            if (restoreAmmo(candidate, ammo, expected)) {
                 return true;
             }
         }
-        return super.tryPickup(player);
+        return false;
+    }
+
+    private static boolean restoreAmmo(ItemStack candidate, AntiqueTool ammo, CompoundTag expected) {
+        if (!candidate.is(ammo) || !candidate.isDamaged()) {
+            return false;
+        }
+        var actual = TinkerDataComponents.getMaterialTag(candidate);
+        if (!expected.getCompound("Modifiers").equals(actual.getCompound("Modifiers"))) {
+            return false;
+        }
+        for (ToolDefinition.Part part : ammo.definition().parts()) {
+            if (!expected.getString(part.key()).equals(actual.getString(part.key()))) {
+                return false;
+            }
+        }
+        // 修复次数和材料定义缓存会变化，但不会改变弹药属于哪一组部件和强化。
+        candidate.setDamageValue(Math.max(0, candidate.getDamageValue() - ToolRanged.AMMO_DURABILITY));
+        return true;
     }
 }

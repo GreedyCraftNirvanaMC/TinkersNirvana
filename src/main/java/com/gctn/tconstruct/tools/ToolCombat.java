@@ -10,9 +10,11 @@ import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -21,6 +23,7 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 @EventBusSubscriber(modid = TinkersNirvana.MODID)
 public final class ToolCombat {
+    private static final ThreadLocal<Entity> CHARGED_SCYTHE_TARGET = new ThreadLocal<>();
     private static final ThreadLocal<Boolean> SWEEPING = ThreadLocal.withInitial(() -> false);
     private ToolCombat() {}
 
@@ -56,17 +59,59 @@ public final class ToolCombat {
             target.knockback(1, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
             attacker.level().playSound(null, attacker.blockPosition(), ToolSounds.FRYPAN.get(), net.minecraft.sounds.SoundSource.PLAYERS, 1.5F, 1);
         }
-        if (item.definition().action() == ToolDefinition.Action.SCYTHE && !SWEEPING.get()) {
-            SWEEPING.set(true);
-            try {
-                for (LivingEntity other : attacker.level().getEntitiesOfClass(LivingEntity.class, target.getBoundingBox().inflate(1.5))) {
-                    if (other == attacker || other == target || attacker.isAlliedTo(other)
-                            || (attacker instanceof Player player && other instanceof Player victim && !player.canHarmPlayer(victim))) { continue; }
-                    other.hurt(attacker.damageSources().mobAttack(attacker), ToolBuilder.savedStats(stack).getFloat("Attack"));
-                }
-            } finally { SWEEPING.set(false); }
+        if (attacker instanceof Player player && target == CHARGED_SCYTHE_TARGET.get()
+                && item.definition().action() == ToolDefinition.Action.SCYTHE && !SWEEPING.get()) {
+            sweep(item, stack, target, player);
         }
         ToolModifiers.afterHit(stack, target, attacker);
+    }
+
+    public static void attack(Player player, Entity target, Runnable original) {
+        if (player.level().isClientSide || !(player.getMainHandItem().getItem() instanceof AntiqueTool tool)
+                || tool.definition().action() != ToolDefinition.Action.SCYTHE || player.getAttackStrengthScale(.5F) <= .9F) {
+            original.run();
+            return;
+        }
+        // 原版攻击在命中回调之前重置攻击冷却，因此在入口保存本次蓄满的目标。
+        Entity previous = CHARGED_SCYTHE_TARGET.get();
+        CHARGED_SCYTHE_TARGET.set(target);
+        try {
+            original.run();
+        } finally {
+            if (previous == null) {
+                CHARGED_SCYTHE_TARGET.remove();
+            } else {
+                CHARGED_SCYTHE_TARGET.set(previous);
+            }
+        }
+    }
+
+    private static void sweep(AntiqueTool item, ItemStack stack, LivingEntity target, Player attacker) {
+        boolean wide = ToolModifiers.level(stack, "harvestwidth") > 0;
+        boolean tall = ToolModifiers.level(stack, "harvestheight") > 0;
+        int width = wide ? 2 : 1;
+        int height = tall ? 2 : 1;
+        float damage = (float) attacker.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE);
+        attacker.level().playSound(null, attacker.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, attacker.getSoundSource(), 1, 1);
+        attacker.sweepAttack();
+        SWEEPING.set(true);
+        try {
+            for (LivingEntity other : attacker.level().getEntitiesOfClass(LivingEntity.class, target.getBoundingBox().inflate(width, height, width))) {
+                if (TinkerTools.isBroken(stack) || stack.isEmpty()) {
+                    break;
+                }
+                if (other == attacker || other == target || !other.isAttackable() || attacker.isAlliedTo(other)
+                        || ((wide || tall) && other.distanceToSqr(target) > 9)
+                        || (other instanceof Player victim && !attacker.canHarmPlayer(victim))) {
+                    continue;
+                }
+                if (other.hurt(attacker.damageSources().playerAttack(attacker), damage)) {
+                    item.postHurtEnemy(stack, other, attacker);
+                }
+            }
+        } finally {
+            SWEEPING.remove();
+        }
     }
 
     public static void release(AntiqueTool item, ItemStack stack, Player player, int used) {
@@ -86,9 +131,11 @@ public final class ToolCombat {
         } else if (item.definition().action() == ToolDefinition.Action.FRYPAN && player.getMainHandItem() == stack) {
             Vec3 eye = player.getEyePosition();
             Vec3 look = player.getLookAngle();
-            Vec3 end = eye.add(look.scale(3.2));
+            HitResult wall = player.pick(3.2, 1, false);
+            Vec3 end = wall.getType() == HitResult.Type.BLOCK ? wall.getLocation() : eye.add(look.scale(3.2));
             var hit = net.minecraft.world.entity.projectile.ProjectileUtil.getEntityHitResult(player, eye, end,
-                    player.getBoundingBox().expandTowards(look.scale(3.2)).inflate(1), entity -> entity instanceof LivingEntity && entity.isPickable(), 3.2 * 3.2);
+                    player.getBoundingBox().expandTowards(end.subtract(eye)).inflate(1),
+                    entity -> entity instanceof LivingEntity && entity.isPickable(), eye.distanceToSqr(end));
             if (hit == null || !(hit.getEntity() instanceof LivingEntity target) || player.isAlliedTo(target)
                     || (target instanceof Player victim && !player.canHarmPlayer(victim))) { return; }
             float progress = Math.min(1, used / 30F);
@@ -98,8 +145,19 @@ public final class ToolCombat {
             float before = target.getHealth() + target.getAbsorptionAmount();
             attribute.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(id, progress * 5,
                     net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE));
-            try { player.attack(target); }
-            finally { attribute.removeModifier(id); }
+            // 拉满时只在结算这一次命中期间点燃目标，让致死一击按燃烧状态计算掉落。
+            boolean chargedIgnition = progress >= 1 && !target.isOnFire();
+            if (chargedIgnition) {
+                target.igniteForSeconds(1);
+            }
+            try {
+                player.attack(target);
+            } finally {
+                attribute.removeModifier(id);
+                if (chargedIgnition) {
+                    target.clearFire();
+                }
+            }
             if (target.getHealth() + target.getAbsorptionAmount() < before) {
                 float strength = .1F + 2.5F * progress * progress;
                 target.setDeltaMovement(target.getDeltaMovement().add(look.x * strength, look.y / 3 * strength + .1F + .4F * progress, look.z * strength));

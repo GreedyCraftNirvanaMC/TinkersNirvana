@@ -26,7 +26,7 @@ the current transaction. A rising redstone signal also activates the faucet.
 Basins cast blocks. Tables cast ingots, nuggets, gems, and the tool parts already
 provided by this project. Pour gold, aluminum brass, or brass over a suitable item
 or part to create a reusable cast. Clay can create disposable tool-part casts.
-Casting blocks accept hopper input and allow completed outputs to be extracted.
+Casting blocks accept hopper input and allow completed outputs to be extracted. Fluid handlers can also drain liquid before a casting finishes.
 Seared tanks retain their fluid when broken and can also hold fluid as items.
 
 Channels route fluid downward first, then split it among their side outputs.

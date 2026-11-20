@@ -6,6 +6,7 @@
 package com.gctn.tconstruct.tools;
 
 import com.gctn.tconstruct.TinkersNirvana;
+import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ChargedProjectiles;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.event.EventHooks;
@@ -31,6 +33,8 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class ToolRanged {
+    static final int AMMO_DURABILITY = 10;
+    private static final String CROSSBOW_LOADED = "CrossbowLoaded";
     private static final String LAUNCHER_TAG = "TinkerLauncher";
     private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, TinkersNirvana.MODID);
     public static final DeferredHolder<EntityType<?>, EntityType<AntiqueProjectile>> PROJECTILE = ENTITIES.register("tool_projectile",
@@ -47,10 +51,10 @@ public final class ToolRanged {
 
     private static boolean supported(AntiqueTool launcher, ItemStack stack) {
         if (stack.getItem() instanceof AntiqueTool ammo) {
-            return !TinkerTools.isBroken(stack) && (launcher.definition().action() == ToolDefinition.Action.CROSSBOW
+            return remainingAmmo(stack) > 0 && (launcher.definition().action() == ToolDefinition.Action.CROSSBOW
                     ? ammo.definition().action() == ToolDefinition.Action.BOLT : ammo.definition().action() == ToolDefinition.Action.ARROW);
         }
-        return stack.getItem() instanceof ArrowItem;
+        return launcher.definition().action() != ToolDefinition.Action.CROSSBOW && stack.getItem() instanceof ArrowItem;
     }
 
     private static ItemStack findAmmo(AntiqueTool launcher, Player player) {
@@ -65,20 +69,22 @@ public final class ToolRanged {
     public static InteractionResultHolder<ItemStack> use(AntiqueTool item, Level level, Player player, InteractionHand hand) {
         ItemStack tool = player.getItemInHand(hand);
         if (item.definition().action() == ToolDefinition.Action.SHURIKEN) {
+            if (!player.getAbilities().instabuild && remainingAmmo(tool) == 0) {
+                return InteractionResultHolder.fail(tool);
+            }
             if (!level.isClientSide) {
-                shoot(item, tool, tool, player, 1, hand);
-                player.getCooldowns().addCooldown(tool.getItem(), 5);
+                shoot(item, tool, tool, player, 1, hand, false);
             }
             return InteractionResultHolder.sidedSuccess(tool, level.isClientSide);
         }
-        ChargedProjectiles loaded = tool.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
-        if (item.definition().action() == ToolDefinition.Action.CROSSBOW && !loaded.isEmpty()) {
+        if (item.definition().action() == ToolDefinition.Action.CROSSBOW && isLoaded(tool)) {
             if (!level.isClientSide) {
-                if (shoot(item, tool, loaded.getItems().getFirst(), player, 1, hand)) {
-                    tool.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
-                    var data = com.gctn.tconstruct.init.TinkerDataComponents.getMaterialTag(tool);
-                    data.remove("LoadedAmmo");
-                    tool.set(com.gctn.tconstruct.init.TinkerDataComponents.TINKER_MATERIAL.get(), net.minecraft.world.item.component.CustomData.of(data));
+                var legacy = tool.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
+                boolean prepaid = !legacy.isEmpty();
+                ItemStack ammo = prepaid ? legacy.getItems().getFirst() : findAmmo(item, player);
+                if (ammo.isEmpty() || shoot(item, tool, ammo, player, 1, hand, prepaid)) {
+                    setLoaded(tool, false);
+                    tool.remove(DataComponents.CHARGED_PROJECTILES);
                 }
             }
             return InteractionResultHolder.sidedSuccess(tool, level.isClientSide);
@@ -91,56 +97,92 @@ public final class ToolRanged {
         return InteractionResultHolder.consume(tool);
     }
 
-    public static void charge(AntiqueTool item, ItemStack tool, Level level, LivingEntity entity, int used) {
-        if (used >= drawTime(item, tool) && entity instanceof Player player && !level.isClientSide
-                && tool.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).isEmpty()) {
-            ItemStack ammo = findAmmo(item, player);
-            if (!ammo.isEmpty()) {
-                var data = com.gctn.tconstruct.init.TinkerDataComponents.getMaterialTag(tool);
-                data.put("LoadedAmmo", ammo.copyWithCount(1).save(level.registryAccess()));
-                tool.set(com.gctn.tconstruct.init.TinkerDataComponents.TINKER_MATERIAL.get(), net.minecraft.world.item.component.CustomData.of(data));
-                tool.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(pickupFor(ammo)));
-                consumeAmmo(ammo, player);
-                level.playSound(null, player.blockPosition(), ToolSounds.CROSSBOW_RELOAD.get(), SoundSource.PLAYERS, 1, 1);
-                player.stopUsingItem();
-            }
+    public static boolean isLoaded(ItemStack tool) {
+        return TinkerDataComponents.getMaterialTag(tool).getBoolean(CROSSBOW_LOADED)
+                || !tool.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).isEmpty();
+    }
+
+    private static void setLoaded(ItemStack tool, boolean loaded) {
+        var data = TinkerDataComponents.getMaterialTag(tool);
+        if (loaded) {
+            data.putBoolean(CROSSBOW_LOADED, true);
+        } else {
+            data.remove(CROSSBOW_LOADED);
+            data.remove("LoadedAmmo");
         }
+        tool.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
     }
 
     public static void release(AntiqueTool item, ItemStack tool, Level level, LivingEntity entity, int used) {
-        if (!(entity instanceof Player player) || item.definition().action() == ToolDefinition.Action.CROSSBOW) { return; }
+        if (!(entity instanceof Player player)) {
+            return;
+        }
+        float progress = Math.min(1, used / (float) drawTime(item, tool));
+        if (item.definition().action() == ToolDefinition.Action.CROSSBOW) {
+            if (!level.isClientSide && progress >= 1 && !isLoaded(tool)) {
+                // 怀古的上弦只保存就绪状态，发射时才从当时的背包消耗弩箭。
+                setLoaded(tool, true);
+                level.playSound(null, player.blockPosition(), ToolSounds.CROSSBOW_RELOAD.get(), SoundSource.PLAYERS, 1.5F, .9F + level.random.nextFloat() * .1F);
+            }
+            return;
+        }
         ItemStack ammo = findAmmo(item, player);
         used = EventHooks.onArrowLoose(tool, level, player, used, !ammo.isEmpty());
-        if (used < 0 || ammo.isEmpty()) { return; }
-        float power = BowItem.getPowerForTime(Math.round(used * 20F / drawTime(item, tool)));
-        if (power < .1F || level.isClientSide) { return; }
-        shoot(item, tool, ammo, player, power, player.getUsedItemHand());
+        if (used < 0 || ammo.isEmpty() || level.isClientSide) {
+            return;
+        }
+        progress = Math.min(1, used / (float) drawTime(item, tool));
+        float power = BowItem.getPowerForTime((int) (progress * 20)) * progress;
+        if (power >= .1F) {
+            shoot(item, tool, ammo, player, power, player.getUsedItemHand(), false);
+        }
+    }
+
+    private static int remainingAmmo(ItemStack ammo) {
+        return Math.max(0, ammo.getMaxDamage() - ammo.getDamageValue()) / AMMO_DURABILITY;
     }
 
     private static ItemStack pickupFor(ItemStack ammo) {
         ItemStack pickup = ammo.copyWithCount(1);
-        if (ammo.getItem() instanceof AntiqueTool) { pickup.setDamageValue(Math.max(0, pickup.getMaxDamage() - 10)); }
+        if (ammo.getItem() instanceof AntiqueTool) { pickup.setDamageValue(Math.max(0, pickup.getMaxDamage() - AMMO_DURABILITY)); }
         return pickup;
     }
 
-    private static void consumeAmmo(ItemStack ammo, Player player) {
-        if (player.getAbilities().instabuild) { return; }
-        if (ammo.getItem() instanceof AntiqueTool item) { item.damage(ammo, 10, player, EquipmentSlot.MAINHAND); }
-        else { ammo.shrink(1); }
+    private static boolean consumeAmmo(ItemStack ammo, Player player) {
+        if (player.getAbilities().instabuild) {
+            return false;
+        }
+        if (!(ammo.getItem() instanceof AntiqueTool item)) {
+            ammo.shrink(1);
+            return true;
+        }
+        int before = remainingAmmo(ammo);
+        EquipmentSlot slot = ammo == player.getOffhandItem() ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+        item.damage(ammo, AMMO_DURABILITY, player, slot);
+        int after = remainingAmmo(ammo);
+        if (after == 0 && !ammo.isEmpty()) {
+            ammo.setDamageValue(ammo.getMaxDamage());
+        }
+        return after < before;
     }
 
-    private static boolean shoot(AntiqueTool launcher, ItemStack tool, ItemStack ammo, Player player, float power, InteractionHand hand) {
+    private static boolean shoot(AntiqueTool launcher, ItemStack tool, ItemStack ammo, Player player, float power,
+                                 InteractionHand hand, boolean prepaid) {
         // 在扣除耐久和运行词条前保留快照，命中时不再依赖玩家当前手持物。
         ItemStack firedFrom = tool.copyWithCount(1);
         boolean crossbow = launcher.definition().action() == ToolDefinition.Action.CROSSBOW;
         boolean shuriken = launcher.definition().action() == ToolDefinition.Action.SHURIKEN;
-        ItemStack pickup = crossbow ? ammo.copyWithCount(1) : pickupFor(ammo);
+        ItemStack pickup = prepaid ? ammo.copyWithCount(1) : pickupFor(ammo);
         ItemStack traits = ammo.getItem() instanceof AntiqueTool ? ammo.copyWithCount(1) : tool.copy();
-        if (crossbow) {
+        if (prepaid) {
             var loaded = com.gctn.tconstruct.init.TinkerDataComponents.getMaterialTag(tool).getCompound("LoadedAmmo");
             ItemStack original = ItemStack.parseOptional(player.registryAccess(), loaded);
             if (!original.isEmpty() && original.getItem() instanceof AntiqueTool) { traits = original; }
         }
+        boolean splits = !shuriken && ammo.getItem() instanceof AntiqueTool
+                && com.gctn.tconstruct.tools.traits.AntiqueTraits.has(traits, "splitting");
+        boolean endspeed = ammo.getItem() instanceof AntiqueTool
+                && com.gctn.tconstruct.tools.traits.AntiqueTraits.has(traits, "endspeed");
         if (ammo.getItem() instanceof AntiqueTool && tool != ammo) {
             var tag = com.gctn.tconstruct.init.TinkerDataComponents.getTraitsTag(traits);
             var entries = com.gctn.tconstruct.tools.traits.ToolTraits.getTraits(tool).stream()
@@ -160,24 +202,53 @@ public final class ToolRanged {
         saveLauncher(arrow, firedFrom);
         arrow.getPersistentData().put("TinkerTool", traits.save(player.registryAccess()));
         float range = shuriken ? 1 : Math.max(.1F, ToolBuilder.savedStats(tool).getFloat("Range"));
-        float accuracy = Math.max(.1F, ToolBuilder.savedStats(traits).getFloat("Accuracy"));
-        float velocity = power * (crossbow ? 3.15F : 3F) * range;
-        float damage = shuriken ? ToolBuilder.savedStats(tool).getFloat("Attack")
-                : (crossbow ? 3 : launcher.definition().action() == ToolDefinition.Action.LONGBOW ? 2.5F : 2)
-                    + ToolBuilder.savedStats(tool).getFloat("ProjectileDamage")
-                    + (pickup.getItem() instanceof AntiqueTool ? ToolBuilder.savedStats(pickup).getFloat("Attack") : 0);
-        arrow.setBaseDamage(Math.max(0, damage) / Math.max(.1F, velocity));
-        arrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, 1 / accuracy);
+        float speed = switch (launcher.definition().action()) {
+            case SHURIKEN -> 2.1F;
+            case LONGBOW -> 5.5F;
+            case CROSSBOW -> 7F;
+            default -> 3F;
+        };
+        float velocity = power * speed * range;
+        float inaccuracy = switch (launcher.definition().action()) {
+            case SHURIKEN, CROSSBOW -> 0F;
+            case LONGBOW -> 1.2F;
+            default -> 1F;
+        };
+        if (endspeed) {
+            inaccuracy *= 2F / 3F;
+        }
+        if (ammo.getItem() instanceof AntiqueTool && !shuriken) {
+            float accuracy = Math.max(.1F, ToolBuilder.savedStats(traits).getFloat("Accuracy"));
+            inaccuracy = Math.max(0, inaccuracy - (1 - 1 / accuracy) * velocity / 2);
+        }
+        if (ammo.getItem() instanceof AntiqueTool) {
+            float damage = ToolBuilder.savedStats(pickup).getFloat("Attack");
+            if (!shuriken) {
+                float bonus = crossbow ? 3F : launcher.definition().action() == ToolDefinition.Action.LONGBOW ? 2.5F : 0F;
+                float multiplier = crossbow ? 1.3F : launcher.definition().action() == ToolDefinition.Action.LONGBOW ? 1.25F : .8F;
+                damage = (damage + bonus * power + ToolBuilder.savedStats(tool).getFloat("ProjectileDamage")) * multiplier;
+            }
+            arrow.setBaseDamage(Math.max(0, damage) / Math.max(.1F, velocity));
+        }
+        arrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, inaccuracy);
         arrow.setCritArrow(power >= 1);
-        arrow.pickup = player.getAbilities().instabuild ? AbstractArrow.Pickup.CREATIVE_ONLY : AbstractArrow.Pickup.ALLOWED;
         com.gctn.tconstruct.tools.traits.ToolTraits.forEach(traits, (trait, level) -> trait.onProjectileLaunch(traitsFor(arrow), level, arrow));
-        if (!player.level().addFreshEntity(arrow)) { return false; }
-        if (!crossbow) { consumeAmmo(ammo, player); }
-        if (!shuriken) { launcher.damage(tool, 1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND); }
-        if (com.gctn.tconstruct.tools.traits.AntiqueTraits.has(traits, "splitting") && player.getRandom().nextBoolean()) {
+        if (!player.level().addFreshEntity(arrow)) {
+            return false;
+        }
+        // 词条可以免除耐久消耗。只允许回收确实扣除过的弹药，避免凭空增加弹药。
+        boolean paid = prepaid || consumeAmmo(ammo, player);
+        arrow.pickup = player.getAbilities().instabuild ? AbstractArrow.Pickup.CREATIVE_ONLY
+                : paid ? AbstractArrow.Pickup.ALLOWED : AbstractArrow.Pickup.DISALLOWED;
+        if (!shuriken && !player.getAbilities().instabuild) {
+            launcher.damage(tool, 1, player, LivingEntity.getSlotForHand(hand));
+        }
+        if (splits && player.getRandom().nextBoolean()) {
             var extra = new AntiqueProjectile(player.level(), player, pickup, traits, firedFrom);
             extra.setBaseDamage(arrow.getBaseDamage());
-            extra.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, 3 / accuracy);
+            extra.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, inaccuracy + 3);
+            extra.setCritArrow(arrow.isCritArrow());
+            com.gctn.tconstruct.tools.traits.ToolTraits.forEach(traits, (trait, level) -> trait.onProjectileLaunch(extra.traitTool(), level, extra));
             extra.pickup = AbstractArrow.Pickup.DISALLOWED;
             player.level().addFreshEntity(extra);
         }
