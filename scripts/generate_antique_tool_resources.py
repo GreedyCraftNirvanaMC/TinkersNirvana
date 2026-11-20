@@ -91,7 +91,8 @@ for tool in tool_ids:
 not_cast = {"arrow_shaft", "fletching", "bow_string"}
 atlas_path = resources / "assets/minecraft/atlases/blocks.json"
 atlas = json.loads(atlas_path.read_text())
-atlas["sources"] = [row for row in atlas["sources"] if not row.get("sprite", "").startswith("tconsnirvana:item/cast_")]
+atlas["sources"] = [row for row in atlas["sources"] if not row.get("sprite", "").startswith(
+    ("tconsnirvana:item/cast_", "tconsnirvana:item/pattern/"))]
 for part, info in parts.items():
     if part in not_cast:
         continue
@@ -100,6 +101,10 @@ for part, info in parts.items():
                              "offset_x": info["offset"].get("x", 0), "offset_y": info["offset"].get("y", 0)})
     write(dest / f"models/item/cast_{part}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": "tconsnirvana:item/cast_" + part}})
     write(dest / f"models/item/clay_cast_{part}.json", {"parent": "tconsnirvana:item/cast_" + part})
+# 物品部件贴图已应用原始偏移量，直接使用其轮廓生成木模板刻痕。
+for part in parts:
+    atlas["sources"].append({"type": "tconsnirvana:cast", "sprite": "tconsnirvana:item/pattern/" + part,
+                             "mask": "tconsnirvana:item/parts/" + part, "wooden_pattern": True})
 write(atlas_path, atlas)
 
 supplies = {"reinforcement": "materials/reinforcement", "necrotic_bone": "materials/necrotic_bone",

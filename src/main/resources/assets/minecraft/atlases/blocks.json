@@ -234,6 +234,174 @@
       "mask": "tconsnirvana:item/cast_masks/wide_guard",
       "offset_x": 0,
       "offset_y": 0
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/arrow_head",
+      "mask": "tconsnirvana:item/parts/arrow_head",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/arrow_shaft",
+      "mask": "tconsnirvana:item/parts/arrow_shaft",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/axe_head",
+      "mask": "tconsnirvana:item/parts/axe_head",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/binding",
+      "mask": "tconsnirvana:item/parts/binding",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/bow_limb",
+      "mask": "tconsnirvana:item/parts/bow_limb",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/bow_string",
+      "mask": "tconsnirvana:item/parts/bow_string",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/broad_axe_head",
+      "mask": "tconsnirvana:item/parts/broad_axe_head",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/cross_guard",
+      "mask": "tconsnirvana:item/parts/cross_guard",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/excavator_head",
+      "mask": "tconsnirvana:item/parts/excavator_head",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/fletching",
+      "mask": "tconsnirvana:item/parts/fletching",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/hammer_head",
+      "mask": "tconsnirvana:item/parts/hammer_head",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/hand_guard",
+      "mask": "tconsnirvana:item/parts/hand_guard",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/kama_head",
+      "mask": "tconsnirvana:item/parts/kama_head",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/knife_blade",
+      "mask": "tconsnirvana:item/parts/knife_blade",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/large_plate",
+      "mask": "tconsnirvana:item/parts/large_plate",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/large_sword_blade",
+      "mask": "tconsnirvana:item/parts/large_sword_blade",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/pan_head",
+      "mask": "tconsnirvana:item/parts/pan_head",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/pickaxe_head",
+      "mask": "tconsnirvana:item/parts/pickaxe_head",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/scythe_head",
+      "mask": "tconsnirvana:item/parts/scythe_head",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/shard",
+      "mask": "tconsnirvana:item/parts/shard",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/sharpening_kit",
+      "mask": "tconsnirvana:item/parts/sharpening_kit",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/shovel_head",
+      "mask": "tconsnirvana:item/parts/shovel_head",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/sign_head",
+      "mask": "tconsnirvana:item/parts/sign_head",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/sword_blade",
+      "mask": "tconsnirvana:item/parts/sword_blade",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/tool_rod",
+      "mask": "tconsnirvana:item/parts/tool_rod",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/tough_binding",
+      "mask": "tconsnirvana:item/parts/tough_binding",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/tough_tool_rod",
+      "mask": "tconsnirvana:item/parts/tough_tool_rod",
+      "wooden_pattern": true
+    },
+    {
+      "type": "tconsnirvana:cast",
+      "sprite": "tconsnirvana:item/pattern/wide_guard",
+      "mask": "tconsnirvana:item/parts/wide_guard",
+      "wooden_pattern": true
     }
   ]
 }

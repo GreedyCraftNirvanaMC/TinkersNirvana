@@ -7,6 +7,7 @@
 - Add optional JEI recipe pages for melting, casting, alloys, liquid fuels, drying, and part building. Add Crafting Station recipe transfer and keep the JEI overlay clear of workshop side panels.
 - Add optional Jade tooltips for multiblock status, stored fluids, heating, casting, and drying progress.
 - Keep recipe stack counts behind JEI tooltips.
+- Keep casts visible during cooling and beneath finished parts. Show the selected part's imprint on wooden patterns.
 
 ## 1.21.1-1.0.5
 

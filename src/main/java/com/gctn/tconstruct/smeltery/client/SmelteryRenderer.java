@@ -5,7 +5,7 @@
  */
 package com.gctn.tconstruct.smeltery.client;
 
-import com.gctn.tconstruct.smeltery.SmelteryModule;
+import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.smeltery.block.SmelteryBlock;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryBlockEntity;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryComponentBlockEntity;
@@ -20,9 +20,11 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.BlockItem;
@@ -129,7 +131,9 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
         boolean basin = entity.kind() == SmelteryBlock.Kind.BASIN;
         ItemStack input = entity.inventory.getStackInSlot(0);
         ItemStack output = entity.inventory.getStackInSlot(1);
-        boolean ingotCast = !basin && input.is(SmelteryModule.item("cast_ingot"));
+        var inputId = BuiltInRegistries.ITEM.getKey(input.getItem());
+        boolean tableCast = !basin && inputId.getNamespace().equals(TinkersNirvana.MODID)
+                && (inputId.getPath().startsWith("cast_") || inputId.getPath().startsWith("clay_cast_"));
         Direction facing = entity.getBlockState().getValue(SmelteryBlock.FACING);
         float itemY = basin ? 0.625F : TABLE_ITEM_Y;
         float scale = basin ? 0.751F : TABLE_ITEM_SCALE;
@@ -138,20 +142,19 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
         if (!fluid.isEmpty()) {
             float fill = Mth.clamp((float) fluid.getAmount() / Math.max(1, entity.tank.getCapacity()), 0.0F, 1.0F);
             float alpha = 1.0F - progress / 3.0F;
-            if (ingotCast) {
-                renderIngotFluid(entity, input, pose, buffers, fluid, fill, facing, light, alpha);
-            } else {
+            if (!tableCast || !renderCastFluid(entity, input, pose, buffers, fluid, fill, facing, light, alpha)) {
                 float bottom = basin ? 0.25F : 0.9375F;
                 float inset = basin ? 0.125F : 0.0625F;
-                float top = Mth.lerp(fill, bottom, 1.0F) + 0.001F;
+                float top = tableCast ? Mth.lerp(fill, bottom, TABLE_ITEM_Y) : Mth.lerp(fill, bottom, 1.0F) + 0.001F;
                 cuboid(pose, buffers, fluid, inset, bottom, inset, 1 - inset, top, 1 - inset, light, alpha);
             }
         }
 
-        if (ingotCast || output.isEmpty()) {
+        if (tableCast || output.isEmpty()) {
             item(pose, buffers, input, 0.5F, itemY, 0.5F, scale, facing, light);
         }
-        float resultY = ingotCast ? itemY + 0.003F : itemY;
+        // 可复用的铸模仍在输入槽中，成品稍微抬高以避免两个模型的表面重叠。
+        float resultY = tableCast ? itemY + 0.003F : itemY;
         if (!output.isEmpty()) {
             item(pose, buffers, output, 0.5F, resultY, 0.5F, scale, facing, light);
         } else if (progress > 0) {
@@ -160,13 +163,15 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
         }
     }
 
-    private static void renderIngotFluid(SmelteryComponentBlockEntity entity, ItemStack cast, PoseStack pose,
+    private static boolean renderCastFluid(SmelteryComponentBlockEntity entity, ItemStack cast, PoseStack pose,
                                         MultiBufferSource buffers, FluidStack fluid, float fill, Direction facing,
                                         int light, float alpha) {
-        // The generated item model uses layer0 as its particle sprite. Its transparent pixels
-        // describe the opening, including the stepped edges in the original ingot cast.
+        // 铸模物品模型的粒子贴图就是其主贴图，透明像素描述孔型。
         var mask = Minecraft.getInstance().getItemRenderer().getModel(cast, entity.getLevel(), null, 0)
                 .getParticleIcon().contents();
+        if (mask.name().equals(MissingTextureAtlasSprite.getLocation())) {
+            return false;
+        }
         int width = mask.width();
         int height = mask.height();
         int frame = mask.getUniqueFrames().findFirst().orElse(0);
@@ -176,7 +181,7 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
             light = LightTexture.FULL_BRIGHT;
         }
         VertexConsumer vertices = buffers.getBuffer(RenderType.entityTranslucent(InventoryMenu.BLOCK_ATLAS));
-        // Generated items are one model pixel thick. Keep the surface just below the cast face.
+        // 生成的物品模型厚一个像素，将液面限制在铸模表面下方。
         float y = Mth.lerp(fill, 0.9375F, TABLE_ITEM_Y + TABLE_ITEM_SCALE / 32 - 0.001F);
         pose.pushPose();
         pose.translate(0.5, 0, 0.5);
@@ -201,6 +206,7 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
             }
         }
         pose.popPose();
+        return true;
     }
 
     private static void fluidSurfaceVertex(VertexConsumer vertices, PoseStack pose, TextureAtlasSprite sprite,
