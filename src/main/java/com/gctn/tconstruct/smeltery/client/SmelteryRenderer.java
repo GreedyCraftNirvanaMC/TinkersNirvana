@@ -17,6 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -26,6 +27,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -138,11 +140,13 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
         float itemY = basin ? 0.625F : TABLE_ITEM_Y;
         float scale = basin ? 0.751F : TABLE_ITEM_SCALE;
         float progress = entity.progress();
+        boolean maskedFluid = false;
 
         if (!fluid.isEmpty()) {
             float fill = Mth.clamp((float) fluid.getAmount() / Math.max(1, entity.tank.getCapacity()), 0.0F, 1.0F);
             float alpha = 1.0F - progress / 3.0F;
-            if (!tableCast || !renderCastFluid(entity, input, pose, buffers, fluid, fill, facing, light, alpha)) {
+            maskedFluid = tableCast && renderCastFluid(entity, input, pose, buffers, fluid, fill, facing, light, alpha);
+            if (!maskedFluid) {
                 float bottom = basin ? 0.25F : 0.9375F;
                 float inset = basin ? 0.125F : 0.0625F;
                 float top = tableCast ? Mth.lerp(fill, bottom, TABLE_ITEM_Y) : Mth.lerp(fill, bottom, 1.0F) + 0.001F;
@@ -158,9 +162,49 @@ public class SmelteryRenderer<T extends BlockEntity> implements BlockEntityRende
         if (!output.isEmpty()) {
             item(pose, buffers, output, 0.5F, resultY, 0.5F, scale, facing, light);
         } else if (progress > 0) {
-            MultiBufferSource translucent = type -> new AlphaConsumer(buffers.getBuffer(RenderType.entityTranslucent(InventoryMenu.BLOCK_ATLAS)), progress);
-            item(pose, translucent, entity.castingResult(), 0.5F, resultY, 0.5F, scale, facing, light);
+            ItemStack result = entity.castingResult();
+            if (!maskedFluid || !renderFlatCastingPreview(pose, buffers, result, resultY, facing, light, progress)) {
+                MultiBufferSource translucent = type -> new AlphaConsumer(buffers.getBuffer(RenderType.entityTranslucent(InventoryMenu.BLOCK_ATLAS)), progress);
+                item(pose, translucent, result, 0.5F, resultY, 0.5F, scale, facing, light);
+            }
         }
+    }
+
+    private static boolean renderFlatCastingPreview(PoseStack pose, MultiBufferSource buffers, ItemStack result,
+                                                    float y, Direction facing, int light, float progress) {
+        if (result.isEmpty() || result.getItem() instanceof BlockItem) {
+            return false;
+        }
+        var minecraft = Minecraft.getInstance();
+        var renderer = minecraft.getItemRenderer();
+        var model = renderer.getModel(result, minecraft.level, null, 0);
+        if (model.isGui3d() || model.isCustomRenderer()) {
+            return false;
+        }
+
+        pose.pushPose();
+        pose.translate(0.5F, y, 0.5F);
+        pose.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
+        pose.scale(TABLE_ITEM_SCALE, TABLE_ITEM_SCALE, TABLE_ITEM_SCALE);
+        pose.mulPose(Axis.XP.rotationDegrees(-90));
+        model = model.applyTransform(ItemDisplayContext.NONE, pose, false);
+        pose.translate(-0.5F, -0.5F, -0.5F);
+
+        // 液面用共享批次，冷却预览用随后提交的固定批次。只混合朝上的面，避免物品的侧面和背面与液面交叉。
+        boolean rendered = false;
+        var random = RandomSource.create(42L);
+        for (var pass : model.getRenderPasses(result, true)) {
+            random.setSeed(42L);
+            var top = pass.getQuads(null, null, random).stream()
+                    .filter(quad -> quad.getDirection() == Direction.SOUTH).toList();
+            if (!top.isEmpty()) {
+                var vertices = new AlphaConsumer(buffers.getBuffer(Sheets.translucentCullBlockSheet()), progress);
+                renderer.renderQuadList(pose, vertices, top, result, light, OverlayTexture.NO_OVERLAY);
+                rendered = true;
+            }
+        }
+        pose.popPose();
+        return rendered;
     }
 
     private static boolean renderCastFluid(SmelteryComponentBlockEntity entity, ItemStack cast, PoseStack pose,
