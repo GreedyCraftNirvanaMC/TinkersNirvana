@@ -4,6 +4,7 @@ package com.gctn.tconstruct.tables.client;
 import com.gctn.tconstruct.tables.WorkshopModule.Kind;
 import com.gctn.tconstruct.tables.menu.WorkshopMenu;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -75,6 +76,15 @@ public class WorkshopScreen extends AbstractContainerScreen<WorkshopMenu> {
         if (!menu.kind().storage()) { graphics.drawString(font, "→", leftPos + 93, topPos + 47, 0xff555555, false); }
         else if (menu.pages() > 1) { graphics.drawString(font, (menu.page() + 1) + "/" + menu.pages(), leftPos + 82, topPos + 27 - WorkshopMenu.STORAGE_HEADER_REDUCTION, 0xff404040, false); }
     }
+    public List<Rect2i> occupiedAreas() {
+        List<Rect2i> areas = new ArrayList<>();
+        nearbyPanel.addOccupiedArea(areas, leftPos, topPos);
+        for (var button : selections) {
+            if (button.visible) { areas.add(new Rect2i(button.getX(), button.getY(), button.getWidth(), button.getHeight())); }
+        }
+        return areas;
+    }
+
     @Override protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
         return !nearbyPanel.contains(mouseX, mouseY, left, top) && super.hasClickedOutside(mouseX, mouseY, left, top, button);
     }

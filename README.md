@@ -4,7 +4,7 @@
 
 [简体中文](README.zh-CN.md)
 
-**Version 1.21.1-1.0.5 · Minecraft Java Edition 1.21.1 · NeoForge**
+**Version 1.21.1-1.0.6 · Minecraft Java Edition 1.21.1 · NeoForge**
 
 TinkersNirvana ports TinkersAntique to Minecraft 1.21.1. Assemble tools from parts made of different materials, customize them with modifiers, and process materials in the Smeltery, Tinker Tank, and Seared Furnace. The port includes workshops, slime islands, gadgets, the in-game *Materials and You* guide, and refreshed block and item textures.
 
@@ -17,6 +17,11 @@ Update custom data packs, resource packs and scripts that refer to the old names
 ## Build from source
 
 Run `./gradlew build` with JDK 21. On Windows, run `.\gradlew.bat build`. The mod JAR is written to `build/libs/`.
+
+## Optional integrations
+
+- **JEI** shows the mod's processing recipes and transfers crafting recipes to the Crafting Station. On servers with custom common config values, match those values on the client for accurate previews.
+- **Jade** shows machine status and progress. Install Jade on the server and client for the extra tooltip data. Hold the configured details key to see individual fluids.
 
 ## Development and customization
 

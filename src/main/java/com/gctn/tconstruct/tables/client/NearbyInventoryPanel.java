@@ -4,6 +4,7 @@ package com.gctn.tconstruct.tables.client;
 import com.gctn.tconstruct.tables.menu.NearbyInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
@@ -48,6 +49,11 @@ public final class NearbyInventoryPanel {
         }
     }
     private int bottom(int top) { return top + 20 + (inventory.visibleSlots() + 4) / 5 * 18; }
+    public void addOccupiedArea(java.util.List<Rect2i> areas, int left, int top) {
+        if (inventory != null && inventory.visible()) {
+            areas.add(new Rect2i(left + inventory.x() - 4, top, 98, bottom(top) - top));
+        }
+    }
     public boolean contains(double mouseX, double mouseY, int left, int top) {
         return inventory != null && inventory.visible() && mouseX >= left + inventory.x() - 4 && mouseX < left + inventory.x() + 94 && mouseY >= top && mouseY < bottom(top);
     }

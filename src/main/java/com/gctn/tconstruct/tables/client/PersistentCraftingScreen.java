@@ -4,6 +4,7 @@ package com.gctn.tconstruct.tables.client;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
@@ -51,6 +52,12 @@ public class PersistentCraftingScreen extends AbstractContainerScreen<Persistent
         menu.nearby().visible(!recipeBookComponent.isVisible());
         this.addWidget(this.recipeBookComponent);
         this.titleLabelX = 29;
+    }
+
+    public java.util.List<Rect2i> occupiedAreas() {
+        var areas = new java.util.ArrayList<Rect2i>();
+        nearbyPanel.addOccupiedArea(areas, leftPos, topPos);
+        return areas;
     }
 
     @Override

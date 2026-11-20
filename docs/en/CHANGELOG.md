@@ -2,6 +2,11 @@
 
 [README](../../README.md) · [简体中文](../zh-CN/CHANGELOG.md)
 
+## 1.21.1-1.0.6
+
+- Add optional JEI recipe pages for melting, casting, alloys, liquid fuels, drying, and part building. Add Crafting Station recipe transfer and keep the JEI overlay clear of workshop side panels.
+- Add optional Jade tooltips for multiblock status, stored fluids, heating, casting, and drying progress.
+
 ## 1.21.1-1.0.5
 
 - Rename the mod ID and resource namespace to `tconsnirvana`. Add legacy save aliases and copy existing configuration when the new config file is absent. Update addon dependencies, scripts and packs to the new IDs.
