@@ -61,16 +61,12 @@ public class Config {
     public static final ModConfigSpec.BooleanValue POOLS_SURFACE_ONLY = BUILDER.define("world.slimePoolsOnlyGenerateInSurfaceWorlds", true);
     public static final ModConfigSpec.BooleanValue GEN_COBALT = BUILDER.define("world.genCobalt", true);
     public static final ModConfigSpec.BooleanValue GEN_ARDITE = BUILDER.define("world.genArdite", true);
-    public static final ModConfigSpec.BooleanValue GEN_COPPER = BUILDER.define("world.genCopper", true);
     public static final ModConfigSpec.BooleanValue GEN_TIN = BUILDER.define("world.genTin", true);
     public static final ModConfigSpec.BooleanValue GEN_ALUMINUM = BUILDER.define("world.genAluminum", true);
     public static final ModConfigSpec.IntValue COBALT_RATE = BUILDER.defineInRange("world.cobaltRate", 20, 0, 4096);
     public static final ModConfigSpec.IntValue ARDITE_RATE = BUILDER.defineInRange("world.arditeRate", 20, 0, 4096);
-    public static final ModConfigSpec.IntValue COPPER_RATE = BUILDER.defineInRange("world.copperRate", 8, 0, 4096);
     public static final ModConfigSpec.IntValue TIN_RATE = BUILDER.defineInRange("world.tinRate", 8, 0, 4096);
     public static final ModConfigSpec.IntValue ALUMINUM_RATE = BUILDER.defineInRange("world.aluminumRate", 8, 0, 4096);
-    public static final ModConfigSpec.IntValue COPPER_MIN_HEIGHT = BUILDER.defineInRange("world.copperHeightMin", 20, -4096, 4096);
-    public static final ModConfigSpec.IntValue COPPER_MAX_HEIGHT = BUILDER.defineInRange("world.copperHeightMax", 60, -4096, 4096);
     public static final ModConfigSpec.IntValue TIN_MIN_HEIGHT = BUILDER.defineInRange("world.tinHeightMin", 0, -4096, 4096);
     public static final ModConfigSpec.IntValue TIN_MAX_HEIGHT = BUILDER.defineInRange("world.tinHeightMax", 40, -4096, 4096);
     public static final ModConfigSpec.IntValue ALUMINUM_MIN_HEIGHT = BUILDER.defineInRange("world.aluminumHeightMin", 0, -4096, 4096);

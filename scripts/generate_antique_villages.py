@@ -92,7 +92,12 @@ for biome, (wood, log, cobble, bricks) in themes.items():
     log, cobble, bricks = ["minecraft:" + value for value in [log, cobble, bricks]]
     table = Template((7, 6, 7))
     table.fill((0, 0, 0), (6, 0, 6), cobble)
-    table.fill((0, 5, 0), (6, 5, 6), f"minecraft:{wood}_fence")
+    # 怀古先铺栅栏，再清空屋内直至 y=5，屋顶最终只剩外围栏杆。
+    railing = {(x, z) for x in range(7) for z in range(7) if x in (0, 6) or z in (0, 6)}
+    directions = {"north": (0, -1), "east": (1, 0), "south": (0, 1), "west": (-1, 0)}
+    for x, z in sorted(railing):
+        connections = {side: str((x + dx, z + dz) in railing).lower() for side, (dx, dz) in directions.items()}
+        table.set(x, 5, z, f"minecraft:{wood}_fence", connections | {"waterlogged": "false"})
     table.fill((1, 0, 1), (5, 0, 5), planks)
     table.fill((2, 0, 2), (4, 0, 4), "minecraft:white_wool")
     for x in [0, 6]:
@@ -106,8 +111,10 @@ for biome, (wood, log, cobble, bricks) in themes.items():
     for side in [0, 6]:
         for pos in range(1, 6):
             block = planks if pos == 3 else "minecraft:glass_pane"
-            table.set(side, 2, pos, block)
-            table.set(pos, 2, side, block)
+            pane_along_z = {"north": "true", "south": "true", "east": "false", "west": "false", "waterlogged": "false"}
+            pane_along_x = {"north": "false", "south": "false", "east": "true", "west": "true", "waterlogged": "false"}
+            table.set(side, 2, pos, block, pane_along_z if block == "minecraft:glass_pane" else None)
+            table.set(pos, 2, side, block, pane_along_x if block == "minecraft:glass_pane" else None)
     table.set(2, 2, 0, planks)
     table.set(4, 2, 0, planks)
     for y, half in [(1, "lower"), (2, "upper")]:

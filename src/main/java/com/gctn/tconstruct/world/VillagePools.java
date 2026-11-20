@@ -14,19 +14,19 @@ import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = TinkersNirvana.MODID)
 public final class VillagePools {
-    private static final Set<ResourceLocation> SMELTERIES = Set.of(
-            WorldModule.id("village/plains/smeltery"), WorldModule.id("village/desert/smeltery"),
-            WorldModule.id("village/savanna/smeltery"), WorldModule.id("village/snowy/smeltery"),
-            WorldModule.id("village/taiga/smeltery"));
+    private static final Set<String> BIOMES = Set.of("plains", "desert", "savanna", "snowy", "taiga");
+    private static final Set<ResourceLocation> SMELTERIES = templates("smeltery");
+    private static final Set<ResourceLocation> WORKSHOPS = templates("tool_workshop");
 
     private VillagePools() {}
     @SubscribeEvent private static void add(ServerAboutToStartEvent event) {
         if (!Config.GEN_VILLAGE_STRUCTURES.get()) { return; }
         var registry = event.getServer().registryAccess().registryOrThrow(Registries.TEMPLATE_POOL);
-        for (String biome : new String[]{"plains", "desert", "savanna", "snowy", "taiga"}) {
+        for (String biome : BIOMES) {
             var pool = registry.get(ResourceLocation.withDefaultNamespace("village/" + biome + "/houses"));
             var additions = registry.get(WorldModule.id("village/" + biome + "/antique"));
             if (pool == null || additions == null) { continue; }
@@ -54,5 +54,14 @@ public final class VillagePools {
     public static boolean isSmeltery(StructurePoolElement element) {
         ResourceLocation template = location(element);
         return template != null && SMELTERIES.contains(template);
+    }
+
+    public static boolean isWorkshop(StructurePoolElement element) {
+        ResourceLocation template = location(element);
+        return template != null && WORKSHOPS.contains(template);
+    }
+
+    private static Set<ResourceLocation> templates(String name) {
+        return BIOMES.stream().map(biome -> WorldModule.id("village/" + biome + "/" + name)).collect(Collectors.toUnmodifiableSet());
     }
 }

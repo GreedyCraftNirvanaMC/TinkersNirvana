@@ -18,9 +18,13 @@ import com.gctn.tconstruct.smeltery.SmelteryTank;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -81,7 +85,21 @@ public final class SmelteryRecipes {
                     }
                 }
             }
+            var rawBlocks = TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                    ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/raw_" + name));
+            MELTING.add(new Melting(stack -> stack.is(rawBlocks) || isNamed(stack, name, "raw_block"),
+                    new FluidStack(fluid, BLOCK * 2), temperature(fluid, BLOCK * 2), 9));
         }
+        // 按切石机最省料的路径确定回收量，防止同一批铜反复切割、熔炼后增值。
+        addCopperVariants(Blocks.COPPER_BLOCK, BLOCK);
+        addCopperVariants(Blocks.CUT_COPPER, BLOCK / 4);
+        addCopperVariants(Blocks.CUT_COPPER_STAIRS, BLOCK / 4);
+        addCopperVariants(Blocks.CUT_COPPER_SLAB, BLOCK / 8);
+        addCopperVariants(Blocks.CHISELED_COPPER, BLOCK / 4);
+        addCopperVariants(Blocks.COPPER_GRATE, BLOCK / 4);
+        addCopperVariants(Blocks.COPPER_BULB, BLOCK * 3 / 4);
+        addCopperVariants(Blocks.COPPER_DOOR, INGOT * 2);
+        addCopperVariants(Blocks.COPPER_TRAPDOOR, INGOT * 3);
         addMelting(Items.ICE, Fluids.WATER, 1000, 305);
         addMelting(Items.PACKED_ICE, Fluids.WATER, 2000, 310);
         addMelting(Items.SNOW_BLOCK, Fluids.WATER, 1000, 305);
@@ -259,8 +277,10 @@ public final class SmelteryRecipes {
         for (int i = MELTING.size() - 1; i >= 0; i--) {
             if (MELTING.get(i).input.test(stack)) {
                 Melting recipe = MELTING.get(i);
-                if (recipe.ore) {
-                    int amount = (int) (recipe.output.getAmount() / 2.0 * com.gctn.tconstruct.Config.ORE_TO_INGOT_RATIO.get());
+                if (recipe.ore()) {
+                    // 先计算单个粗矿的取整产量，确保打包熔炼和逐个熔炼的产量完全一致。
+                    double base = recipe.output.getAmount() / (2.0 * recipe.oreUnits());
+                    int amount = (int) (base * com.gctn.tconstruct.Config.ORE_TO_INGOT_RATIO.get()) * recipe.oreUnits();
                     return melting(recipe.input, recipe.output.getFluid(), amount);
                 }
                 return recipe;
@@ -333,7 +353,18 @@ public final class SmelteryRecipes {
     private static boolean isNamed(ItemStack stack, String material, String suffix) {
         ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         return id.getPath().equals(material + "_" + suffix) || id.getPath().equals("deepslate_" + material + "_" + suffix)
-                || suffix.equals("raw") && id.getPath().equals("raw_" + material);
+                || suffix.equals("raw") && id.getPath().equals("raw_" + material)
+                || suffix.equals("raw_block") && id.getPath().equals("raw_" + material + "_block");
+    }
+
+    private static void addCopperVariants(Block base, int amount) {
+        var copper = SmelteryFluids.get("copper");
+        var waxable = HoneycombItem.WAXABLES.get();
+        for (Block block = base; block != null; block = WeatheringCopper.getNext(block).orElse(null)) {
+            addMelting(block.asItem(), copper, amount);
+            Block waxed = waxable.get(block);
+            if (waxed != null) { addMelting(waxed.asItem(), copper, amount); }
+        }
     }
 
     private static ItemStack preferred(String material, String suffix) {
@@ -414,10 +445,14 @@ public final class SmelteryRecipes {
         ALLOYS.add(new Alloy(fluid(name, amount), List.of(inputs)));
     }
 
-    public record Melting(Predicate<ItemStack> input, FluidStack output, int temperature, boolean ore) {
+    public record Melting(Predicate<ItemStack> input, FluidStack output, int temperature, int oreUnits) {
+        public Melting(Predicate<ItemStack> input, FluidStack output, int temperature, boolean ore) {
+            this(input, output, temperature, ore ? 1 : 0);
+        }
         public Melting(Predicate<ItemStack> input, FluidStack output, int temperature) {
             this(input, output, temperature, false);
         }
+        public boolean ore() { return oreUnits > 0; }
         public int heat() {
             return Math.max(5, temperature - 300);
         }

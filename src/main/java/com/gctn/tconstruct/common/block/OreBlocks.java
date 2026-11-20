@@ -1,6 +1,8 @@
 package com.gctn.tconstruct.common.block;
 
 import com.gctn.tconstruct.init.BlockRegister;
+import com.gctn.tconstruct.init.ItemRegister;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -11,7 +13,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class OreBlocks {
-    public static final DeferredBlock<Block> COPPER_ORE = commonOre("copper");
     public static final DeferredBlock<Block> TIN_ORE = commonOre("tin");
     public static final DeferredBlock<Block> ALUMINUM_ORE = commonOre("aluminum");
     // 旧版 setHardness 同时保证抗爆强度至少等于硬度，下界矿石的两项数值均为十。
@@ -28,8 +29,16 @@ public class OreBlocks {
 
     public static Collection<DeferredBlock<?>> entries() {
         return List.of(
-                COBALT_ORE, ARDITE_ORE, COPPER_ORE, TIN_ORE, ALUMINUM_ORE
+                COBALT_ORE, ARDITE_ORE, TIN_ORE, ALUMINUM_ORE
         );
+    }
+
+    static {
+        // 旧区块及物品栏中的模组铜矿石统一解析为原版铜矿石。
+        var oldId = ResourceLocation.fromNamespaceAndPath("tconstruct", "copper_ore");
+        var vanilla = ResourceLocation.withDefaultNamespace("copper_ore");
+        BlockRegister.BLOCKS.addAlias(oldId, vanilla);
+        ItemRegister.ITEMS.addAlias(oldId, vanilla);
     }
 
     private static DeferredBlock<Block> commonOre(String metal) {

@@ -17,7 +17,7 @@ public class AntiqueHeightPlacement extends PlacementModifier {
     public static final MapCodec<AntiqueHeightPlacement> CODEC = com.mojang.serialization.Codec.STRING.fieldOf("setting").xmap(AntiqueHeightPlacement::new, filter -> filter.setting);
     private final String setting;
     public AntiqueHeightPlacement(String setting) {
-        if (!Set.of("cobalt", "ardite", "copper", "tin", "aluminum", "slime_pool", "slime_pool_humid", "magma_pool").contains(setting)) { throw new IllegalArgumentException("Unknown Antique height setting: " + setting); }
+        if (!Set.of("cobalt", "ardite", "tin", "aluminum", "slime_pool", "slime_pool_humid", "magma_pool").contains(setting)) { throw new IllegalArgumentException("Unknown Antique height setting: " + setting); }
         this.setting = setting;
     }
     @Override public Stream<BlockPos> getPositions(PlacementContext context, RandomSource random, BlockPos origin) {
@@ -28,12 +28,12 @@ public class AntiqueHeightPlacement extends PlacementModifier {
             return result.build().filter(pos -> !context.getLevel().isOutsideBuildHeight(pos));
         }
         boolean enabled = switch (setting) {
-            case "cobalt" -> Config.GEN_COBALT.get(); case "ardite" -> Config.GEN_ARDITE.get(); case "copper" -> Config.GEN_COPPER.get();
+            case "cobalt" -> Config.GEN_COBALT.get(); case "ardite" -> Config.GEN_ARDITE.get();
             case "tin" -> Config.GEN_TIN.get(); default -> Config.GEN_ALUMINUM.get();
         };
         if (!enabled) { return Stream.empty(); }
         int count = switch (setting) {
-            case "cobalt" -> Config.COBALT_RATE.get(); case "ardite" -> Config.ARDITE_RATE.get(); case "copper" -> Config.COPPER_RATE.get();
+            case "cobalt" -> Config.COBALT_RATE.get(); case "ardite" -> Config.ARDITE_RATE.get();
             case "tin" -> Config.TIN_RATE.get(); default -> Config.ALUMINUM_RATE.get();
         };
         if (setting.equals("cobalt") || setting.equals("ardite")) {
@@ -44,8 +44,8 @@ public class AntiqueHeightPlacement extends PlacementModifier {
             }
         } else {
             if (!context.getLevel().dimensionType().hasSkyLight()) { return Stream.empty(); }
-            int min = setting.equals("copper") ? Config.COPPER_MIN_HEIGHT.get() : setting.equals("tin") ? Config.TIN_MIN_HEIGHT.get() : Config.ALUMINUM_MIN_HEIGHT.get();
-            int max = setting.equals("copper") ? Config.COPPER_MAX_HEIGHT.get() : setting.equals("tin") ? Config.TIN_MAX_HEIGHT.get() : Config.ALUMINUM_MAX_HEIGHT.get();
+            int min = setting.equals("tin") ? Config.TIN_MIN_HEIGHT.get() : Config.ALUMINUM_MIN_HEIGHT.get();
+            int max = setting.equals("tin") ? Config.TIN_MAX_HEIGHT.get() : Config.ALUMINUM_MAX_HEIGHT.get();
             // 配置可以跨越多个维度的高度范围，采样范围以当前维度实际可放置的高度为限。
             min = Math.max(min, context.getLevel().getMinBuildHeight());
             max = Math.min(max, context.getLevel().getMaxBuildHeight());

@@ -26,7 +26,9 @@ Edit `config/tconstruct-common.toml`. World generation settings affect future ch
 | `world.generateVillageStructures` | `true` | Both village structure families |
 | `world.villageWorkshopWeight` / `world.villageSmelteryWeight` | `30` / `9` | Village structure weights |
 
-Islands and pools have separate dimension ID lists, allowlist or denylist settings, and surface-dimension restrictions. Use resource IDs. Empty lists are valid. Copper, tin, aluminum, cobalt, and Ardite each have an ore toggle and attempt count. Overworld ores also have minimum and maximum height settings. A count of zero disables attempts.
+Islands and pools have separate dimension ID lists, allowlist or denylist settings, and surface-dimension restrictions. Use resource IDs. Empty lists are valid. Tin, aluminum, cobalt, and Ardite each have an ore toggle and attempt count. Tin and aluminum also have minimum and maximum height settings. A count of zero disables attempts. Copper uses vanilla ore generation.
+
+Each new village rolls a workshop limit from zero to three and can place at most one smeltery. The workshop limit uses Antique's formula with the default village size.
 
 Each slime island makes three tree placement attempts. The resulting tree count depends on suitable ground. Blue and purple slimes can breathe and swim in liquid slime. After the configured time away from an island, they are removed without drops, experience or splitting. Returning to any ordinary slime island resets the timer, which is saved with the entity.
 
