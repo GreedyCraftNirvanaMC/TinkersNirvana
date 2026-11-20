@@ -18,23 +18,36 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceMetadata;
 
-/** Ports Antique's CastTexture into the modern atlas pipeline, including its shaded imprint edges. */
-public record CastSpriteSource(ResourceLocation sprite, ResourceLocation mask, int offsetX, int offsetY) implements SpriteSource {
+/** 使用怀古的部件轮廓生成铸模孔型和木模板刻痕。 */
+public record CastSpriteSource(ResourceLocation sprite, ResourceLocation mask, int offsetX, int offsetY,
+                               boolean woodenPattern) implements SpriteSource {
     public static final MapCodec<CastSpriteSource> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("sprite").forGetter(CastSpriteSource::sprite),
             ResourceLocation.CODEC.fieldOf("mask").forGetter(CastSpriteSource::mask),
             Codec.INT.optionalFieldOf("offset_x", 0).forGetter(CastSpriteSource::offsetX),
-            Codec.INT.optionalFieldOf("offset_y", 0).forGetter(CastSpriteSource::offsetY)).apply(instance, CastSpriteSource::new));
+            Codec.INT.optionalFieldOf("offset_y", 0).forGetter(CastSpriteSource::offsetY),
+            Codec.BOOL.optionalFieldOf("wooden_pattern", false).forGetter(CastSpriteSource::woodenPattern))
+            .apply(instance, CastSpriteSource::new));
     public static final SpriteSourceType TYPE = new SpriteSourceType(CODEC);
+
+    public CastSpriteSource(ResourceLocation sprite, ResourceLocation mask, int offsetX, int offsetY) {
+        this(sprite, mask, offsetX, offsetY, false);
+    }
 
     @Override
     public void run(ResourceManager manager, Output output) {
         output.add(sprite, loader -> {
             NativeImage cast = null;
-            try (var baseStream = manager.getResourceOrThrow(ResourceLocation.fromNamespaceAndPath(TinkersNirvana.MODID, "textures/item/cast.png")).open();
+            var baseTexture = ResourceLocation.fromNamespaceAndPath(TinkersNirvana.MODID,
+                    woodenPattern ? "item/toolsupplies/pattern" : "item/cast");
+            try (var baseStream = manager.getResourceOrThrow(TEXTURE_ID_CONVERTER.idToFile(baseTexture)).open();
                  var maskStream = manager.getResourceOrThrow(TEXTURE_ID_CONVERTER.idToFile(mask)).open();
                  NativeImage part = NativeImage.read(maskStream)) {
                 cast = NativeImage.read(baseStream);
+                if (woodenPattern) {
+                    engravePattern(cast, part);
+                    return new SpriteContents(sprite, new FrameSize(cast.getWidth(), cast.getHeight()), cast, ResourceMetadata.EMPTY);
+                }
                 for (int y = 0; y < cast.getHeight(); y++) {
                     for (int x = 0; x < cast.getWidth(); x++) {
                         int pixel = cast.getPixelRGBA(x, y);
@@ -58,11 +71,7 @@ public record CastSpriteSource(ResourceLocation sprite, ResourceLocation mask, i
                         if (alpha(part, px + 1, py) < 64) { count++; }
                         if (alpha(part, px, py - 1) < 64) { count -= 3; }
                         if (count != 0) {
-                            float multiplier = count < 0 ? 0.8F : 1.1F;
-                            int red = Math.min(255, (int) ((pixel & 255) * multiplier));
-                            int green = Math.min(255, (int) ((pixel >> 8 & 255) * multiplier));
-                            int blue = Math.min(255, (int) ((pixel >> 16 & 255) * multiplier));
-                            cast.setPixelRGBA(x, y, 0xff000000 | blue << 16 | green << 8 | red);
+                            cast.setPixelRGBA(x, y, shade(pixel, count < 0 ? 0.8F : 1.1F) | 0xff000000);
                         }
                     }
                 }
@@ -71,10 +80,58 @@ public record CastSpriteSource(ResourceLocation sprite, ResourceLocation mask, i
                 if (cast != null) {
                     cast.close();
                 }
-                TinkersNirvana.LOGGER.error("Unable to load cast sprite {}", sprite, exception);
+                TinkersNirvana.LOGGER.error("Unable to generate sprite {}", sprite, exception);
                 return null;
             }
         });
+    }
+
+    private void engravePattern(NativeImage pattern, NativeImage part) {
+        int left = part.getWidth(), right = -1, top = part.getHeight(), bottom = -1;
+        for (int y = 0; y < part.getHeight(); y++) {
+            for (int x = 0; x < part.getWidth(); x++) {
+                if (alpha(part, x, y) >= 64) {
+                    left = Math.min(left, x);
+                    right = Math.max(right, x);
+                    top = Math.min(top, y);
+                    bottom = Math.max(bottom, y);
+                }
+            }
+        }
+        if (right < left) {
+            return;
+        }
+
+        int sourceWidth = right - left + 1, sourceHeight = bottom - top + 1;
+        int marginX = pattern.getWidth() / 8, marginY = pattern.getHeight() / 8;
+        // 以部件的实际轮廓为中心，等比缩小过大的轮廓，避免单侧裁切压住模板边框。
+        float scale = Math.min(Math.min((float) pattern.getWidth() / part.getWidth(),
+                        (float) pattern.getHeight() / part.getHeight()),
+                Math.min((float) (pattern.getWidth() - 2 * marginX) / sourceWidth,
+                        (float) (pattern.getHeight() - 2 * marginY) / sourceHeight));
+        int width = Math.max(1, Math.round(sourceWidth * scale));
+        int height = Math.max(1, Math.round(sourceHeight * scale));
+        int startX = (pattern.getWidth() - width) / 2 + Math.round(offsetX * scale);
+        int startY = (pattern.getHeight() - height) / 2 + Math.round(offsetY * scale);
+        for (int y = Math.max(startY, marginY); y < Math.min(startY + height, pattern.getHeight() - marginY); y++) {
+            for (int x = Math.max(startX, marginX); x < Math.min(startX + width, pattern.getWidth() - marginX); x++) {
+                int px = left + (int) ((x - startX + 0.5F) * sourceWidth / width);
+                int py = top + (int) ((y - startY + 0.5F) * sourceHeight / height);
+                int pixel = pattern.getPixelRGBA(x, y);
+                if (pixel >>> 24 != 0 && alpha(part, px, py) >= 64) {
+                    boolean edge = alpha(part, px - 1, py) < 64 || alpha(part, px + 1, py) < 64
+                            || alpha(part, px, py - 1) < 64 || alpha(part, px, py + 1) < 64;
+                    pattern.setPixelRGBA(x, y, shade(pixel, edge ? 0.6F : 0.5F));
+                }
+            }
+        }
+    }
+
+    private static int shade(int pixel, float multiplier) {
+        int red = Math.min(255, (int) ((pixel & 255) * multiplier));
+        int green = Math.min(255, (int) ((pixel >> 8 & 255) * multiplier));
+        int blue = Math.min(255, (int) ((pixel >> 16 & 255) * multiplier));
+        return (pixel & 0xff000000) | blue << 16 | green << 8 | red;
     }
 
     private static int alpha(NativeImage image, int x, int y) {

@@ -7,6 +7,7 @@ package com.gctn.tconstruct.smeltery.recipe;
 import com.gctn.tconstruct.Config;
 import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.smeltery.SmelteryFluids;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +16,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -45,15 +47,21 @@ public final class SmelteryRecipeEvents {
     private static void rebuild(MinecraftServer server) {
         SmelteryRecipes.initialize();
         com.gctn.tconstruct.api.TinkerContent.installCastingRecipes();
+        var automatic = inferAutomaticMelting(server.getRecipeManager(), server.registryAccess());
         SmelteryRecipes.AUTOMATIC_MELTING.clear();
+        SmelteryRecipes.AUTOMATIC_MELTING.putAll(automatic);
+    }
+
+    /** 从指定配方管理器计算回收规则，使客户端可以预览而无需改写服务端缓存。 */
+    public static Map<Item, SmelteryRecipes.Melting> inferAutomaticMelting(RecipeManager recipes, HolderLookup.Provider registries) {
         Map<Item, FluidStack> inferred = new HashMap<>();
-        for (var holder : server.getRecipeManager().getRecipes()) {
+        for (var holder : recipes.getRecipes()) {
             if (!(holder.value() instanceof CraftingRecipe recipe)) {
                 continue;
             }
-            ItemStack output = recipe.getResultItem(server.registryAccess());
+            ItemStack output = recipe.getResultItem(registries);
             if (output.isEmpty() || !output.getComponentsPatch().isEmpty()
-                    || SmelteryRecipes.findMelting(output) != null || recipe.isIncomplete()) {
+                    || SmelteryRecipes.findMelting(output, Map.of()) != null || recipe.isIncomplete()) {
                 continue;
             }
             FluidStack value = infer(recipe, output.getCount());
@@ -61,12 +69,14 @@ public final class SmelteryRecipeEvents {
             inferred.merge(output.getItem(), value, (previous, next) ->
                     FluidStack.matches(previous, next) ? previous : FluidStack.EMPTY);
         }
+        Map<Item, SmelteryRecipes.Melting> result = new HashMap<>();
         inferred.forEach((item, value) -> {
             if (value.isEmpty()) { return; }
             ItemStack plain = new ItemStack(item);
-            SmelteryRecipes.AUTOMATIC_MELTING.put(item, SmelteryRecipes.melting(
+            result.put(item, SmelteryRecipes.melting(
                     stack -> ItemStack.isSameItemSameComponents(plain, stack), value.getFluid(), value.getAmount()));
         });
+        return Map.copyOf(result);
     }
 
     private static FluidStack infer(CraftingRecipe recipe, int outputCount) {

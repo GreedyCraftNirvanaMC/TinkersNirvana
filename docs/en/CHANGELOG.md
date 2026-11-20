@@ -2,6 +2,13 @@
 
 [README](../../README.md) · [简体中文](../zh-CN/CHANGELOG.md)
 
+## 1.21.1-1.0.6
+
+- Add JEI and Jade integration.
+- Fix rendering issues during casting.
+- Update the appearance of blank wooden patterns.
+- Fix cast items failing to stack automatically when collected.
+
 ## 1.21.1-1.0.5
 
 - Rename the mod ID and resource namespace to `tconsnirvana`. Add legacy save aliases and copy existing configuration when the new config file is absent. Update addon dependencies, scripts and packs to the new IDs.

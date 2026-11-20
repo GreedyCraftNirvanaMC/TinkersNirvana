@@ -5,6 +5,7 @@ import com.gctn.tconstruct.tables.data.Mode;
 import com.gctn.tconstruct.tables.menu.ToolStationMenu;
 import com.gctn.tconstruct.tables.data.ToolStationSlotPositions.SlotPosition;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -211,6 +212,15 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
         if (nameField.isFocused() && key != 256) { return nameField.keyPressed(key, scan, modifiers) || nameField.canConsumeInput(); }
         return super.keyPressed(key, scan, modifiers);
     }
+    public List<Rect2i> occupiedAreas() {
+        List<Rect2i> areas = new ArrayList<>();
+        nearbyPanel.addOccupiedArea(areas, leftPos, topPos);
+        for (var button : modeButtons) {
+            if (button.visible) { areas.add(new Rect2i(button.getX(), button.getY(), button.getWidth(), button.getHeight())); }
+        }
+        return areas;
+    }
+
     @Override protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
         for (ModeButton modeButton : modeButtons) {
             if (modeButton.visible && mouseX >= modeButton.getX() && mouseX < modeButton.getX() + modeButton.getWidth()

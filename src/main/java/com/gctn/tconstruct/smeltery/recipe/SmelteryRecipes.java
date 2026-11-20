@@ -272,6 +272,10 @@ public final class SmelteryRecipes {
     }
 
     public static Melting findMelting(ItemStack stack) {
+        return findMelting(stack, AUTOMATIC_MELTING);
+    }
+
+    public static Melting findMelting(ItemStack stack, Map<Item, Melting> automatic) {
         initialize();
         // Later registrations override built-ins, matching integrations' ability to replace recipes.
         for (int i = MELTING.size() - 1; i >= 0; i--) {
@@ -286,7 +290,7 @@ public final class SmelteryRecipes {
                 return recipe;
             }
         }
-        Melting inferred = AUTOMATIC_MELTING.get(stack.getItem());
+        Melting inferred = automatic.get(stack.getItem());
         return inferred != null && inferred.input.test(stack) ? inferred : null;
     }
 

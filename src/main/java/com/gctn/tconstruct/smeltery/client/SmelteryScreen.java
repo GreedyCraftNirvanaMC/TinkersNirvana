@@ -12,6 +12,7 @@ import com.gctn.tconstruct.smeltery.menu.SmelteryMenu;
 import com.gctn.tconstruct.smeltery.network.SmelteryNetwork;
 import com.gctn.tconstruct.smeltery.recipe.SmelteryRecipes;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -79,6 +80,10 @@ public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
         } else {
             graphics.blit(background, leftPos + 8, topPos + 16, 176, 76, 52, 52);
         }
+    }
+
+    public List<Rect2i> occupiedAreas() {
+        return List.of(new Rect2i(leftPos - menu.sideWidth + 6, topPos, menu.sideWidth, 14 + menu.visibleRows * 18));
     }
 
     private void drawSideInventory(GuiGraphics graphics, int mouseX, int mouseY) {
