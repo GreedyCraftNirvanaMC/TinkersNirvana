@@ -32,7 +32,15 @@ public class WorkshopMenu extends AbstractContainerMenu {
     private final BlockPos pos;
     private final Container backing;
     private final ResultContainer result = new ResultContainer();
-    private final SimpleContainerData data = new SimpleContainerData(2);
+    private final WorkshopStoragePages storagePages;
+    private final SimpleContainerData data = new SimpleContainerData(3) {
+        @Override public int get(int index) {
+            if (index == 2 && storagePages != null) {
+                return storagePages.pageCount(PAGE_SIZE, slot -> !backing.getItem(slot).isEmpty());
+            }
+            return super.get(index);
+        }
+    };
     private final Inventory inventory;
     private final int playerStart;
     private final int playerEnd;
@@ -51,7 +59,9 @@ public class WorkshopMenu extends AbstractContainerMenu {
     private WorkshopMenu(int id, Inventory inventory, Kind kind, BlockPos pos, Container backing, NearbyInventory.Source source) {
         super(WorkshopModule.MENU.get(), id);
         this.kind = kind; this.pos = pos; this.backing = backing; this.inventory = inventory;
-        nearby = new NearbyInventory(inventory.player, source, kind == Kind.STENCIL ? 182 : -94);
+        storagePages = kind.storage() && !inventory.player.level().isClientSide
+                ? new WorkshopStoragePages(kind.size, slot -> !backing.getItem(slot).isEmpty()) : null;
+        nearby = new NearbyInventory(inventory.player, source, kind == Kind.STENCIL ? 182 : -96);
         data.set(1, -1);
         if (kind.storage()) {
             Container page = new PageView();
@@ -113,7 +123,8 @@ public class WorkshopMenu extends AbstractContainerMenu {
         super.clicked(slot, button, type, player);
     }
     public int page() { return data.get(0); }
-    public int pages() { return (kind.size + PAGE_SIZE - 1) / PAGE_SIZE; }
+    public int pages() { return Math.max(page() + 1, data.get(2)); }
+    public int firstNearbySlot() { return playerEnd; }
     public int selection() { return data.get(1); }
     public static List<AntiqueParts.Definition> patterns() { return AntiqueParts.entries().values().stream().filter(part -> !part.id().equals("bolt_core")).toList(); }
     @Override public boolean stillValid(Player player) {
@@ -172,7 +183,11 @@ public class WorkshopMenu extends AbstractContainerMenu {
         return original;
     }
     private class PageView implements Container {
-        private int index(int slot) { return inventory.player.level().isClientSide ? slot : page() * PAGE_SIZE + slot; }
+        private int index(int slot) {
+            if (storagePages == null) { return slot; }
+            int displaySlot = page() * PAGE_SIZE + slot;
+            return displaySlot < backing.getContainerSize() ? storagePages.index(displaySlot) : displaySlot;
+        }
         @Override public int getContainerSize() { return PAGE_SIZE; }
         @Override public boolean isEmpty() { for (int i = 0; i < PAGE_SIZE; i++) { if (!getItem(i).isEmpty()) { return false; } } return true; }
         @Override public ItemStack getItem(int slot) { return index(slot) < backing.getContainerSize() ? backing.getItem(index(slot)) : ItemStack.EMPTY; }

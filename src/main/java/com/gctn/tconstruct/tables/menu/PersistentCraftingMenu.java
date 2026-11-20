@@ -40,7 +40,7 @@ public class PersistentCraftingMenu extends RecipeBookMenu<CraftingInput, Crafti
     private PersistentCraftingMenu(int id, Inventory inventory, BlockPos pos, WorkshopBlockEntity entity, NearbyInventory.Source source) {
         super(WorkshopModule.CRAFTING_MENU.get(), id);
         this.inventory = inventory; this.pos = pos; this.entity = entity;
-        nearby = new NearbyInventory(inventory.player, source, -94);
+        nearby = new NearbyInventory(inventory.player, source, -96);
         grid = new PersistentGrid(entity == null ? new net.minecraft.world.SimpleContainer(9) : entity);
         addSlot(new ResultSlot(inventory.player, grid, result, 0, 124, 35) {
             @Override public boolean mayPickup(Player player) {

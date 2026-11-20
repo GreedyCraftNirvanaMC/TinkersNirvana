@@ -45,7 +45,7 @@ public class PersistentCraftingScreen extends AbstractContainerScreen<Persistent
             menu.nearby().visible(!recipeBookComponent.isVisible());
         })));
         nearbyPanel.init(leftPos, topPos, menu.containerId, button -> positionButtons.add(addRenderableWidget(button)));
-        WorkshopNavigation.add(menu.position(), menu.containerId, leftPos + 8, topPos - 20, button -> positionButtons.add(addRenderableWidget(button)));
+        WorkshopNavigation.add(menu.position(), menu.containerId, width, height, this::addRenderableWidget);
         menu.nearby().visible(!recipeBookComponent.isVisible());
         this.addWidget(this.recipeBookComponent);
         this.titleLabelX = 29;

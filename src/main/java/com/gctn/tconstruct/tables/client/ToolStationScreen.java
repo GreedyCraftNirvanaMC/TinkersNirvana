@@ -75,7 +75,7 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
             }
         });
         addRenderableWidget(nameField);
-        WorkshopNavigation.add(menu.position(), menu.containerId, leftPos + 8, topPos - 20, this::addRenderableWidget);
+        WorkshopNavigation.add(menu.position(), menu.containerId, width, height, this::addRenderableWidget);
         this.addModeButton(Mode.DEFAULT, ICON_TEXTURE, 55, 1, 16, 16);
         this.addModeButton(Mode.DISASSEMBLE, new ItemStack(Items.SHEARS));
         this.addModeButton(Mode.PICKAXE, new ItemStack(Items.WOODEN_PICKAXE));

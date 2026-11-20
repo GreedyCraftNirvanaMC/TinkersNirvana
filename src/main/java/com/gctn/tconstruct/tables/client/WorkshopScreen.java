@@ -28,7 +28,7 @@ public class WorkshopScreen extends AbstractContainerScreen<WorkshopMenu> {
     @Override protected void init() {
         super.init(); selections.clear();
         nearbyPanel.init(leftPos, topPos, menu.containerId, this::addRenderableWidget);
-        WorkshopNavigation.add(menu.position(), menu.containerId, leftPos + 8, menu.kind().storage() ? topPos + 4 : topPos - 20, this::addRenderableWidget);
+        WorkshopNavigation.add(menu.position(), menu.containerId, width, height, this::addRenderableWidget);
         if (menu.kind() == Kind.STENCIL) {
             var patterns = WorkshopMenu.patterns();
             for (int i = 0; i < patterns.size(); i++) {
@@ -48,7 +48,11 @@ public class WorkshopScreen extends AbstractContainerScreen<WorkshopMenu> {
     @Override public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         nearbyPanel.update();
         for (int i = 0; i < selections.size(); i++) { selections.get(i).active = i != menu.selection(); }
-        if (previous != null) { previous.active = menu.page() > 0; next.active = menu.page() + 1 < menu.pages(); }
+        if (previous != null) {
+            previous.visible = next.visible = menu.pages() > 1;
+            previous.active = menu.page() > 0;
+            next.active = menu.page() + 1 < menu.pages();
+        }
         super.render(graphics, mouseX, mouseY, partialTick); renderTooltip(graphics, mouseX, mouseY);
     }
     @Override protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
@@ -56,7 +60,8 @@ public class WorkshopScreen extends AbstractContainerScreen<WorkshopMenu> {
         graphics.fill(leftPos, topPos, leftPos + imageWidth, topPos + imageHeight, 0xffc6c6c6);
         graphics.fill(leftPos, topPos, leftPos + imageWidth, topPos + 2, 0xffffffff);
         graphics.fill(leftPos + imageWidth - 2, topPos, leftPos + imageWidth, topPos + imageHeight, 0xff555555);
-        for (var slot : menu.slots) {
+        for (int i = 0; i < menu.firstNearbySlot(); i++) {
+            var slot = menu.slots.get(i);
             if (!slot.isActive()) { continue; }
             int x = leftPos + slot.x, y = topPos + slot.y;
             graphics.fill(x - 1, y - 1, x + 17, y + 17, 0xff373737);
@@ -65,7 +70,7 @@ public class WorkshopScreen extends AbstractContainerScreen<WorkshopMenu> {
             graphics.fill(x + 16, y, x + 17, y + 17, 0xffffffff);
         }
         if (!menu.kind().storage()) { graphics.drawString(font, "→", leftPos + 93, topPos + 47, 0xff555555, false); }
-        else { graphics.drawString(font, (menu.page() + 1) + "/" + menu.pages(), leftPos + 82, topPos + 27, 0xff404040, false); }
+        else if (menu.pages() > 1) { graphics.drawString(font, (menu.page() + 1) + "/" + menu.pages(), leftPos + 82, topPos + 27, 0xff404040, false); }
     }
     @Override protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
         return !nearbyPanel.contains(mouseX, mouseY, left, top) && super.hasClickedOutside(mouseX, mouseY, left, top, button);

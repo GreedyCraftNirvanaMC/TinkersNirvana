@@ -7,6 +7,7 @@ import com.gctn.tconstruct.tables.block.entity.WorkshopBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
@@ -50,7 +51,7 @@ public final class NearbyInventory {
             }
         } else if (kind == null || kind == Kind.STENCIL || kind == Kind.PART_BUILDER) {
             Kind wanted = kind == null ? Kind.PART_CHEST : Kind.PATTERN_CHEST;
-            for (BlockPos pos : WorkshopModule.connected(player.level(), origin, player)) {
+            for (BlockPos pos : WorkshopModule.connectedByDistance(player.level(), origin, player)) {
                 if (player.level().getBlockEntity(pos) instanceof WorkshopBlockEntity entity && entity.kind() == wanted) {
                     Source source = inspect(player, pos, null);
                     if (source != null) { return source; }
@@ -79,11 +80,23 @@ public final class NearbyInventory {
     private final Source source;
     private final BlockEntity original;
     private final IItemHandlerModifiable client;
-    private final SimpleContainerData data = new SimpleContainerData(1);
+    private final WorkshopStoragePages storage;
+    private final SimpleContainerData data = new SimpleContainerData(2) {
+        @Override public int get(int index) {
+            if (index == 1 && storage != null) {
+                var handler = handler();
+                if (handler != null) { return storage.pageCount(PAGE_SIZE, slot -> !handler.getStackInSlot(slot).isEmpty()); }
+            }
+            return super.get(index);
+        }
+    };
     private final int x;
     private boolean visible = true;
     private final IItemHandlerModifiable pageHandler = new IItemHandlerModifiable() {
-        private int index(int slot) { return player.level().isClientSide ? slot : page() * PAGE_SIZE + slot; }
+        private int index(int slot) {
+            if (client != null) { return slot; }
+            return physicalSlot(page() * PAGE_SIZE + slot);
+        }
         private IItemHandlerModifiable access(int slot) { return index(slot) < size() ? handler() : null; }
         @Override public int getSlots() { return PAGE_SIZE; }
         @Override public ItemStack getStackInSlot(int slot) { var handler = access(slot); return handler == null ? ItemStack.EMPTY : handler.getStackInSlot(index(slot)); }
@@ -97,6 +110,8 @@ public final class NearbyInventory {
         this.player = player; this.source = source; this.x = x;
         original = source == null ? null : player.level().getBlockEntity(source.pos);
         client = player.level().isClientSide && source != null ? new ItemStackHandler(PAGE_SIZE) : null;
+        var handler = client == null && original instanceof WorkshopBlockEntity workshop && workshop.kind().storage() ? handler() : null;
+        storage = handler == null ? null : new WorkshopStoragePages(size(), slot -> !handler.getStackInSlot(slot).isEmpty());
     }
     public void addSlots(Consumer<Slot> add) {
         if (source == null) { return; }
@@ -121,6 +136,7 @@ public final class NearbyInventory {
                 || !(original instanceof WorkshopBlockEntity chest) || chest.kind() != Kind.PATTERN_CHEST) { return false; }
         int slot = page() * PAGE_SIZE + visibleSlot;
         if (slot >= source.size) { return false; }
+        slot = physicalSlot(slot);
         ItemStack wanted = chest.getItem(slot), previous = builder.getItem(0);
         if (!(wanted.getItem() instanceof com.gctn.tconstruct.tools.PatternItem) || wanted.getCount() != 1
                 || !previous.isEmpty() && (!(previous.getItem() instanceof com.gctn.tconstruct.tools.PatternItem) || previous.getCount() != 1
@@ -130,7 +146,17 @@ public final class NearbyInventory {
     public boolean present() { return source != null; }
     public SimpleContainerData data() { return data; }
     public int page() { return data.get(0); }
-    public int pages() { return (size() + PAGE_SIZE - 1) / PAGE_SIZE; }
+    private int physicalSlot(int index) { return storage == null || index >= size() ? index : storage.index(index); }
+    public int pages() {
+        int synced = data.get(1);
+        int count = synced > 0 ? synced : (size() + PAGE_SIZE - 1) / PAGE_SIZE;
+        return Math.max(page() + 1, count);
+    }
+    public int visibleSlots() { return Math.clamp(size() - page() * PAGE_SIZE, 0, PAGE_SIZE); }
+    public Component title() {
+        if (original instanceof net.minecraft.world.Nameable named) { return named.getDisplayName(); }
+        return player.level().getBlockState(source.pos).getBlock().getName();
+    }
     private int size() { return source == null ? 0 : source.size; }
     public int x() { return x; }
     public void visible(boolean visible) { this.visible = visible; }

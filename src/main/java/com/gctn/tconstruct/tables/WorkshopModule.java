@@ -13,6 +13,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.network.chat.Component;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -29,6 +34,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -82,18 +88,27 @@ public final class WorkshopModule {
         return block instanceof WorkshopBlock || block instanceof ToolStationBlock;
     }
     public static List<BlockPos> connected(Level level, BlockPos origin, Player player) {
+        var found = connectedByDistance(level, origin, player);
+        // 从任意相邻工作台打开时，按方块 ID 排列，重复类型使用固定坐标作为入口。
+        var byType = new java.util.TreeMap<net.minecraft.resources.ResourceLocation, BlockPos>();
+        found.sort(Comparator.naturalOrder());
+        for (BlockPos pos : found) {
+            byType.putIfAbsent(BuiltInRegistries.BLOCK.getKey(level.getBlockState(pos).getBlock()), pos);
+        }
+        return List.copyOf(byType.values());
+    }
+    public static List<BlockPos> connectedByDistance(Level level, BlockPos origin, Player player) {
         List<BlockPos> found = new ArrayList<>();
         ArrayDeque<BlockPos> queue = new ArrayDeque<>();
         HashSet<BlockPos> visited = new HashSet<>();
-        HashSet<net.minecraft.world.level.block.Block> offered = new HashSet<>();
         queue.add(origin); visited.add(origin);
         while (!queue.isEmpty() && visited.size() <= 64) {
             BlockPos pos = queue.removeFirst();
             if (!level.hasChunkAt(pos) || !isTable(level, pos)) { continue; }
-            if (player.distanceToSqr(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5) <= 64 && offered.add(level.getBlockState(pos).getBlock())) { found.add(pos); }
+            if (player.distanceToSqr(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5) <= 64) { found.add(pos); }
             for (Direction direction : Direction.Plane.HORIZONTAL) {
                 BlockPos next = pos.relative(direction);
-                if (visited.add(next) && visited.size() <= 64) { queue.addLast(next); }
+                if (visited.size() < 64 && level.hasChunkAt(next) && isTable(level, next) && visited.add(next)) { queue.addLast(next); }
             }
         }
         return found;
@@ -104,22 +119,36 @@ public final class WorkshopModule {
         int index = button - 100;
         if (index >= tables.size()) { return false; }
         BlockPos target = tables.get(index);
-        open(player, target);
+        if (player.level().getBlockState(target).getBlock() == player.level().getBlockState(origin).getBlock()) { return false; }
+        open(player, target, true);
         return true;
     }
     public static void open(Player player, BlockPos pos) {
-        if (!player.level().isClientSide && player.level().getBlockEntity(pos) instanceof net.minecraft.world.MenuProvider provider) {
+        open(player, pos, false);
+    }
+    private static void open(Player player, BlockPos pos, boolean switching) {
+        if (!player.level().isClientSide && player.level().getBlockEntity(pos) instanceof MenuProvider provider) {
+            MenuProvider menu = switching ? new NavigationMenuProvider(provider) : provider;
             if (provider instanceof WorkshopBlockEntity entity) {
                 var source = com.gctn.tconstruct.tables.menu.NearbyInventory.find(player, pos, entity.kind());
-                player.openMenu(provider, buffer -> {
+                player.openMenu(menu, buffer -> {
                     buffer.writeBlockPos(pos);
                     if (entity.kind() != Kind.CRAFTING) { buffer.writeEnum(entity.kind()); }
                     com.gctn.tconstruct.tables.menu.NearbyInventory.write(buffer, source);
                 });
             } else {
                 var source = com.gctn.tconstruct.tables.menu.NearbyInventory.find(player, pos, null);
-                player.openMenu(provider, buffer -> { buffer.writeBlockPos(pos); com.gctn.tconstruct.tables.menu.NearbyInventory.write(buffer, source); });
+                player.openMenu(menu, buffer -> { buffer.writeBlockPos(pos); com.gctn.tconstruct.tables.menu.NearbyInventory.write(buffer, source); });
             }
         }
+    }
+
+    private record NavigationMenuProvider(MenuProvider target) implements MenuProvider {
+        @Override public Component getDisplayName() { return target.getDisplayName(); }
+        @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+            return target.createMenu(id, inventory, player);
+        }
+        // 让服务端正常关闭旧容器，同时跳过客户端的关闭包，避免恢复游戏视角并重置鼠标。
+        @Override public boolean shouldTriggerClientSideContainerClosingOnOpen() { return false; }
     }
 }

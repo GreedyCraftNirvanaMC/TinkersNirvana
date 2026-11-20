@@ -14,10 +14,13 @@ import java.util.function.Consumer;
 
 public final class WorkshopNavigation {
     private WorkshopNavigation() {}
-    public static void add(BlockPos origin, int containerId, int x, int y, Consumer<Button> add) {
+    public static void add(BlockPos origin, int containerId, int screenWidth, int screenHeight, Consumer<Button> add) {
         Minecraft minecraft = Minecraft.getInstance();
         if (origin == null || minecraft.level == null || minecraft.player == null) { return; }
         var tables = WorkshopModule.connected(minecraft.level, origin, minecraft.player);
+        int x = (screenWidth - 176) / 2 + 8;
+        int y = Math.max(2, (screenHeight - 224) / 2 - 20);
+        var current = minecraft.level.getBlockState(origin).getBlock();
         for (int i = 0; i < Math.min(8, tables.size()); i++) {
             BlockPos target = tables.get(i);
             ItemStack icon = new ItemStack(minecraft.level.getBlockState(target).getBlock());
@@ -25,7 +28,7 @@ public final class WorkshopNavigation {
             Button button = new IconButton(x + i * 20, y, icon, pressed -> {
                 if (minecraft.gameMode != null) { minecraft.gameMode.handleInventoryButtonClick(containerId, action); }
             });
-            button.active = !target.equals(origin);
+            button.active = minecraft.level.getBlockState(target).getBlock() != current;
             button.setTooltip(Tooltip.create(icon.getHoverName()));
             add.accept(button);
         }
