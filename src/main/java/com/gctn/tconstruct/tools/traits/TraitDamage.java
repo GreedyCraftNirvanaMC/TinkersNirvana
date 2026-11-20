@@ -9,11 +9,17 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 
 /** 次级词条伤害仍经过原版伤害事件；单次命中结束后恢复原来的受击冷却。 */
 public final class TraitDamage {
     private TraitDamage() {}
+
+    public static boolean isRetaliation(DamageSource source) {
+        return source.is(DamageTypes.THORNS) || source.is(ResourceKey.create(Registries.DAMAGE_TYPE,
+                ResourceLocation.fromNamespaceAndPath("tconstruct", "spiky")));
+    }
     public static boolean hurt(LivingEntity target, LivingEntity attacker, String id, float amount) {
         if (target.level().isClientSide || amount <= 0 || !target.isAlive()) { return false; }
         var key = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("tconstruct", id));

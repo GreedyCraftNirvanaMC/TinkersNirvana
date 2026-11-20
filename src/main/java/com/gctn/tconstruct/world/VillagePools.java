@@ -13,9 +13,15 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 @EventBusSubscriber(modid = TinkersNirvana.MODID)
 public final class VillagePools {
+    private static final Set<ResourceLocation> SMELTERIES = Set.of(
+            WorldModule.id("village/plains/smeltery"), WorldModule.id("village/desert/smeltery"),
+            WorldModule.id("village/savanna/smeltery"), WorldModule.id("village/snowy/smeltery"),
+            WorldModule.id("village/taiga/smeltery"));
+
     private VillagePools() {}
     @SubscribeEvent private static void add(ServerAboutToStartEvent event) {
         if (!Config.GEN_VILLAGE_STRUCTURES.get()) { return; }
@@ -43,5 +49,10 @@ public final class VillagePools {
 
     private static ResourceLocation location(StructurePoolElement element) {
         return element instanceof SinglePoolElement single ? single.template.left().orElse(null) : null;
+    }
+
+    public static boolean isSmeltery(StructurePoolElement element) {
+        ResourceLocation template = location(element);
+        return template != null && SMELTERIES.contains(template);
     }
 }

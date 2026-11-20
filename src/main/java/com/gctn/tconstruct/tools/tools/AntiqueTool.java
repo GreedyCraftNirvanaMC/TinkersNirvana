@@ -11,6 +11,7 @@ import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.library.stats.HeadMaterialStats;
 import com.gctn.tconstruct.tools.*;
 import com.gctn.tconstruct.tools.ToolDefinition.Action;
+import com.gctn.tconstruct.tools.traits.AntiqueTraits;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -169,6 +170,7 @@ public class AntiqueTool extends TinkerTools {
     @Override
     public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (!attacker.level().isClientSide && !isBroken(stack)) {
+            if (!(attacker instanceof Player)) { AntiqueTraits.shockingHit(stack, attacker, target); }
             ToolTraits.forEach(stack, (trait, traitLevel) -> trait.afterHit(stack, traitLevel, target, attacker));
             ToolCombat.afterHit(this, stack, target, attacker);
             damageTool(stack, definition.effectiveBlocks().isEmpty() ? 1 : 2, attacker, EquipmentSlot.MAINHAND);

@@ -140,7 +140,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
                 && this.disassemblyState == DISASSEMBLY_NONE
                 && this.getItem(RESULT_SLOT).isEmpty()
                 && this.areInputSlotsEmpty()
-                && ToolStationDisassemblyRecipes.canDisassemble(stack);
+                && ToolStationDisassemblyRecipes.canDisassemble(stack, isForge());
     }
 
     public boolean canTakeResult() {
@@ -302,7 +302,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     }
 
     private void startDisassembly(ItemStack sourceTool) {
-        PartList parts = ToolStationDisassemblyRecipes.createParts(sourceTool);
+        PartList parts = ToolStationDisassemblyRecipes.createParts(sourceTool, isForge());
         if (parts.isEmpty() || !this.areInputSlotsEmpty()) {
             return;
         }

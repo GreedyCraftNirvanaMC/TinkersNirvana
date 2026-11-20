@@ -264,7 +264,7 @@ public class ToolStationMenu extends AbstractContainerMenu {
                 && this.data.get(DATA_DISASSEMBLY_STATE) == 0
                 && this.toolStation.getItem(RESULT_SLOT_INDEX).isEmpty()
                 && this.areInputSlotsEmpty()
-                && ToolStationDisassemblyRecipes.canDisassemble(stack);
+                && ToolStationDisassemblyRecipes.canDisassemble(stack, this.data.get(2) != 0);
     }
 
     public boolean canTakeResultSlot() {

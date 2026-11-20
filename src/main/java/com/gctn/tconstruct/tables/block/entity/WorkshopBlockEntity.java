@@ -50,10 +50,10 @@ public class WorkshopBlockEntity extends net.minecraft.world.level.block.entity.
         var id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         return id.getNamespace().equals("tconstruct") && (id.getPath().startsWith("cast_") || id.getPath().startsWith("clay_cast_"));
     }
-    public static String patternKey(ItemStack stack) {
-        if (stack.getItem() instanceof PatternItem) { return "pattern:" + (PatternItem.isBlank(stack) ? "blank" : PatternItem.selected(stack).id()); }
-        String id = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
-        return id.replace("tconstruct:clay_cast_", "tconstruct:cast_");
+    private static String partCastFamily(ItemStack stack) {
+        String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
+        String prefix = path.startsWith("clay_cast_") ? "clay_cast_" : "cast_";
+        return AntiqueParts.get(path.substring(prefix.length())) == null ? "" : prefix;
     }
     @Override public int getMaxStackSize() { return kind() == Kind.PATTERN_CHEST ? 1 : 64; }
     @Override public boolean canPlaceItem(int slot, ItemStack stack) {
@@ -70,10 +70,22 @@ public class WorkshopBlockEntity extends net.minecraft.world.level.block.entity.
         } else if (kind == Kind.PATTERN_CHEST) {
             boolean cast = isCast(stack);
             if (!cast && !(stack.getItem() instanceof PatternItem)) { return false; }
+            String family = cast ? partCastFamily(stack) : "";
             for (int i = 0; i < container.getContainerSize(); i++) {
                 var existing = container.getItem(i);
-                if (existing.isEmpty()) { continue; }
-                if (isCast(existing) != cast || (i != slot && patternKey(existing).equals(patternKey(stack)))) { return false; }
+                if (i == slot || existing.isEmpty()) { continue; }
+                if (isCast(existing) != cast) { return false; }
+                if (!family.isEmpty()) {
+                    String otherFamily = partCastFamily(existing);
+                    // 怀古的部件铸模只能使用同一种铸模材料，锭等无部件的铸模不受此限制。
+                    if (!otherFamily.isEmpty() && !family.equals(otherFamily)) { return false; }
+                    if (stack.is(existing.getItem())) { return false; }
+                } else if (cast) {
+                    if (ItemStack.isSameItemSameComponents(existing, stack)) { return false; }
+                } else if (PatternItem.isBlank(stack) == PatternItem.isBlank(existing)
+                        && PatternItem.selected(existing) == PatternItem.selected(stack)) {
+                    return false;
+                }
             }
         }
         return true;

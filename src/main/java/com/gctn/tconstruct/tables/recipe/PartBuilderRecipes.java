@@ -6,6 +6,9 @@
 package com.gctn.tconstruct.tables.recipe;
 
 import com.gctn.tconstruct.library.materials.MaterialInputs;
+import com.gctn.tconstruct.library.TinkerMaterials;
+import com.gctn.tconstruct.library.materials.Material;
+import com.gctn.tconstruct.library.toolparts.AntiqueParts;
 import com.gctn.tconstruct.tools.PatternItem;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +29,8 @@ public final class PartBuilderRecipes {
         if (!(container.getItem(0).getItem() instanceof PatternItem) || PatternItem.isBlank(container.getItem(0))) { return null; }
         var part = PatternItem.selected(container.getItem(0));
         if (part.id().equals("bolt_core")) { return null; }
-        com.gctn.tconstruct.library.materials.Material material = null;
+        if (returnShards) { return planSingle(container, part); }
+        Material material = null;
         float value = 0;
         int[] counts = new int[6];
         for (int slot = 1; slot < 6; slot++) {
@@ -45,25 +49,51 @@ public final class PartBuilderRecipes {
         if (material == null) { return null; }
         ItemStack result = part.create(material);
         if (result.isEmpty()) { return null; }
-        if (returnShards) {
-            if (value + .0001F < part.cost()) { return null; }
-            float surplus = value - part.cost();
-            int shards = Math.round(surplus * 2);
-            if (shards > 64 || Math.abs(surplus - shards * .5F) > .001F) { return null; }
-            ItemStack remainder = ItemStack.EMPTY;
-            if (shards > 0) {
-                remainder = com.gctn.tconstruct.library.toolparts.AntiqueParts.get("shard").create(material);
-                if (remainder.isEmpty()) { return null; }
-                remainder.setCount(shards);
-                ItemStack existing = container.getItem(6);
-                if (!existing.isEmpty() && (!ItemStack.isSameItemSameComponents(existing, remainder) || existing.getCount() + shards > existing.getMaxStackSize())) { return null; }
-            }
-            return new Plan(result, counts, remainder);
-        }
         int outputCount = Math.round(value / part.cost());
         if (outputCount < 1 || outputCount > 64 || Math.abs(value - part.cost() * outputCount) > 0.001F) { return null; }
         result.setCount(outputCount);
         return new Plan(result, counts);
+    }
+
+    private static Plan planSingle(Container container, AntiqueParts.Definition part) {
+        record Input(int slot, int count, MaterialInputs.Match match) {}
+        var inputs = new java.util.ArrayList<Input>();
+        for (int slot = 1; slot < 6; slot++) {
+            ItemStack stack = container.getItem(slot);
+            var match = MaterialInputs.match(stack);
+            if (match != null && match.material().isCraftable()) {
+                inputs.add(new Input(slot, stack.getCount(), match));
+            }
+        }
+        // Mantle 优先消耗价值高的匹配项，并让不能用于当前部件的材料留在原槽。
+        inputs.sort(java.util.Comparator.comparingDouble((Input input) -> input.match().value()).reversed());
+        for (Material material : TinkerMaterials.materials) {
+            float value = 0;
+            int[] counts = new int[6];
+            for (Input input : inputs) {
+                if (input.match().material() != material) { continue; }
+                while (counts[input.slot()] < input.count() && value + .0001F < part.cost()) {
+                    value += input.match().value();
+                    counts[input.slot()]++;
+                }
+            }
+            if (value + .0001F < part.cost()) { continue; }
+            ItemStack result = part.create(material);
+            if (result.isEmpty()) { return null; }
+            float surplus = value - part.cost();
+            int shards = Math.round(surplus * 2);
+            if (Math.abs(surplus - shards * .5F) > .001F) { return null; }
+            if (shards == 0) { return new Plan(result, counts); }
+            ItemStack remainder = AntiqueParts.get("shard").create(material);
+            ItemStack existing = container.getItem(6);
+            if (remainder.isEmpty() || shards > remainder.getMaxStackSize() || !existing.isEmpty()
+                    && (!ItemStack.isSameItemSameComponents(existing, remainder) || existing.getCount() + shards > existing.getMaxStackSize())) {
+                return null;
+            }
+            remainder.setCount(shards);
+            return new Plan(result, counts, remainder);
+        }
+        return null;
     }
 
     public static ItemStack createResult(Container container) {

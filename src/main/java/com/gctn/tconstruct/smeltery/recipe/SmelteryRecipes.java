@@ -242,8 +242,9 @@ public final class SmelteryRecipes {
                 new ItemStack(com.gctn.tconstruct.tools.ToolSupplies.item("blazing_bone")), 12, true, false));
         alloy("obsidian", 36, new FluidStack(Fluids.WATER, 125), new FluidStack(Fluids.LAVA, 125));
         alloy("clay", 144, fluid("stone", 72), fluid("dirt", 144), new FluidStack(Fluids.WATER, 250));
-        alloy("pigiron", 144, fluid("iron", 144), fluid("blood", 40), fluid("clay", 72));
+        // 骑士史莱姆与生铁共用铁液，按怀古顺序先尝试骑士史莱姆。
         alloy("knightslime", 72, fluid("iron", 72), fluid("purpleslime", 125), fluid("stone", 144));
+        alloy("pigiron", 144, fluid("iron", 144), fluid("blood", 40), fluid("clay", 72));
         alloy("manyullyn", 2, fluid("cobalt", 2), fluid("ardite", 2));
         alloy("bronze", 4, fluid("copper", 3), fluid("tin", 1));
         alloy("electrum", 2, fluid("gold", 1), fluid("silver", 1));

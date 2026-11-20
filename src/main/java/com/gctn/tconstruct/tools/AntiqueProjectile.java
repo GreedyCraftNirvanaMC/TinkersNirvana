@@ -63,6 +63,9 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
 
     @Override
     protected void onHitEntity(EntityHitResult hit) {
+        if (!level().isClientSide && getOwner() instanceof LivingEntity attacker && hit.getEntity() instanceof LivingEntity target) {
+            AntiqueTraits.shockingHit(traitTool(), attacker, target);
+        }
         double speed = getDeltaMovement().length();
         if (launchSpeed <= 0 || speed <= 0 || level().isClientSide) {
             super.onHitEntity(hit);

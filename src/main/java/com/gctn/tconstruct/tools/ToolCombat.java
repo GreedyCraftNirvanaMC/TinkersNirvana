@@ -7,6 +7,7 @@ package com.gctn.tconstruct.tools;
 
 import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
+import com.gctn.tconstruct.tools.traits.AntiqueTraits;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.EntityTypeTags;
@@ -36,7 +37,10 @@ public final class ToolCombat {
         ItemStack tool = projectileTool.isEmpty() ? attacker.getMainHandItem() : projectileTool;
         if (!(tool.getItem() instanceof AntiqueTool item) || TinkerTools.isBroken(tool)) { return; }
         if (event.getSource().getDirectEntity() != attacker && projectileTool.isEmpty()) { return; }
-        float original = event.getAmount();
+        float strength = projectileTool.isEmpty() && attacker instanceof Player player ? player.getAttackStrengthScale(.5F) : 1F;
+        float cooldown = .2F + strength * strength * .8F;
+        // 原版进入伤害事件时已经乘了冷却系数；怀古先计算词条和递减伤害，再乘回冷却。
+        float original = event.getAmount() / cooldown;
         float damage = original;
         for (ToolTraits.Entry entry : ToolTraits.getTraits(tool)) {
             damage = entry.trait().modifyAttack(tool, entry.level(), attacker, event.getEntity(), original, damage);
@@ -48,10 +52,28 @@ public final class ToolCombat {
             event.addReductionModifier(DamageContainer.Reduction.ARMOR, (container, reduction) -> reduction / 2);
             event.setInvulnerabilityTicks(4);
         }
-        event.setAmount(Math.max(0, ToolModifiers.modifyAttack(tool, attacker, event.getEntity(), damage)));
+        damage = ToolModifiers.modifyAttack(tool, attacker, event.getEntity(), damage);
+        event.setAmount(Math.max(0, applyDamageCutoff(damage, item.definition().action()) * cooldown));
         if (com.gctn.tconstruct.tools.traits.AntiqueTraits.has(tool, "squeaky", "modifyAttack")) {
             attacker.level().playSound(null, event.getEntity().blockPosition(), ToolSounds.SQUEAK.get(), net.minecraft.sounds.SoundSource.PLAYERS, 1, 1);
         }
+    }
+
+    public static float applyDamageCutoff(float damage, ToolDefinition.Action action) {
+        float cutoff = switch (action) {
+            case RAPIER -> 13F;
+            case LONGSWORD -> 18F;
+            case CLEAVER -> 25F;
+            default -> 15F;
+        };
+        float total = 0F;
+        float multiplier = 1F;
+        while (damage > cutoff && multiplier > .001F) {
+            total += cutoff * multiplier;
+            damage -= cutoff;
+            multiplier *= .9F;
+        }
+        return total + damage * multiplier;
     }
 
     public static void afterHit(AntiqueTool item, ItemStack stack, LivingEntity target, LivingEntity attacker) {
@@ -64,6 +86,14 @@ public final class ToolCombat {
             sweep(item, stack, target, player);
         }
         ToolModifiers.afterHit(stack, target, attacker);
+    }
+
+    public static void beforeHit(Player player, Entity target) {
+        ItemStack stack = player.getMainHandItem();
+        if (!player.level().isClientSide && target instanceof LivingEntity living
+                && stack.getItem() instanceof AntiqueTool && !TinkerTools.isBroken(stack)) {
+            AntiqueTraits.shockingHit(stack, player, living);
+        }
     }
 
     public static void attack(Player player, Entity target, Runnable original) {
@@ -105,6 +135,7 @@ public final class ToolCombat {
                         || (other instanceof Player victim && !attacker.canHarmPlayer(victim))) {
                     continue;
                 }
+                beforeHit(attacker, other);
                 if (other.hurt(attacker.damageSources().playerAttack(attacker), damage)) {
                     item.postHurtEnemy(stack, other, attacker);
                 }

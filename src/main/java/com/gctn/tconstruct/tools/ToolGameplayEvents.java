@@ -231,7 +231,7 @@ public final class ToolGameplayEvents {
         if (!event.getDamageSource().is(net.minecraft.tags.DamageTypeTags.IS_PROJECTILE)) {
             event.setBlockedDamage(amount * .65F);
             if (event.getDamageSource().getEntity() instanceof LivingEntity attacker && attacker != event.getEntity()
-                    && !event.getDamageSource().is(net.minecraft.world.damagesource.DamageTypes.THORNS)) {
+                    && !com.gctn.tconstruct.tools.traits.TraitDamage.isRetaliation(event.getDamageSource())) {
                 attacker.hurt(event.getEntity().damageSources().thorns(event.getEntity()), amount * .35F);
             }
         }

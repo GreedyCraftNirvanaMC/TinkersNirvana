@@ -76,16 +76,8 @@ public final class ToolPartReplacement {
         ToolTraits.addTraits(newTraits, ToolTraits.entriesFrom(embossed));
         CompoundTag actual = TinkerDataComponents.getTraitsTag(source);
         boolean legacyEmbossing = materialData.contains("Embossed") && !materialData.contains("EmbossedTraits");
-        for (String id : oldTraits.getAllKeys()) {
-            // Older saves did not retain embossing provenance; preserve their stored trait snapshot.
-            if (!newTraits.contains(id) && !legacyEmbossing) { actual.remove(id); }
-        }
-        for (String id : newTraits.getAllKeys()) {
-            CompoundTag state = actual.getCompound(id).copy();
-            state.merge(newTraits.getCompound(id));
-            if (!newTraits.getCompound(id).contains("AppliedLevels")) { state.remove("AppliedLevels"); }
-            actual.put(id, state);
-        }
+        // 较早的存档没有记录刻印来源，替换部件时保留这些工具可能来自刻印的词条。
+        ToolTraits.replaceMaterialTraits(actual, oldTraits, newTraits, legacyEmbossing);
         result.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(materialData));
         result.set(TinkerDataComponents.TINKER_TRAITS.get(), CustomData.of(actual));
         if (assigned.stream().anyMatch(index -> java.util.Set.of("Head", "Bow").contains(definition.parts().get(index).stat()))
