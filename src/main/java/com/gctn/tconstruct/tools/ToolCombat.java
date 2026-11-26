@@ -48,8 +48,13 @@ public final class ToolCombat {
         if (item.definition().action() == ToolDefinition.Action.HAMMER && event.getEntity().getType().is(EntityTypeTags.UNDEAD)) {
             damage += 3 + attacker.getRandom().nextInt(4);
         }
-        if (item.definition().action() == ToolDefinition.Action.RAPIER) {
+        boolean rapier = item.definition().action() == ToolDefinition.Action.RAPIER;
+        boolean bolt = item.definition().action() == ToolDefinition.Action.BOLT && !projectileTool.isEmpty()
+                && !event.getSource().is(AntiqueProjectile.ENDERFERENCE_DAMAGE);
+        if (rapier || bolt) {
             event.addReductionModifier(DamageContainer.Reduction.ARMOR, (container, reduction) -> reduction / 2);
+        }
+        if (rapier) {
             event.setInvulnerabilityTicks(4);
         }
         damage = ToolModifiers.modifyAttack(tool, attacker, event.getEntity(), damage);
@@ -156,8 +161,9 @@ public final class ToolCombat {
             player.getCooldowns().addCooldown(stack.getItem(), 3);
         } else if (item.definition().action() == ToolDefinition.Action.RAPIER && player.onGround()) {
             Vec3 look = player.getLookAngle();
-            player.setDeltaMovement(-look.x * .5, .32, -look.z * .5);
+            player.setDeltaMovement(-look.x * .5, player.getDeltaMovement().y + .32, -look.z * .5);
             player.hurtMarked = true;
+            player.causeFoodExhaustion(.1F);
             player.getCooldowns().addCooldown(stack.getItem(), 4);
         } else if (item.definition().action() == ToolDefinition.Action.FRYPAN && player.getMainHandItem() == stack) {
             Vec3 eye = player.getEyePosition();

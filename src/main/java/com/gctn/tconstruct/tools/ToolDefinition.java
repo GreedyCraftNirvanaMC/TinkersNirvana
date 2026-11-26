@@ -16,6 +16,13 @@ import java.util.Objects;
 public record ToolDefinition(String id, List<Part> parts, List<TagKey<Block>> effectiveBlocks,
                              float durabilityMultiplier, float damageMultiplier, float bonusDamage,
                              float attackSpeed, Action action) {
+    public boolean isSword() {
+        return switch (action) {
+            case BROADSWORD, LONGSWORD, RAPIER, CLEAVER -> true;
+            default -> false;
+        };
+    }
+
     public ToolDefinition {
         Objects.requireNonNull(id);
         parts = List.copyOf(parts);

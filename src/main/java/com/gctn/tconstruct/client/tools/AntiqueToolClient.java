@@ -66,7 +66,7 @@ public final class AntiqueToolClient {
                         (stack, level, entity, seed) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1 : 0);
                 ItemProperties.register(item, ResourceLocation.withDefaultNamespace("pull"),
                         (stack, level, entity, seed) -> entity == null || !(item instanceof AntiqueTool tool) ? 0
-                                : (stack.getUseDuration(entity) - entity.getUseItemRemainingTicks()) / (float) ToolRanged.drawTime(tool, stack));
+                                : ToolRanged.drawProgress(tool, stack, stack.getUseDuration(entity) - entity.getUseItemRemainingTicks()));
                 ItemProperties.register(item, ResourceLocation.withDefaultNamespace("charged"),
                         (stack, level, entity, seed) -> ToolRanged.isLoaded(stack) ? 1 : 0);
                 ItemProperties.register(item, ResourceLocation.withDefaultNamespace("blocking"),

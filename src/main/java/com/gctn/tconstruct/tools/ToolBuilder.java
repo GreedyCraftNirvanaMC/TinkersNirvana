@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,11 @@ public final class ToolBuilder {
         }
         if (definition.action() == ToolDefinition.Action.AXE) {
             rules.add(Tool.Rule.overrideSpeed(BlockTags.LEAVES, stats.miningSpeed));
+        }
+        if (definition.isSword()) {
+            // 怀古的剑类按材料速度的一半清理植被，蜘蛛网再乘以 7.5。
+            rules.add(Tool.Rule.minesAndDrops(List.of(Blocks.COBWEB), stats.miningSpeed * 3.75F));
+            rules.add(Tool.Rule.overrideSpeed(HarvestLevels.SWORD_EFFICIENT, stats.miningSpeed * .5F));
         }
         for (var tag : definition.effectiveBlocks()) {
             if (definition.action() == ToolDefinition.Action.MATTOCK) {

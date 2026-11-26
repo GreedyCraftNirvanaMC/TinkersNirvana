@@ -9,6 +9,7 @@ import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.library.stats.HeadMaterialStats;
+import com.gctn.tconstruct.library.utils.HarvestLevels;
 import com.gctn.tconstruct.tools.*;
 import com.gctn.tconstruct.tools.ToolDefinition.Action;
 import com.gctn.tconstruct.tools.traits.AntiqueTraits;
@@ -28,6 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.IShearable;
 import net.neoforged.neoforge.common.ItemAbilities;
@@ -58,7 +60,7 @@ public class AntiqueTool extends TinkerTools {
             case MATTOCK -> ItemAbilities.DEFAULT_AXE_ACTIONS.contains(ability) || ability == (com.gctn.tconstruct.Config.OLD_MATTOCK_AND_KAMA.get() ? ItemAbilities.HOE_TILL : ItemAbilities.SHOVEL_FLATTEN);
             case KAMA -> ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(ability) || ability == ItemAbilities.HOE_TILL && !com.gctn.tconstruct.Config.OLD_MATTOCK_AND_KAMA.get();
             case SCYTHE -> ToolModifiers.level(stack, "silktouch") > 0 && ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(ability);
-            case BROADSWORD -> ItemAbilities.DEFAULT_SWORD_ACTIONS.contains(ability);
+            case BROADSWORD, LONGSWORD, RAPIER, CLEAVER -> ItemAbilities.DEFAULT_SWORD_ACTIONS.contains(ability);
             case BATTLESIGN -> ability == ItemAbilities.SHIELD_BLOCK;
             default -> false;
         };
@@ -138,15 +140,15 @@ public class AntiqueTool extends TinkerTools {
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
         if (isBroken(stack)) {
+            if (definition.isSword() && state.is(Blocks.COBWEB)) { return .3F * 7.5F; }
             return isEffectiveOn(state) || isHatchetOnLeaves(state) ? .3F : 1F;
         }
-        if (definition.action() == Action.BROADSWORD && state.is(net.minecraft.world.level.block.Blocks.COBWEB)) { return 15; }
         return super.getDestroySpeed(stack, state);
     }
 
     private boolean isEffectiveOn(BlockState state) {
         return definition.effectiveBlocks().stream().anyMatch(state::is)
-                || definition.action() == Action.BROADSWORD && state.is(net.minecraft.world.level.block.Blocks.COBWEB);
+                || definition.isSword() && (state.is(Blocks.COBWEB) || state.is(HarvestLevels.SWORD_EFFICIENT));
     }
 
     private boolean isHatchetOnLeaves(BlockState state) {
@@ -154,9 +156,8 @@ public class AntiqueTool extends TinkerTools {
     }
 
     @Override
-    public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return !isBroken(stack) && ((definition.action() == Action.BROADSWORD && state.is(net.minecraft.world.level.block.Blocks.COBWEB))
-                || super.isCorrectToolForDrops(stack, state));
+    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
+        return !(definition.isSword() && player.isCreative()) && super.canAttackBlock(state, level, pos, player);
     }
 
     @Override
@@ -199,10 +200,15 @@ public class AntiqueTool extends TinkerTools {
         if (definition.action() == Action.LONGSWORD && player.isFallFlying()) { return InteractionResultHolder.pass(stack); }
         if (isLauncher() || definition.action() == Action.SHURIKEN) { return ToolRanged.use(this, level, player, hand); }
         if (definition.action() == Action.RAPIER) {
+            ItemStack offhand = player.getOffhandItem();
+            if (hand == InteractionHand.MAIN_HAND && (offhand.canPerformAction(ItemAbilities.SHIELD_BLOCK)
+                    || offhand.getItem() instanceof AntiqueTool held && held.definition().action() == Action.SHURIKEN)) {
+                return InteractionResultHolder.fail(stack);
+            }
             if (!level.isClientSide) { ToolCombat.release(this, stack, player, 0); }
             return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
         }
-        if (definition.action() == Action.LONGSWORD || definition.action() == Action.RAPIER
+        if (definition.action() == Action.LONGSWORD
                 || definition.action() == Action.FRYPAN || definition.action() == Action.BATTLESIGN) {
             player.startUsingItem(hand);
             return InteractionResultHolder.consume(stack);

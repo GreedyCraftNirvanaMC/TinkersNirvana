@@ -1,9 +1,12 @@
 package com.gctn.tconstruct.library.utils;
 
 import com.gctn.tconstruct.library.TinkerMaterials;
+import com.gctn.tconstruct.TinkersNirvana;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.component.Tool;
@@ -21,6 +24,8 @@ public class HarvestLevels {
     public static final int DIAMOND = 2;
     public static final int OBSIDIAN = 3;
     public static final int COBALT = 4;
+    public static final TagKey<Block> SWORD_EFFICIENT = TagKey.create(Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(TinkersNirvana.MODID, "sword_efficient"));
     private static final Map<ToolTier, Tool.Rule> RESTRICTED_RULES = new ConcurrentHashMap<>();
 
     private HarvestLevels() {

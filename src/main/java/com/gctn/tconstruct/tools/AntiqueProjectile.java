@@ -5,15 +5,24 @@
  */
 package com.gctn.tconstruct.tools;
 
+import com.gctn.tconstruct.TinkersNirvana;
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import com.gctn.tconstruct.tools.traits.AntiqueTraits;
+import com.gctn.tconstruct.tools.traits.TinkerEffects;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ProjectileDeflection;
@@ -26,8 +35,12 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.EventHooks;
 
+import java.util.function.Predicate;
+
 /** 原版箭实体负责碰撞、保护事件、同步和掉落；附带工具数据用于材料词条。 */
 public class AntiqueProjectile extends AbstractArrow implements net.minecraft.world.entity.projectile.ItemSupplier {
+    public static final ResourceKey<DamageType> ENDERFERENCE_DAMAGE =
+            ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(TinkersNirvana.MODID, "enderference_projectile"));
     private int groundedLife;
     private int flightTicks;
     private double launchSpeed;
@@ -60,6 +73,25 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     protected ItemStack getDefaultPickupItem() { return new ItemStack(Items.ARROW); }
 
     void recordLaunchSpeed() { launchSpeed = getDeltaMovement().length(); }
+
+    public boolean hurtTarget(EnderMan enderman, DamageSource source, Predicate<DamageSource> hurt) {
+        boolean applied = !enderman.hasEffect(TinkerEffects.ENDERFERENCE) && AntiqueTraits.has(traitTool(), "enderference")
+                && enderman.addEffect(new MobEffectInstance(TinkerEffects.ENDERFERENCE, 100, 1));
+        if (!enderman.hasEffect(TinkerEffects.ENDERFERENCE)) { return hurt.test(source); }
+
+        // 怀古保留弹体和发射者，但对受末影干扰的末影人绕开弹射物标签触发的闪避分支。
+        boolean hit = hurt.test(damageSources().source(ENDERFERENCE_DAMAGE, this, source.getEntity()));
+        if (hit) {
+            // 原版箭遇到任何成功处理的末影人命中都会提前返回。真实命中仍要结算词条并移除弹体。
+            if (projectileAction() != ToolDefinition.Action.SHURIKEN) { enderman.setArrowCount(enderman.getArrowCount() + 1); }
+            doPostHurtEffects(enderman);
+            playSound(net.minecraft.sounds.SoundEvents.ARROW_HIT, 1F, 1F);
+            discard();
+        } else if (applied) {
+            enderman.removeEffect(TinkerEffects.ENDERFERENCE);
+        }
+        return hit;
+    }
 
     @Override
     protected void onHitEntity(EntityHitResult hit) {
