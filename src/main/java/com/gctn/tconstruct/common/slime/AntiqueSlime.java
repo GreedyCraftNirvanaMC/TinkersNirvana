@@ -24,6 +24,7 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -123,12 +124,22 @@ public final class AntiqueSlime extends Slime {
         return false;
     }
 
+    @Override
+    public boolean checkSpawnObstruction(LevelReader level) {
+        // 原版 Mob 会拒绝液体中的实体。怀古允许对应颜色的黏液，但仍需检查与其他实体的碰撞。
+        return isSpawnFluid(level, blockPosition(), getType()) ? level.isUnobstructed(this) : super.checkSpawnObstruction(level);
+    }
+
+    public static boolean isSpawnFluid(LevelReader level, BlockPos pos, EntityType<?> type) {
+        var fluid = SmelteryFluids.get(type == SlimeMobModule.PURPLE.get() ? "purpleslime" : "blueslime");
+        return level.getFluidState(pos).getType().isSame(fluid);
+    }
+
     public static boolean checkSpawnRules(EntityType<AntiqueSlime> type, ServerLevelAccessor level,
                                           MobSpawnType reason, BlockPos pos, RandomSource random) {
         boolean purple = type == SlimeMobModule.PURPLE.get();
-        var fluid = SmelteryFluids.get(purple ? "purpleslime" : "blueslime");
-        // 流动与源头使用同一流体家族；草地标签由后续世界模块填充。
-        return level.getFluidState(pos).getType().isSame(fluid)
+        // 流动与源头使用同一流体家族；草地标签由世界模块填充。
+        return isSpawnFluid(level, pos, type)
                 || level.getBlockState(pos.below()).is(purple ? PURPLE_SPAWNABLE : BLUE_SPAWNABLE);
     }
 }

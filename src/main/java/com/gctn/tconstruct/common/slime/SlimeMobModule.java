@@ -9,6 +9,7 @@ import com.gctn.tconstruct.init.ItemRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacementType;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.item.Item;
@@ -26,6 +27,10 @@ import java.util.function.Supplier;
 public final class SlimeMobModule {
     public static final int BLUE_TINT = 0xff67f0f5;
     public static final int PURPLE_TINT = 0xefd236ff;
+    // 在陆地保留原版检查，在匹配的黏液中只豁免液体限制。
+    private static final SpawnPlacementType PLACEMENT = (level, pos, type) ->
+            type != null && level.getWorldBorder().isWithinBounds(pos)
+                    && (AntiqueSlime.isSpawnFluid(level, pos, type) || SpawnPlacementTypes.ON_GROUND.isSpawnPositionOk(level, pos, type));
     private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, TinkersNirvana.MODID);
     public static final Supplier<EntityType<AntiqueSlime>> BLUE = entity("blueslime");
     public static final Supplier<EntityType<AntiqueSlime>> PURPLE = entity("purpleslime");
@@ -61,7 +66,7 @@ public final class SlimeMobModule {
     }
 
     private static void registerPlacement(RegisterSpawnPlacementsEvent event, EntityType<AntiqueSlime> type) {
-        event.register(type, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        event.register(type, PLACEMENT, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 AntiqueSlime::checkSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 }
