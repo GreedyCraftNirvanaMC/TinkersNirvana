@@ -51,6 +51,8 @@ public final class SmelteryRecipes {
     public static final List<EntityMelting> ENTITY_MELTING = new ArrayList<>();
     public static final java.util.Map<Item, Melting> AUTOMATIC_MELTING = new java.util.HashMap<>();
     private static final Map<Casting, StandardCast> STANDARD_CASTS = new IdentityHashMap<>();
+    private static Casting obsidianBasin;
+    private static Melting stoneMelting;
     private static boolean initialized;
 
     private SmelteryRecipes() {
@@ -138,7 +140,13 @@ public final class SmelteryRecipes {
                 }
             }
         }
-        special("obsidian", Items.OBSIDIAN, 288, "", true, -1);
+        Fluid obsidian = SmelteryFluids.get("obsidian");
+        var obsidianTag = TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                ResourceLocation.fromNamespaceAndPath("c", "obsidians/normal"));
+        MELTING.add(new Melting(stack -> stack.is(Items.OBSIDIAN) || stack.is(obsidianTag),
+                new FluidStack(obsidian, INGOT * 2), temperature(obsidian, INGOT * 2), true));
+        obsidianBasin = casting(true, ItemStack::isEmpty, obsidian, INGOT * 2, new ItemStack(Items.OBSIDIAN), false, false);
+        CASTING.add(obsidianBasin);
         addMelting(Items.CLAY_BALL, SmelteryFluids.get("clay"), 144);
         addMelting(Items.CLAY, SmelteryFluids.get("clay"), 576);
         CASTING.add(casting(false, stack -> com.gctn.tconstruct.Config.ALLOW_BRICK_CASTING.get() && castPredicate("cast_ingot").test(stack),
@@ -188,8 +196,10 @@ public final class SmelteryRecipes {
         }
         addMelting(SmelteryModule.item("seared_brick"), SmelteryFluids.get("stone"), 72);
         addMelting(SmelteryModule.LADDER.get().asItem(), SmelteryFluids.get("stone"), 288);
-        MELTING.add(new Melting(stack -> stack.is(Items.COBBLESTONE) || stack.is(Items.STONE),
-                new FluidStack(SmelteryFluids.get("stone"), 72), temperature(SmelteryFluids.get("stone"), 288)));
+        Fluid searedStone = SmelteryFluids.get("stone");
+        stoneMelting = new Melting(stack -> stack.is(Items.COBBLESTONE) || stack.is(Items.STONE),
+                new FluidStack(searedStone, 72), temperature(searedStone, INGOT * 2));
+        MELTING.add(stoneMelting);
         MELTING.add(new Melting(stack -> stack.is(SmelteryModule.item("grout")),
                 new FluidStack(SmelteryFluids.get("stone"), 72), temperature(SmelteryFluids.get("stone"), 24)));
         CASTING.add(casting(false, castPredicate("cast_ingot"), SmelteryFluids.get("stone"), 72,
@@ -295,8 +305,12 @@ public final class SmelteryRecipes {
                 if (recipe.ore()) {
                     // 先计算单个粗矿的取整产量，确保打包熔炼和逐个熔炼的产量完全一致。
                     double base = recipe.output.getAmount() / (2.0 * recipe.oreUnits());
-                    int amount = (int) (base * com.gctn.tconstruct.Config.ORE_TO_INGOT_RATIO.get()) * recipe.oreUnits();
+                    int amount = oreYield(base) * recipe.oreUnits();
                     return melting(recipe.input, recipe.output.getFluid(), amount);
+                }
+                if (recipe == stoneMelting) {
+                    // 怀古只让石头的熔炼门槛随矿石倍率变化，产量始终是一块焦黑砖的量。
+                    return new Melting(recipe.input, recipe.output, temperature(recipe.output.getFluid(), oreYield(INGOT)));
                 }
                 return recipe;
             }
@@ -308,7 +322,7 @@ public final class SmelteryRecipes {
                 Fluid stone = SmelteryFluids.get("stone");
                 int cost = Math.round(part.cost() * INGOT);
                 // 怀古按每份材料回收半锭焦黑石，热量则按原部件用料和矿石倍率计算。
-                int heatAmount = (int) (cost * Config.ORE_TO_INGOT_RATIO.get());
+                int heatAmount = oreYield(cost);
                 return new Melting(input -> input.is(part.item().get())
                         && TinkerMaterials.getMaterial(TinkerDataComponents.getMaterialTag(input).getString(Tags.PART_MATERIAL)) == TinkerMaterials.stone,
                         new FluidStack(stone, cost / 2), temperature(stone, heatAmount));
@@ -320,6 +334,10 @@ public final class SmelteryRecipes {
 
     private static boolean isDirt(ItemStack stack) {
         return stack.is(Items.DIRT) || stack.is(Items.COARSE_DIRT) || stack.is(Items.PODZOL);
+    }
+
+    private static int oreYield(double base) {
+        return (int) (base * Config.ORE_TO_INGOT_RATIO.get());
     }
 
     public static Fuel fuel(FluidStack stack) {
@@ -346,11 +364,17 @@ public final class SmelteryRecipes {
     public static Casting findCasting(boolean basin, ItemStack cast, Fluid fluid) {
         initialize();
         if (!basin && cast.is(Items.BUCKET) && fluid.getBucket() != Items.AIR) {
-            return casting(false, stack -> stack.is(Items.BUCKET), fluid, 1000, new ItemStack(fluid.getBucket()), true, false);
+            return new Casting(false, stack -> stack.is(Items.BUCKET), fluid, 1000, new ItemStack(fluid.getBucket()), 5, true, false);
         }
         for (int i = CASTING.size() - 1; i >= 0; i--) {
             Casting recipe = CASTING.get(i);
             if (recipe.basin == basin && recipe.fluid == fluid && recipe.cast.test(cast)) {
+                if (recipe == obsidianBasin) {
+                    // 回铸与熔出共用同一倍率，避免改配置后重复熔铸增产。
+                    int amount = oreYield(INGOT);
+                    return amount == recipe.amount ? recipe
+                            : casting(basin, recipe.cast, fluid, amount, recipe.output, recipe.consumeCast, recipe.switchOutputs);
+                }
                 StandardCast standard = STANDARD_CASTS.get(recipe);
                 if (standard == null) { return recipe; }
                 // 标准铸模的标签产物会随数据包重载改变。显式浇铸配方仍保留注册时的优先级。
