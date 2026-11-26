@@ -22,7 +22,7 @@ Edit `config/tconsnirvana-common.toml`. World generation settings affect future 
 | `world.generateIslandsInSuperflat` | `false` | Slime islands in superflat worlds |
 | `world.generateSlimePools` | `false` | Underground slime and magma pools |
 | `world.slimePoolRate` / `world.magmaPoolRate` | `30` | Underground pool attempt frequency |
-| `world.slimePoolHeightMax` | `64` | Maximum pool attempt height |
+| `world.slimePoolHeightMax` | `64` | Maximum pool attempt height. The downward search stops at Y=5 or the dimension floor plus five blocks, whichever is higher. |
 | `world.generateVillageStructures` | `true` | Both village structure families |
 | `world.villageWorkshopWeight` / `world.villageSmelteryWeight` | `30` / `9` | Village structure weights |
 

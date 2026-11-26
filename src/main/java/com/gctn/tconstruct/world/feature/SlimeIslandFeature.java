@@ -28,7 +28,9 @@ public class SlimeIslandFeature extends Feature<NoneFeatureConfiguration> {
     @Override public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
         var level = context.level(); var random = context.random();
         int x = (context.origin().getX() & ~15) + 4 + random.nextInt(8), z = (context.origin().getZ() & ~15) + 4 + random.nextInt(8);
-        int surface = magma ? context.chunkGenerator().getSeaLevel() : level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z) + 61 + random.nextInt(50);
+        // 怀古按地表高度抬升岛屿，树冠也计入高度。新版高度图排除不阻挡移动的小植物。
+        int surface = magma ? context.chunkGenerator().getSeaLevel()
+                : level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z) + 61 + random.nextInt(50);
         if (magma) {
             BlockPos sea = new BlockPos(x, surface - 1, z);
             if (!level.getFluidState(sea).is(net.minecraft.tags.FluidTags.LAVA)) { return false; }

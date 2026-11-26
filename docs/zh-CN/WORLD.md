@@ -22,7 +22,7 @@
 | `world.generateIslandsInSuperflat` | `false` | 超平坦世界中的黏液岛 |
 | `world.generateSlimePools` | `false` | 地下黏液池与岩浆池 |
 | `world.slimePoolRate` / `world.magmaPoolRate` | `30` | 地下池尝试频率 |
-| `world.slimePoolHeightMax` | `64` | 黏液池最高尝试高度 |
+| `world.slimePoolHeightMax` | `64` | 黏液池最高尝试高度。向下搜索遇到 Y=5 或维度底界上方五格时停止，取较高者。 |
 | `world.generateVillageStructures` | `true` | 两类村庄建筑 |
 | `world.villageWorkshopWeight` / `world.villageSmelteryWeight` | `30` / `9` | 村庄建筑权重 |
 
