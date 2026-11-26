@@ -9,6 +9,9 @@ import com.gctn.tconstruct.tables.data.ToolStationSlotPositions.SlotPosition;
 import com.gctn.tconstruct.tables.recipe.ToolAssemblyRecipe;
 import com.gctn.tconstruct.tables.recipe.ToolStationAssemblyRecipes;
 import com.gctn.tconstruct.tables.recipe.ToolStationDisassemblyRecipes;
+import com.gctn.tconstruct.tools.ToolSounds;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -303,6 +306,10 @@ public class ToolStationMenu extends AbstractContainerMenu {
             if (actionMode != Mode.DISASSEMBLE && !crafted.isEmpty()) {
                 crafted.onCraftedBy(player.level(), player, crafted.getCount());
                 net.neoforged.neoforge.event.EventHooks.firePlayerCraftingEvent(player, crafted, inputs);
+                boolean forge = blockEntity.isForge();
+                float roll = player.getRandom().nextFloat();
+                player.level().playSound(null, player.blockPosition(), forge ? SoundEvents.ANVIL_USE : ToolSounds.SAW.get(),
+                        SoundSource.PLAYERS, forge ? .9F : .8F, forge ? .95F + .2F * roll : .8F + .4F * roll);
             }
         }
     }

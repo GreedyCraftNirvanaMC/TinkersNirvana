@@ -5,6 +5,7 @@ import com.gctn.tconstruct.library.materials.MaterialInputs;
 import com.gctn.tconstruct.library.toolparts.AntiqueParts;
 import com.gctn.tconstruct.tools.ToolBuilder;
 import com.gctn.tconstruct.tools.ToolModifiers;
+import com.gctn.tconstruct.tools.ToolPartReplacement;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import com.gctn.tconstruct.tools.TinkerTools;
 import com.gctn.tconstruct.tools.TinkerTools.RepairInfo;
@@ -24,78 +25,50 @@ public final class ToolStationDefaultRecipes {
     private ToolStationDefaultRecipes() {
     }
 
-    // 预览结果
     public static ItemStack createResult(Container container) {
-        ItemStack tool = container.getItem(TOOL_SLOT);
-        var special = StationProcessingRecipes.plan(container);
-        if (special != null) { return special.result(); }
-        if (tool.getItem() instanceof com.gctn.tconstruct.tools.PatternItem) {
-            return PartBuilderRecipes.createResult(container);
-        }
-        if (!isTinkerTool(tool)) {
-            return ItemStack.EMPTY;
-        }
-
-        var replacement = com.gctn.tconstruct.tools.ToolPartReplacement.plan(container);
-        if (replacement != null) { return replacement.result(); }
-
-        ItemStack enhancedTool = createEnhancementResult(container);
-        if (!enhancedTool.isEmpty()) {
-            return enhancedTool;
-        }
-
-        return createRepairResult(container);
+        return apply(container, false);
     }
 
-    // 确认后消耗原料
     public static void consumeInputs(Container container) {
+        apply(container, true);
+    }
+
+    private static ItemStack apply(Container container, boolean consume) {
         var special = StationProcessingRecipes.plan(container);
-        if (special != null) { special.consume(container); return; }
+        if (special != null) {
+            if (consume) { special.consume(container); }
+            return special.result();
+        }
         ItemStack tool = container.getItem(TOOL_SLOT);
         if (tool.getItem() instanceof com.gctn.tconstruct.tools.PatternItem) {
-            PartBuilderRecipes.consumeInputs(container);
-            return;
+            ItemStack result = PartBuilderRecipes.createResult(container);
+            if (consume && !result.isEmpty()) { PartBuilderRecipes.consumeInputs(container); }
+            return result;
         }
-        if (!isTinkerTool(tool)) {
-            return;
-        }
+        if (!isTinkerTool(tool)) { return ItemStack.EMPTY; }
 
-        var replacement = com.gctn.tconstruct.tools.ToolPartReplacement.plan(container);
-        if (replacement != null) { replacement.consume(container); return; }
-
-        ItemStack enhancedTool = createEnhancementResult(container);
-        if (!enhancedTool.isEmpty()) {
-            consumeEnhancementInputs(container);
-            return;
-        }
-
-        RepairPlan repairPlan = createRepairPlan(container);
-        if (repairPlan == null || repairPlan.isEmpty()) {
-            return;
-        }
-
-        container.setItem(TOOL_SLOT, ItemStack.EMPTY);
-        for (int i = 0; i < MATERIAL_SLOT_COUNT; i++) {
-            if (repairPlan.repairCount[i] > 0) {
-                container.removeItem(FIRST_MATERIAL_SLOT + i, repairPlan.repairCount[i]);
+        // 怀古先修复，再换件和强化。磨制套件与燧石同时适用时，预览和扣料必须选中同一种操作。
+        RepairPlan repair = createRepairPlan(container, LAST_MATERIAL_SLOT);
+        if (repair != null && !repair.isEmpty()) {
+            if (consume) {
+                container.setItem(TOOL_SLOT, ItemStack.EMPTY);
+                for (int i = 0; i < MATERIAL_SLOT_COUNT; i++) {
+                    if (repair.repairCount[i] > 0) {
+                        container.removeItem(FIRST_MATERIAL_SLOT + i, repair.repairCount[i]);
+                    }
+                }
             }
+            return repair.resultTool;
         }
-    }
-
-    // 强化预览与提交共用同一计划。
-    private static ItemStack createEnhancementResult(Container container) {
-        var plan = com.gctn.tconstruct.tools.ToolModifiers.plan(container);
-        return plan == null ? ItemStack.EMPTY : plan.result();
-    }
-
-    private static void consumeEnhancementInputs(Container container) {
-        var plan = com.gctn.tconstruct.tools.ToolModifiers.plan(container);
-        if (plan != null) { plan.consume(container); }
-    }
-
-    // 获取修复结果
-    private static ItemStack createRepairResult(Container container) {
-        return repairResult(container, LAST_MATERIAL_SLOT);
+        var replacement = ToolPartReplacement.plan(container);
+        if (replacement != null) {
+            if (consume) { replacement.consume(container); }
+            return replacement.result();
+        }
+        var enhancement = ToolModifiers.plan(container);
+        if (enhancement == null) { return ItemStack.EMPTY; }
+        if (consume) { enhancement.consume(container); }
+        return enhancement.result();
     }
 
     /** Shared by stations and the native crafting-grid sharpening-kit recipe. Slot zero is the tool. */
@@ -106,16 +79,10 @@ public final class ToolStationDefaultRecipes {
             return ItemStack.EMPTY;
         }
 
-        ItemStack repairedTool = repairPlan.resultTool.copy();
-        repairedTool.setCount(1);
-        return repairedTool;
+        return repairPlan.resultTool;
     }
 
     // 获取修复方案(包括修复量和材料消耗情况)
-    private static RepairPlan createRepairPlan(Container container) {
-        return createRepairPlan(container, LAST_MATERIAL_SLOT);
-    }
-
     private static RepairPlan createRepairPlan(Container container, int lastMaterialSlot) {
 
         ItemStack sourceTool = container.getItem(TOOL_SLOT);
@@ -213,6 +180,7 @@ public final class ToolStationDefaultRecipes {
             ToolTraits.forEach(tool, (trait, level) -> trait.onRepair(tool, level, healed));
             repairCount = Math.min(100, repairCount + 1);
         }
+        tool.setCount(1);
         data = TinkerDataComponents.getMaterialTag(tool);
         data.putInt("RepairCount", repairCount);
         tool.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));

@@ -1,4 +1,9 @@
 {
+  "little_saw": {
+    "sounds": [
+      "tconsnirvana:little_saw"
+    ]
+  },
   "smeltery_loop": {
     "sounds": [
       "tconsnirvana:smeltery_loop"

@@ -269,11 +269,10 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     }
 
     private boolean canRenameAlone() {
-        if (mode != Mode.DEFAULT || pendingName.isEmpty() || !canRenameItem(getItem(0))) { return false; }
-        Component current = getItem(0).get(net.minecraft.core.component.DataComponents.CUSTOM_NAME);
-        if (current != null && current.getString().equals(pendingName)) { return false; }
-        for (int i = 1; i < INPUT_SLOT_COUNT; i++) { if (!getItem(i).isEmpty()) { return false; } }
-        return true;
+        ItemStack tool = getItem(0);
+        return mode == Mode.DEFAULT && !pendingName.isEmpty()
+                && tool.getItem() instanceof com.gctn.tconstruct.tools.TinkerTools
+                && canRenameItem(tool) && !tool.getHoverName().getString().equals(pendingName);
     }
 
     private static boolean canRenameItem(ItemStack stack) {
@@ -288,8 +287,12 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         }
 
         if (this.mode == Mode.DEFAULT) {
-            if (canRenameAlone()) { setItem(0, ItemStack.EMPTY); }
-            else { ToolStationDefaultRecipes.consumeInputs(this); }
+            // 旧版在未匹配修理、换件或强化时仍允许重命名，并保留其他输入。
+            if (canRenameAlone() && ToolStationDefaultRecipes.createResult(this).isEmpty()) {
+                setItem(0, ItemStack.EMPTY);
+            } else {
+                ToolStationDefaultRecipes.consumeInputs(this);
+            }
         } else {
             ToolAssemblyRecipe recipe = ToolStationAssemblyRecipes.get(this.mode);
             if (recipe == null) {
@@ -297,6 +300,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
                 return;
             }
             recipe.consumeInputs(this);
+            pendingName = "";
         }
         this.updateResult();
     }
