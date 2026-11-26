@@ -101,13 +101,12 @@ public class AntiqueTool extends TinkerTools {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
-        if (isBroken(stack) || !(entity instanceof IShearable)
+        if (stack.isEmpty() || isBroken(stack) || !(entity instanceof IShearable)
                 || (definition.action() != Action.KAMA && definition.action() != Action.SCYTHE)) {
             return InteractionResult.PASS;
         }
         if (definition.action() == Action.KAMA) {
-            return shearEntity(stack, player, entity, hand)
-                    ? InteractionResult.sidedSuccess(entity.level().isClientSide) : InteractionResult.PASS;
+            return finishShearing(player, shearEntity(stack, player, entity, hand, false));
         }
         boolean expandedWidth = ToolModifiers.level(stack, "harvestwidth") > 0;
         boolean expandedHeight = ToolModifiers.level(stack, "harvestheight") > 0;
@@ -115,21 +114,32 @@ public class AntiqueTool extends TinkerTools {
         int height = expandedHeight ? 2 : 1;
         boolean shorn = false;
         for (Entity candidate : entity.level().getEntities(player, entity.getBoundingBox().inflate(width, height, width))) {
-            if (isBroken(stack)) {
+            if (stack.isEmpty() || isBroken(stack)) {
                 break;
             }
             if ((!expandedWidth && !expandedHeight) || candidate.distanceToSqr(entity) <= 9) {
-                shorn |= shearEntity(stack, player, candidate, hand);
+                shorn |= shearEntity(stack, player, candidate, hand, candidate != entity);
             }
         }
-        return shorn ? InteractionResult.sidedSuccess(entity.level().isClientSide) : InteractionResult.PASS;
+        return finishShearing(player, shorn);
     }
 
-    private boolean shearEntity(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
+    private static InteractionResult finishShearing(Player player, boolean shorn) {
+        if (!shorn) { return InteractionResult.PASS; }
+        if (!player.level().isClientSide) { player.sweepAttack(); }
+        return InteractionResult.sidedSuccess(player.level().isClientSide);
+    }
+
+    private boolean shearEntity(ItemStack stack, Player player, Entity entity, InteractionHand hand, boolean additional) {
         if (!(entity instanceof IShearable target) || !target.isShearable(player, stack, entity.level(), entity.blockPosition())) {
             return false;
         }
         if (!entity.level().isClientSide) {
+            // 中心实体已经派发交互事件，范围内的其他目标也应经过各自的保护检查。
+            if (additional && (!player.mayInteract(entity.level(), entity.blockPosition())
+                    || net.neoforged.neoforge.common.CommonHooks.onInteractEntity(player, entity, hand) != null)) {
+                return false;
+            }
             for (ItemStack drop : target.onSheared(player, stack, entity.level(), entity.blockPosition())) {
                 target.spawnShearedDrop(entity.level(), entity.blockPosition(), drop);
             }
