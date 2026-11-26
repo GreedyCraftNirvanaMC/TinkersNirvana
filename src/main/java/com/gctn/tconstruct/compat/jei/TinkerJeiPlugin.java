@@ -8,7 +8,8 @@ import com.gctn.tconstruct.library.utils.Tags;
 import com.gctn.tconstruct.smeltery.SmelteryModule;
 import com.gctn.tconstruct.smeltery.client.SmelteryScreen;
 import com.gctn.tconstruct.smeltery.client.TinkerTankScreen;
-import com.gctn.tconstruct.smeltery.network.EntityMeltingSync;
+import com.gctn.tconstruct.common.network.EntityRecipeSync;
+import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.tables.WorkshopModule;
 import com.gctn.tconstruct.tables.block.TableBlocks;
 import com.gctn.tconstruct.tables.client.PersistentCraftingScreen;
@@ -64,6 +65,7 @@ public final class TinkerJeiPlugin implements IModPlugin {
             registration.addRecipeCategories(new ProcessingCategory(kind, helpers.getGuiHelper(), itemRenderer));
         }
         registration.addRecipeCategories(new EntityMeltingCategory(helpers.getGuiHelper()));
+        registration.addRecipeCategories(new BeheadingCategory(helpers.getGuiHelper()));
     }
 
     @Override public void registerRecipes(IRecipeRegistration registration) {
@@ -76,8 +78,9 @@ public final class TinkerJeiPlugin implements IModPlugin {
         }
         var connection = minecraft.getConnection();
         if (connection != null) {
-            registration.addRecipes(EntityMeltingCategory.TYPE,
-                    EntityMeltingCategory.displays(EntityMeltingSync.recipes(connection.getConnection())));
+            var entities = EntityRecipeSync.recipes(connection.getConnection());
+            registration.addRecipes(EntityMeltingCategory.TYPE, EntityMeltingCategory.displays(entities.melting()));
+            registration.addRecipes(BeheadingCategory.TYPE, BeheadingCategory.displays(entities.beheading()));
         }
     }
 
@@ -87,6 +90,8 @@ public final class TinkerJeiPlugin implements IModPlugin {
         }
         registration.addRecipeCatalyst(new ItemStack(SmelteryModule.CONTROLLER.get()), ProcessingCategory.type(RecipeCatalog.Kind.FUEL));
         registration.addRecipeCatalyst(new ItemStack(SmelteryModule.CONTROLLER.get()), EntityMeltingCategory.TYPE);
+        TinkerMaterials.materials.stream().map(BeheadingCategory::cleaver).filter(stack -> !stack.isEmpty()).limit(11)
+                .forEach(stack -> registration.addRecipeCatalyst(stack, BeheadingCategory.TYPE));
         registration.addRecipeCatalyst(new ItemStack(SmelteryModule.FURNACE.get()),
                 RecipeTypes.SMELTING, ProcessingCategory.type(RecipeCatalog.Kind.FUEL));
         registration.addRecipeCatalyst(new ItemStack(WorkshopModule.BLOCKS.get(WorkshopModule.Kind.CRAFTING).get()), RecipeTypes.CRAFTING);

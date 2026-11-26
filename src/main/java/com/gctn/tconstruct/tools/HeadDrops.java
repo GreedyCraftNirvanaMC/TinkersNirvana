@@ -29,8 +29,9 @@ import java.util.function.Predicate;
 @EventBusSubscriber(modid = TinkersNirvana.MODID)
 public final class HeadDrops {
     private record Entry(Predicate<LivingEntity> entity, Function<LivingEntity, ItemStack> output) {}
+    private record ConfiguredDrop(Predicate<LivingEntity> entity, ItemStack output) {}
     private static final List<Entry> REGISTERED = new ArrayList<>();
-    private static List<Entry> configured = List.of();
+    private static List<ConfiguredDrop> configured = List.of();
     private static List<? extends String> snapshot;
     private HeadDrops() {}
     public static void register(Predicate<LivingEntity> entity, Function<LivingEntity, ItemStack> output) {
@@ -38,7 +39,7 @@ public final class HeadDrops {
     }
     private static void configure(ServerLevel level) {
         var values = Config.MOB_HEAD_DROPS.get(); if (values.equals(snapshot)) { return; }
-        var parsed = new ArrayList<Entry>();
+        var parsed = new ArrayList<ConfiguredDrop>();
         for (String value : values) {
             try {
                 String[] fields = value.split(";", -1);
@@ -48,7 +49,7 @@ public final class HeadDrops {
                 if (!BuiltInRegistries.ITEM.containsKey(id)) { continue; }
                 ItemStack output = new ItemStack(BuiltInRegistries.ITEM.get(id), count);
                 if (output.isEmpty()) { continue; }
-                parsed.add(new Entry(ConfiguredEntities.matcher(fields[0], fields[1], level), entity -> output.copy()));
+                parsed.add(new ConfiguredDrop(ConfiguredEntities.matcher(fields[0], fields[1], level), output));
             } catch (RuntimeException error) { TinkersNirvana.LOGGER.error("Invalid mobHeadDrops entry {}: {}", value, error.getMessage()); }
         }
         configured = List.copyOf(parsed); snapshot = List.copyOf(values);
@@ -63,10 +64,22 @@ public final class HeadDrops {
         }
         return ResourceLocation.parse(name);
     }
+    /** JEI 与实际掉落共享静态配置。依赖命中实体状态的回调仅在实际结算时调用。 */
+    public static List<ItemStack> configuredDrops(LivingEntity entity) {
+        if (!(entity.level() instanceof ServerLevel level)) { return List.of(); }
+        configure(level);
+        return configured.stream().filter(drop -> drop.entity.test(entity)).map(drop -> drop.output.copy()).toList();
+    }
+
     public static ItemStack random(LivingEntity entity) {
-        if (!(entity.level() instanceof ServerLevel level)) { return ItemStack.EMPTY; }
-        configure(level); List<ItemStack> choices = new ArrayList<>();
-        for (var entries : List.of(configured, REGISTERED)) { for (Entry entry : entries) { if (entry.entity.test(entity)) { ItemStack stack = entry.output.apply(entity); if (stack != null && !stack.isEmpty()) { choices.add(stack.copy()); } } } }
+        if (!(entity.level() instanceof ServerLevel)) { return ItemStack.EMPTY; }
+        List<ItemStack> choices = new ArrayList<>(configuredDrops(entity));
+        for (Entry entry : REGISTERED) {
+            if (entry.entity.test(entity)) {
+                ItemStack stack = entry.output.apply(entity);
+                if (stack != null && !stack.isEmpty()) { choices.add(stack.copy()); }
+            }
+        }
         if (choices.isEmpty()) { return ItemStack.EMPTY; }
         ItemStack head = choices.get(entity.getRandom().nextInt(choices.size())); head.setCount(1 + entity.getRandom().nextInt(head.getCount()));
         if (entity instanceof Player player && head.is(Items.PLAYER_HEAD)) { head.set(DataComponents.PROFILE, new ResolvableProfile(player.getGameProfile())); }
@@ -82,7 +95,7 @@ public final class HeadDrops {
     public static void add(LivingDropsEvent event) {
         if (!chance(event.getEntity(), event.getSource())) { return; }
         ItemStack head = random(event.getEntity());
-        if (head.isEmpty() || !(event.getEntity() instanceof Player) && event.getDrops().stream().anyMatch(drop -> ItemStack.isSameItemSameComponents(drop.getItem(), head))) { return; }
+        if (head.isEmpty() || !(event.getEntity() instanceof Player) && event.getDrops().stream().anyMatch(drop -> ItemStack.matches(drop.getItem(), head))) { return; }
         var entity = event.getEntity(); var drop = new ItemEntity(entity.level(), entity.getX(), entity.getY(), entity.getZ(), head); drop.setDefaultPickUpDelay(); event.getDrops().add(drop);
     }
     @SubscribeEvent(priority = EventPriority.LOWEST) private static void keepInventory(LivingDeathEvent event) {
