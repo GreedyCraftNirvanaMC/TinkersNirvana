@@ -490,7 +490,8 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
             }
             return Math.min(15, 1 + (int) (14L * controller.liquids().amount() / Math.max(1, controller.liquids().capacity())));
         }
-        return tank.isEmpty() ? 0 : 1 + 14 * tank.getFluidAmount() / Math.max(1, tank.getCapacity());
+        // 独立储罐沿用怀古的整数液位刻度，低于第一格时信号为零。
+        return Math.min(15, (int) (15L * tank.getFluidAmount() / Math.max(1, tank.getCapacity())));
     }
 
     public void onBroken() {

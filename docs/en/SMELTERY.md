@@ -20,6 +20,9 @@ each fluid separately. Click a fluid layer to make it the drain's default output
 Hold Shift over a fluid to display bucket quantities. The per-slot bars show
 heating, missing recipes, missing fuel, insufficient heat, or insufficient space.
 
+A Seared Tank, Gauge, or Window has a 4,000 mB capacity. Its comparator first
+outputs a signal at 267 mB and reaches strength 15 when full.
+
 Place a Faucet against a Smeltery Drain, with a Casting Table or Casting Basin
 directly below. Right-click the faucet to pour; right-click again to stop after
 the current transaction. A rising redstone signal also activates the faucet.
