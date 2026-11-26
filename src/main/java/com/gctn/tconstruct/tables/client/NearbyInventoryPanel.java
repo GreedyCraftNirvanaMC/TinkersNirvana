@@ -49,6 +49,7 @@ public final class NearbyInventoryPanel {
         }
     }
     private int bottom(int top) { return top + 20 + (inventory.visibleSlots() + 4) / 5 * 18; }
+    int rightEdge() { return inventory.x() + 94; }
     public void addOccupiedArea(java.util.List<Rect2i> areas, int left, int top) {
         if (inventory != null && inventory.visible()) {
             areas.add(new Rect2i(left + inventory.x() - 4, top, 98, bottom(top) - top));

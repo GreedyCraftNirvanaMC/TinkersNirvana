@@ -14,21 +14,18 @@ public class OreBlocks {
     public static final DeferredBlock<Block> TIN_ORE = commonOre("tin");
     public static final DeferredBlock<Block> ALUMINUM_ORE = commonOre("aluminum");
     // 旧版 setHardness 同时保证抗爆强度至少等于硬度，下界矿石的两项数值均为十。
-    public static final DeferredBlock<Block> ARDITE_ORE =
-            BlockRegister.registerBlockWithItem("ardite_ore", () -> new Block(BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.STONE).strength(10, 10).sound(SoundType.STONE).requiresCorrectToolForDrops()));
-    public static final DeferredBlock<Block> COBALT_ORE =
-            BlockRegister.registerBlockWithItem("cobalt_ore", () -> new Block(
-                    BlockBehaviour.Properties.of()
-                            .strength(25.0F, 15.0F)
-                            .sound(SoundType.STONE)
-                            .requiresCorrectToolForDrops()
-            ));
+    public static final DeferredBlock<Block> ARDITE_ORE = netherOre("ardite");
+    public static final DeferredBlock<Block> COBALT_ORE = netherOre("cobalt");
 
     public static Collection<DeferredBlock<?>> entries() {
         return List.of(
                 COBALT_ORE, ARDITE_ORE, TIN_ORE, ALUMINUM_ORE
         );
+    }
+
+    private static DeferredBlock<Block> netherOre(String metal) {
+        return BlockRegister.registerBlockWithItem(metal + "_ore", () -> new Block(BlockBehaviour.Properties.of()
+                .mapColor(MapColor.STONE).strength(10, 10).sound(SoundType.STONE).requiresCorrectToolForDrops()));
     }
 
     private static DeferredBlock<Block> commonOre(String metal) {

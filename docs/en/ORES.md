@@ -19,8 +19,9 @@ artwork retains Antique's mineral layout over modern netherrack. It keeps
 Antique's hardness 10, blast resistance 10, stone sounds, and default cobalt
 harvest tier 4, represented by NeoForge's `needs_netherite_tool` tag. Native
 netherite pickaxes and assembled cobalt-tier-or-higher pickaxes can harvest it;
-diamond and lower tiers cannot. Successful harvesting drops one ore block,
-including with Fortune or Silk Touch.
+diamond and lower tiers leave no drop. Cobalt Ore (`tconsnirvana:cobalt_ore`)
+uses the same hardness, blast resistance, and tool requirements. Both ores
+drop one ore block when harvested successfully, including with Fortune or Silk Touch.
 
 The ores use matching `c:ores/<metal>` block and item tags, plus `c:ores`,
 `c:ores_in_ground/stone`, and `c:ore_rates/singular`. They integrate with the
