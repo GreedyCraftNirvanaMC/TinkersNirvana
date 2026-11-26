@@ -189,8 +189,20 @@ public class ToolStationMenu extends AbstractContainerMenu {
         return this.getMode() == mode;
     }
 
+    public boolean isForge() {
+        return this.data.get(2) != 0;
+    }
+
+    public ItemStack displayedTool() {
+        ItemStack result = this.toolStation.getItem(RESULT_SLOT_INDEX);
+        if (result.getItem() instanceof com.gctn.tconstruct.tools.TinkerTools) {
+            return result;
+        }
+        return this.isMode(Mode.DEFAULT) ? this.toolStation.getItem(MOVING_SLOT_INDEX) : ItemStack.EMPTY;
+    }
+
     public boolean isModeButtonVisible(Mode mode) {
-        if (mode.requiresForge() && this.data.get(2) == 0) { return false; }
+        if (mode.requiresForge() && !this.isForge()) { return false; }
         return mode == Mode.DEFAULT
                 || mode == Mode.DISASSEMBLE
                 || (ToolStationAssemblyRecipes.get(mode) != null

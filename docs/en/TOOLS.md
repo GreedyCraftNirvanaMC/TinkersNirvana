@@ -13,6 +13,8 @@ For Minecraft 1.21.1 / NeoForge. Tools share the material components, trait syst
 
 The Part Builder takes enough material for one part and returns usable surplus as shards. The Tool Station can produce multiple parts in a batch when the value consumed is an exact multiple of the part cost. Repair mode puts the tool in the center. Assembly slots follow each tool's part layout.
 
+The Tool Station and Tool Forge show durability, other tool stats, and traits in the panel on the right. The panel updates as you assemble, repair, or modify a tool. At larger GUI scales, the button above the panel switches between tool stats and nearby inventory when both panels cannot fit side by side.
+
 ## Workshops, storage, and repair
 
 The Crafting Station has nine inputs, a vanilla recipe book, and access to adjacent storage. Workstations connected horizontally to a Crafting Station show tabs at the top. The Pattern Chest stores one of each pattern or cast. The Part Chest separates parts by material and component. Both chests have 256 slots and show extra pages as the displayed inventory fills.
