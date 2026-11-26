@@ -6,6 +6,7 @@ import com.gctn.tconstruct.gadgets.item.PiggybackItem;
 import com.gctn.tconstruct.gadgets.item.SlimeBootsItem;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -15,7 +16,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 @EventBusSubscriber(modid = TinkersNirvana.MODID)
@@ -29,34 +29,40 @@ public final class GearPhysics {
         if (entity.isShiftKeyDown()) { event.setDamageMultiplier(.2f); return; }
         if (event.getDistance() <= 2) { return; }
         event.setDamageMultiplier(0); event.setCanceled(true); entity.fallDistance = 0;
-        if (entity instanceof Player player ? entity.level().isClientSide && player.isLocalPlayer() : !entity.level().isClientSide) {
-            var motion = entity.getDeltaMovement(); var bounce = entity.getData(SlimeGear.BOUNCE);
-            bounce.active = true; bounce.pendingY = Math.max(0, -motion.y * .9); bounce.groundTicks = 0;
-            entity.setDeltaMovement(motion.x / .95, motion.y, motion.z / .95);
-            if (entity.level().isClientSide || !(entity instanceof Player)) { entity.playSound(SoundEvents.SLIME_SQUISH, 1, 1); }
+        if (entity instanceof Player player) {
+            // 怀古只给真实玩家启动反弹。其余实体穿靴子也免受跌落伤害。
+            if (player.isLocalPlayer() && player.level().isClientSide) {
+                var motion = player.getDeltaMovement();
+                var bounce = player.getData(SlimeGear.BOUNCE);
+                bounce.active = true;
+                bounce.pendingY = -motion.y * .9;
+                bounce.groundTicks = 0;
+                player.setDeltaMovement(motion.x / .95, motion.y, motion.z / .95);
+                player.playSound(SoundEvents.SLIME_SQUISH, 1, 1);
+            } else if (!player.level().isClientSide) {
+                player.level().playSound(player, player.blockPosition(), SoundEvents.SLIME_SQUISH, SoundSource.PLAYERS, 1, 1);
+            }
+        } else if (!entity.level().isClientSide) {
+            entity.playSound(SoundEvents.SLIME_SQUISH, 1, 1);
         }
-        if (!entity.level().isClientSide && entity instanceof Player player) { entity.level().playSound(player, entity.blockPosition(), SoundEvents.SLIME_SQUISH, net.minecraft.sounds.SoundSource.PLAYERS, 1, 1); }
     }
-    private static void bounce(LivingEntity entity, boolean preserveHorizontal) {
+    private static void bounce(Player entity) {
         if (!entity.hasData(SlimeGear.BOUNCE)) { return; }
         BounceState state = entity.getData(SlimeGear.BOUNCE);
         if (!state.active || entity.isFallFlying()) { return; }
         var motion = entity.getDeltaMovement();
         if (!Double.isNaN(state.pendingY)) { entity.setDeltaMovement(motion.x, state.pendingY, motion.z); entity.setOnGround(false); state.pendingY = Double.NaN; }
         motion = entity.getDeltaMovement();
-        if (preserveHorizontal && !entity.onGround() && (motion.x != state.lastX || motion.z != state.lastZ)) {
+        if (!entity.onGround() && (motion.x != state.lastX || motion.z != state.lastZ)) {
             entity.setDeltaMovement(motion.x / .935, motion.y, motion.z / .935); state.lastX = entity.getDeltaMovement().x; state.lastZ = entity.getDeltaMovement().z;
         }
-        if (state.wasAir && entity.onGround()) { if (++state.groundTicks > 5) { entity.removeData(SlimeGear.BOUNCE); } }
+        if (state.wasAir && entity.onGround()) { if (++state.groundTicks > 6) { entity.removeData(SlimeGear.BOUNCE); } }
         else { state.groundTicks = 0; state.wasAir = true; }
     }
     @SubscribeEvent private static void playerTick(PlayerTickEvent.Post event) {
         Player player = event.getEntity();
-        if (player.level().isClientSide) { if (player.isLocalPlayer()) { bounce(player, true); } return; }
+        if (player.level().isClientSide) { if (player.isLocalPlayer()) { bounce(player); } return; }
         carry(player);
-    }
-    @SubscribeEvent private static void entityTick(EntityTickEvent.Post event) {
-        if (event.getEntity() instanceof LivingEntity living && !(living instanceof Player) && !living.level().isClientSide) { bounce(living, false); }
     }
     @SubscribeEvent(priority = net.neoforged.bus.api.EventPriority.LOWEST) private static void interact(PlayerInteractEvent.EntityInteract event) {
         if (event.getItemStack().getItem() instanceof PiggybackItem pack && event.getTarget() instanceof LivingEntity target) {
