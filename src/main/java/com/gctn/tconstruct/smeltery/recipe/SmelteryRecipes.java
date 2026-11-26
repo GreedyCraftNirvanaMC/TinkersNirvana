@@ -13,7 +13,6 @@ import com.gctn.tconstruct.library.toolparts.AntiqueParts;
 import com.gctn.tconstruct.library.toolparts.Binding;
 import com.gctn.tconstruct.library.toolparts.PickaxeHead;
 import com.gctn.tconstruct.library.toolparts.ToolRod;
-import com.gctn.tconstruct.library.utils.Tags;
 import com.gctn.tconstruct.smeltery.SmelteryFluids;
 import com.gctn.tconstruct.smeltery.SmelteryModule;
 import com.gctn.tconstruct.smeltery.SmelteryTank;
@@ -30,6 +29,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -37,6 +37,8 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+
+import static com.gctn.tconstruct.library.utils.Tags.PART_MATERIAL;
 
 /** The original quantities and temperature/cooling rules, independent of a recipe's item source. */
 public final class SmelteryRecipes {
@@ -175,6 +177,7 @@ public final class SmelteryRecipes {
         MELTING.add(melting(stack -> stack.is(TagKey.create(net.minecraft.core.registries.Registries.ITEM,
                 ResourceLocation.fromNamespaceAndPath("c", "glass_panes"))), SmelteryFluids.get("glass"), 375));
         special("notmilk", Items.BONE, 144, "", false, 50);
+        MELTING.add(melting(stack -> stack.is(Tags.Items.BONES), SmelteryFluids.get("notmilk"), INGOT));
         special("notmilk", Items.BONE_BLOCK, 432, "", true, 100);
         addMelting(Items.BONE_MEAL, SmelteryFluids.get("notmilk"), 48);
         MELTING.add(new Melting(SmelteryRecipes::isDirt, new FluidStack(SmelteryFluids.get("dirt"), 144),
@@ -186,9 +189,9 @@ public final class SmelteryRecipes {
         CASTING.add(new Casting(true, stack -> stack.is(net.minecraft.tags.ItemTags.PLANKS), Fluids.LAVA, 250,
                 new ItemStack(SmelteryModule.LAVAWOOD.get()), 100, true, false));
         CASTING.add(casting(true, stack -> stack.is(Items.SAND), SmelteryFluids.get("blood"), 10, new ItemStack(Items.RED_SAND), true, false));
-        CASTING.add(casting(false, stack -> com.gctn.tconstruct.Config.STEEL_ALLOY.get() && stack.is(Items.IRON_INGOT),
+        CASTING.add(casting(false, stack -> Config.STEEL_ALLOY.get() && stack.is(Tags.Items.INGOTS_IRON),
                 SmelteryFluids.get("blazing_blood"), 100, new ItemStack(SmelteryModule.item("steel_ingot")), true, false));
-        CASTING.add(casting(false, stack -> com.gctn.tconstruct.Config.STEEL_ALLOY.get() && stack.is(Items.IRON_BLOCK),
+        CASTING.add(casting(false, stack -> Config.STEEL_ALLOY.get() && stack.is(Tags.Items.STORAGE_BLOCKS_IRON),
                 SmelteryFluids.get("blazing_blood"), 900, preferred("steel", "block"), true, false));
         for (String type : new String[]{"stone", "cobble", "paver", "brick", "brick_cracked", "brick_fancy", "brick_square",
                 "brick_triangle", "brick_small", "road", "tile", "creeper"}) {
@@ -197,7 +200,8 @@ public final class SmelteryRecipes {
         addMelting(SmelteryModule.item("seared_brick"), SmelteryFluids.get("stone"), 72);
         addMelting(SmelteryModule.LADDER.get().asItem(), SmelteryFluids.get("stone"), 288);
         Fluid searedStone = SmelteryFluids.get("stone");
-        stoneMelting = new Melting(stack -> stack.is(Items.COBBLESTONE) || stack.is(Items.STONE),
+        stoneMelting = new Melting(stack -> stack.is(Tags.Items.COBBLESTONES_NORMAL)
+                        || stack.is(Tags.Items.STONES),
                 new FluidStack(searedStone, 72), temperature(searedStone, INGOT * 2));
         MELTING.add(stoneMelting);
         MELTING.add(new Melting(stack -> stack.is(SmelteryModule.item("grout")),
@@ -206,7 +210,7 @@ public final class SmelteryRecipes {
                 new ItemStack(SmelteryModule.item("seared_brick")), false, false));
         CASTING.add(casting(true, ItemStack::isEmpty, SmelteryFluids.get("stone"), 288,
                 new ItemStack(SmelteryModule.BLOCKS.get("seared_stone").get()), false, false));
-        CASTING.add(casting(true, stack -> stack.is(Items.COBBLESTONE), SmelteryFluids.get("stone"), 216,
+        CASTING.add(casting(true, stack -> stack.is(Tags.Items.COBBLESTONES_NORMAL), SmelteryFluids.get("stone"), 216,
                 new ItemStack(SmelteryModule.BLOCKS.get("seared_cobble").get()), true, false));
         CASTING.add(casting(true, stack -> stack.is(Items.FURNACE), SmelteryFluids.get("stone"), 576,
                 new ItemStack(SmelteryModule.FURNACE.get()), true, true));
@@ -245,7 +249,7 @@ public final class SmelteryRecipes {
                 if (!java.util.Set.of("Head", "Handle", "Extra", "Bow").contains(part.stat()) || !material.hasStats(part.stat())) { continue; }
                 ItemStack output = part.create(material);
                 int cost = Math.round(part.cost() * INGOT);
-                MELTING.add(melting(stack -> stack.is(output.getItem()) && TinkerDataComponents.getMaterialTag(stack).getString(Tags.PART_MATERIAL).equals(name), SmelteryFluids.get(name), cost));
+                MELTING.add(melting(stack -> stack.is(output.getItem()) && TinkerDataComponents.getMaterialTag(stack).getString(PART_MATERIAL).equals(name), SmelteryFluids.get(name), cost));
                 CASTING.add(casting(false, castPredicate("cast_" + part.id()), SmelteryFluids.get(name), cost, output, false, false));
                 CASTING.add(casting(false, stack -> com.gctn.tconstruct.Config.CLAY_CASTS.get() && stack.is(SmelteryModule.item("clay_cast_" + part.id())),
                         SmelteryFluids.get(name), cost, output, true, false));
@@ -258,7 +262,7 @@ public final class SmelteryRecipes {
                 data.putString("Coating", name);
                 core.set(TinkerDataComponents.TINKER_MATERIAL.get(), net.minecraft.world.item.component.CustomData.of(data));
                 CASTING.add(casting(false, stack -> stack.is(com.gctn.tconstruct.library.toolparts.AntiqueParts.get("arrow_shaft").item().get())
-                                && TinkerDataComponents.getMaterialTag(stack).getString(Tags.PART_MATERIAL).equals(shaft.identifier),
+                                && TinkerDataComponents.getMaterialTag(stack).getString(PART_MATERIAL).equals(shaft.identifier),
                         SmelteryFluids.get(name), INGOT * 2, core, true, false));
             }
         }
@@ -273,11 +277,13 @@ public final class SmelteryRecipes {
             CASTING.add(casting(false, stack -> com.gctn.tconstruct.Config.CLAY_CASTS.get() && stack.is(item),
                     SmelteryFluids.get("clay"), 288, new ItemStack(SmelteryModule.item("clay_cast_" + part.id())), true, true));
         }
-        CASTING.add(casting(false, stack -> stack.is(Items.BONE), SmelteryFluids.get("blood"), 250,
+        CASTING.add(casting(false, stack -> stack.is(Tags.Items.BONES), SmelteryFluids.get("blood"), 250,
                 new ItemStack(com.gctn.tconstruct.tools.ToolSupplies.item("bloodbone")), true, false));
-        CASTING.add(casting(false, stack -> stack.is(Items.BONE), SmelteryFluids.get("venom"), 250,
+        CASTING.add(casting(false, stack -> stack.is(Tags.Items.BONES), SmelteryFluids.get("venom"), 250,
                 new ItemStack(com.gctn.tconstruct.tools.ToolSupplies.item("venomous_bone")), true, false));
-        CASTING.add(new Casting(false, stack -> stack.is(com.gctn.tconstruct.tools.ToolSupplies.item("necrotic_bone")), SmelteryFluids.get("blazing_blood"), 250,
+        var witheredBones = TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                ResourceLocation.fromNamespaceAndPath(TinkersNirvana.MODID, "withered_bones"));
+        CASTING.add(new Casting(false, stack -> stack.is(witheredBones), SmelteryFluids.get("blazing_blood"), 250,
                 new ItemStack(com.gctn.tconstruct.tools.ToolSupplies.item("blazing_bone")), 12, true, false));
         alloy("obsidian", 36, new FluidStack(Fluids.WATER, 125), new FluidStack(Fluids.LAVA, 125));
         alloy("clay", 144, fluid("stone", 72), fluid("dirt", 144), new FluidStack(Fluids.WATER, 250));
@@ -315,7 +321,7 @@ public final class SmelteryRecipes {
                 return recipe;
             }
         }
-        String materialId = TinkerDataComponents.getMaterialTag(stack).getString(Tags.PART_MATERIAL);
+        String materialId = TinkerDataComponents.getMaterialTag(stack).getString(PART_MATERIAL);
         if (!materialId.isEmpty() && TinkerMaterials.getMaterial(materialId) == TinkerMaterials.stone) {
             var part = AntiqueParts.get(stack);
             if (part != null && !part.external() && !part.id().equals("shard") && part.acceptsMaterial(TinkerMaterials.stone)) {
@@ -324,7 +330,7 @@ public final class SmelteryRecipes {
                 // 怀古按每份材料回收半锭焦黑石，热量则按原部件用料和矿石倍率计算。
                 int heatAmount = oreYield(cost);
                 return new Melting(input -> input.is(part.item().get())
-                        && TinkerMaterials.getMaterial(TinkerDataComponents.getMaterialTag(input).getString(Tags.PART_MATERIAL)) == TinkerMaterials.stone,
+                        && TinkerMaterials.getMaterial(TinkerDataComponents.getMaterialTag(input).getString(PART_MATERIAL)) == TinkerMaterials.stone,
                         new FluidStack(stone, cost / 2), temperature(stone, heatAmount));
             }
         }
