@@ -337,7 +337,8 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity implements Hea
         AABB bounds = new AABB(min.getX(), min.getY(), min.getZ(), max.getX() + 1, max.getY() + 1, max.getZ() + 1);
         for (Entity entity : level.getEntities((Entity) null, bounds)) {
             if (entity instanceof ItemEntity item && SmelteryRecipes.findMelting(item.getItem()) != null) {
-                ItemStack stack = item.getItem();
+                ItemStack held = item.getItem();
+                ItemStack stack = held.copy();
                 for (int slot = 0; slot < items.size() && !stack.isEmpty(); slot++) {
                     if (items.get(slot).isEmpty()) {
                         setItem(slot, stack.split(1));
@@ -345,6 +346,9 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity implements Hea
                 }
                 if (stack.isEmpty()) {
                     item.discard();
+                } else if (stack.getCount() != held.getCount()) {
+                    // 原样修改实体数据中的物品不会同步数量，使用新的剩余堆叠。
+                    item.setItem(stack);
                 }
             } else if (entity instanceof LivingEntity living && living.isAlive()) {
                 if (fuel <= 0) {
@@ -390,7 +394,7 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity implements Hea
     }
 
     public FuelDisplay fuelDisplay() {
-        return FuelDisplay.of(level, structure == null ? clientTanks : structure.tanks(), currentFuel, fuel);
+        return FuelDisplay.of(level, structure == null ? clientTanks : structure.tanks(), currentTank, currentFuel, fuel);
     }
 
     public void changed() {

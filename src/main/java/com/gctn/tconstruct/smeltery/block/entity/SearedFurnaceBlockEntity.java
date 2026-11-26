@@ -347,7 +347,7 @@ public class SearedFurnaceBlockEntity extends BaseContainerBlockEntity implement
 
     @Override
     public FuelDisplay fuelDisplay() {
-        return FuelDisplay.of(level, structure == null ? clientTanks : structure.tanks(), currentFuel, fuel);
+        return FuelDisplay.of(level, structure == null ? clientTanks : structure.tanks(), currentTank, currentFuel, fuel);
     }
 
     private void changed() {

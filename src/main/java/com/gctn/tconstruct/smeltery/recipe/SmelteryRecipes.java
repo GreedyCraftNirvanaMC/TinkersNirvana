@@ -324,7 +324,8 @@ public final class SmelteryRecipes {
 
     public static Fuel fuel(FluidStack stack) {
         initialize();
-        return FUELS.stream().filter(fuel -> stack.is(fuel.fluid) && stack.getAmount() >= fuel.amount).findFirst().orElse(null);
+        return FUELS.stream().filter(fuel -> stack.is(fuel.fluid)).findFirst()
+                .map(fuel -> fuel.forAmount(stack.getAmount())).orElse(null);
     }
 
     public static FluidStack entityMelting(net.minecraft.world.entity.LivingEntity entity) {
@@ -498,6 +499,11 @@ public final class SmelteryRecipes {
     }
 
     public record Fuel(Fluid fluid, int amount, int duration) {
+        private Fuel forAmount(int available) {
+            if (available >= amount) { return this; }
+            // 怀古对不足一批的余液按 (余量 / 每批毫桶) × 余量计热，可舍入为零。
+            return new Fuel(fluid, available, Math.round((float) available / amount * available));
+        }
     }
 
     public record EntityMelting(Predicate<net.minecraft.world.entity.LivingEntity> input, FluidStack output) {
