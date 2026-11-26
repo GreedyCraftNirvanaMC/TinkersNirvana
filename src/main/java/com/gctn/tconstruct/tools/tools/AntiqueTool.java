@@ -155,6 +155,10 @@ public class AntiqueTool extends TinkerTools {
         return definition.action() == Action.AXE && state.is(BlockTags.LEAVES);
     }
 
+    public boolean matchesHarvestCategory(BlockState state) {
+        return isEffectiveOn(state) || isHatchetOnLeaves(state);
+    }
+
     @Override
     public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
         return !(definition.isSword() && player.isCreative()) && super.canAttackBlock(state, level, pos, player);

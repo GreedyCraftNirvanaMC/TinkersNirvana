@@ -6,6 +6,7 @@
   "mixins": ["EntityChannelFluidMixin", "PlayerOffhandHarvestMixin",
     "PlayerAttackMixin", "ServerOffhandHarvestMixin", "LivingEntityDamageAccessor", "ExperienceOrbMixin", "WorldgenTreeFeatureMixin",
     "VillageBuildingLimitsMixin", "AntiqueProjectileDamageMixin", "LootingCountMixin", "LootingChanceMixin"],
-  "client": ["ClientOffhandHarvestMixin", "LauncherHandRendererMixin", "CrossbowChargeAnimationMixin", "LauncherAmmoRendererMixin"],
+  "client": ["ClientOffhandHarvestMixin", "OffhandHarvestSwingMixin",
+    "LauncherHandRendererMixin", "CrossbowChargeAnimationMixin", "LauncherAmmoRendererMixin"],
   "injectors": {"defaultRequire": 1}
 }

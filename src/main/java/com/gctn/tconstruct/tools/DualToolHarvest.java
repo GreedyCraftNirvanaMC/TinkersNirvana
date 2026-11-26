@@ -17,18 +17,20 @@ public final class DualToolHarvest {
     private static final ThreadLocal<Set<Player>> ACTIVE = new ThreadLocal<>();
     private DualToolHarvest() {}
     private static boolean effective(ItemStack stack, BlockState state) {
-        if (stack.isEmpty() || TinkerTools.isBroken(stack)) { return false; }
+        if (stack.isEmpty()) { return false; }
         if (ToolModifiers.level(stack, "blasting") > 0 && !state.requiresCorrectToolForDrops() && state.getFluidState().isEmpty()) { return true; }
-        return stack.getDestroySpeed(state) > 1 || stack.isCorrectToolForDrops(state);
+        // 怀古先判断工具类别是否适用。耐久、材料等级和挖掘速度仍由实际参与破坏的工具结算。
+        if (stack.getItem() instanceof AntiqueTool tool && tool.matchesHarvestCategory(state)) { return true; }
+        return !TinkerTools.isBroken(stack) && (stack.getDestroySpeed(state) > 1 || stack.isCorrectToolForDrops(state));
     }
     public static boolean shouldUseOffhand(Player player, BlockState state) {
         ItemStack main = player.getMainHandItem();
-        return main.getItem() instanceof AntiqueTool tool && !tool.definition().effectiveBlocks().isEmpty()
+        return state != null && main.getItem() instanceof AntiqueTool
                 && !effective(main, state) && effective(player.getOffhandItem(), state);
     }
     public static boolean active(Player player) { var active = ACTIVE.get(); return active != null && active.contains(player); }
     public static <T> T withTool(Player player, BlockState state, Supplier<T> action) {
-        return player != null && shouldUseOffhand(player, state) ? withOffhandTool(player, action) : action.get();
+        return player != null && !active(player) && shouldUseOffhand(player, state) ? withOffhandTool(player, action) : action.get();
     }
     static <T> T withOffhandTool(Player player, Supplier<T> action) {
         if (active(player)) { return action.get(); }
