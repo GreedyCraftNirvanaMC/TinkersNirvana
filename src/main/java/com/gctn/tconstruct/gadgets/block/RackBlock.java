@@ -15,8 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -42,23 +40,20 @@ public class RackBlock extends BaseEntityBlock {
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(BlockStateProperties.ATTACH_FACE, BlockStateProperties.HORIZONTAL_FACING); }
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction side = context.getClickedFace();
-        if (!side.getAxis().isHorizontal()) { return null; }
-        BlockState state = defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, side);
-        return state.canSurvive(context.getLevel(), context.getClickedPos()) ? state : null;
-    }
-    @Override protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        // 新放置的架子只能挂墙，保留旧存档已放置的地面和天花板状态。
-        if (state.getValue(BlockStateProperties.ATTACH_FACE) != AttachFace.WALL) { return true; }
-        Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
-        BlockPos support = pos.relative(facing.getOpposite());
-        return level.getBlockState(support).isFaceSturdy(level, support, facing);
-    }
-    @Override protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbor, LevelAccessor level,
-                                               BlockPos pos, BlockPos neighborPos) {
-        if (direction == state.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite() && !state.canSurvive(level, pos)) {
-            return Blocks.AIR.defaultBlockState();
+        BlockState clicked = context.getLevel().getBlockState(context.getClickedPos().relative(side.getOpposite()));
+        // 怀古允许在物品架和晾干架之间接续放置，继承朝向以形成同一排独立架子。
+        if (!context.replacingClickedOnBlock() && clicked.getBlock() instanceof RackBlock) {
+            return defaultBlockState().setValue(BlockStateProperties.ATTACH_FACE, clicked.getValue(BlockStateProperties.ATTACH_FACE))
+                    .setValue(BlockStateProperties.HORIZONTAL_FACING, clicked.getValue(BlockStateProperties.HORIZONTAL_FACING));
         }
-        return super.updateShape(state, direction, neighbor, level, pos, neighborPos);
+        AttachFace face = switch (side) {
+            case UP -> AttachFace.FLOOR;
+            case DOWN -> AttachFace.CEILING;
+            default -> AttachFace.WALL;
+        };
+        Direction facing = face == AttachFace.WALL ? side : context.getHorizontalDirection();
+        return defaultBlockState().setValue(BlockStateProperties.ATTACH_FACE, face)
+                .setValue(BlockStateProperties.HORIZONTAL_FACING, facing);
     }
     @Override protected BlockState rotate(BlockState state, Rotation rotation) { return state.setValue(BlockStateProperties.HORIZONTAL_FACING, rotation.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING))); }
     @Override protected BlockState mirror(BlockState state, Mirror mirror) { return rotate(state, mirror.getRotation(state.getValue(BlockStateProperties.HORIZONTAL_FACING))); }
@@ -72,9 +67,9 @@ public class RackBlock extends BaseEntityBlock {
     @Override public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) { return drying ? createTickerHelper(type, RemainingGadgets.RACK_ENTITY.get(), RackBlockEntity::tick) : null; }
     @Override protected boolean hasAnalogOutputSignal(BlockState state) { return drying; }
     @Override protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) { return level.getBlockEntity(pos) instanceof RackBlockEntity rack && !rack.getItem(1).isEmpty() ? 15 : 0; }
-    @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) { interact(level, pos, player, InteractionHand.MAIN_HAND); return InteractionResult.sidedSuccess(level.isClientSide); }
-    @Override protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) { interact(level, pos, player, hand); return ItemInteractionResult.sidedSuccess(level.isClientSide); }
-    private void interact(Level level, BlockPos pos, Player player, InteractionHand hand) { if (!level.isClientSide && level.getBlockEntity(pos) instanceof RackBlockEntity rack) { rack.interact(player, hand); } }
+    @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) { interact(level, pos, player); return InteractionResult.sidedSuccess(level.isClientSide); }
+    @Override protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) { interact(level, pos, player); return ItemInteractionResult.sidedSuccess(level.isClientSide); }
+    private void interact(Level level, BlockPos pos, Player player) { if (!level.isClientSide && level.getBlockEntity(pos) instanceof RackBlockEntity rack) { rack.interact(player); } }
     @Override protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState next, boolean moving) {
         if (!state.is(next.getBlock())) { Containers.dropContentsOnDestroy(state, next, level, pos); }
         super.onRemove(state, level, pos, next, moving);
