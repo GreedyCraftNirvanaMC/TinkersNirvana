@@ -34,7 +34,7 @@ public final class AreaHarvestRender {
         BlockHitResult hit = event.getTarget();
         var camera = event.getCamera().getPosition();
         var outlines = (MiningOutlineInvoker) event.getLevelRenderer();
-        for (BlockPos pos : targets(player, hit.getBlockPos(), hit)) {
+        for (BlockPos pos : targets(player, hit.getBlockPos(), hit, false)) {
             if (player.level().getWorldBorder().isWithinBounds(pos)) {
                 outlines.tconstruct$renderMiningOutline(event.getPoseStack(), event.getMultiBufferSource().getBuffer(RenderType.lines()),
                         player, camera.x, camera.y, camera.z, pos, player.level().getBlockState(pos));
@@ -56,7 +56,7 @@ public final class AreaHarvestRender {
         var camera = event.getCamera().getPosition();
         var pose = event.getPoseStack();
         var level = minecraft.level;
-        for (BlockPos pos : targets(player, origin, hit)) {
+        for (BlockPos pos : targets(player, origin, hit, true)) {
             var state = level.getBlockState(pos);
             if (state.hasBlockEntity() || state.getRenderShape() != RenderShape.MODEL) { continue; }
             pose.pushPose();
@@ -69,9 +69,10 @@ public final class AreaHarvestRender {
         }
     }
 
-    private static List<BlockPos> targets(LocalPlayer player, BlockPos origin, BlockHitResult hit) {
+    private static List<BlockPos> targets(LocalPlayer player, BlockPos origin, BlockHitResult hit, boolean cracking) {
         var state = player.level().getBlockState(origin);
         var tool = DualToolHarvest.shouldUseOffhand(player, state) ? player.getOffhandItem() : player.getMainHandItem();
+        if (cracking && !ToolHarvest.minesArea(tool)) { return List.of(); }
         return ToolHarvest.extraBlocks(player, tool, origin, state, hit);
     }
 }

@@ -11,6 +11,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -22,11 +24,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.NetherWartBlock;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -50,7 +57,7 @@ public final class ToolHarvest {
     private ToolHarvest() {}
     public static void afterBreak(AntiqueTool item, ItemStack tool, Level level, BlockState original, BlockPos pos, LivingEntity entity) {
         if (!(entity instanceof ServerPlayer player) || HARVESTING.get() || REPLANTING.get() != null
-                || !canExpand(tool, original)) {
+                || !minesArea(tool) || !canExpand(tool, original)) {
             return;
         }
         var action = item.definition().action();
@@ -82,6 +89,12 @@ public final class ToolHarvest {
             case PICKAXE, SHOVEL, AXE, MATTOCK, KAMA, HAMMER, EXCAVATOR, LUMBERAXE, SCYTHE -> true;
             default -> false;
         };
+    }
+
+    public static boolean minesArea(ItemStack stack) {
+        // 怀古的鹤嘴锹可以扩展铺路或耕地，左键每次只挖一格。
+        return stack.getItem() instanceof AntiqueTool tool && supportsExpanders(tool.definition().action())
+                && tool.definition().action() != ToolDefinition.Action.MATTOCK;
     }
 
     private static boolean canExpand(ItemStack stack, BlockState origin) {
@@ -183,16 +196,56 @@ public final class ToolHarvest {
         return !level.isOutsideBuildHeight(pos) && level.hasChunkAt(pos) && level.getBlockState(pos).is(BlockTags.LOGS);
     }
 
+    public static boolean modifyGround(AntiqueTool item, UseOnContext context, ItemAbility ability) {
+        if (context.getClickedFace() == Direction.DOWN) { return false; }
+        var level = context.getLevel();
+        var player = context.getPlayer();
+        var stack = context.getItemInHand();
+        BlockPos pos = context.getClickedPos();
+        var state = level.getBlockState(pos);
+        boolean path = ability == ItemAbilities.SHOVEL_FLATTEN;
+        var hit = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos, context.isInside());
+        var extras = !path || state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.DIRT_PATH)
+                ? extraBlocks(player, stack, pos, state, hit) : List.<BlockPos>of();
+        boolean changed = modifyGroundAt(item, context, ability);
+        for (BlockPos extra : extras) {
+            if (TinkerTools.isBroken(stack) || stack.isEmpty()) { break; }
+            if (path && !level.getBlockState(extra).is(Blocks.GRASS_BLOCK)) { continue; }
+            var extraHit = new BlockHitResult(hit.getLocation().add(extra.getX() - pos.getX(), extra.getY() - pos.getY(), extra.getZ() - pos.getZ()),
+                    hit.getDirection(), extra, hit.isInside());
+            if (!player.mayInteract(level, extra) || !player.mayUseItemAt(extra, hit.getDirection(), stack)) { continue; }
+            // 中心格已由原版交互派发右键事件，附带方块也要让保护模组有机会拒绝。
+            if (!level.isClientSide) {
+                var event = CommonHooks.onRightClickBlock(player, context.getHand(), extra, extraHit);
+                if (event.isCanceled() || event.getUseItem() == TriState.FALSE) { continue; }
+            }
+            changed |= modifyGroundAt(item, new UseOnContext(level, player, context.getHand(), stack, extraHit), ability);
+        }
+        return changed;
+    }
+
+    private static boolean modifyGroundAt(AntiqueTool item, UseOnContext context, ItemAbility ability) {
+        var level = context.getLevel();
+        var pos = context.getClickedPos();
+        boolean path = ability == ItemAbilities.SHOVEL_FLATTEN;
+        if (path && !level.isEmptyBlock(pos.above())) { return false; }
+        var state = level.getBlockState(pos);
+        var next = state.getToolModifiedState(context, ability, level.isClientSide);
+        if (next == null || next == state) { return false; }
+        if (!level.isClientSide) {
+            if (!level.setBlock(pos, next, 11)) { return false; }
+            level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(context.getPlayer(), next));
+            item.damage(context.getItemInHand(), 1, context.getPlayer(), LivingEntity.getSlotForHand(context.getHand()));
+        }
+        level.playSound(context.getPlayer(), pos, path ? SoundEvents.SHOVEL_FLATTEN : SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1, 1);
+        return true;
+    }
+
     public static boolean harvestCrops(AntiqueTool item, ItemStack tool, UseOnContext context) {
         Level level = context.getLevel();
         BlockPos origin = context.getClickedPos();
-        if (context.getPlayer() == null || !canHarvestCrop(level, origin, level.getBlockState(origin))) {
-            return false;
-        }
-        if (level.isClientSide) {
-            return true;
-        }
-        if (!(context.getPlayer() instanceof ServerPlayer player)) {
+        BlockState center = level.getBlockState(origin);
+        if (context.getPlayer() == null || !isCrop(center) && !item.matchesHarvestCategory(center)) {
             return false;
         }
         boolean scythe = item.definition().action() == ToolDefinition.Action.SCYTHE;
@@ -201,17 +254,34 @@ public final class ToolHarvest {
         int width = scythe ? (wide ? 5 : 3) : (wide ? 2 : 1);
         int height = scythe ? (tall ? 5 : 3) : (tall ? 2 : 1);
         Vec3 offset = context.getClickLocation().subtract(Vec3.atLowerCornerOf(origin));
-        var positions = harvestBounds(origin, context.getClickedFace(), offset, player.getDirection(), width, height, scythe ? 3 : 1);
+        var positions = new ArrayList<BlockPos>();
+        for (BlockPos candidate : harvestBounds(origin, context.getClickedFace(), offset, context.getHorizontalDirection(), width, height, scythe ? 3 : 1)) {
+            if (!candidate.equals(origin) && (!scythe || (!wide && !tall) || candidate.distManhattan(origin) <= 3)
+                    && level.hasChunkAt(candidate) && canHarvestCrop(level, candidate, level.getBlockState(candidate))) {
+                positions.add(candidate);
+            }
+        }
+        if (canHarvestCrop(level, origin, center)) { positions.add(origin); }
+        if (positions.isEmpty()) { return false; }
+        if (level.isClientSide) { return true; }
+        if (!(context.getPlayer() instanceof ServerPlayer player)) { return false; }
         java.util.function.Supplier<Boolean> action = () -> {
             boolean harvested = false;
             for (BlockPos candidate : positions) {
-                if (!candidate.equals(origin) && (!scythe || (!wide && !tall) || candidate.distManhattan(origin) <= 3)) {
-                    harvested |= harvestCrop(player, item, tool, candidate.immutable());
-                }
+                harvested |= harvestCrop(player, item, tool, candidate);
             }
-            return harvestCrop(player, item, tool, origin) || harvested;
+            return harvested;
         };
-        return context.getHand() == InteractionHand.OFF_HAND ? DualToolHarvest.withOffhandTool(player, action) : action.get();
+        boolean harvested = context.getHand() == InteractionHand.OFF_HAND ? DualToolHarvest.withOffhandTool(player, action) : action.get();
+        if (harvested) {
+            level.playSound(null, player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1, 1);
+            player.sweepAttack();
+        }
+        return harvested;
+    }
+
+    private static boolean isCrop(BlockState state) {
+        return state.getBlock() instanceof CropBlock || state.is(Blocks.NETHER_WART) || state.is(Blocks.SUGAR_CANE);
     }
 
     private static boolean canHarvestCrop(Level level, BlockPos pos, BlockState state) {

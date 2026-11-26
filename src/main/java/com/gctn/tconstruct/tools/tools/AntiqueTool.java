@@ -78,8 +78,12 @@ public class AntiqueTool extends TinkerTools {
         for (ItemAbility ability : new ItemAbility[]{ItemAbilities.AXE_STRIP, ItemAbilities.AXE_SCRAPE,
                 ItemAbilities.AXE_WAX_OFF, ItemAbilities.SHOVEL_FLATTEN, ItemAbilities.HOE_TILL}) {
             if (!canPerformAction(stack, ability)) { continue; }
-            if ((ability == ItemAbilities.HOE_TILL || ability == ItemAbilities.SHOVEL_FLATTEN) && context.getClickedFace() == net.minecraft.core.Direction.DOWN) { continue; }
-            if (ability == ItemAbilities.SHOVEL_FLATTEN && !context.getLevel().isEmptyBlock(context.getClickedPos().above())) { continue; }
+            if (ability == ItemAbilities.HOE_TILL || ability == ItemAbilities.SHOVEL_FLATTEN) {
+                if (ToolHarvest.modifyGround(this, context, ability)) {
+                    return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
+                }
+                continue;
+            }
             BlockState result = state.getToolModifiedState(context, ability, false);
             if (result == null) { continue; }
             Level level = context.getLevel();
@@ -89,9 +93,7 @@ public class AntiqueTool extends TinkerTools {
                         net.minecraft.world.level.gameevent.GameEvent.Context.of(context.getPlayer(), result));
                 damageTool(stack, 1, context.getPlayer(), context.getHand() == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
             }
-            level.playSound(context.getPlayer(), context.getClickedPos(),
-                    ability == ItemAbilities.HOE_TILL ? SoundEvents.HOE_TILL : ability == ItemAbilities.SHOVEL_FLATTEN
-                            ? SoundEvents.SHOVEL_FLATTEN : SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1, 1);
+            level.playSound(context.getPlayer(), context.getClickedPos(), SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1, 1);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
