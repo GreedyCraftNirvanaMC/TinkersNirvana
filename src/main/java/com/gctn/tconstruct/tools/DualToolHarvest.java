@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 public final class DualToolHarvest {
     private static final ThreadLocal<Set<Player>> ACTIVE = new ThreadLocal<>();
     private DualToolHarvest() {}
-    private static boolean effective(ItemStack stack, BlockState state) {
+    static boolean effective(ItemStack stack, BlockState state) {
         if (stack.isEmpty()) { return false; }
         if (ToolModifiers.level(stack, "blasting") > 0 && !state.requiresCorrectToolForDrops() && state.getFluidState().isEmpty()) { return true; }
         // 怀古先判断工具类别是否适用。耐久、材料等级和挖掘速度仍由实际参与破坏的工具结算。

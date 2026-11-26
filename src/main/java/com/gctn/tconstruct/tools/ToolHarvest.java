@@ -15,6 +15,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -32,9 +33,11 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 /** 每个额外方块都走原版玩家破坏流程，包括领地保护、掉落、事件和耐久。 */
@@ -47,19 +50,12 @@ public final class ToolHarvest {
     private ToolHarvest() {}
     public static void afterBreak(AntiqueTool item, ItemStack tool, Level level, BlockState original, BlockPos pos, LivingEntity entity) {
         if (!(entity instanceof ServerPlayer player) || HARVESTING.get() || REPLANTING.get() != null
-                || TinkerTools.isBroken(tool) || !tool.isCorrectToolForDrops(original)) {
+                || !canExpand(tool, original)) {
             return;
         }
         var action = item.definition().action();
-        if (!supportsExpanders(action)) {
-            return;
-        }
         boolean expandedWidth = ToolModifiers.level(tool, "harvestwidth") > 0;
         boolean expandedHeight = ToolModifiers.level(tool, "harvestheight") > 0;
-        boolean large = switch (action) {
-            case HAMMER, EXCAVATOR, LUMBERAXE, SCYTHE -> true;
-            default -> false;
-        };
         HARVESTING.set(true);
         try {
             if (action == ToolDefinition.Action.LUMBERAXE && isTree(level, pos)) {
@@ -71,17 +67,11 @@ public final class ToolHarvest {
                 }
                 return;
             }
-            if (!large && !expandedWidth && !expandedHeight) {
-                return;
+            HitResult hit = player.pick(player.blockInteractionRange(), 1, false);
+            BlockHitResult blockHit = hit instanceof BlockHitResult block ? block : null;
+            for (BlockPos next : extraBlocks(player, tool, pos, original, blockHit)) {
+                harvest(player, tool, next, pos, original);
             }
-            int width = (large ? 3 : 1) + (expandedWidth ? (large ? 2 : 1) : 0);
-            int height = (large ? 3 : 1) + (expandedHeight ? (large ? 2 : 1) : 0);
-            if (action == ToolDefinition.Action.MATTOCK) {
-                width = height = width + height - 1;
-            }
-            int depth = action == ToolDefinition.Action.LUMBERAXE || action == ToolDefinition.Action.SCYTHE ? 3 : 1;
-            int distance = large && (expandedWidth || expandedHeight) ? 3 : 0;
-            harvestVolume(player, tool, pos, original, width, height, depth, distance);
         } finally {
             HARVESTING.remove();
         }
@@ -94,18 +84,41 @@ public final class ToolHarvest {
         };
     }
 
-    private static void harvestVolume(ServerPlayer player, ItemStack tool, BlockPos origin, BlockState original,
-                                      int width, int height, int depth, int distance) {
-        HitResult hit = player.pick(player.blockInteractionRange(), 1, false);
-        BlockHitResult blockHit = hit instanceof BlockHitResult block && hit.getType() == HitResult.Type.BLOCK
-                && block.getBlockPos().equals(origin) ? block : null;
+    private static boolean canExpand(ItemStack stack, BlockState origin) {
+        return stack.getItem() instanceof AntiqueTool tool && supportsExpanders(tool.definition().action())
+                && !TinkerTools.isBroken(stack) && !origin.isAir() && DualToolHarvest.effective(stack, origin);
+    }
+
+    public static List<BlockPos> extraBlocks(Player player, ItemStack stack, BlockPos origin, BlockState original, BlockHitResult blockHit) {
+        if (!canExpand(stack, original)) { return List.of(); }
+        var action = ((AntiqueTool) stack.getItem()).definition().action();
+        boolean wide = ToolModifiers.level(stack, "harvestwidth") > 0;
+        boolean tall = ToolModifiers.level(stack, "harvestheight") > 0;
+        boolean large = switch (action) {
+            case HAMMER, EXCAVATOR, LUMBERAXE, SCYTHE -> true;
+            default -> false;
+        };
+        if (!large && !wide && !tall) { return List.of(); }
+        int width = (large ? 3 : 1) + (wide ? (large ? 2 : 1) : 0);
+        int height = (large ? 3 : 1) + (tall ? (large ? 2 : 1) : 0);
+        if (action == ToolDefinition.Action.MATTOCK) { width = height = width + height - 1; }
+        int depth = action == ToolDefinition.Action.LUMBERAXE || action == ToolDefinition.Action.SCYTHE ? 3 : 1;
+        int distance = large && (wide || tall) ? 3 : 0;
+        if (blockHit != null && (blockHit.getType() != HitResult.Type.BLOCK || !blockHit.getBlockPos().equals(origin))) {
+            blockHit = null;
+        }
         Direction side = blockHit == null ? player.getDirection().getOpposite() : blockHit.getDirection();
         Vec3 offset = blockHit == null ? new Vec3(.5, .5, .5) : blockHit.getLocation().subtract(Vec3.atLowerCornerOf(origin));
+        Level level = player.level();
+        List<BlockPos> extra = new ArrayList<>();
         for (BlockPos next : harvestBounds(origin, side, offset, player.getDirection(), width, height, depth)) {
-            if (!next.equals(origin) && (distance == 0 || next.distManhattan(origin) <= distance)) {
-                harvest(player, tool, next.immutable(), origin, original);
+            if (next.equals(origin) || distance > 0 && next.distManhattan(origin) > distance || !level.hasChunkAt(next)) {
+                continue;
             }
+            BlockState state = level.getBlockState(next);
+            if (!state.isAir() && DualToolHarvest.effective(stack, state)) { extra.add(next); }
         }
+        return extra;
     }
 
     private static Iterable<BlockPos> harvestBounds(BlockPos origin, Direction side, Vec3 offset, Direction horizontal,
@@ -119,8 +132,16 @@ public final class ToolHarvest {
         int startX = side.getAxis() == Direction.Axis.X ? 0 : startOffset(x, offset.x);
         int startY = side.getAxis() == Direction.Axis.Y ? 0 : startOffset(y, offset.y);
         int startZ = side.getAxis() == Direction.Axis.Z ? 0 : startOffset(z, offset.z);
-        return BlockPos.betweenClosed(origin.offset(startX, startY, startZ),
-                origin.offset(startX + x - Integer.signum(x), startY + y - Integer.signum(y), startZ + z - Integer.signum(z)));
+        List<BlockPos> positions = new ArrayList<>();
+        // 保留怀古面向顺序，耐久不足时先处理排在前面的额外方块。
+        for (int dx = 0; dx != x; dx += Integer.signum(x)) {
+            for (int dy = 0; dy != y; dy += Integer.signum(y)) {
+                for (int dz = 0; dz != z; dz += Integer.signum(z)) {
+                    positions.add(origin.offset(startX + dx, startY + dy, startZ + dz));
+                }
+            }
+        }
+        return positions;
     }
 
     private static int startOffset(int size, double hit) {
@@ -348,14 +369,13 @@ public final class ToolHarvest {
         if (TinkerTools.isBroken(tool) || player.getMainHandItem() != tool || !player.level().hasChunkAt(pos)) { return false; }
         BlockState state = player.level().getBlockState(pos);
         float hardness = state.getDestroySpeed(player.level(), pos);
-        if (state.isAir() || state.hasBlockEntity() || hardness < 0
-                || !tool.isCorrectToolForDrops(state) || !player.mayInteract(player.level(), pos)) {
+        if (state.isAir() || state.hasBlockEntity() || hardness < 0 || !DualToolHarvest.effective(tool, state)
+                || !state.canHarvestBlock(player.level(), pos, player) || !player.mayInteract(player.level(), pos)) {
             return false;
         }
-        float referenceSpeed = tool.getDestroySpeed(original);
-        float referenceHardness = original.getDestroySpeed(player.level(), origin);
         // 比较相对挖掘时间，避免低速工具借范围挖掘秒破远比中心方块难挖的方块。
-        if (hardness > 0 && referenceSpeed * hardness > 10 * tool.getDestroySpeed(state) * referenceHardness) {
+        if (hardness > 0 && original.getDestroyProgress(player, player.level(), origin)
+                > 10 * state.getDestroyProgress(player, player.level(), pos)) {
             return false;
         }
         return player.gameMode.destroyBlock(pos);
