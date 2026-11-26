@@ -141,7 +141,7 @@ public final class ToolModifiers {
         return definition == null || units == 0 ? 0 : Math.min(definition.maxLevel(), (units - 1) / definition.unitsPerLevel() + 1);
     }
     public static int usedSlots(ItemStack tool) {
-        return (int) Math.min(Integer.MAX_VALUE, MODIFIERS.keySet().stream().filter(id -> !java.util.Set.of("creative", "endearment", "incognito").contains(id))
+        return (int) Math.min(Integer.MAX_VALUE, MODIFIERS.keySet().stream().filter(id -> !java.util.Set.of("creative", "endearment", "incognito", "soulbound").contains(id))
                 .mapToLong(id -> id.equals("luck") || id.equals("blasting") ? (units(tool, id) > 0 ? 1 : 0) : level(tool, id)).sum());
     }
 
@@ -187,7 +187,7 @@ public final class ToolModifiers {
                 int capacity = match.id().equals("luck") ? 360 : match.maxLevel() * match.unitsPerLevel();
                 var staged = source.copyWithCount(1); var stagedData = material.copy(); stagedData.put("Modifiers", modifiers.copy()); staged.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(stagedData));
                 int free = item.getTotalModifierSlots(staged) - usedSlots(staged);
-                if (!java.util.Set.of("creative", "endearment", "incognito").contains(match.id())) {
+                if (!java.util.Set.of("creative", "endearment", "incognito", "soulbound").contains(match.id())) {
                     if (match.id().equals("luck") || match.id().equals("blasting")) { if (current == 0 && free <= 0) { return null; } }
                     else { capacity = (int) Math.min(capacity, Math.max(0L, (long) level(staged, match.id()) + free) * match.unitsPerLevel()); }
                 }
@@ -230,17 +230,12 @@ public final class ToolModifiers {
                 changed = true;
             }
         }
-        if (!changed || (modifiers.getInt("silktouch") > 0 && modifiers.getInt("luck") > 0)
-                || (AntiqueTraits.has(source, "squeaky") && (modifiers.getInt("luck") > 0 || modifiers.getInt("silktouch") > 0))) { return null; }
-        if (modifiers.getInt("blasting") > 0 && (item.definition().effectiveBlocks().isEmpty() || modifiers.getInt("luck") > 0
-                || modifiers.getInt("silktouch") > 0 || modifiers.getInt("autosmelt") > 0
-                || AntiqueTraits.has(source, "squeaky") || AntiqueTraits.has(source, "autosmelt"))) { return null; }
-        if (modifiers.getInt("fins") > 0 && !item.isAmmo()) { return null; }
+        if (!changed) { return null; }
         if ((modifiers.getInt("harvestwidth") > 0 || modifiers.getInt("harvestheight") > 0)
                 && !ToolHarvest.supportsExpanders(item.definition().action())) { return null; }
         material.put("Modifiers", modifiers);
         result.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(material));
-        if (((TinkerTools) result.getItem()).getTotalModifierSlots(result) < usedSlots(result)) { return null; }
+        if (!isCompatible(result)) { return null; }
         ToolBuilder.rebuild(result, item.definition());
         return new Plan(result, counts);
     }
@@ -350,9 +345,15 @@ public final class ToolModifiers {
         if (!(tool.getItem() instanceof AntiqueTool item)) { return false; }
         var modifiers = data(tool);
         if (modifiers.getInt("silktouch") > 0 && modifiers.getInt("luck") > 0) { return false; }
-        if (AntiqueTraits.has(tool, "squeaky") && (modifiers.getInt("luck") > 0 || modifiers.getInt("silktouch") > 0 || modifiers.getInt("blasting") > 0)) { return false; }
-        if (modifiers.getInt("blasting") > 0 && (item.definition().effectiveBlocks().isEmpty() || modifiers.getInt("luck") > 0
-                || modifiers.getInt("silktouch") > 0 || modifiers.getInt("autosmelt") > 0 || AntiqueTraits.has(tool, "autosmelt"))) { return false; }
+        boolean squeaky = AntiqueTraits.has(tool, "squeaky");
+        boolean materialAutosmelt = AntiqueTraits.has(tool, "autosmelt");
+        boolean autosmeltModifier = modifiers.getInt("autosmelt") > 0;
+        if (squeaky && (modifiers.getInt("luck") > 0 || modifiers.getInt("silktouch") > 0
+                || modifiers.getInt("blasting") > 0 || autosmeltModifier)) { return false; }
+        if (autosmeltModifier && (!item.definition().hasHarvestCategory() || materialAutosmelt)) { return false; }
+        if ((materialAutosmelt || autosmeltModifier) && modifiers.getInt("silktouch") > 0) { return false; }
+        if (modifiers.getInt("blasting") > 0 && (!item.definition().hasHarvestCategory() || modifiers.getInt("luck") > 0
+                || modifiers.getInt("silktouch") > 0 || autosmeltModifier || materialAutosmelt)) { return false; }
         if (modifiers.getInt("fins") > 0 && !item.isAmmo()) { return false; }
         return item.getTotalModifierSlots(tool) >= usedSlots(tool);
     }
