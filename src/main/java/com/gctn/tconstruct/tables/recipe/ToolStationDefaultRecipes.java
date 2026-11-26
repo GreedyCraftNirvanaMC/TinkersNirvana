@@ -2,6 +2,7 @@ package com.gctn.tconstruct.tables.recipe;
 
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.MaterialInputs;
+import com.gctn.tconstruct.library.toolparts.AntiqueParts;
 import com.gctn.tconstruct.tools.ToolBuilder;
 import com.gctn.tconstruct.tools.ToolModifiers;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
@@ -129,6 +130,9 @@ public final class ToolStationDefaultRecipes {
             if (stack.isEmpty()) {
                 continue;
             }
+            var toolPart = AntiqueParts.get(stack);
+            boolean kit = toolPart != null && toolPart.id().equals("sharpening_kit");
+            if (toolPart != null && !kit && !toolPart.id().equals("shard")) { return null; }
             var input = MaterialInputs.match(stack);
             if (input == null) {
                 return null;
@@ -139,10 +143,26 @@ public final class ToolStationDefaultRecipes {
             if (info == null) {
                 return null;
             }
-            matches.add(new RepairMatch(slot, info, input.value()));
+            matches.add(new RepairMatch(slot, info, input.value(), kit));
         }
 
         int[] consumed = new int[lastMaterialSlot];
+        // 怀古逐个可修理部件检查第一个修理包。原料可单独匹配，额外的修理包槽位必须也能匹配。
+        var kits = matches.stream().filter(RepairMatch::kit).toList();
+        int kitIndex = 0;
+        for (RepairInfo info : materials) {
+            if (kitIndex >= kits.size()) { break; }
+            RepairMatch kit = kits.get(kitIndex);
+            if (kit.info().material() == info.material()) {
+                if (++consumed[kit.slot() - FIRST_MATERIAL_SLOT] >= container.getItem(kit.slot()).getCount()) { kitIndex++; }
+            }
+        }
+        for (RepairMatch kit : kits) {
+            if (consumed[kit.slot() - FIRST_MATERIAL_SLOT] == 0) { return null; }
+        }
+        Arrays.fill(consumed, 0);
+        List<RepairInfo> repairParts = materials.stream().filter(info -> info.partEfficient() > 0)
+                .filter(info -> matches.stream().anyMatch(match -> match.info().equals(info))).distinct().toList();
         var data = TinkerDataComponents.getMaterialTag(tool);
         int repairCount = Math.clamp(data.getInt("RepairCount"), 0, 100);
         int baseDurability = ToolBuilder.savedStats(tool).getInt("BaseDurability");
@@ -155,28 +175,40 @@ public final class ToolStationDefaultRecipes {
         int usedModifiers = Math.min(3, ToolModifiers.usedSlots(tool));
 
         while (tool.isDamaged()) {
-            var batch = new LinkedHashMap<RepairInfo, RepairMatch>();
+            List<RepairMatch> batch = new ArrayList<>();
+            var raw = new HashMap<RepairInfo, RepairMatch>();
+            var availableKits = new ArrayDeque<RepairMatch>();
             for (RepairMatch match : matches) {
-                if (consumed[match.slot() - FIRST_MATERIAL_SLOT] < container.getItem(match.slot()).getCount()) {
-                    batch.putIfAbsent(match.info(), match);
+                if (consumed[match.slot() - FIRST_MATERIAL_SLOT] >= container.getItem(match.slot()).getCount()) { continue; }
+                if (match.kit()) { availableKits.addLast(match); }
+                else { raw.merge(match.info(), match, (first, second) -> first.value() >= second.value() ? first : second); }
+            }
+            float amount = 0;
+            int rawMaterials = 0;
+            for (RepairInfo info : repairParts) {
+                RepairMatch kit = availableKits.peekFirst();
+                if (kit != null && kit.info().equals(info)) {
+                    batch.add(kit);
+                    amount += (int) (info.durability() * kit.value()) * info.partEfficient();
+                    if (consumed[kit.slot() - FIRST_MATERIAL_SLOT] + 1 >= container.getItem(kit.slot()).getCount()) {
+                        availableKits.removeFirst();
+                    }
+                }
+                RepairMatch ingredient = raw.get(info);
+                if (ingredient != null) {
+                    batch.add(ingredient);
+                    amount += info.durability() * ingredient.value() * info.partEfficient();
+                    rawMaterials++;
                 }
             }
-            if (batch.isEmpty()) {
-                break;
-            }
-            // 同种材料每轮只算一次。材料属性决定基础修复量，再计入多材料加成和修复衰减。
-            double amount = batch.values().stream()
-                    .mapToDouble(match -> match.info().durability() * match.info().partEfficient() * match.value()).sum();
-            amount *= 1 + (batch.size() - 1) / 9.0;
-            amount = Math.max((int) amount * Math.min(10, durabilityFactor), tool.getMaxDamage() / 64.0);
-            amount *= (1 - usedModifiers * .05) * (1 - (repairCount / 2) / 100.0);
-            int healed = Math.min(tool.getDamageValue(), ToolTraits.modifyHealing(tool, (int) Math.ceil(amount), null));
-            if (healed <= 0) {
-                break;
-            }
-            for (RepairMatch match : batch.values()) {
-                consumed[match.slot() - FIRST_MATERIAL_SLOT]++;
-            }
+            // 修理包单独计入修复量，多材料倍率只按普通原料的种数计算。
+            int baseRepair = (int) (amount * (1 + (rawMaterials - 1) / 9F));
+            if (baseRepair <= 0) { break; }
+            double adjusted = Math.max(baseRepair * Math.min(10, durabilityFactor), tool.getMaxDamage() / 64.0);
+            adjusted *= (1 - usedModifiers * .05) * (1 - (repairCount / 2) / 100.0);
+            int healed = Math.min(tool.getDamageValue(), ToolTraits.modifyHealing(tool, (int) Math.ceil(adjusted), null));
+            if (healed <= 0) { break; }
+            for (RepairMatch match : batch) { consumed[match.slot() - FIRST_MATERIAL_SLOT]++; }
             tool.setDamageValue(tool.getDamageValue() - healed);
             ToolTraits.forEach(tool, (trait, level) -> trait.onRepair(tool, level, healed));
             repairCount = Math.min(100, repairCount + 1);
@@ -209,6 +241,6 @@ public final class ToolStationDefaultRecipes {
         }
     }
 
-    private record RepairMatch(int slot, RepairInfo info, double value) {
+    private record RepairMatch(int slot, RepairInfo info, float value, boolean kit) {
     }
 }

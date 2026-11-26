@@ -66,6 +66,7 @@ Ammunition is stored as durability, and each shot uses ten points. To recover a 
 ## Repair, modifiers, and disassembly
 
 - In default mode, put the tool in the center and materials or modifiers in the other slots. Preview changes a copy. Inputs are consumed when taking the output.
+- Repair tools with raw materials for an eligible part, material shards, or matching sharpening kits. You can use a kit and raw material together in the station. A crafting table only accepts sharpening kits for this repair recipe.
 - Common modifiers use redstone, quartz, lapis, diamonds, emeralds, blaze powder, pistons, fermented spider eyes, Consecrated Soil, and similar ingredients. Lapis retains staged progress. Silk Touch and Luck are mutually exclusive.
 - Reinforcements, silky jewels, lava crystals, and expanders have crafting recipes. Wither skeletons drop necrotic bones. Coat a bone in blood to make a bloodbone.
 - Use a moss ball on a bookshelf or another enchanting-power block. It costs five XP levels to turn it into Mending Moss. An upgraded tool stores repair energy from XP and repairs gradually in the hotbar or offhand.
