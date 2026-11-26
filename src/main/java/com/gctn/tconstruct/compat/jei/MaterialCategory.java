@@ -98,11 +98,11 @@ final class MaterialCategory implements IRecipeCategory<MaterialCategory.Display
             FluidStack fluid = materialFluid(material);
             List<ItemStack> inputs = new ArrayList<>(rawInputs);
             if (!fluid.isEmpty()) { inputs.addAll(meltingInputs.getOrDefault(fluid.getFluid(), List.of())); }
-            var allParts = parts(material, List.of("Head", "Extra", "Handle", "Bow", "BowString", "Projectile", "Shaft", "Fletching"));
+            var allParts = parts(material, List.of("Head", "Extra", "Handle", "Bow", "BowString", "Projectile", "Shaft", "Fletching"), true);
             for (Kind kind : Kind.values()) {
                 var roles = kind.roles.stream().filter(role -> material.hasStats(statRole(role))).toList();
                 if (roles.isEmpty()) { continue; }
-                var parts = parts(material, roles);
+                var parts = parts(material, roles, false);
                 if (parts.isEmpty()) { continue; }
                 var lines = new ArrayList<Line>();
                 for (String role : roles) { addLines(lines, material, role); }
@@ -126,11 +126,12 @@ final class MaterialCategory implements IRecipeCategory<MaterialCategory.Display
 
     private static String statRole(String role) { return role.equals("Projectile") ? "Head" : role; }
 
-    private static List<ItemStack> parts(Material material, List<String> roles) {
+    private static List<ItemStack> parts(Material material, List<String> roles, boolean includeShard) {
         var parts = new ArrayList<ItemStack>();
         var required = AntiqueTools.entries().values().stream().flatMap(tool -> tool.definition().parts().stream()).toList();
         for (var part : AntiqueParts.entries().values()) {
-            if (part.id().equals("shard") || part.id().equals("bolt_core")) { continue; }
+            // 碎片能用于查询材料属性，但怀古不在可制部件的轮播槽里展示它。
+            if (part.id().equals("bolt_core") || part.id().equals("shard") && !includeShard) { continue; }
             boolean match = roles.contains(part.stat()) || required.stream().anyMatch(component ->
                     component.part().equals(part.id()) && roles.stream().anyMatch(role -> component.stat().equals(statRole(role))
                             && (!role.equals("Projectile") || component.part().equals("arrow_head") || component.part().equals("knife_blade"))));
