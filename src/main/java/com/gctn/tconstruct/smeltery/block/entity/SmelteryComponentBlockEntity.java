@@ -19,15 +19,16 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
@@ -139,7 +140,7 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
                 if (stopPouring || !beginTransfer()) {
                     pouring = false;
                     stopPouring = false;
-                    level.playSound(null, worldPosition, SoundEvents.LAVA_POP, SoundSource.BLOCKS, 0.2F, 1.0F);
+                    level.playSound(null, worldPosition, SoundEvents.LAVA_POP, SoundSource.BLOCKS, 0.2F, 0.8F + level.random.nextFloat() * 0.4F);
                     changed();
                 }
             } else {
@@ -212,7 +213,7 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
         return recipe == null ? ItemStack.EMPTY : recipe.output().copy();
     }
 
-    public void interact(Player player, InteractionHand hand, BlockHitResult hit) {
+    public void interact(Player player, BlockHitResult hit) {
         if (kind() == SmelteryBlock.Kind.FAUCET) {
             activate();
         } else if (kind() == SmelteryBlock.Kind.CHANNEL) {
@@ -231,12 +232,12 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
             ItemStack input = inventory.getStackInSlot(0);
             if (!output.isEmpty() || !input.isEmpty()) {
                 int slot = output.isEmpty() ? 0 : 1;
-                player.getInventory().placeItemBackInInventory(inventory.getStackInSlot(slot).copy());
+                ItemStack taken = inventory.getStackInSlot(slot).copy();
+                if (slot == 1) { EventHooks.firePlayerSmeltedEvent(player, taken); }
+                player.getInventory().placeItemBackInInventory(taken);
                 inventory.setStackInSlot(slot, ItemStack.EMPTY);
-            } else if (!player.getItemInHand(hand).isEmpty()) {
-                ItemStack placed = player.getItemInHand(hand).copyWithCount(1);
-                player.getItemInHand(hand).shrink(1);
-                inventory.setStackInSlot(0, placed);
+            } else if (!player.getMainHandItem().isEmpty()) {
+                inventory.setStackInSlot(0, player.getMainHandItem().split(1));
             }
         }
     }
@@ -337,7 +338,8 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
                 int outputs = (int) Direction.Plane.HORIZONTAL.stream().filter(side -> connections[side.ordinal()] == 1).count();
                 if (outputs > 0) {
                     int rate = Math.max(1, Math.min(transferRate, available / outputs));
-                    for (Direction side : Direction.Plane.HORIZONTAL) {
+                    for (int i = 0; i < 4; i++) {
+                        Direction side = Direction.from2DDataValue(i);
                         if (connections[side.ordinal()] == 1) {
                             transferChannel(side, Math.min(rate, Math.max(0, tank.getFluidAmount() - locked)));
                         }
@@ -356,13 +358,14 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
 
     private boolean transferChannel(Direction side, int amount) {
         IFluidHandler target = handler(worldPosition.relative(side), side.getOpposite());
-        if (target == null || amount <= 0 || tank.isEmpty()) {
-            return false;
-        }
-        int filled = target.fill(tank.getFluid().copyWithAmount(amount), IFluidHandler.FluidAction.EXECUTE);
+        int filled = target == null || amount <= 0 || tank.isEmpty() ? 0
+                : target.fill(tank.getFluid().copyWithAmount(amount), IFluidHandler.FluidAction.EXECUTE);
         if (filled > 0) {
             tank.drain(filled, IFluidHandler.FluidAction.EXECUTE);
             flow[side.ordinal()] = 3;
+            changed();
+        } else if (flow[side.ordinal()] > 0) {
+            flow[side.ordinal()] = 0;
             changed();
         }
         return filled > 0;
@@ -420,7 +423,7 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
         changed();
     }
 
-    public void neighborChanged(BlockPos from) {
+    public void neighborChanged(BlockPos from, boolean newlyPlaced) {
         SmelteryMaster controller = master();
         if (controller != null) {
             controller.requestCheck();
@@ -436,7 +439,8 @@ public class SmelteryComponentBlockEntity extends BlockEntity {
                 IFluidHandler target = handler(from, side.getOpposite());
                 if (target == null && !channel) {
                     connections[side.ordinal()] = 0;
-                } else if (!channel && connections[side.ordinal()] == 0) {
+                } else if (newlyPlaced && !channel && connections[side.ordinal()] == 0) {
+                    // 普通方块更新保留玩家手动关闭的出口。仅放置新容器时自动连接。
                     connections[side.ordinal()] = 1;
                 }
             }

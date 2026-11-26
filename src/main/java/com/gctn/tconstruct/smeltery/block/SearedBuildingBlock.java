@@ -32,7 +32,7 @@ public interface SearedBuildingBlock extends EntityBlock {
 
     static void neighborChanged(Level level, BlockPos pos, BlockPos from) {
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity component) {
-            component.neighborChanged(from);
+            component.neighborChanged(from, false);
         }
     }
 
