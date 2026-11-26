@@ -11,6 +11,8 @@ import com.gctn.tconstruct.tools.traits.AntiqueTraits;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -32,8 +34,7 @@ public final class ToolCombat {
     public static void damage(LivingIncomingDamageEvent event) {
         if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) { return; }
         ItemStack projectileTool = ToolRanged.traitsFor(event.getSource().getDirectEntity());
-        if (projectileTool.isEmpty() && !event.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK)
-                && !event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK)) { return; }
+        if (projectileTool.isEmpty() && !isMeleeDamage(event.getSource())) { return; }
         ItemStack tool = projectileTool.isEmpty() ? meleeTool(attacker) : projectileTool;
         if (!(tool.getItem() instanceof AntiqueTool item) || TinkerTools.isBroken(tool)) { return; }
         if (event.getSource().getDirectEntity() != attacker && projectileTool.isEmpty()) { return; }
@@ -83,8 +84,7 @@ public final class ToolCombat {
 
     public static void afterHit(AntiqueTool item, ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (item.definition().action() == ToolDefinition.Action.FRYPAN) {
-            target.knockback(1, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
-            attacker.level().playSound(null, attacker.blockPosition(), ToolSounds.FRYPAN.get(), net.minecraft.sounds.SoundSource.PLAYERS, 1.5F, 1);
+            attacker.level().playSound(null, attacker.blockPosition(), ToolSounds.FRYPAN.get(), net.minecraft.sounds.SoundSource.PLAYERS, 2, 1);
         }
         if (attacker instanceof Player player && target == CHARGED_SCYTHE_TARGET.get()
                 && item.definition().action() == ToolDefinition.Action.SCYTHE && !SWEEPING.get()) {
@@ -105,6 +105,28 @@ public final class ToolCombat {
     public static ItemStack meleeTool(LivingEntity attacker) {
         ItemStack held = attacker.getMainHandItem();
         return held.getItem() instanceof AntiqueTool item && item.isAmmo() ? ItemStack.EMPTY : held;
+    }
+
+    public static float hurtKnockbackScale(DamageSource source) {
+        if (!isMeleeDamage(source) || !(source.getEntity() instanceof LivingEntity attacker) || source.getDirectEntity() != attacker) {
+            return 0;
+        }
+        ItemStack stack = meleeTool(attacker);
+        if (!(stack.getItem() instanceof AntiqueTool tool) || TinkerTools.isBroken(stack)) {
+            return 0;
+        }
+        return switch (tool.definition().action()) {
+            case FRYPAN -> 2F;
+            case LUMBERAXE -> 1.5F;
+            case AXE -> 1.3F;
+            case MATTOCK -> 1.1F;
+            case RAPIER -> .6F;
+            default -> 1F;
+        };
+    }
+
+    private static boolean isMeleeDamage(DamageSource source) {
+        return source.is(DamageTypes.PLAYER_ATTACK) || source.is(DamageTypes.MOB_ATTACK);
     }
 
     public static void attack(Player player, Entity target, Runnable original) {
@@ -157,15 +179,14 @@ public final class ToolCombat {
     }
 
     public static void release(AntiqueTool item, ItemStack stack, Player player, int used) {
-        if (player.isFallFlying()) { return; }
-        if (item.definition().action() == ToolDefinition.Action.LONGSWORD && used > 5) {
+        if (item.definition().action() == ToolDefinition.Action.LONGSWORD && used > 5 && !player.isFallFlying()) {
             Vec3 look = player.getLookAngle();
             float speed = Math.min(.925F, .05F * used);
             player.setDeltaMovement(look.x * speed, player.getDeltaMovement().y + Math.min(.56F, .02F * used + .2F), look.z * speed);
             player.hurtMarked = true;
             player.causeFoodExhaustion(.2F);
             player.getCooldowns().addCooldown(stack.getItem(), 3);
-        } else if (item.definition().action() == ToolDefinition.Action.RAPIER && player.onGround()) {
+        } else if (item.definition().action() == ToolDefinition.Action.RAPIER && player.onGround() && !player.isFallFlying()) {
             Vec3 look = player.getLookAngle();
             player.setDeltaMovement(-look.x * .5, player.getDeltaMovement().y + .32, -look.z * .5);
             player.hurtMarked = true;
@@ -205,6 +226,8 @@ public final class ToolCombat {
                 float strength = .1F + 2.5F * progress * progress;
                 target.setDeltaMovement(target.getDeltaMovement().add(look.x * strength, look.y / 3 * strength + .1F + .4F * progress, look.z * strength));
                 target.hurtMarked = true;
+                player.level().playSound(null, player.blockPosition(), ToolSounds.FRYPAN.get(), player.getSoundSource(),
+                        1.5F, .6F + .2F * player.getRandom().nextFloat());
             }
         }
     }

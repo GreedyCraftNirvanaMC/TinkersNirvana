@@ -239,11 +239,13 @@ public class AntiqueTool extends TinkerTools {
                 : definition.action() == Action.FRYPAN || definition.action() == Action.LONGSWORD ? UseAnim.BOW : UseAnim.NONE;
     }
     @Override
-    public int getUseDuration(ItemStack stack, LivingEntity entity) { return 72000; }
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+        return definition.action() == Action.FRYPAN ? 100 : 72000;
+    }
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int remaining) {
         if (isBroken(stack)) { return; }
-        int used = 72000 - remaining;
+        int used = getUseDuration(stack, entity) - remaining;
         if (isLauncher()) { ToolRanged.release(this, stack, level, entity, used); }
         else if (!level.isClientSide && entity instanceof Player player) { ToolCombat.release(this, stack, player, used); }
     }
