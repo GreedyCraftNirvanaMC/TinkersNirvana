@@ -68,10 +68,11 @@ public final class ToolBuilder {
     /** 强化和材料变更共用的确定性重算入口；损耗和未知组件保留。 */
     public static void rebuild(ItemStack tool, ToolDefinition definition) {
         ToolStats stats = calculate(tool, definition);
+        float originalAttack = stats.attack;
         ToolTraits.forEach(tool, (trait, level) -> trait.modifyStats(tool, level, stats));
         stats.durability = ToolTraits.modifyDurability(tool, stats.durability);
         stats.baseDurability = stats.durability;
-        ToolModifiers.modifyStats(tool, stats);
+        ToolModifiers.modifyStats(tool, stats, originalAttack);
         stats.durability += stats.growthDurability;
         stats.attack += stats.growthAttack;
         stats.miningSpeed += stats.growthSpeed;

@@ -23,6 +23,21 @@ public record ToolDefinition(String id, List<Part> parts, List<TagKey<Block>> ef
         };
     }
 
+    // 怀古的采集类别也包含手斧、锤和镰刀，它们还具有武器类别。
+    boolean hasHarvestCategory() {
+        return switch (action) {
+            case PICKAXE, SHOVEL, AXE, MATTOCK, KAMA, HAMMER, EXCAVATOR, LUMBERAXE, SCYTHE -> true;
+            default -> false;
+        };
+    }
+
+    boolean hasWeaponCategory() {
+        return isSword() || switch (action) {
+            case AXE, KAMA, HAMMER, SCYTHE, FRYPAN, BATTLESIGN -> true;
+            default -> false;
+        };
+    }
+
     public ToolDefinition {
         Objects.requireNonNull(id);
         parts = List.copyOf(parts);
