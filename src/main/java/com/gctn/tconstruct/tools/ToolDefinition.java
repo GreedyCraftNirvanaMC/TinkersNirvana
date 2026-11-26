@@ -23,6 +23,10 @@ public record ToolDefinition(String id, List<Part> parts, List<TagKey<Block>> ef
         };
     }
 
+    public boolean isAmmo() {
+        return switch (action) { case ARROW, BOLT, SHURIKEN -> true; default -> false; };
+    }
+
     // 怀古的采集类别也包含手斧、锤和镰刀，它们还具有武器类别。
     boolean hasHarvestCategory() {
         return switch (action) {

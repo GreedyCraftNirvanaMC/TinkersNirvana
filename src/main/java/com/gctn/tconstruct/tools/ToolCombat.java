@@ -34,7 +34,7 @@ public final class ToolCombat {
         ItemStack projectileTool = ToolRanged.traitsFor(event.getSource().getDirectEntity());
         if (projectileTool.isEmpty() && !event.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK)
                 && !event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK)) { return; }
-        ItemStack tool = projectileTool.isEmpty() ? attacker.getMainHandItem() : projectileTool;
+        ItemStack tool = projectileTool.isEmpty() ? meleeTool(attacker) : projectileTool;
         if (!(tool.getItem() instanceof AntiqueTool item) || TinkerTools.isBroken(tool)) { return; }
         if (event.getSource().getDirectEntity() != attacker && projectileTool.isEmpty()) { return; }
         float strength = projectileTool.isEmpty() && attacker instanceof Player player ? player.getAttackStrengthScale(.5F) : 1F;
@@ -95,11 +95,16 @@ public final class ToolCombat {
     }
 
     public static void beforeHit(Player player, Entity target) {
-        ItemStack stack = player.getMainHandItem();
+        ItemStack stack = meleeTool(player);
         if (!player.level().isClientSide && target instanceof LivingEntity living
                 && stack.getItem() instanceof AntiqueTool && !TinkerTools.isBroken(stack)) {
             AntiqueTraits.shockingHit(stack, player, living);
         }
+    }
+
+    public static ItemStack meleeTool(LivingEntity attacker) {
+        ItemStack held = attacker.getMainHandItem();
+        return held.getItem() instanceof AntiqueTool item && item.isAmmo() ? ItemStack.EMPTY : held;
     }
 
     public static void attack(Player player, Entity target, Runnable original) {

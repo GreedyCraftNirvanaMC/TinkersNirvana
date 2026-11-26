@@ -120,13 +120,18 @@ public final class ToolBuilder {
             rules.add(Tool.Rule.minesAndDrops(tag, stats.miningSpeed));
         }
         tool.set(DataComponents.TOOL, new Tool(rules, 1, 1));
-        var attributes = ItemAttributeModifiers.builder()
-                .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID,
-                        Math.max(0, stats.attack), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
-                .add(Attributes.ATTACK_SPEED, new AttributeModifier(Item.BASE_ATTACK_SPEED_ID,
-                        stats.attackSpeed - 4, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
-        for (var entry : stats.attributes()) { attributes.add(entry.attribute(), entry.modifier(), entry.slot()); }
-        tool.set(DataComponents.ATTRIBUTE_MODIFIERS, attributes.build());
+        if (definition.isAmmo()) {
+            // 怀古只在弹射命中时使用弹药的攻击属性，握在手里时按普通物品处理。
+            tool.set(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
+        } else {
+            var attributes = ItemAttributeModifiers.builder()
+                    .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID,
+                            Math.max(0, stats.attack), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                    .add(Attributes.ATTACK_SPEED, new AttributeModifier(Item.BASE_ATTACK_SPEED_ID,
+                            stats.attackSpeed - 4, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+            for (var entry : stats.attributes()) { attributes.add(entry.attribute(), entry.modifier(), entry.slot()); }
+            tool.set(DataComponents.ATTRIBUTE_MODIFIERS, attributes.build());
+        }
         CompoundTag data = TinkerDataComponents.getMaterialTag(tool);
         CompoundTag saved = new CompoundTag();
         saved.putInt("BaseDurability", stats.baseDurability);

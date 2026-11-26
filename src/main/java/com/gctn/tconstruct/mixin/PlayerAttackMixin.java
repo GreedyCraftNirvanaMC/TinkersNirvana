@@ -33,7 +33,7 @@ public abstract class PlayerAttackMixin {
         float strength = original.call(attacker, target, source);
         // 让原版把强化和冲刺合并计算，再同步被击中的玩家。
         if (!attacker.level().isClientSide && target instanceof LivingEntity) {
-            strength += ToolModifiers.knockbackBonus(attacker.getMainHandItem());
+            strength += ToolModifiers.knockbackBonus(ToolCombat.meleeTool(attacker));
         }
         return strength;
     }

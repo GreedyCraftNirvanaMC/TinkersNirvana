@@ -47,7 +47,7 @@ public class AntiqueTool extends TinkerTools {
         return switch (definition.action()) { case SHORTBOW, LONGBOW, CROSSBOW -> true; default -> false; };
     }
     public boolean isAmmo() {
-        return switch (definition.action()) { case ARROW, BOLT, SHURIKEN -> true; default -> false; };
+        return definition.isAmmo();
     }
 
     @Override
@@ -183,10 +183,10 @@ public class AntiqueTool extends TinkerTools {
         return true;
     }
     @Override
-    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) { return true; }
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) { return !isAmmo(); }
     @Override
     public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (!attacker.level().isClientSide && !isBroken(stack)) {
+        if (!isAmmo() && !attacker.level().isClientSide && !isBroken(stack)) {
             if (!(attacker instanceof Player)) { AntiqueTraits.shockingHit(stack, attacker, target); }
             ToolTraits.forEach(stack, (trait, traitLevel) -> trait.afterHit(stack, traitLevel, target, attacker));
             ToolCombat.afterHit(this, stack, target, attacker);
