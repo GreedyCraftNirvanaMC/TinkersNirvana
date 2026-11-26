@@ -64,6 +64,7 @@ public record ToolDefinition(String id, List<Part> parts, List<TagKey<Block>> ef
         public AntiqueParts.Definition definition() { return AntiqueParts.get(part); }
         public List<String> traitStats(Action action) {
             if (stat.equals("Bow")) { return List.of("Bow", "Head"); }
+            if (stat.equals("Head") && action == Action.SHURIKEN) { return List.of("Head", "Extra", "Projectile"); }
             if (stat.equals("Head") && (action == Action.ARROW || action == Action.BOLT)) { return List.of("Head", "Projectile"); }
             if (stat.equals("Handle") && action == Action.CROSSBOW) { return List.of("Handle", "Extra"); }
             return List.of(stat);

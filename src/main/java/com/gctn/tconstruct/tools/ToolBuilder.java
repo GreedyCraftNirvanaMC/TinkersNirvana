@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ToolBuilder {
+    private static final String SHURIKEN_TRAITS = "ShurikenBladeTraits";
     private ToolBuilder() {}
 
     public static ItemStack assemble(AntiqueTools.Entry entry, List<Material> materials) {
@@ -48,12 +49,14 @@ public final class ToolBuilder {
             ToolDefinition.Part part = definition.parts().get(i);
             if (material == null || !material.hasStats(part.stat())
                     || (part.stat().equals("Bow") && !material.hasStats("Head"))
+                    || (definition.action() == ToolDefinition.Action.SHURIKEN && !material.hasStats("Extra"))
                     || (part.stat().equals("Handle") && definition.action() == ToolDefinition.Action.CROSSBOW && !material.hasStats("Extra"))) {
                 return ItemStack.EMPTY;
             }
             data.putString(part.key(), material.identifier);
             ToolTraits.addTraits(traits, material.getTraitsForStats(part.traitStats(definition.action())));
         }
+        if (definition.action() == ToolDefinition.Action.SHURIKEN) { data.putBoolean(SHURIKEN_TRAITS, true); }
         tool.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
         tool.set(TinkerDataComponents.TINKER_TRAITS.get(), CustomData.of(traits));
         rebuild(tool, definition);
@@ -67,6 +70,7 @@ public final class ToolBuilder {
 
     /** 强化和材料变更共用的确定性重算入口；损耗和未知组件保留。 */
     public static void rebuild(ItemStack tool, ToolDefinition definition) {
+        updateShurikenTraits(tool, definition);
         ToolStats stats = calculate(tool, definition);
         float originalAttack = stats.attack;
         ToolTraits.forEach(tool, (trait, level) -> trait.modifyStats(tool, level, stats));
@@ -151,11 +155,35 @@ public final class ToolBuilder {
 
     public static boolean ensureCurrent(ItemStack tool, ToolDefinition definition) {
         String current = com.gctn.tconstruct.tools.traits.TinkerTraits.definitionSession();
-        if (!current.isEmpty() && !current.equals(TinkerDataComponents.getMaterialTag(tool).getString("DefinitionSession"))) {
+        var data = TinkerDataComponents.getMaterialTag(tool);
+        if ((definition.action() == ToolDefinition.Action.SHURIKEN && !data.getBoolean(SHURIKEN_TRAITS))
+                || (!current.isEmpty() && !current.equals(data.getString("DefinitionSession")))) {
             rebuild(tool, definition);
             return true;
         }
         return false;
+    }
+
+    private static void updateShurikenTraits(ItemStack tool, ToolDefinition definition) {
+        if (definition.action() != ToolDefinition.Action.SHURIKEN) { return; }
+        CompoundTag data = TinkerDataComponents.getMaterialTag(tool);
+        if (data.getBoolean(SHURIKEN_TRAITS)) { return; }
+        // 旧存档只安装了头部词条。替换材料来源的词条，同时保留运行状态和刻印。
+        var previous = new CompoundTag();
+        var replacement = new CompoundTag();
+        for (var part : definition.parts()) {
+            var material = TinkerMaterials.getMaterial(data.getString(part.key()));
+            if (material == null) { continue; }
+            ToolTraits.addTraits(previous, material.getTraits("Head"));
+            ToolTraits.addTraits(replacement, material.getTraitsForStats(part.traitStats(definition.action())));
+        }
+        ToolTraits.addTraits(replacement, ToolTraits.entriesFrom(data.getCompound("EmbossedTraits")));
+        var actual = TinkerDataComponents.getTraitsTag(tool);
+        ToolTraits.replaceMaterialTraits(actual, previous, replacement,
+                data.contains("Embossed") && !data.contains("EmbossedTraits"));
+        data.putBoolean(SHURIKEN_TRAITS, true);
+        tool.set(TinkerDataComponents.TINKER_TRAITS.get(), CustomData.of(actual));
+        tool.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
     }
 
     public static ToolStats calculate(ItemStack tool, ToolDefinition definition) {

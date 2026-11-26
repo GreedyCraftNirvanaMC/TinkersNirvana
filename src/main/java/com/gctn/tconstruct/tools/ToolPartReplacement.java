@@ -33,7 +33,12 @@ public final class ToolPartReplacement {
             materials.add(material);
         }
         ItemStack oldBase = ToolBuilder.assemble(source.getItem(), definition, materials);
-        if (oldBase.isEmpty()) { return null; }
+        CompoundTag oldTraits = TinkerDataComponents.getTraitsTag(oldBase);
+        if (oldBase.isEmpty()) {
+            if (definition.action() != ToolDefinition.Action.SHURIKEN) { return null; }
+            // 曾经允许只有头部属性的刀刃。允许玩家一次换掉这些旧刀刃。
+            for (var material : materials) { ToolTraits.addTraits(oldTraits, material.getTraits("Head")); }
+        }
         HashSet<Integer> assigned = new HashSet<>();
         int[] counts = new int[6];
         boolean changed = false;
@@ -70,7 +75,6 @@ public final class ToolPartReplacement {
         ItemStack result = source.copyWithCount(1);
         CompoundTag materialData = original.copy();
         for (int index = 0; index < materials.size(); index++) { materialData.putString(definition.parts().get(index).key(), materials.get(index).identifier); }
-        CompoundTag oldTraits = TinkerDataComponents.getTraitsTag(oldBase);
         CompoundTag newTraits = TinkerDataComponents.getTraitsTag(newBase);
         CompoundTag embossed = materialData.getCompound("EmbossedTraits");
         ToolTraits.addTraits(newTraits, ToolTraits.entriesFrom(embossed));

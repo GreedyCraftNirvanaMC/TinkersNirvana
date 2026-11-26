@@ -78,12 +78,17 @@ public final class ToolRanged {
     public static InteractionResultHolder<ItemStack> use(AntiqueTool item, Level level, Player player, InteractionHand hand) {
         ItemStack tool = player.getItemInHand(hand);
         if (item.definition().action() == ToolDefinition.Action.SHURIKEN) {
-            if (!player.getAbilities().instabuild && remainingAmmo(tool) == 0) {
+            if (player.getCooldowns().isOnCooldown(tool.getItem())
+                    || (!player.getAbilities().instabuild && remainingAmmo(tool) == 0)) {
                 return InteractionResultHolder.fail(tool);
             }
             if (!level.isClientSide) {
-                shoot(item, tool, tool, player, 1, 1, hand, false);
+                ToolBuilder.ensureCurrent(tool, item.definition());
+                if (!shoot(item, tool, tool, player, 1, 1, hand, false)) {
+                    return InteractionResultHolder.fail(tool);
+                }
             }
+            player.getCooldowns().addCooldown(tool.getItem(), 4);
             return InteractionResultHolder.sidedSuccess(tool, level.isClientSide);
         }
         if (item.definition().action() == ToolDefinition.Action.CROSSBOW && isLoaded(tool)) {
