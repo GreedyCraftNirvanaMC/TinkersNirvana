@@ -5,6 +5,7 @@
 The Seared Furnace uses ordinary Minecraft smelting recipes and shared liquid
 fuel to cook several batches at once. Its controller is in the Smeltery creative
 tab. Craft it with eight Seared Bricks (items) surrounding a vanilla furnace.
+You can also pour 576 mB of Seared Stone over a vanilla furnace in a Casting Basin.
 
 Build a closed seared cuboid with an empty interior 1–9 blocks wide and deep,
 and at least one block tall. Full seared blocks form the inner floor, side walls,

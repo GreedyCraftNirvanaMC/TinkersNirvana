@@ -15,6 +15,7 @@ import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -90,7 +91,13 @@ public final class ToolBuilder {
         tool.set(DataComponents.MAX_DAMAGE, Math.max(1, stats.durability));
         tool.set(DataComponents.DAMAGE, Math.min(tool.getDamageValue(), tool.getMaxDamage()));
         List<Tool.Rule> rules = new ArrayList<>();
-        rules.add(Tool.Rule.deniesDrops(HarvestLevels.getIncorrectBlocksForDrops(stats.harvestLevel)));
+        var incorrectBlocks = HarvestLevels.getIncorrectBlocksForDrops(stats.harvestLevel);
+        rules.add(Tool.Rule.deniesDrops(incorrectBlocks));
+        // 怀古组装工具在等级不足时按徒手速度挖掘。原版镐保留自己的速度规则。
+        rules.add(Tool.Rule.overrideSpeed(incorrectBlocks, 1));
+        if (definition.action() == ToolDefinition.Action.AXE) {
+            rules.add(Tool.Rule.overrideSpeed(BlockTags.LEAVES, stats.miningSpeed));
+        }
         for (var tag : definition.effectiveBlocks()) {
             rules.add(Tool.Rule.minesAndDrops(tag, stats.miningSpeed));
         }

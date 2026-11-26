@@ -75,6 +75,7 @@ final class RecipeCatalog {
         catalog.addMelting(candidates, SmelteryRecipeEvents.inferAutomaticMelting(recipes, registries));
         catalog.addCasting(candidates);
         for (var alloy : SmelteryRecipes.ALLOYS) {
+            if (!alloy.enabled()) { continue; }
             catalog.add(Kind.ALLOYING, alloy.inputs().stream().map(Ingredient::fluid).toList(),
                     List.of(Ingredient.fluid(alloy.output())), Component.empty());
         }
@@ -87,7 +88,7 @@ final class RecipeCatalog {
             var recipe = holder.value();
             if (!recipe.leather() || Config.LEATHER_DRYING.get()) {
                 catalog.add(Kind.DRYING, List.of(Ingredient.items(List.of(recipe.ingredient().getItems()))),
-                        List.of(Ingredient.item(recipe.result().copy())), Component.translatable(TEXT + "time", recipe.time()));
+                        List.of(Ingredient.item(recipe.result().copy())), Component.translatable(TEXT + "time", recipe.duration()));
             }
         }
         catalog.addParts(candidates);

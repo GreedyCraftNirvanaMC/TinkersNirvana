@@ -175,19 +175,10 @@ public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
                 Math.max(liquids().amount(), liquids().capacity()), 52, com.gctn.tconstruct.Config.MIN_FLUID_HEIGHT.get());
     }
 
-    private int hoveredFluid(int x, int y) {
-        if (liquids() == null || x < 8 || x >= 60 || y < 16 || y >= 68) {
-            return -1;
-        }
-        int bottom = 68;
-        int[] heights = layerHeights();
-        for (int i = 0; i < heights.length; i++) {
-            bottom -= heights[i];
-            if (y >= bottom) {
-                return i;
-            }
-        }
-        return -1;
+    public Optional<SmelteryRendering.FluidLayer> fluidLayerAt(double mouseX, double mouseY) {
+        var tank = liquids();
+        return tank == null ? Optional.empty() : SmelteryRendering.fluidLayerAt(tank.fluids(), layerHeights(),
+                new Rect2i(leftPos + 8, topPos + 16, 52, 52), mouseX, mouseY);
     }
 
     private List<Component> tooltip(int x, int y) {
@@ -196,9 +187,9 @@ public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
             return text;
         }
         if (liquids() != null && x >= 8 && x < 60 && y >= 16 && y < 68) {
-            int index = hoveredFluid(x, y);
-            if (index >= 0) {
-                FluidStack fluid = liquids().fluids().get(index);
+            var layer = fluidLayerAt(leftPos + x, topPos + y);
+            if (layer.isPresent()) {
+                FluidStack fluid = layer.get().fluid();
                 text.add(fluid.getHoverName());
                 amount(text, fluid.getAmount(), fluid);
             } else {
@@ -248,7 +239,7 @@ public class SmelteryScreen extends AbstractContainerScreen<SmelteryMenu> {
     @Override
     public boolean mouseClicked(double x, double y, int button) {
         if (button == 0) {
-            int fluid = hoveredFluid((int) x - leftPos, (int) y - topPos);
+            int fluid = fluidLayerAt(x, y).map(SmelteryRendering.FluidLayer::index).orElse(-1);
             if (fluid >= 0) {
                 PacketDistributor.sendToServer(new SmelteryNetwork.SelectFluid(menu.containerId, fluid));
                 return true;

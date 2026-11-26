@@ -6,11 +6,13 @@ import com.gctn.tconstruct.library.toolparts.AntiqueParts;
 import com.gctn.tconstruct.library.utils.Tags;
 import com.gctn.tconstruct.smeltery.SmelteryModule;
 import com.gctn.tconstruct.smeltery.client.SmelteryScreen;
+import com.gctn.tconstruct.smeltery.client.TinkerTankScreen;
 import com.gctn.tconstruct.tables.WorkshopModule;
 import com.gctn.tconstruct.tables.client.PersistentCraftingScreen;
 import com.gctn.tconstruct.tables.client.ToolStationScreen;
 import com.gctn.tconstruct.tables.client.WorkshopScreen;
 import com.gctn.tconstruct.tables.menu.PersistentCraftingMenu;
+import com.gctn.tconstruct.tables.recipe.TableMaterialRecipe;
 import com.gctn.tconstruct.tools.AntiqueTools;
 import com.gctn.tconstruct.tools.PatternItem;
 import mezz.jei.api.IModPlugin;
@@ -27,6 +29,8 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
+import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
+import mezz.jei.api.runtime.IClickableIngredient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
@@ -35,6 +39,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -76,6 +81,10 @@ public final class TinkerJeiPlugin implements IModPlugin {
                 RecipeTypes.CRAFTING, 1, 9, 10, 36);
     }
 
+    @Override public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
+        registration.getCraftingCategory().addExtension(TableMaterialRecipe.class, new TableCraftingExtension());
+    }
+
     @Override public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         registration.addGuiContainerHandler(PersistentCraftingScreen.class, new IGuiContainerHandler<>() {
             @Override public List<Rect2i> getGuiExtraAreas(PersistentCraftingScreen screen) { return screen.occupiedAreas(); }
@@ -86,6 +95,19 @@ public final class TinkerJeiPlugin implements IModPlugin {
         protectSidePanels(registration, WorkshopScreen.class, WorkshopScreen::occupiedAreas);
         protectSidePanels(registration, ToolStationScreen.class, ToolStationScreen::occupiedAreas);
         protectSidePanels(registration, SmelteryScreen.class, SmelteryScreen::occupiedAreas);
+        var ingredients = registration.getJeiHelpers().getIngredientManager();
+        registration.addGuiContainerHandler(SmelteryScreen.class, new IGuiContainerHandler<SmelteryScreen>() {
+            @Override public Optional<IClickableIngredient<?>> getClickableIngredientUnderMouse(SmelteryScreen screen, double x, double y) {
+                return screen.fluidLayerAt(x, y)
+                        .flatMap(layer -> ingredients.createClickableIngredient(layer.fluid(), layer.area(), false));
+            }
+        });
+        registration.addGuiContainerHandler(TinkerTankScreen.class, new IGuiContainerHandler<TinkerTankScreen>() {
+            @Override public Optional<IClickableIngredient<?>> getClickableIngredientUnderMouse(TinkerTankScreen screen, double x, double y) {
+                return screen.fluidLayerAt(x, y)
+                        .flatMap(layer -> ingredients.createClickableIngredient(layer.fluid(), layer.area(), false));
+            }
+        });
     }
 
     private static <T extends AbstractContainerScreen<?>> void protectSidePanels(

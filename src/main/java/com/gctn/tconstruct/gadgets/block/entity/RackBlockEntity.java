@@ -69,7 +69,7 @@ public class RackBlockEntity extends BaseContainerBlockEntity {
         if (rack.getItem(0).isEmpty() || !rack.getItem(1).isEmpty()) { return; }
         var recipe = rack.recipes.getRecipeFor(new SingleRecipeInput(rack.getItem(0)), level);
         if (recipe.isEmpty()) { rack.items.set(1, rack.items.get(0)); rack.items.set(0, ItemStack.EMPTY); rack.reset(); rack.setChanged(); return; }
-        int duration = Math.max(1, (int) Math.min(Integer.MAX_VALUE, recipe.get().value().time() * com.gctn.tconstruct.Config.DRYING_TIME_MULTIPLIER.get()));
+        int duration = recipe.get().value().duration();
         if (!rack.recipeId.equals(recipe.get().id().toString()) || rack.duration != duration) {
             rack.reset(); rack.recipeId = recipe.get().id().toString(); rack.duration = duration; rack.setChanged();
         }

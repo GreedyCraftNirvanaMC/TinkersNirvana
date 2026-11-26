@@ -312,7 +312,7 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity implements Hea
             return;
         }
         for (SmelteryRecipes.Alloy recipe : SmelteryRecipes.ALLOYS) {
-            if (recipe.output().is(SmelteryFluids.get("obsidian")) && !com.gctn.tconstruct.Config.OBSIDIAN_ALLOY.get()) {
+            if (!recipe.enabled()) {
                 continue;
             }
             int matched = Math.min(10, recipe.matches(liquids));

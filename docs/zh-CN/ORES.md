@@ -8,6 +8,8 @@
 
 创造栏还有阿迪特矿石 `tconsnirvana:ardite_ore` 和钴矿石 `tconsnirvana:cobalt_ore`。两者的硬度和抗爆性均为 10，使用石质音效。匠魂怀古的默认采掘等级为钴级 4，在 NeoForge 中通过 `needs_netherite_tool` 标签表示。下界合金镐及钴级以上的组装镐可采集，钻石镐及以下破坏后没有掉落。成功采集时掉落一块矿石，时运和精准采集同样如此。
 
-常见矿石的方块与物品使用 `c:ores/<metal>`、`c:ores`、`c:ores_in_ground/stone` 和 `c:ore_rates/singular` 标签。阿迪特使用 `c:ores/ardite`、`c:ores`、`c:ores_in_ground/netherrack` 和 `c:ore_rates/singular`。所有矿石均按 `smeltery.oreToIngotRatio` 在冶炼炉中产出对应熔融金属，默认倍率为 2，每块 288 mB。
+第一批钴矿或阿迪特矿可用黑曜石镐采集。将镐头模板和两块黑曜石放进部件加工台，再用所得的钴级镐头组装镐。锤的采掘等级由锤头决定。组装工具等级不足时，基础挖掘速度等同于徒手。原版镐沿用自身的挖掘速度规则。
 
-矿石生成由[世界生成配置](WORLD.md)管理。矿石方块的注册本身不提供额外的普通熔炉配方。数据包可以调整矿石放置，游戏内名称支持简体中文与英文。
+锡、铝、钴和阿迪特的方块与物品均加入 `c:ores/<metal>`、`c:ores` 和 `c:ore_rates/singular`。锡和铝使用 `c:ores_in_ground/stone`，钴和阿迪特使用 `c:ores_in_ground/netherrack`。这四种矿石在普通熔炉中每块烧出一锭，在冶炼炉中的产量由 `smeltery.oreToIngotRatio` 决定，默认每块产出 288 mB 对应的熔融金属。
+
+矿石生成由[世界生成配置](WORLD.md)管理。数据包可调整矿石放置和普通熔炉配方。游戏内名称支持简体中文与英文。

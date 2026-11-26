@@ -16,6 +16,7 @@ import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -136,8 +137,20 @@ public class AntiqueTool extends TinkerTools {
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        if (!isBroken(stack) && definition.action() == Action.BROADSWORD && state.is(net.minecraft.world.level.block.Blocks.COBWEB)) { return 15; }
+        if (isBroken(stack)) {
+            return isEffectiveOn(state) || isHatchetOnLeaves(state) ? .3F : 1F;
+        }
+        if (definition.action() == Action.BROADSWORD && state.is(net.minecraft.world.level.block.Blocks.COBWEB)) { return 15; }
         return super.getDestroySpeed(stack, state);
+    }
+
+    private boolean isEffectiveOn(BlockState state) {
+        return definition.effectiveBlocks().stream().anyMatch(state::is)
+                || definition.action() == Action.BROADSWORD && state.is(net.minecraft.world.level.block.Blocks.COBWEB);
+    }
+
+    private boolean isHatchetOnLeaves(BlockState state) {
+        return definition.action() == Action.AXE && state.is(BlockTags.LEAVES);
     }
 
     @Override
@@ -150,7 +163,7 @@ public class AntiqueTool extends TinkerTools {
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity entity) {
         if (!level.isClientSide && !isBroken(stack)) {
             if (state.getDestroySpeed(level, pos) > 0) {
-                boolean effective = isCorrectToolForDrops(stack, state);
+                boolean effective = isEffectiveOn(state);
                 ToolTraits.forEach(stack, (trait, traitLevel) -> trait.afterBlockBreak(stack, traitLevel, level, state, pos, entity, effective));
                 ToolModifiers.rewardLuck(stack, entity, 1);
                 int blasting = ToolModifiers.level(stack, "blasting");
@@ -159,7 +172,10 @@ public class AntiqueTool extends TinkerTools {
                             : net.minecraft.core.particles.ParticleTypes.EXPLOSION;
                     server.sendParticles(particle, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, 1, 0, 0, 0, 0);
                 }
-                damageTool(stack, 1, entity, EquipmentSlot.MAINHAND);
+                // 怀古按工具适用类别计损耗；短斧清理树叶不耗耐久。
+                if (!isHatchetOnLeaves(state)) {
+                    damageTool(stack, effective ? 1 : 2, entity, EquipmentSlot.MAINHAND);
+                }
             }
             ToolHarvest.afterBreak(this, stack, level, state, pos, entity);
         }

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "blocks",
+  "ingredient": {
+    "item": "tconsnirvana:tin_ore"
+  },
+  "result": {
+    "id": "tconsnirvana:tin_ingot"
+  },
+  "experience": 0.5,
+  "cookingtime": 200
+}

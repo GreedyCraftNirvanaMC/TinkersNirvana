@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "tconsnirvana:ardite_ore"
+    "tconsnirvana:ardite_ore",
+    "tconsnirvana:cobalt_ore"
   ]
 }

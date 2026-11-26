@@ -80,9 +80,8 @@ public final class PartBuilderRecipes {
             if (value + .0001F < part.cost()) { continue; }
             ItemStack result = part.create(material);
             if (result.isEmpty()) { continue; }
-            float surplus = value - part.cost();
-            int shards = Math.round(surplus * 2);
-            if (Math.abs(surplus - shards * .5F) > .001F) { return null; }
+            // 怀古只返还完整碎片。少于半份的尾料不影响部件产出。
+            int shards = (int) ((value - part.cost() + .0001F) * 2);
             if (shards == 0) { return new Plan(result, counts); }
             ItemStack remainder = AntiqueParts.get("shard").create(material);
             ItemStack existing = container.getItem(6);
