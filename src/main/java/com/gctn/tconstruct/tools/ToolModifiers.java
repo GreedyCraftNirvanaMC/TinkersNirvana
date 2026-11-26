@@ -394,9 +394,24 @@ public final class ToolModifiers {
     public static void afterHit(ItemStack tool, LivingEntity target, LivingEntity attacker) {
         int fire = units(tool, "fiery");
         if (fire > 0) { target.igniteForSeconds(1 + fire / 8); com.gctn.tconstruct.tools.traits.TraitDamage.hurt(target, attacker, "fiery", fire / 15F); }
-        if (units(tool, "knockback") > 0) { target.knockback(units(tool, "knockback") * .1, attacker.getX() - target.getX(), attacker.getZ() - target.getZ()); }
         if (units(tool, "shulking") > 0) { target.addEffect(new MobEffectInstance(MobEffects.LEVITATION, units(tool, "shulking") / 2 + 10)); }
         if (level(tool, "webbed") > 0) { target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, level(tool, "webbed") * 60, 1)); }
+    }
+
+    public static float knockbackBonus(ItemStack tool) {
+        return tool.getItem() instanceof AntiqueTool && !TinkerTools.isBroken(tool) ? units(tool, "knockback") * .1F : 0F;
+    }
+
+    static void applyExtraKnockback(ItemStack tool, LivingEntity target, LivingEntity attacker) {
+        float strength = knockbackBonus(tool);
+        if (strength <= 0) { return; }
+        // 怀古对弹射命中也沿攻击者的朝向加速度，远距离时不以双方坐标连线计算。
+        float yaw = attacker.getYRot() * net.minecraft.util.Mth.DEG_TO_RAD;
+        target.push(-net.minecraft.util.Mth.sin(yaw) * strength * .5F, .1,
+                net.minecraft.util.Mth.cos(yaw) * strength * .5F);
+        target.hurtMarked = true;
+        attacker.setDeltaMovement(attacker.getDeltaMovement().multiply(.6, 1, .6));
+        attacker.setSprinting(false);
     }
 
     public static void rewardLuck(ItemStack tool, LivingEntity user, int attempts) {

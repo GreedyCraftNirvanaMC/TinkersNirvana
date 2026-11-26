@@ -90,6 +90,7 @@ public final class ToolCombat {
                 && item.definition().action() == ToolDefinition.Action.SCYTHE && !SWEEPING.get()) {
             sweep(item, stack, target, player);
         }
+        if (!(attacker instanceof Player)) { ToolModifiers.applyExtraKnockback(stack, target, attacker); }
         ToolModifiers.afterHit(stack, target, attacker);
     }
 

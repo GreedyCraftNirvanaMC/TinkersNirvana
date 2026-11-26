@@ -127,6 +127,7 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     protected void doPostHurtEffects(LivingEntity target) {
         super.doPostHurtEffects(target);
         if (!level().isClientSide && getOwner() instanceof LivingEntity owner) {
+            ToolModifiers.applyExtraKnockback(traitTool(), target, owner);
             ToolTraits.forEach(traitTool(), (trait, level) -> trait.afterHit(traitTool(), level, target, owner));
             ToolModifiers.afterHit(traitTool(), target, owner);
         }

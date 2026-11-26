@@ -84,6 +84,7 @@ public final class ToolGameplayEvents {
         }
         if (!projectile.isEmpty() && !(event.getSource().getDirectEntity() instanceof AntiqueProjectile)) {
             ItemStack used = projectile;
+            ToolModifiers.applyExtraKnockback(used, event.getEntity(), attacker);
             ToolTraits.forEach(used, (trait, level) -> trait.afterHit(used, level, event.getEntity(), attacker));
             ToolModifiers.afterHit(used, event.getEntity(), attacker);
         }
