@@ -75,6 +75,22 @@ public final class ToolRanged {
         return ItemStack.EMPTY;
     }
 
+    public static ItemStack ammoForDisplay(AntiqueTool launcher, ItemStack tool, Player player) {
+        if (launcher.definition().action() == ToolDefinition.Action.CROSSBOW && isLoaded(tool)) {
+            return loadedAmmo(launcher, tool, player);
+        }
+        return creativeFallback(findAmmo(launcher, player), player);
+    }
+
+    private static ItemStack loadedAmmo(AntiqueTool launcher, ItemStack tool, Player player) {
+        var legacy = tool.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
+        return !legacy.isEmpty() ? legacy.getItems().getFirst() : creativeFallback(findAmmo(launcher, player), player);
+    }
+
+    private static ItemStack creativeFallback(ItemStack ammo, Player player) {
+        return ammo.isEmpty() && player.getAbilities().instabuild ? new ItemStack(Items.ARROW) : ammo;
+    }
+
     public static InteractionResultHolder<ItemStack> use(AntiqueTool item, Level level, Player player, InteractionHand hand) {
         ItemStack tool = player.getItemInHand(hand);
         if (item.definition().action() == ToolDefinition.Action.SHURIKEN) {
@@ -95,8 +111,7 @@ public final class ToolRanged {
             if (!level.isClientSide) {
                 var legacy = tool.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
                 boolean prepaid = !legacy.isEmpty();
-                ItemStack ammo = prepaid ? legacy.getItems().getFirst() : findAmmo(item, player);
-                if (ammo.isEmpty() && player.getAbilities().instabuild) { ammo = new ItemStack(Items.ARROW); }
+                ItemStack ammo = loadedAmmo(item, tool, player);
                 if (ammo.isEmpty() || shoot(item, tool, ammo, player, 1, 1, hand, prepaid)) {
                     setLoaded(tool, false);
                     tool.remove(DataComponents.CHARGED_PROJECTILES);
@@ -147,7 +162,7 @@ public final class ToolRanged {
             return;
         }
         // 怀古以实际拉弓五刻为下限。长弓在五刻后的低速箭仍会发射。
-        if (ammo.isEmpty()) { ammo = new ItemStack(Items.ARROW); }
+        ammo = creativeFallback(ammo, player);
         float progress = drawProgress(item, tool, used);
         float power = BowItem.getPowerForTime((int) (progress * 20)) * progress;
         shoot(item, tool, ammo, player, power, progress, player.getUsedItemHand(), false);

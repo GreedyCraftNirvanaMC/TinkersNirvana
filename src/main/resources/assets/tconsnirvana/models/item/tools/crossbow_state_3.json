@@ -5,41 +5,5 @@
     "layer1": "tconsnirvana:item/antique/crossbow/limb_3",
     "layer2": "tconsnirvana:item/antique/crossbow/binding",
     "layer3": "tconsnirvana:item/antique/crossbow/bowstring_3"
-  },
-  "display": {
-    "firstperson_righthand": {
-      "rotation": [
-        -90,
-        -5,
-        -45
-      ],
-      "translation": [
-        0,
-        2,
-        0
-      ],
-      "scale": [
-        0.68,
-        0.68,
-        0.68
-      ]
-    },
-    "firstperson_lefthand": {
-      "rotation": [
-        -90,
-        -5,
-        45
-      ],
-      "translation": [
-        0,
-        2,
-        0
-      ],
-      "scale": [
-        0.68,
-        0.68,
-        0.68
-      ]
-    }
   }
 }
