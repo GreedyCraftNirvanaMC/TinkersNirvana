@@ -12,11 +12,17 @@ import com.gctn.tconstruct.tools.traits.AntiqueTraits;
 import com.gctn.tconstruct.tools.traits.TinkerEffects;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Rotations;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -30,6 +36,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -44,8 +51,13 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     private int groundedLife;
     private int flightTicks;
     private double launchSpeed;
-    private static final net.minecraft.network.syncher.EntityDataAccessor<ItemStack> TOOL =
-            net.minecraft.network.syncher.SynchedEntityData.defineId(AntiqueProjectile.class, net.minecraft.network.syncher.EntityDataSerializers.ITEM_STACK);
+    private float visualSpin;
+    private float visualSpinSpeed;
+    private static final EntityDataAccessor<ItemStack> TOOL =
+            SynchedEntityData.defineId(AntiqueProjectile.class, EntityDataSerializers.ITEM_STACK);
+    private static final Rotations NOT_EMBEDDED = new Rotations(0, 0, 0);
+    private static final EntityDataAccessor<Rotations> IMPACT_ROTATION =
+            SynchedEntityData.defineId(AntiqueProjectile.class, EntityDataSerializers.ROTATIONS);
 
     public AntiqueProjectile(EntityType<? extends AntiqueProjectile> type, Level level) { super(type, level); }
 
@@ -61,9 +73,10 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     }
 
     @Override
-    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(TOOL, ItemStack.EMPTY);
+        builder.define(IMPACT_ROTATION, NOT_EMBEDDED);
     }
 
     public ItemStack traitTool() { return entityData.get(TOOL); }
@@ -71,6 +84,14 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     public ItemStack getItem() { return traitTool(); }
     @Override
     protected ItemStack getDefaultPickupItem() { return new ItemStack(Items.ARROW); }
+
+    public Rotations impactRotation() { return entityData.get(IMPACT_ROTATION); }
+
+    public boolean isEmbedded() { return inGround || impactRotation().getZ() != 0; }
+
+    public float visualSpin(float partialTick) {
+        return visualSpin + (isEmbedded() ? 0 : visualSpinSpeed * partialTick);
+    }
 
     void recordLaunchSpeed() { launchSpeed = getDeltaMovement().length(); }
 
@@ -139,6 +160,7 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
         tag.putInt("TinkerGroundedLife", groundedLife);
         if (launchSpeed > 0) { tag.putDouble("TinkerLaunchSpeed", launchSpeed); }
         if (!traitTool().isEmpty()) { tag.put("TinkerTool", traitTool().save(registryAccess())); }
+        if (inGround) { tag.put("TinkerImpactRotation", impactRotation().save()); }
     }
 
     @Override
@@ -147,6 +169,9 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
         groundedLife = Math.max(0, tag.contains("TinkerGroundedLife") ? tag.getInt("TinkerGroundedLife") : tag.getShort("life"));
         launchSpeed = tag.getDouble("TinkerLaunchSpeed");
         entityData.set(TOOL, ItemStack.parseOptional(registryAccess(), tag.getCompound("TinkerTool")));
+        var savedImpact = tag.getList("TinkerImpactRotation", Tag.TAG_FLOAT);
+        entityData.set(IMPACT_ROTATION, !inGround ? NOT_EMBEDDED : savedImpact.size() == 3
+                ? new Rotations(savedImpact) : new Rotations(getXRot(), getYRot(), 1));
     }
 
     @Override
@@ -156,6 +181,19 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
         double gravity = isNoGravity() ? 0 : getGravity();
         Vec3 incoming = getDeltaMovement();
         super.tick();
+        if (!level().isClientSide && !inGround && impactRotation().getZ() != 0) {
+            entityData.set(IMPACT_ROTATION, NOT_EMBEDDED);
+        }
+        if (level().isClientSide && flight && !isEmbedded()) {
+            if (visualSpinSpeed == 0 && incoming.lengthSqr() > .001 && traitTool().getItem() instanceof AntiqueTool ammo) {
+                visualSpinSpeed = switch (ammo.definition().action()) {
+                    case ARROW -> Math.max(1, (int) (incoming.length() * 80 / 3));
+                    case SHURIKEN -> 20;
+                    default -> 0;
+                };
+            }
+            visualSpin = (visualSpin + visualSpinSpeed) % 360;
+        }
         if (inGround || isRemoved()) {
             flightTicks = 0;
             return;
@@ -263,8 +301,15 @@ public class AntiqueProjectile extends AbstractArrow implements net.minecraft.wo
     }
 
     @Override
-    protected void onHitBlock(net.minecraft.world.phys.BlockHitResult result) {
+    protected void onHitBlock(BlockHitResult result) {
+        Vec3 incoming = getDeltaMovement();
         super.onHitBlock(result);
+        if (!level().isClientSide && inGround) {
+            // 极近的碰撞可能早于客户端第一刻飞行。同步实际入墙方向，第三轴标记方向有效。
+            float pitch = (float) (Mth.atan2(incoming.y, incoming.horizontalDistance()) * Mth.RAD_TO_DEG);
+            float yaw = (float) (Mth.atan2(incoming.x, incoming.z) * Mth.RAD_TO_DEG);
+            entityData.set(IMPACT_ROTATION, new Rotations(pitch, yaw, 1));
+        }
         ToolTraits.forEach(traitTool(), (trait, level) -> trait.onProjectileHitBlock(traitTool(), level, this, result));
     }
 

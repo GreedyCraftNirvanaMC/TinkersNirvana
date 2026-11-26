@@ -17,7 +17,6 @@ import com.gctn.tconstruct.tools.*;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -77,19 +76,7 @@ public final class AntiqueToolClient {
 
     @SubscribeEvent
     public static void renderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(ToolRanged.PROJECTILE.get(), context -> new ArrowRenderer<AntiqueProjectile>(context) {
-            private final net.minecraft.client.renderer.entity.ThrownItemRenderer<AntiqueProjectile> shuriken = new net.minecraft.client.renderer.entity.ThrownItemRenderer<>(context);
-            @Override
-            public void render(AntiqueProjectile entity, float yaw, float partial, com.mojang.blaze3d.vertex.PoseStack pose,
-                               net.minecraft.client.renderer.MultiBufferSource buffers, int light) {
-                if (entity.getItem().getItem() instanceof AntiqueTool item && item.definition().action() == ToolDefinition.Action.SHURIKEN) {
-                    shuriken.render(entity, yaw, partial, pose, buffers, light);
-                } else { super.render(entity, yaw, partial, pose, buffers, light); }
-            }
-            @Override public ResourceLocation getTextureLocation(AntiqueProjectile entity) {
-                return ResourceLocation.withDefaultNamespace("textures/entity/projectiles/arrow.png");
-            }
-        });
+        event.registerEntityRenderer(ToolRanged.PROJECTILE.get(), AntiqueProjectileRenderer::new);
     }
 
     @SubscribeEvent
