@@ -205,11 +205,24 @@ public final class BookScreen extends Screen {
         hits.add(new Hit(x, y, width, 9, target, ItemStack.EMPTY, null, label, null));
     }
     private void section(GuiGraphics graphics, int x, int y, BookDocument.Section section, float mx, float my) {
-        if (mx >= x && mx < x + 42 && my >= y && my < y + 42) { graphics.fill(x + 5, y + 3, x + 37, y + 35, 0x77ee541c); }
+        int labelSpace = BookDocument.INDEX_COLUMN_WIDTH - 4;
+        int center = x + BookDocument.INDEX_TILE_WIDTH / 2;
+        int left = center - labelSpace / 2;
+        boolean hovered = mx >= left && mx < left + labelSpace && my >= y && my < y + BookDocument.INDEX_TILE_HEIGHT;
+        if (hovered) { graphics.fill(x + 5, y + 3, x + 37, y + 35, 0x77ee541c); }
         item(graphics, section.icon(), x + 5, y + 5, 2);
         var label = BookContents.paper(section.label());
-        graphics.drawString(font, label, x + 21 - font.width(label) / 2, y + 38, mx >= x && mx < x + 42 && my >= y && my < y + 42 ? 0xff000000 : 0x7f000000, false);
-        hits.add(new Hit(x, y, 42, 46, "go-to-page:" + section.target(), ItemStack.EMPTY, null, section.label(), null));
+        int width = font.width(label);
+        // 资源包和译文可以提供更长的标题，将文字限制在各列内并在悬浮时显示完整标题。
+        float scale = width > labelSpace ? (float) labelSpace / width : 1;
+        var pose = graphics.pose();
+        pose.pushPose();
+        pose.translate(center - width * scale / 2, y + 38, 0);
+        pose.scale(scale, scale, 1);
+        graphics.drawString(font, label, 0, 0, hovered ? 0xff000000 : 0x7f000000, false);
+        pose.popPose();
+        hits.add(new Hit(left, y, labelSpace, BookDocument.INDEX_TILE_HEIGHT, "go-to-page:" + section.target(),
+                ItemStack.EMPTY, null, section.label(), null));
     }
     private void diagram(GuiGraphics graphics, int x, int y, BookDocument.Diagram diagram) {
         if (diagram.modifier()) {

@@ -21,6 +21,7 @@ import java.util.*;
 /** Mantle and Antique page templates in their original paper coordinates. */
 final class BookDocument {
     static final int WIDTH = 182, HEIGHT = 176, BOTTOM = 156;
+    static final int INDEX_COLUMN_WIDTH = 58, INDEX_TILE_WIDTH = 42, INDEX_TILE_HEIGHT = 46;
     sealed interface Element permits Text, Icon, Image, Link, Tile, Section, Diagram, Structure {}
     record Text(int x, int y, FormattedCharSequence line, float scale, boolean shadow) implements Element {
         Text(int x, int y, FormattedCharSequence line) { this(x, y, line, 1, false); }
@@ -59,7 +60,9 @@ final class BookDocument {
         }
         List<Element> index = new ArrayList<>(); int number = 0;
         for (var entry : indexEntries) {
-            index.add(new Section(23 + number % 3 * 47, 20 + number / 3 % 3 * 47, entry.label(), entry.target(), entry.icon()));
+            int x = (WIDTH - 3 * INDEX_COLUMN_WIDTH) / 2 + (INDEX_COLUMN_WIDTH - INDEX_TILE_WIDTH) / 2;
+            index.add(new Section(x + number % 3 * INDEX_COLUMN_WIDTH, 20 + number / 3 % 3 * 47,
+                    entry.label(), entry.target(), entry.icon()));
             number++;
             if (number % 9 == 0) { add(new Leaf(number == 9 ? "index" : "index:" + (number / 9 - 1), "index", Component.empty(), List.copyOf(index), "index")); index.clear(); }
         }
