@@ -16,6 +16,32 @@ import java.util.Objects;
 public record ToolDefinition(String id, List<Part> parts, List<TagKey<Block>> effectiveBlocks,
                              float durabilityMultiplier, float damageMultiplier, float bonusDamage,
                              float attackSpeed, Action action) {
+    public boolean isSword() {
+        return switch (action) {
+            case BROADSWORD, LONGSWORD, RAPIER, CLEAVER -> true;
+            default -> false;
+        };
+    }
+
+    public boolean isAmmo() {
+        return switch (action) { case ARROW, BOLT, SHURIKEN -> true; default -> false; };
+    }
+
+    // 怀古的采集类别也包含手斧、锤和镰刀，它们还具有武器类别。
+    boolean hasHarvestCategory() {
+        return switch (action) {
+            case PICKAXE, SHOVEL, AXE, MATTOCK, KAMA, HAMMER, EXCAVATOR, LUMBERAXE, SCYTHE -> true;
+            default -> false;
+        };
+    }
+
+    boolean hasWeaponCategory() {
+        return isSword() || switch (action) {
+            case AXE, KAMA, HAMMER, SCYTHE, FRYPAN, BATTLESIGN -> true;
+            default -> false;
+        };
+    }
+
     public ToolDefinition {
         Objects.requireNonNull(id);
         parts = List.copyOf(parts);
@@ -42,6 +68,7 @@ public record ToolDefinition(String id, List<Part> parts, List<TagKey<Block>> ef
         public AntiqueParts.Definition definition() { return AntiqueParts.get(part); }
         public List<String> traitStats(Action action) {
             if (stat.equals("Bow")) { return List.of("Bow", "Head"); }
+            if (stat.equals("Head") && action == Action.SHURIKEN) { return List.of("Head", "Extra", "Projectile"); }
             if (stat.equals("Head") && (action == Action.ARROW || action == Action.BOLT)) { return List.of("Head", "Projectile"); }
             if (stat.equals("Handle") && action == Action.CROSSBOW) { return List.of("Handle", "Extra"); }
             return List.of(stat);

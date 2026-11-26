@@ -11,6 +11,12 @@ public class Config {
     public static final ModConfigSpec.BooleanValue LIST_ALL_TABLES = BUILDER.define("client.listAllTables", true);
     public static final ModConfigSpec.BooleanValue LIST_ALL_TOOL_MATERIALS = BUILDER.define("client.listAllToolMaterials", true);
     public static final ModConfigSpec.BooleanValue LIST_ALL_PART_MATERIALS = BUILDER.define("client.listAllPartMaterials", true);
+    public static final ModConfigSpec.BooleanValue JEI_GUIDEBOOK_BUTTON = BUILDER.define("client.jeiGuidebookButton", false);
+    public static final ModConfigSpec.BooleanValue FANCY_JEI_BEHEADING = BUILDER.define("client.fancyJEIBeheadingAnimation", true);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> JEI_ENTITY_SCALES = BUILDER
+            .comment("Entity model scale overrides in JEI, in entity_id;positive_scale format.")
+            .defineListAllowEmpty("client.entityJEIRendererScaleFactor", List.of("minecraft:ender_dragon;5.0"),
+                    () -> "minecraft:ender_dragon;5.0", Config::isEntityPreviewScale);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> MOB_HEAD_DROPS = BUILDER
             .comment("entity_id or #entity_type_tag;include_subclasses;item_id;optional_max_quantity (1..64)")
             .defineListAllowEmpty("tools.mobHeadDrops", List.of("minecraft:skeleton;true;minecraft:skeleton_skull", "minecraft:stray;true;minecraft:skeleton_skull", "minecraft:bogged;true;minecraft:skeleton_skull",
@@ -25,6 +31,18 @@ public class Config {
                     "minecraft:bogged;true;tconsnirvana:notmilk;20", "minecraft:villager;true;tconsnirvana:emerald;6", "minecraft:iron_golem;true;tconsnirvana:iron;18", "minecraft:vindicator;true;tconsnirvana:emerald;6",
                     "minecraft:wither_skeleton;true;tconsnirvana:notmilk;20", "minecraft:zombified_piglin;true;tconsnirvana:gold;10", "tconsnirvana:blueslime;false;tconsnirvana:blueslime;25", "tconsnirvana:purpleslime;false;tconsnirvana:purpleslime;25"),
                     () -> "minecraft:zombie;false;tconsnirvana:blood;20", value -> value instanceof String);
+
+    private static boolean isEntityPreviewScale(Object entry) {
+        if (!(entry instanceof String value)) { return false; }
+        String[] fields = value.split(";", -1);
+        if (fields.length != 2 || net.minecraft.resources.ResourceLocation.tryParse(fields[0]) == null) { return false; }
+        try {
+            float scale = Float.parseFloat(fields[1]);
+            return Float.isFinite(scale) && scale > 0;
+        } catch (NumberFormatException invalidScale) {
+            return false;
+        }
+    }
 
     public static final ModConfigSpec.BooleanValue CHESTS_KEEP_INVENTORY = BUILDER.define("general.chestsKeepInventory", true);
     public static final ModConfigSpec.BooleanValue REUSE_STENCIL = BUILDER.define("general.reuseStencil", true);
@@ -95,6 +113,9 @@ public class Config {
     public static final ModConfigSpec.DoubleValue ORE_TO_INGOT_RATIO = BUILDER
             .defineInRange("smeltery.oreToIngotRatio", 2.0, 0.1, 100.0);
     public static final ModConfigSpec.BooleanValue OBSIDIAN_ALLOY = BUILDER.define("smeltery.obsidianAlloy", true);
+    public static final ModConfigSpec.BooleanValue ENTITY_MELTING_BLOOD = BUILDER
+            .comment("Whether damage to living entities in a fueled Smeltery produces fluid.")
+            .define("smeltery.entityMeltingBlood", true);
     public static final ModConfigSpec.BooleanValue CLAY_CASTS = BUILDER.define("smeltery.claycasts", true);
     public static final ModConfigSpec.BooleanValue ALLOW_BRICK_CASTING = BUILDER.define("smeltery.allowBrickCasting", true);
     public static final ModConfigSpec.BooleanValue STEEL_ALLOY = BUILDER.define("smeltery.steelAlloy", true);

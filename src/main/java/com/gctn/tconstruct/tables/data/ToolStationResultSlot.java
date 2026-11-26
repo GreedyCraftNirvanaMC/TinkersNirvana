@@ -17,7 +17,7 @@ public class ToolStationResultSlot extends Slot {
         this.menu = menu;
     }
 
-    // 只有拆解模式下允许把完整工具放入结果槽作为拆解源。
+    // 默认页空置时，允许从结果槽放入完整工具以拆解。
     @Override
     public boolean mayPlace(ItemStack stack) {
         return this.menu.canPlaceResultSlot(stack);
@@ -34,10 +34,10 @@ public class ToolStationResultSlot extends Slot {
         return mayPickup;
     }
 
-    // 拆解源仅接受一个工具；部件加工允许一次输出整批产物。
     @Override
-    public int getMaxStackSize() {
-        return this.menu.isMode(Mode.DISASSEMBLE) ? 1 : 64;
+    public int getMaxStackSize(ItemStack stack) {
+        // 手动放入时每次只能拆一个，领取合成产物仍可取走整批。
+        return this.menu.canPlaceResultSlot(stack) ? 1 : super.getMaxStackSize(stack);
     }
 
     @Override

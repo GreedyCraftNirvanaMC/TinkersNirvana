@@ -11,6 +11,7 @@ import com.gctn.tconstruct.smeltery.menu.TinkerTankMenu;
 import com.gctn.tconstruct.smeltery.network.SmelteryNetwork;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -67,9 +68,9 @@ public class TinkerTankScreen extends AbstractContainerScreen<TinkerTankMenu> {
         }
         List<Component> text = new ArrayList<>();
         var tank = menu.controller.liquids;
-        int index = fluidAt(mouseX - leftPos, mouseY - topPos);
-        if (index >= 0) {
-            FluidStack fluid = tank.fluids().get(index);
+        var layer = fluidLayerAt(mouseX, mouseY);
+        if (layer.isPresent()) {
+            FluidStack fluid = layer.get().fluid();
             text.add(fluid.getHoverName());
             FluidTankTooltip.amount(text, fluid.getAmount(), fluid, hasShiftDown());
         } else {
@@ -92,28 +93,19 @@ public class TinkerTankScreen extends AbstractContainerScreen<TinkerTankMenu> {
                 menu.controller.liquids.capacity(), 106, Config.MIN_FLUID_HEIGHT.get());
     }
 
-    private int fluidAt(int x, int y) {
-        if (x < 8 || x >= 114 || y < 16 || y >= 122) {
-            return -1;
-        }
-        // 点击判定与绘制使用同一组高度，少量液体也能准确选中。
-        int bottom = 122;
-        int[] heights = heights();
-        for (int i = 0; i < heights.length; i++) {
-            bottom -= heights[i];
-            if (y >= bottom) {
-                return i;
-            }
-        }
-        return -1;
+    public Optional<SmelteryRendering.FluidLayer> fluidLayerAt(double mouseX, double mouseY) {
+        return menu.controller == null ? Optional.empty() : SmelteryRendering.fluidLayerAt(
+                menu.controller.liquids.fluids(), heights(), new Rect2i(leftPos + 8, topPos + 16, 106, 106), mouseX, mouseY);
     }
 
     @Override
     public boolean mouseClicked(double x, double y, int button) {
-        int index = fluidAt((int) x - leftPos, (int) y - topPos);
-        if (button == 0 && index >= 0) {
-            PacketDistributor.sendToServer(new SmelteryNetwork.SelectFluid(menu.containerId, index));
-            return true;
+        if (button == 0) {
+            var layer = fluidLayerAt(x, y);
+            if (layer.isPresent()) {
+                PacketDistributor.sendToServer(new SmelteryNetwork.SelectFluid(menu.containerId, layer.get().index()));
+                return true;
+            }
         }
         return super.mouseClicked(x, y, button);
     }

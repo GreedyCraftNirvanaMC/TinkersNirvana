@@ -34,10 +34,18 @@ public record TableMaterialRecipe(ShapedRecipe base, Ingredient material) implem
     @Override public RecipeSerializer<?> getSerializer() { return WorkshopModule.TABLE_RECIPE.get(); }
     @Override public boolean canCraftInDimensions(int width, int height) { return base.canCraftInDimensions(width, height); }
     @Override public ItemStack getResultItem(HolderLookup.Provider registries) {
-        ItemStack output = base.getResultItem(registries).copy();
         for (ItemStack stack : material.getItems()) {
-            if (stack.getItem() instanceof BlockItem item) { output.set(TinkerDataComponents.TABLE_MATERIAL.get(), stack.getOrDefault(TinkerDataComponents.TABLE_MATERIAL.get(), item.getBlock().defaultBlockState())); break; }
+            ItemStack output = resultForMaterial(stack, registries);
+            if (!output.isEmpty()) { return output; }
         }
+        return base.getResultItem(registries).copy();
+    }
+
+    public ItemStack resultForMaterial(ItemStack stack, HolderLookup.Provider registries) {
+        if (!material.test(stack) || !(stack.getItem() instanceof BlockItem item)) { return ItemStack.EMPTY; }
+        ItemStack output = base.getResultItem(registries).copy();
+        output.set(TinkerDataComponents.TABLE_MATERIAL.get(),
+                stack.getOrDefault(TinkerDataComponents.TABLE_MATERIAL.get(), item.getBlock().defaultBlockState()));
         return output;
     }
     @Override public NonNullList<Ingredient> getIngredients() { return base.getIngredients(); }

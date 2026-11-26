@@ -25,10 +25,15 @@ public class SlimeSlingItem extends Item {
     @Override public int getUseDuration(ItemStack stack, LivingEntity entity) { return 72000; }
     @Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) { player.startUsingItem(hand); return InteractionResultHolder.consume(player.getItemInHand(hand)); }
     @Override public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int remaining) {
-        if (!(entity instanceof ServerPlayer player) || !player.onGround() || getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE).getType() != HitResult.Type.BLOCK) { return; }
+        if (!(entity instanceof ServerPlayer player) || !player.onGround()) { return; }
+        var look = player.getLookAngle().normalize();
+        var eye = player.getEyePosition();
+        // 怀古的 Item.rayTrace 忽略无碰撞箱的方块与流体，弹弓需要支点。
+        var target = level.clip(new ClipContext(eye, eye.add(look.scale(player.blockInteractionRange())),
+                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
+        if (target.getType() != HitResult.Type.BLOCK) { return; }
         float charge = (getUseDuration(stack, player) - remaining) / 20f;
         float strength = Math.min(6, (charge * charge + charge * 2) / 3 * 4);
-        var look = player.getLookAngle().normalize();
         var motion = player.getDeltaMovement().add(-look.x * strength, -look.y * strength / 3, -look.z * strength);
         player.setDeltaMovement(motion);
         // The native velocity packet clips at 3.9 blocks/tick; a full sling charge reaches six.

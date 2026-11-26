@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "tconsnirvana:silky_jewel",
+  "ingredients": [
+    {
+      "item": "tconsnirvana:silky_jewel_block"
+    }
+  ],
+  "result": {
+    "id": "tconsnirvana:silky_jewel",
+    "count": 9
+  }
+}

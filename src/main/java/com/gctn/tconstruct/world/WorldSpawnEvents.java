@@ -158,7 +158,9 @@ public final class WorldSpawnEvents {
             for (int depth = 0; depth <= 3; depth++) {
                 BlockPos pos = top.below(depth);
                 var soil = chunk.getBlockState(pos.below());
-                boolean suitable = soil.is(AntiqueSlime.BLUE_SPAWNABLE) || soil.is(AntiqueSlime.PURPLE_SPAWNABLE);
+                boolean suitable = soil.is(AntiqueSlime.BLUE_SPAWNABLE) || soil.is(AntiqueSlime.PURPLE_SPAWNABLE)
+                        || AntiqueSlime.isSpawnFluid(level, pos, SlimeMobModule.BLUE.get())
+                        || AntiqueSlime.isSpawnFluid(level, pos, SlimeMobModule.PURPLE.get());
                 if (suitable && chunk.getBlockState(pos).getCollisionShape(level, pos).isEmpty()) {
                     NaturalSpawner.spawnCategoryForPosition(MobCategory.MONSTER, level, chunk, pos,
                             (type, candidate, ignored) -> isIslandSlime(type)

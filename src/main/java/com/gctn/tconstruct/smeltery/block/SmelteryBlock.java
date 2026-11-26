@@ -191,7 +191,7 @@ public class SmelteryBlock extends BaseEntityBlock {
         if (level.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity component) {
             if (kind == Kind.FAUCET || kind == Kind.TABLE || kind == Kind.BASIN || kind == Kind.CHANNEL) {
                 if (!level.isClientSide) {
-                    component.interact(player, hand, hit);
+                    component.interact(player, hit);
                 }
                 return true;
             }
@@ -208,7 +208,7 @@ public class SmelteryBlock extends BaseEntityBlock {
             controller.requestCheck();
         }
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity component) {
-            component.neighborChanged(from);
+            component.neighborChanged(from, neighbor == net.minecraft.world.level.block.Blocks.AIR);
         }
     }
 

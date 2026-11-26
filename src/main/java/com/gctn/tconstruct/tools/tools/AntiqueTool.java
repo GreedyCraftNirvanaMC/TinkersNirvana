@@ -9,6 +9,7 @@ import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.library.materials.Material;
 import com.gctn.tconstruct.library.stats.HeadMaterialStats;
+import com.gctn.tconstruct.library.utils.HarvestLevels;
 import com.gctn.tconstruct.tools.*;
 import com.gctn.tconstruct.tools.ToolDefinition.Action;
 import com.gctn.tconstruct.tools.traits.AntiqueTraits;
@@ -16,6 +17,7 @@ import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -27,6 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.IShearable;
 import net.neoforged.neoforge.common.ItemAbilities;
@@ -44,7 +47,7 @@ public class AntiqueTool extends TinkerTools {
         return switch (definition.action()) { case SHORTBOW, LONGBOW, CROSSBOW -> true; default -> false; };
     }
     public boolean isAmmo() {
-        return switch (definition.action()) { case ARROW, BOLT, SHURIKEN -> true; default -> false; };
+        return definition.isAmmo();
     }
 
     @Override
@@ -57,7 +60,7 @@ public class AntiqueTool extends TinkerTools {
             case MATTOCK -> ItemAbilities.DEFAULT_AXE_ACTIONS.contains(ability) || ability == (com.gctn.tconstruct.Config.OLD_MATTOCK_AND_KAMA.get() ? ItemAbilities.HOE_TILL : ItemAbilities.SHOVEL_FLATTEN);
             case KAMA -> ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(ability) || ability == ItemAbilities.HOE_TILL && !com.gctn.tconstruct.Config.OLD_MATTOCK_AND_KAMA.get();
             case SCYTHE -> ToolModifiers.level(stack, "silktouch") > 0 && ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(ability);
-            case BROADSWORD -> ItemAbilities.DEFAULT_SWORD_ACTIONS.contains(ability);
+            case BROADSWORD, LONGSWORD, RAPIER, CLEAVER -> ItemAbilities.DEFAULT_SWORD_ACTIONS.contains(ability);
             case BATTLESIGN -> ability == ItemAbilities.SHIELD_BLOCK;
             default -> false;
         };
@@ -75,8 +78,12 @@ public class AntiqueTool extends TinkerTools {
         for (ItemAbility ability : new ItemAbility[]{ItemAbilities.AXE_STRIP, ItemAbilities.AXE_SCRAPE,
                 ItemAbilities.AXE_WAX_OFF, ItemAbilities.SHOVEL_FLATTEN, ItemAbilities.HOE_TILL}) {
             if (!canPerformAction(stack, ability)) { continue; }
-            if ((ability == ItemAbilities.HOE_TILL || ability == ItemAbilities.SHOVEL_FLATTEN) && context.getClickedFace() == net.minecraft.core.Direction.DOWN) { continue; }
-            if (ability == ItemAbilities.SHOVEL_FLATTEN && !context.getLevel().isEmptyBlock(context.getClickedPos().above())) { continue; }
+            if (ability == ItemAbilities.HOE_TILL || ability == ItemAbilities.SHOVEL_FLATTEN) {
+                if (ToolHarvest.modifyGround(this, context, ability)) {
+                    return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
+                }
+                continue;
+            }
             BlockState result = state.getToolModifiedState(context, ability, false);
             if (result == null) { continue; }
             Level level = context.getLevel();
@@ -86,9 +93,7 @@ public class AntiqueTool extends TinkerTools {
                         net.minecraft.world.level.gameevent.GameEvent.Context.of(context.getPlayer(), result));
                 damageTool(stack, 1, context.getPlayer(), context.getHand() == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
             }
-            level.playSound(context.getPlayer(), context.getClickedPos(),
-                    ability == ItemAbilities.HOE_TILL ? SoundEvents.HOE_TILL : ability == ItemAbilities.SHOVEL_FLATTEN
-                            ? SoundEvents.SHOVEL_FLATTEN : SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1, 1);
+            level.playSound(context.getPlayer(), context.getClickedPos(), SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1, 1);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
@@ -96,13 +101,12 @@ public class AntiqueTool extends TinkerTools {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
-        if (isBroken(stack) || !(entity instanceof IShearable)
+        if (stack.isEmpty() || isBroken(stack) || !(entity instanceof IShearable)
                 || (definition.action() != Action.KAMA && definition.action() != Action.SCYTHE)) {
             return InteractionResult.PASS;
         }
         if (definition.action() == Action.KAMA) {
-            return shearEntity(stack, player, entity, hand)
-                    ? InteractionResult.sidedSuccess(entity.level().isClientSide) : InteractionResult.PASS;
+            return finishShearing(player, shearEntity(stack, player, entity, hand, false));
         }
         boolean expandedWidth = ToolModifiers.level(stack, "harvestwidth") > 0;
         boolean expandedHeight = ToolModifiers.level(stack, "harvestheight") > 0;
@@ -110,21 +114,32 @@ public class AntiqueTool extends TinkerTools {
         int height = expandedHeight ? 2 : 1;
         boolean shorn = false;
         for (Entity candidate : entity.level().getEntities(player, entity.getBoundingBox().inflate(width, height, width))) {
-            if (isBroken(stack)) {
+            if (stack.isEmpty() || isBroken(stack)) {
                 break;
             }
             if ((!expandedWidth && !expandedHeight) || candidate.distanceToSqr(entity) <= 9) {
-                shorn |= shearEntity(stack, player, candidate, hand);
+                shorn |= shearEntity(stack, player, candidate, hand, candidate != entity);
             }
         }
-        return shorn ? InteractionResult.sidedSuccess(entity.level().isClientSide) : InteractionResult.PASS;
+        return finishShearing(player, shorn);
     }
 
-    private boolean shearEntity(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
+    private static InteractionResult finishShearing(Player player, boolean shorn) {
+        if (!shorn) { return InteractionResult.PASS; }
+        if (!player.level().isClientSide) { player.sweepAttack(); }
+        return InteractionResult.sidedSuccess(player.level().isClientSide);
+    }
+
+    private boolean shearEntity(ItemStack stack, Player player, Entity entity, InteractionHand hand, boolean additional) {
         if (!(entity instanceof IShearable target) || !target.isShearable(player, stack, entity.level(), entity.blockPosition())) {
             return false;
         }
         if (!entity.level().isClientSide) {
+            // 中心实体已经派发交互事件，范围内的其他目标也应经过各自的保护检查。
+            if (additional && (!player.mayInteract(entity.level(), entity.blockPosition())
+                    || net.neoforged.neoforge.common.CommonHooks.onInteractEntity(player, entity, hand) != null)) {
+                return false;
+            }
             for (ItemStack drop : target.onSheared(player, stack, entity.level(), entity.blockPosition())) {
                 target.spawnShearedDrop(entity.level(), entity.blockPosition(), drop);
             }
@@ -136,21 +151,36 @@ public class AntiqueTool extends TinkerTools {
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        if (!isBroken(stack) && definition.action() == Action.BROADSWORD && state.is(net.minecraft.world.level.block.Blocks.COBWEB)) { return 15; }
+        if (isBroken(stack)) {
+            if (definition.isSword() && state.is(Blocks.COBWEB)) { return .3F * 7.5F; }
+            return isEffectiveOn(state) || isHatchetOnLeaves(state) ? .3F : 1F;
+        }
         return super.getDestroySpeed(stack, state);
     }
 
+    private boolean isEffectiveOn(BlockState state) {
+        return definition.effectiveBlocks().stream().anyMatch(state::is)
+                || definition.isSword() && (state.is(Blocks.COBWEB) || state.is(HarvestLevels.SWORD_EFFICIENT));
+    }
+
+    private boolean isHatchetOnLeaves(BlockState state) {
+        return definition.action() == Action.AXE && state.is(BlockTags.LEAVES);
+    }
+
+    public boolean matchesHarvestCategory(BlockState state) {
+        return isEffectiveOn(state) || isHatchetOnLeaves(state);
+    }
+
     @Override
-    public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return !isBroken(stack) && ((definition.action() == Action.BROADSWORD && state.is(net.minecraft.world.level.block.Blocks.COBWEB))
-                || super.isCorrectToolForDrops(stack, state));
+    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
+        return !(definition.isSword() && player.isCreative()) && super.canAttackBlock(state, level, pos, player);
     }
 
     @Override
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity entity) {
         if (!level.isClientSide && !isBroken(stack)) {
             if (state.getDestroySpeed(level, pos) > 0) {
-                boolean effective = isCorrectToolForDrops(stack, state);
+                boolean effective = isEffectiveOn(state);
                 ToolTraits.forEach(stack, (trait, traitLevel) -> trait.afterBlockBreak(stack, traitLevel, level, state, pos, entity, effective));
                 ToolModifiers.rewardLuck(stack, entity, 1);
                 int blasting = ToolModifiers.level(stack, "blasting");
@@ -159,17 +189,20 @@ public class AntiqueTool extends TinkerTools {
                             : net.minecraft.core.particles.ParticleTypes.EXPLOSION;
                     server.sendParticles(particle, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, 1, 0, 0, 0, 0);
                 }
-                damageTool(stack, 1, entity, EquipmentSlot.MAINHAND);
+                // 怀古按工具适用类别计损耗；短斧清理树叶不耗耐久。
+                if (!isHatchetOnLeaves(state)) {
+                    damageTool(stack, effective ? 1 : 2, entity, EquipmentSlot.MAINHAND);
+                }
             }
             ToolHarvest.afterBreak(this, stack, level, state, pos, entity);
         }
         return true;
     }
     @Override
-    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) { return true; }
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) { return !isAmmo(); }
     @Override
     public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (!attacker.level().isClientSide && !isBroken(stack)) {
+        if (!isAmmo() && !attacker.level().isClientSide && !isBroken(stack)) {
             if (!(attacker instanceof Player)) { AntiqueTraits.shockingHit(stack, attacker, target); }
             ToolTraits.forEach(stack, (trait, traitLevel) -> trait.afterHit(stack, traitLevel, target, attacker));
             ToolCombat.afterHit(this, stack, target, attacker);
@@ -183,10 +216,15 @@ public class AntiqueTool extends TinkerTools {
         if (definition.action() == Action.LONGSWORD && player.isFallFlying()) { return InteractionResultHolder.pass(stack); }
         if (isLauncher() || definition.action() == Action.SHURIKEN) { return ToolRanged.use(this, level, player, hand); }
         if (definition.action() == Action.RAPIER) {
+            ItemStack offhand = player.getOffhandItem();
+            if (hand == InteractionHand.MAIN_HAND && (offhand.canPerformAction(ItemAbilities.SHIELD_BLOCK)
+                    || offhand.getItem() instanceof AntiqueTool held && held.definition().action() == Action.SHURIKEN)) {
+                return InteractionResultHolder.fail(stack);
+            }
             if (!level.isClientSide) { ToolCombat.release(this, stack, player, 0); }
             return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
         }
-        if (definition.action() == Action.LONGSWORD || definition.action() == Action.RAPIER
+        if (definition.action() == Action.LONGSWORD
                 || definition.action() == Action.FRYPAN || definition.action() == Action.BATTLESIGN) {
             player.startUsingItem(hand);
             return InteractionResultHolder.consume(stack);
@@ -201,11 +239,13 @@ public class AntiqueTool extends TinkerTools {
                 : definition.action() == Action.FRYPAN || definition.action() == Action.LONGSWORD ? UseAnim.BOW : UseAnim.NONE;
     }
     @Override
-    public int getUseDuration(ItemStack stack, LivingEntity entity) { return 72000; }
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+        return definition.action() == Action.FRYPAN ? 100 : 72000;
+    }
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int remaining) {
         if (isBroken(stack)) { return; }
-        int used = 72000 - remaining;
+        int used = getUseDuration(stack, entity) - remaining;
         if (isLauncher()) { ToolRanged.release(this, stack, level, entity, used); }
         else if (!level.isClientSide && entity instanceof Player player) { ToolCombat.release(this, stack, player, used); }
     }

@@ -12,15 +12,24 @@ public final class ToolStationSlotPositions {
 
     // Indexed by recipe slot, including inactive slots that may still contain items.
     private static final SlotPosition[] REPAIR = {CENTER, LOWER_LEFT, LEFT, TOP, RIGHT, LOWER_RIGHT};
-    private static final SlotPosition[] HANDHELD = {LOWER_LEFT, TOP, CENTER, LEFT, RIGHT, LOWER_RIGHT};
-    private static final SlotPosition[] SIDE_HEAD = {LOWER_LEFT, TOP, RIGHT, CENTER, LEFT, LOWER_RIGHT};
-    private static final SlotPosition[] HAMMER = {LOWER_LEFT, TOP, LEFT, RIGHT, CENTER, LOWER_RIGHT};
-    private static final SlotPosition[] SCYTHE = {LOWER_LEFT, TOP, CENTER, LOWER_RIGHT, LEFT, RIGHT};
-    private static final SlotPosition[] SHORTBOW = {TOP, LOWER_LEFT, CENTER, LEFT, RIGHT, LOWER_RIGHT};
-    private static final SlotPosition[] LONGBOW = {TOP, LOWER_LEFT, LEFT, CENTER, RIGHT, LOWER_RIGHT};
-    private static final SlotPosition[] CROSSBOW = {LOWER_LEFT, TOP, LEFT, CENTER, RIGHT, LOWER_RIGHT};
-    private static final SlotPosition[] ARROW = {CENTER, TOP, LOWER_LEFT, LEFT, RIGHT, LOWER_RIGHT};
-    private static final SlotPosition[] SHURIKEN = {LEFT, TOP, RIGHT, CENTER, LOWER_LEFT, LOWER_RIGHT};
+    private static final SlotPosition[] PICKAXE = layout(15, 60, 53, 22, 33, 42);
+    private static final SlotPosition[] SHOVEL = layout(33, 42, 51, 24, 13, 62);
+    private static final SlotPosition[] HAND_AXE = layout(22, 53, 31, 22, 51, 34);
+    private static final SlotPosition[] HAMMER = layout(21, 52, 44, 29, 57, 48, 25, 16);
+    private static final SlotPosition[] EXCAVATOR = layout(25, 46, 45, 26, 25, 26, 7, 62);
+    private static final SlotPosition[] LUMBERAXE = layout(32, 46, 33, 22, 53, 38, 13, 62);
+    private static final SlotPosition[] SCYTHE = layout(17, 54, 36, 19, 56, 29, 37, 47);
+    private static final SlotPosition[] SWORD = layout(12, 62, 48, 26, 30, 44);
+    private static final SlotPosition[] RAPIER = layout(52, 62, 18, 26, 32, 44);
+    private static final SlotPosition[] FRYPAN = layout(12, 62, 34, 36);
+    private static final SlotPosition[] BATTLESIGN = layout(27, 60, 27, 34);
+    private static final SlotPosition[] CLEAVER = layout(9, 64, 25, 36, 47, 30, 33, 58);
+    private static final SlotPosition[] SHORTBOW = layout(36, 23, 14, 45, 38, 47);
+    private static final SlotPosition[] LONGBOW = layout(44, 19, 10, 53, 17, 26, 38, 47);
+    private static final SlotPosition[] CROSSBOW = layout(38, 47, 44, 19, 14, 23, 18, 51);
+    private static final SlotPosition[] ARROW = layout(32, 41, 50, 23, 14, 59);
+    private static final SlotPosition[] BOLT = layout(40, 37, 20, 53);
+    private static final SlotPosition[] SHURIKEN = layout(20, 29, 44, 29, 44, 53, 20, 53);
 
     private ToolStationSlotPositions() {}
     public static boolean isInputSlotActive(Mode mode, int slot) {
@@ -39,18 +48,35 @@ public final class ToolStationSlotPositions {
     }
     public static SlotPosition getDisplayInputSlotPosition(Mode mode, int slot) {
         SlotPosition[] layout = switch (mode) {
-            case PICKAXE, SHOVEL, AXE, KAMA, BROADSWORD, LONGSWORD, RAPIER, FRYPAN, BATTLESIGN -> HANDHELD;
-            case MATTOCK, EXCAVATOR, LUMBERAXE, CLEAVER -> SIDE_HEAD;
+            case PICKAXE -> PICKAXE;
+            case SHOVEL -> SHOVEL;
+            case AXE, MATTOCK, KAMA -> HAND_AXE;
             case HAMMER -> HAMMER;
+            case EXCAVATOR -> EXCAVATOR;
+            case LUMBERAXE -> LUMBERAXE;
             case SCYTHE -> SCYTHE;
+            case BROADSWORD, LONGSWORD -> SWORD;
+            case RAPIER -> RAPIER;
+            case FRYPAN -> FRYPAN;
+            case BATTLESIGN -> BATTLESIGN;
+            case CLEAVER -> CLEAVER;
             case SHORTBOW -> SHORTBOW;
-            case LONGBOW, BOLT -> LONGBOW;
+            case LONGBOW -> LONGBOW;
             case CROSSBOW -> CROSSBOW;
             case ARROW -> ARROW;
+            case BOLT -> BOLT;
             case SHURIKEN -> SHURIKEN;
             case DEFAULT, DISASSEMBLE, DEBUG -> REPAIR;
         };
-        return layout[slot];
+        return slot < layout.length ? layout[slot] : REPAIR[slot];
+    }
+
+    private static SlotPosition[] layout(int... positions) {
+        SlotPosition[] result = new SlotPosition[positions.length / 2];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = new SlotPosition(positions[2 * i] - 1, positions[2 * i + 1] - 1);
+        }
+        return result;
     }
     public record SlotPosition(int x, int y) {
         public int slotX() { return x + 1; }

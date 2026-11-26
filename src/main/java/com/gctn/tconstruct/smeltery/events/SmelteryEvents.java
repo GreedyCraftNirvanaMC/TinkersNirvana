@@ -5,17 +5,43 @@
  */
 package com.gctn.tconstruct.smeltery.events;
 
+import com.gctn.tconstruct.TinkersNirvana;
+import com.gctn.tconstruct.smeltery.SmelteryFluids;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryBlockEntity;
 import com.gctn.tconstruct.smeltery.block.entity.SmelteryComponentBlockEntity;
 import com.gctn.tconstruct.smeltery.recipe.SmelteryRecipes;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.ICancellableEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 /** Integration hooks corresponding to Antique's melting and casting events. Fired on the server. */
+@EventBusSubscriber(modid = TinkersNirvana.MODID)
 public final class SmelteryEvents {
+    public static final ResourceKey<DamageType> ENTITY_MELTING_DAMAGE =
+            ResourceKey.create(Registries.DAMAGE_TYPE, SmelteryFluids.id("smeltery"));
+
     private SmelteryEvents() {
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    private static void checkMeltingDamage(EntityInvulnerabilityCheckEvent event) {
+        var source = event.getSource();
+        if (event.getOriginalInvulnerability() && source.is(ENTITY_MELTING_DAMAGE) && source.is(DamageTypeTags.IS_FIRE)
+                && !source.is(DamageTypeTags.IS_FALL) && event.getEntity() instanceof LivingEntity entity
+                && entity.fireImmune() && !entity.isInvulnerable() && !entity.isRemoved()) {
+            // 怀古的自定义火焰伤害可熔化烈焰人，抗火药水仍由 LivingEntity 的伤害流程处理。
+            event.setInvulnerable(false);
+        }
     }
 
     public static final class Melting extends Event implements ICancellableEvent {

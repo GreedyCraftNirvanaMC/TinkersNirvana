@@ -23,13 +23,16 @@ diamond and lower tiers leave no drop. Cobalt Ore (`tconsnirvana:cobalt_ore`)
 uses the same hardness, blast resistance, and tool requirements. Both ores
 drop one ore block when harvested successfully, including with Fortune or Silk Touch.
 
-The ores use matching `c:ores/<metal>` block and item tags, plus `c:ores`,
-`c:ores_in_ground/stone`, and `c:ore_rates/singular`. They integrate with the
-existing Smeltery ore recipes and `smeltery.oreToIngotRatio` setting. The default
-ratio 2 produces 288 mB of matching molten metal per ore.
+To mine the first cobalt or ardite, use a Pickaxe Head Pattern and two obsidian
+blocks in the Part Builder. The assembled obsidian-headed pickaxe already has
+harvest tier 4. An assembled hammer uses the tier of its hammer head.
+Assembled tools mine at hand speed below the required tier. Vanilla pickaxes
+keep their native mining speed, even if they cannot collect the ore.
 
-Ardite uses `c:ores/ardite`, `c:ores`, `c:ore_rates/singular`, and
-`c:ores_in_ground/netherrack` on blocks and items. Its Smeltery output follows
-the same ore-yield setting and produces molten Ardite (288 mB by default).
+Tin, aluminum, cobalt, and ardite use matching `c:ores/<metal>` block and item
+tags, `c:ores`, and `c:ore_rates/singular`. Tin and aluminum use
+`c:ores_in_ground/stone`, while cobalt and ardite use `c:ores_in_ground/netherrack`.
+Each of these four ores yields one ingot in a furnace. In a Smeltery it uses
+`smeltery.oreToIngotRatio`, which defaults to 288 mB of matching molten metal per ore.
 
-[World generation settings](WORLD.md) control ore placement. The ore block registration itself adds no ordinary furnace recipes. Data packs can override placement. In-game names support English and Simplified Chinese.
+[World generation settings](WORLD.md) control ore placement. Data packs can override placement and furnace recipes. In-game names support English and Simplified Chinese.

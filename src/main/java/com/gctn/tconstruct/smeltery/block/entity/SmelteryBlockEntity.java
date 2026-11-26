@@ -5,6 +5,7 @@
  */
 package com.gctn.tconstruct.smeltery.block.entity;
 
+import com.gctn.tconstruct.Config;
 import com.gctn.tconstruct.smeltery.SmelteryModule;
 import com.gctn.tconstruct.smeltery.SmelteryTank;
 import com.gctn.tconstruct.smeltery.SmelteryFluids;
@@ -312,7 +313,7 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity implements Hea
             return;
         }
         for (SmelteryRecipes.Alloy recipe : SmelteryRecipes.ALLOYS) {
-            if (recipe.output().is(SmelteryFluids.get("obsidian")) && !com.gctn.tconstruct.Config.OBSIDIAN_ALLOY.get()) {
+            if (!recipe.enabled()) {
                 continue;
             }
             int matched = Math.min(10, recipe.matches(liquids));
@@ -336,7 +337,8 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity implements Hea
         AABB bounds = new AABB(min.getX(), min.getY(), min.getZ(), max.getX() + 1, max.getY() + 1, max.getZ() + 1);
         for (Entity entity : level.getEntities((Entity) null, bounds)) {
             if (entity instanceof ItemEntity item && SmelteryRecipes.findMelting(item.getItem()) != null) {
-                ItemStack stack = item.getItem();
+                ItemStack held = item.getItem();
+                ItemStack stack = held.copy();
                 for (int slot = 0; slot < items.size() && !stack.isEmpty(); slot++) {
                     if (items.get(slot).isEmpty()) {
                         setItem(slot, stack.split(1));
@@ -344,12 +346,15 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity implements Hea
                 }
                 if (stack.isEmpty()) {
                     item.discard();
+                } else if (stack.getCount() != held.getCount()) {
+                    // 原样修改实体数据中的物品不会同步数量，使用新的剩余堆叠。
+                    item.setItem(stack);
                 }
             } else if (entity instanceof LivingEntity living && living.isAlive()) {
                 if (fuel <= 0) {
                     needsFuel = true;
-                } else if (living.hurt(level.damageSources().source(net.minecraft.resources.ResourceKey.create(
-                        net.minecraft.core.registries.Registries.DAMAGE_TYPE, SmelteryFluids.id("smeltery"))), 2.0F)) {
+                } else if (living.hurt(level.damageSources().source(SmelteryEvents.ENTITY_MELTING_DAMAGE), 2.0F)
+                        && Config.ENTITY_MELTING_BLOOD.get()) {
                     liquids.fill(SmelteryRecipes.entityMelting(living), FluidAction.EXECUTE);
                 }
             }
@@ -389,7 +394,7 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity implements Hea
     }
 
     public FuelDisplay fuelDisplay() {
-        return FuelDisplay.of(level, structure == null ? clientTanks : structure.tanks(), currentFuel, fuel);
+        return FuelDisplay.of(level, structure == null ? clientTanks : structure.tanks(), currentTank, currentFuel, fuel);
     }
 
     public void changed() {

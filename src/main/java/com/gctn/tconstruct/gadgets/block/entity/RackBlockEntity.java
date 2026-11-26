@@ -13,7 +13,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -58,9 +57,9 @@ public class RackBlockEntity extends BaseContainerBlockEntity {
     }
     @Override public ItemStack removeItem(int slot, int amount) { if (slot == 0) { reset(); } return super.removeItem(slot, amount); }
     @Override public ItemStack removeItemNoUpdate(int slot) { if (slot == 0) { reset(); } return super.removeItemNoUpdate(slot); }
-    public void interact(Player player, InteractionHand hand) {
+    public void interact(Player player) {
         if (!canOpen(player)) { return; }
-        if (isEmpty()) { setItem(0, player.getItemInHand(hand).split(1)); }
+        if (isEmpty()) { setItem(0, player.getMainHandItem().split(1)); }
         else { int slot = getItem(1).isEmpty() ? 0 : 1; ItemStack stack = removeItem(slot, getItem(slot).getCount()); player.getInventory().placeItemBackInInventory(stack); }
         setChanged();
     }
@@ -69,7 +68,7 @@ public class RackBlockEntity extends BaseContainerBlockEntity {
         if (rack.getItem(0).isEmpty() || !rack.getItem(1).isEmpty()) { return; }
         var recipe = rack.recipes.getRecipeFor(new SingleRecipeInput(rack.getItem(0)), level);
         if (recipe.isEmpty()) { rack.items.set(1, rack.items.get(0)); rack.items.set(0, ItemStack.EMPTY); rack.reset(); rack.setChanged(); return; }
-        int duration = Math.max(1, (int) Math.min(Integer.MAX_VALUE, recipe.get().value().time() * com.gctn.tconstruct.Config.DRYING_TIME_MULTIPLIER.get()));
+        int duration = recipe.get().value().duration();
         if (!rack.recipeId.equals(recipe.get().id().toString()) || rack.duration != duration) {
             rack.reset(); rack.recipeId = recipe.get().id().toString(); rack.duration = duration; rack.setChanged();
         }

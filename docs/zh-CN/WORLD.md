@@ -6,7 +6,7 @@
 
 黏液树苗需种植在黏液土上。骨粉可催生树苗、草与蕨类；剪刀或精准采集可收集树叶。蓝色、紫色藤蔓分为三段，按阶段向下生长。黏液树叶和藤蔓也可作为箭羽、箭杆材料。
 
-村庄的五种原版风格均可生成工具作坊和冶炼建筑，箱内随机战利品在首次打开时生成。建筑使用原版拼图结构池，兼容其它模组向同一结构池添加建筑。
+村庄的五种原版风格均可生成工具作坊和冶炼建筑，每座工具作坊生成一名工具匠，箱内随机战利品在首次打开时生成。建筑使用原版拼图结构池，兼容其它模组向同一结构池添加建筑。
 
 ## 配置
 
@@ -22,7 +22,7 @@
 | `world.generateIslandsInSuperflat` | `false` | 超平坦世界中的黏液岛 |
 | `world.generateSlimePools` | `false` | 地下黏液池与岩浆池 |
 | `world.slimePoolRate` / `world.magmaPoolRate` | `30` | 地下池尝试频率 |
-| `world.slimePoolHeightMax` | `64` | 黏液池最高尝试高度 |
+| `world.slimePoolHeightMax` | `64` | 黏液池最高尝试高度。向下搜索遇到 Y=5 或维度底界上方五格时停止，取较高者。 |
 | `world.generateVillageStructures` | `true` | 两类村庄建筑 |
 | `world.villageWorkshopWeight` / `world.villageSmelteryWeight` | `30` / `9` | 村庄建筑权重 |
 

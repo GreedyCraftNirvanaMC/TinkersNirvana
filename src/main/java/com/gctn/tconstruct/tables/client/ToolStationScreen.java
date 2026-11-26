@@ -1,22 +1,27 @@
 package com.gctn.tconstruct.tables.client;
 
 import com.gctn.tconstruct.TinkersNirvana;
+import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.tables.data.Mode;
 import com.gctn.tconstruct.tables.menu.ToolStationMenu;
 import com.gctn.tconstruct.tables.data.ToolStationSlotPositions.SlotPosition;
+import com.gctn.tconstruct.tools.AntiqueTools;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
@@ -30,8 +35,16 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     private static final int MODE_BUTTON_Y = 10;
     private static final int MODE_BUTTON_SPACING = 22;
     private static final int SIDE_PANEL_GAP = 4;
+    private static final int INFO_PANEL_Y = 11;
+    private static final int WORKSHOP_PANEL_OFFSET = 2;
     private static final int SIDE_BUTTON_HEIGHT = 18;
     private static final float INPUT_SLOT_ICON_ALPHA = 0.35F;
+    private static final List<Mode> TOOL_ORDER = List.of(
+            Mode.PICKAXE, Mode.SHOVEL, Mode.AXE, Mode.MATTOCK, Mode.KAMA,
+            Mode.HAMMER, Mode.EXCAVATOR, Mode.LUMBERAXE, Mode.SCYTHE,
+            Mode.BROADSWORD, Mode.LONGSWORD, Mode.RAPIER, Mode.FRYPAN, Mode.BATTLESIGN, Mode.CLEAVER,
+            Mode.SHORTBOW, Mode.LONGBOW, Mode.ARROW, Mode.CROSSBOW, Mode.BOLT, Mode.SHURIKEN);
+    private static final List<String> PREVIEW_MATERIALS = List.of("wood", "iron", "cobalt", "manyullyn");
     private static final DefaultSlotIcon[] DEFAULT_SLOT_ICONS = {
             new DefaultSlotIcon(32, 44, 0),
             new DefaultSlotIcon(14, 64, 18),
@@ -42,15 +55,16 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     };
 
     private final List<ModeButton> modeButtons = new ArrayList<>();
+    private final EnumMap<Mode, ItemStack> toolPreviews = new EnumMap<>(Mode.class);
     private final NearbyInventoryPanel nearbyPanel;
     private ToolStationInfoPanel infoPanel;
+    private ToolStationInfoPanel detailsPanel;
     private Button sidePanelButton;
     private boolean showingNearby;
     private net.minecraft.client.gui.components.EditBox nameField;
     private String observedName;
     private boolean applyingServerName;
     private int modeButtonColumns;
-    private Mode slotLayoutMode;
 
     public ToolStationScreen(ToolStationMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -69,6 +83,7 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
         var tabs = WorkshopNavigation.tabs(menu.position());
         topPos = WorkshopNavigation.panelTop(topPos, tabs);
         this.modeButtons.clear();
+        toolPreviews.clear();
         initSidePanels();
         this.modeButtonColumns = Math.clamp(leftPos / MODE_BUTTON_SPACING, 1, MAX_MODE_BUTTON_COLUMNS);
         nearbyPanel.init(leftPos, topPos, menu.containerId, this::addRenderableWidget);
@@ -87,22 +102,19 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
         addRenderableWidget(nameField);
         WorkshopNavigation.add(tabs, menu.position(), menu.containerId, leftPos, topPos, this::addRenderableWidget);
         this.addModeButton(Mode.DEFAULT, ICON_TEXTURE, 55, 1, 16, 16);
-        this.addModeButton(Mode.DISASSEMBLE, new ItemStack(Items.SHEARS));
-        this.addModeButton(Mode.PICKAXE, new ItemStack(Items.WOODEN_PICKAXE));
-        this.addModeButton(Mode.SHOVEL, new ItemStack(Items.WOODEN_SHOVEL));
-        this.addModeButton(Mode.AXE, new ItemStack(Items.WOODEN_AXE));
-        for (Mode mode : Mode.values()) {
-            if (mode == Mode.DEFAULT || mode == Mode.DISASSEMBLE || mode == Mode.PICKAXE || mode == Mode.SHOVEL || mode == Mode.AXE || mode == Mode.DEBUG) { continue; }
-            var entry = com.gctn.tconstruct.tools.AntiqueTools.get(mode.name().toLowerCase(java.util.Locale.ROOT));
-            if (entry != null) { this.addModeButton(mode, new ItemStack(entry.item().get())); }
+        for (Mode mode : TOOL_ORDER) {
+            String id = mode == Mode.AXE ? "hatchet" : mode.name().toLowerCase(java.util.Locale.ROOT);
+            ItemStack preview = preview(AntiqueTools.get(id));
+            toolPreviews.put(mode, preview);
+            this.addModeButton(mode, preview);
         }
         this.updateModeButtons();
     }
 
     private void initSidePanels() {
         boolean hasNearby = menu.nearby() != null && menu.nearby().present();
-        int statsOffset = imageWidth + SIDE_PANEL_GAP;
-        int statsOuterWidth = ToolStationInfoPanel.PREFERRED_WIDTH + 8;
+        int statsOffset = imageWidth + WORKSHOP_PANEL_OFFSET;
+        int statsOuterWidth = ToolStationInfoPanel.PREFERRED_WIDTH;
         int nearbyRight = hasNearby ? nearbyPanel.rightEdge() : 0;
         int combinedRight = nearbyRight + SIDE_PANEL_GAP + statsOuterWidth;
         // 空间充足时并排显示，两栏放不下时共用右侧位置。
@@ -119,9 +131,12 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
         }
 
         int panelX = leftPos + statsOffset;
-        int panelWidth = Math.clamp(width - panelX - 8, 32, ToolStationInfoPanel.PREFERRED_WIDTH);
-        int panelHeight = Math.clamp(height - topPos, 32, imageHeight);
-        infoPanel = addRenderableWidget(new ToolStationInfoPanel(font, menu, panelX, topPos, panelWidth, panelHeight));
+        int panelWidth = Math.clamp(width - panelX, 32, ToolStationInfoPanel.PREFERRED_WIDTH);
+        int panelHeight = Math.clamp((height - topPos - INFO_PANEL_Y - SIDE_PANEL_GAP) / 2, 24, 83);
+        int panelY = topPos + INFO_PANEL_Y;
+        infoPanel = addRenderableWidget(new ToolStationInfoPanel(font, menu, panelX, panelY, panelWidth, panelHeight, false));
+        detailsPanel = addRenderableWidget(new ToolStationInfoPanel(font, menu, panelX, panelY + panelHeight + SIDE_PANEL_GAP,
+                panelWidth, panelHeight, true));
         sidePanelButton = null;
         if (hasNearby && !sideBySide) {
             sidePanelButton = addRenderableWidget(Button.builder(Component.empty(), button -> {
@@ -135,7 +150,7 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
 
     private void updateSidePanels() {
         boolean usingSharedSpace = sidePanelButton != null;
-        infoPanel.visible = !usingSharedSpace || !showingNearby;
+        infoPanel.visible = detailsPanel.visible = !usingSharedSpace || !showingNearby;
         if (menu.nearby() != null) {
             menu.nearby().visible(!usingSharedSpace || showingNearby);
         }
@@ -161,8 +176,10 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
         }
         this.updateModeButtons();
         infoPanel.update();
+        detailsPanel.update();
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
+        this.detailsPanel.renderTraitTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
@@ -170,11 +187,20 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
         nearbyPanel.update(); nearbyPanel.render(guiGraphics, leftPos, topPos);
         guiGraphics.blit(BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         int beamWidth = modeButtonColumns * MODE_BUTTON_SPACING;
-        guiGraphics.blit(BACKGROUND_TEXTURE, leftPos - beamWidth, topPos, 0, 180, beamWidth - 2, 7);
-        guiGraphics.blit(BACKGROUND_TEXTURE, leftPos - 2, topPos, 131, 180, 2, 7);
+        renderBeam(guiGraphics, leftPos - beamWidth, beamWidth);
+        if (infoPanel.visible) {
+            renderBeam(guiGraphics, infoPanel.getX() - 2, infoPanel.getWidth() + 2);
+            renderPanelHangers(guiGraphics, infoPanel);
+            renderPanelHangers(guiGraphics, detailsPanel);
+        }
         if (!nameField.visible) {
             guiGraphics.fill(leftPos + 68, topPos + 6, leftPos + 170, topPos + 18, 0xffc6c6c6);
+        } else if (nameField.isFocused()) {
+            guiGraphics.blit(BACKGROUND_TEXTURE, leftPos + 68, topPos + 6, 0, 210, 102, 12);
         }
+        renderSelectionPreview(guiGraphics);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(0, 0, 30);
         for (int inputSlot = 0; inputSlot < ToolStationMenu.INPUT_SLOT_COUNT; inputSlot++) {
             if (this.menu.isInputSlotVisible(inputSlot)) {
                 SlotPosition position = this.menu.getInputSlotPosition(inputSlot);
@@ -182,12 +208,65 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
                 renderInputSlotIcon(guiGraphics, inputSlot, position.x(), position.y());
             }
         }
+        guiGraphics.pose().popPose();
         if (!this.menu.isMode(Mode.DISASSEMBLE)) {
             guiGraphics.blit(BACKGROUND_TEXTURE, this.leftPos + 104, this.topPos + 38, 0, 241, 8, 15);
         }
-        else {
+        if (this.menu.isMode(Mode.DISASSEMBLE) || this.menu.isReadyForDisassembly()) {
             guiGraphics.blit(BACKGROUND_TEXTURE, this.leftPos + 82, this.topPos + 38, 8, 241, 8, 15);
         }
+    }
+
+    private void renderSelectionPreview(GuiGraphics graphics) {
+        if (menu.isMode(Mode.DISASSEMBLE)) { return; }
+        if (menu.isMode(Mode.DEFAULT)) {
+            RenderSystem.enableBlend();
+            graphics.setColor(1, 1, 1, .18F);
+            graphics.blit(ICON_TEXTURE, leftPos + 10, topPos + 22, 67, 60, 54, 0, 18, 18, 256, 256);
+            graphics.setColor(1, 1, 1, 1);
+            RenderSystem.disableBlend();
+            return;
+        }
+        ItemStack preview = toolPreviews.get(menu.getMode());
+        if (preview == null) { return; }
+        // 物品模型上方覆盖浅灰色，与怀古的装配轮廓一致，槽框绘制在其上。
+        graphics.pose().pushPose();
+        graphics.pose().translate(leftPos + 10, topPos + 22, -140);
+        graphics.pose().scale(3.7F, 3.7F, 1);
+        graphics.renderFakeItem(preview, 0, 0);
+        graphics.pose().popPose();
+        graphics.fill(leftPos + 7, topPos + 18, leftPos + 87, topPos + 82, 25, 0xd1c6c6c6);
+    }
+
+    private void renderBeam(GuiGraphics graphics, int x, int beamWidth) {
+        int textureY = menu.isForge() ? 187 : 180;
+        graphics.blit(BACKGROUND_TEXTURE, x, topPos, 0, textureY, beamWidth - 2, 7);
+        graphics.blit(BACKGROUND_TEXTURE, x + beamWidth - 2, topPos, 131, textureY, 2, 7);
+    }
+
+    private void renderPanelHangers(GuiGraphics graphics, ToolStationInfoPanel panel) {
+        int offset = menu.isForge() ? 36 : 18;
+        int y = panel.getY() - 4;
+        graphics.blit(BACKGROUND_TEXTURE, panel.getX() + 5, y, offset, 174, 5, 4);
+        graphics.blit(BACKGROUND_TEXTURE, panel.getX() + panel.getWidth() - 14, y, offset + 9, 174, 9, 4);
+    }
+
+    private static ItemStack preview(AntiqueTools.Entry entry) {
+        ItemStack stack = new ItemStack(entry.item().get());
+        CompoundTag materials = new CompoundTag();
+        var parts = entry.definition().parts();
+        for (int i = 0; i < parts.size(); i++) {
+            var part = parts.get(i);
+            String material = switch (part.stat()) {
+                case "Shaft" -> "wood";
+                case "Fletching" -> "feather";
+                case "BowString" -> "string";
+                default -> PREVIEW_MATERIALS.get(i);
+            };
+            materials.putString(part.key(), material);
+        }
+        stack.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(materials));
+        return stack;
     }
 
     private void renderItemSlot(GuiGraphics guiGraphics, int x, int y) {
@@ -220,13 +299,13 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
 
     private void addModeButton(Mode mode, ItemStack icon) {
         ModeButton button = new ModeButton(0, 0, mode, icon, BACKGROUND_TEXTURE, ICON_TEXTURE,
-                this.menu::isMode, selectedMode -> this.setMode(selectedMode.getButtonId()));
+                menu::isForge, this::isSelectedMode, selectedMode -> this.setMode(selectedMode.getButtonId()));
         this.modeButtons.add(this.addRenderableWidget(button));
     }
 
     private void addModeButton(Mode mode, ResourceLocation resourceLocation, int uOffset, int vOffset, int uWidth, int vHeight) {
         ModeButton button = new ModeButton(0, 0, mode, resourceLocation, uOffset, vOffset, uWidth, vHeight,
-                BACKGROUND_TEXTURE, ICON_TEXTURE, this.menu::isMode,
+                BACKGROUND_TEXTURE, ICON_TEXTURE, menu::isForge, this::isSelectedMode,
                 selectedMode -> this.setMode(selectedMode.getButtonId()));
         this.modeButtons.add(this.addRenderableWidget(button));
     }
@@ -242,17 +321,14 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
 
     private void updateModeButtons() {
         Mode currentMode = this.menu.getMode();
-        if (this.slotLayoutMode != currentMode) {
-            this.menu.updateInputSlotPositions();
-            this.slotLayoutMode = currentMode;
-        }
+        this.menu.updateInputSlotPositions();
         int visibleCount = (int) modeButtons.stream().filter(button -> menu.isModeButtonVisible(button.getMode())).count();
         int lastRow = Math.max(1, (visibleCount - 1) / modeButtonColumns);
         int rowSpacing = Math.clamp((height - topPos - MODE_BUTTON_Y - 18) / lastRow, 18, MODE_BUTTON_SPACING);
         int index = 0;
         for (ModeButton button : this.modeButtons) {
             button.visible = this.menu.isModeButtonVisible(button.getMode());
-            button.active = button.visible && !this.menu.isMode(button.getMode());
+            button.active = button.visible && currentMode != Mode.DISASSEMBLE && !isSelectedMode(button.getMode());
             if (button.visible) {
                 int column = index % modeButtonColumns;
                 int row = index / modeButtonColumns;
@@ -263,6 +339,9 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
         }
     }
 
+    private boolean isSelectedMode(Mode mode) {
+        return menu.isMode(mode) || mode == Mode.DEFAULT && menu.isMode(Mode.DISASSEMBLE);
+    }
     private record DefaultSlotIcon(int x, int y, int u) {
     }
     @Override public boolean keyPressed(int key, int scan, int modifiers) {
@@ -272,7 +351,10 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
     public List<Rect2i> occupiedAreas() {
         List<Rect2i> areas = new ArrayList<>();
         nearbyPanel.addOccupiedArea(areas, leftPos, topPos);
-        if (infoPanel != null && infoPanel.visible) { areas.add(infoPanel.bounds()); }
+        if (infoPanel != null && infoPanel.visible) {
+            areas.add(infoPanel.bounds());
+            areas.add(detailsPanel.bounds());
+        }
         if (sidePanelButton != null) {
             areas.add(new Rect2i(sidePanelButton.getX(), sidePanelButton.getY(), sidePanelButton.getWidth(), sidePanelButton.getHeight()));
         }
@@ -289,7 +371,7 @@ public class ToolStationScreen extends AbstractContainerScreen<ToolStationMenu> 
                 return false;
             }
         }
-        return !infoPanel.isMouseOver(mouseX, mouseY)
+        return !infoPanel.isMouseOver(mouseX, mouseY) && !detailsPanel.isMouseOver(mouseX, mouseY)
                 && (sidePanelButton == null || !sidePanelButton.isMouseOver(mouseX, mouseY))
                 && !nearbyPanel.contains(mouseX, mouseY, left, top)
                 && super.hasClickedOutside(mouseX, mouseY, left, top, button);

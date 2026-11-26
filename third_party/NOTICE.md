@@ -47,6 +47,7 @@ Source areas used for this port:
   `client/module/GuiSmelterySideInventory.java`, `tools/common/client/module/GuiSideInventory.java`
 - `library/client/texture/CastTexture.java` and `smeltery/client/*Renderer.java`
 - Original GUI, block, fluid, material-item, cast, sound, crafting, and language assets
+- The Silky Block of Jewel texture, recipes, and behavior from `shared/block/BlockMetal.java`
 - `shared/block/BlockClearGlass.java`, `BlockClearStainedGlass.java`,
   the `clearGlassSilkTouch` configuration, and original connected stained-glass assets
 
@@ -130,4 +131,4 @@ animation layers remain attributed to Slime Knights and contributors.
 The supplied modern Minecraft iron sword was used as a palette reference.
 The creative-modifier crystal and six status-effect icons are newly drawn
 in GIMP. Tool audio (`frypan_hit`, `toy_squeak`, `charged`, `discharge`,
-`crossbow_reload`) is copied from the corresponding Antique OGG files.
+`crossbow_reload`, `little_saw`) is copied from the corresponding Antique OGG files.

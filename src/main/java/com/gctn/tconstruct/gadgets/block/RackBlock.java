@@ -47,7 +47,7 @@ public class RackBlock extends BaseEntityBlock {
         return state.canSurvive(context.getLevel(), context.getClickedPos()) ? state : null;
     }
     @Override protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        // 新放置的架子只能挂墙，保留旧存档已放置的地面和天花板状态。
+        // 展示架和晾干架只允许新挂在墙上，已存档的地面和天花板架子仍可使用。
         if (state.getValue(BlockStateProperties.ATTACH_FACE) != AttachFace.WALL) { return true; }
         Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
         BlockPos support = pos.relative(facing.getOpposite());
@@ -72,9 +72,9 @@ public class RackBlock extends BaseEntityBlock {
     @Override public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) { return drying ? createTickerHelper(type, RemainingGadgets.RACK_ENTITY.get(), RackBlockEntity::tick) : null; }
     @Override protected boolean hasAnalogOutputSignal(BlockState state) { return drying; }
     @Override protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) { return level.getBlockEntity(pos) instanceof RackBlockEntity rack && !rack.getItem(1).isEmpty() ? 15 : 0; }
-    @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) { interact(level, pos, player, InteractionHand.MAIN_HAND); return InteractionResult.sidedSuccess(level.isClientSide); }
-    @Override protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) { interact(level, pos, player, hand); return ItemInteractionResult.sidedSuccess(level.isClientSide); }
-    private void interact(Level level, BlockPos pos, Player player, InteractionHand hand) { if (!level.isClientSide && level.getBlockEntity(pos) instanceof RackBlockEntity rack) { rack.interact(player, hand); } }
+    @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) { interact(level, pos, player); return InteractionResult.sidedSuccess(level.isClientSide); }
+    @Override protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) { interact(level, pos, player); return ItemInteractionResult.sidedSuccess(level.isClientSide); }
+    private void interact(Level level, BlockPos pos, Player player) { if (!level.isClientSide && level.getBlockEntity(pos) instanceof RackBlockEntity rack) { rack.interact(player); } }
     @Override protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState next, boolean moving) {
         if (!state.is(next.getBlock())) { Containers.dropContentsOnDestroy(state, next, level, pos); }
         super.onRemove(state, level, pos, next, moving);

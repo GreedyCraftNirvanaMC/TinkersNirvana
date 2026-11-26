@@ -73,7 +73,7 @@ public final class ToolGameplayEvents {
         ItemStack projectile = ToolRanged.traitsFor(event.getSource().getDirectEntity());
         ItemStack tool = projectile;
         if (tool.isEmpty() && event.getSource().getDirectEntity() == attacker
-                && (event.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK) || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK))) { tool = attacker.getMainHandItem(); }
+                && (event.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK) || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK))) { tool = ToolCombat.meleeTool(attacker); }
         if (tool.getItem() instanceof TinkerTools && !TinkerTools.isBroken(tool)) {
             ItemStack used = tool;
             ToolModifiers.afterDamage(used, attacker, event.getNewDamage());
@@ -84,6 +84,7 @@ public final class ToolGameplayEvents {
         }
         if (!projectile.isEmpty() && !(event.getSource().getDirectEntity() instanceof AntiqueProjectile)) {
             ItemStack used = projectile;
+            ToolModifiers.applyExtraKnockback(used, event.getEntity(), attacker);
             ToolTraits.forEach(used, (trait, level) -> trait.afterHit(used, level, event.getEntity(), attacker));
             ToolModifiers.afterHit(used, event.getEntity(), attacker);
         }
@@ -94,7 +95,7 @@ public final class ToolGameplayEvents {
         if (event.getEntity().level().isClientSide || event.getNewDamage() <= 0 || !(event.getSource().getEntity() instanceof LivingEntity attacker)) { return; }
         ItemStack tool = ToolRanged.traitsFor(event.getSource().getDirectEntity());
         if (tool.isEmpty() && event.getSource().getDirectEntity() == attacker
-                && (event.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK) || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK))) { tool = attacker.getMainHandItem(); }
+                && (event.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK) || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK))) { tool = ToolCombat.meleeTool(attacker); }
         int fire = ToolModifiers.units(tool, "fiery");
         if (tool.getItem() instanceof TinkerTools && !TinkerTools.isBroken(tool) && fire > 0) { event.getEntity().igniteForSeconds(1 + fire / 8); }
     }

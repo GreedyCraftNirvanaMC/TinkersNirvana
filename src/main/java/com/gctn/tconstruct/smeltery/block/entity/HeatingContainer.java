@@ -5,8 +5,9 @@
  */
 package com.gctn.tconstruct.smeltery.block.entity;
 
-import net.minecraft.world.Container;
+import com.gctn.tconstruct.smeltery.recipe.SmelteryRecipes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Container;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -33,8 +34,18 @@ public interface HeatingContainer extends Container, SmelteryMaster {
     FuelDisplay fuelDisplay();
 
     record FuelDisplay(FluidStack fluid, int amount, int capacity, int temperature) {
-        public static FuelDisplay of(Level level, List<BlockPos> tanks, FluidStack currentFuel, int fuel) {
+        public static FuelDisplay of(Level level, List<BlockPos> tanks, BlockPos currentTank, FluidStack currentFuel, int fuel) {
             FluidStack display = fuel > 0 && !currentFuel.isEmpty() ? currentFuel.copyWithAmount(1) : FluidStack.EMPTY;
+            // 当前批次耗尽后，下一批仍优先从同一个储罐补充。
+            if (display.isEmpty() && level != null && currentTank != null && tanks.contains(currentTank)
+                    && level.hasChunkAt(currentTank)
+                    && level.getBlockEntity(currentTank) instanceof SmelteryComponentBlockEntity component) {
+                FluidStack fluid = component.tank.getFluid();
+                if ((currentFuel.isEmpty() || FluidStack.isSameFluidSameComponents(currentFuel, fluid))
+                        && SmelteryRecipes.fuel(fluid) != null) {
+                    display = fluid.copyWithAmount(1);
+                }
+            }
             int capacity = fuel > 0 ? currentFuel.getAmount() : 0;
             int amount = 0;
             for (BlockPos pos : tanks) {

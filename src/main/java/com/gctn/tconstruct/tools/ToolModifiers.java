@@ -13,6 +13,7 @@ import com.gctn.tconstruct.library.utils.Tags;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import com.gctn.tconstruct.tools.traits.AntiqueTraits;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.EntityTypeTags;
@@ -29,6 +30,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 
@@ -44,21 +47,8 @@ public final class ToolModifiers {
     private record IngredientValue(String modifier, Predicate<ItemStack> ingredient, int value) {}
     private static final java.util.List<IngredientValue> INGREDIENTS = new java.util.ArrayList<>();
     static {
-        add("haste", 5, 50, Items.REDSTONE, (stats, units) -> {
-            for (int i = 0; i < units; i++) {
-                stats.miningSpeed += stats.miningSpeed <= 15 ? .15F - .05F * stats.miningSpeed / 15
-                        : stats.miningSpeed <= 25 ? .1F - .05F * (stats.miningSpeed - 15) / 10 : .05F;
-            }
-            stats.miningSpeed += units / 50 * .5F;
-            stats.attackSpeed += stats.baseAttackSpeed * units * .004F;
-            stats.drawSpeed *= 1 + units * .002F;
-        });
-        add("sharpness", 5, 72, Items.QUARTZ, (stats, units) -> {
-            for (int i = 0; i < units; i++) {
-                stats.attack += stats.attack <= 10 ? .05F - .025F * stats.attack / 10 : stats.attack <= 20 ? .025F - .01F * stats.attack / 20 : .015F;
-            }
-            stats.attack += units / 72 * .25F;
-        });
+        add("haste", 5, 50, Items.REDSTONE, ToolModifiers::boostMiningSpeed);
+        add("sharpness", 5, 72, Items.QUARTZ, (stats, units) -> stats.attack += sharpnessBonus(stats.attack, units));
         add("diamond", 1, 1, Items.DIAMOND, (stats, units) -> { stats.durability += 500; stats.attack += 1; stats.miningSpeed += .5F; if (stats.harvestLevel < 3) { stats.harvestLevel++; } });
         add("emerald", 1, 1, Items.EMERALD, (stats, units) -> { stats.durability += stats.baseDurability / 2; if (stats.harvestLevel < 2) { stats.harvestLevel++; } });
         add("luck", 3, 60, Items.LAPIS_LAZULI, (stats, units) -> {});
@@ -151,7 +141,7 @@ public final class ToolModifiers {
         return definition == null || units == 0 ? 0 : Math.min(definition.maxLevel(), (units - 1) / definition.unitsPerLevel() + 1);
     }
     public static int usedSlots(ItemStack tool) {
-        return (int) Math.min(Integer.MAX_VALUE, MODIFIERS.keySet().stream().filter(id -> !java.util.Set.of("creative", "endearment", "incognito").contains(id))
+        return (int) Math.min(Integer.MAX_VALUE, MODIFIERS.keySet().stream().filter(id -> !java.util.Set.of("creative", "endearment", "incognito", "soulbound").contains(id))
                 .mapToLong(id -> id.equals("luck") || id.equals("blasting") ? (units(tool, id) > 0 ? 1 : 0) : level(tool, id)).sum());
     }
 
@@ -191,10 +181,13 @@ public final class ToolModifiers {
                 if (match == null) { return null; }
                 int current = modifiers.getInt(match.id());
                 if (match.id().equals("beheading") || match.id().equals("glowing")) { return null; }
+                if (match.id().equals("haste") && item.isAmmo()) { return null; }
+                if (match.id().equals("luck") && !item.isAmmo() && !item.definition().hasHarvestCategory()
+                        && !item.definition().hasWeaponCategory()) { return null; }
                 int capacity = match.id().equals("luck") ? 360 : match.maxLevel() * match.unitsPerLevel();
                 var staged = source.copyWithCount(1); var stagedData = material.copy(); stagedData.put("Modifiers", modifiers.copy()); staged.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(stagedData));
                 int free = item.getTotalModifierSlots(staged) - usedSlots(staged);
-                if (!java.util.Set.of("creative", "endearment", "incognito").contains(match.id())) {
+                if (!java.util.Set.of("creative", "endearment", "incognito", "soulbound").contains(match.id())) {
                     if (match.id().equals("luck") || match.id().equals("blasting")) { if (current == 0 && free <= 0) { return null; } }
                     else { capacity = (int) Math.min(capacity, Math.max(0L, (long) level(staged, match.id()) + free) * match.unitsPerLevel()); }
                 }
@@ -229,25 +222,20 @@ public final class ToolModifiers {
                     changed = true;
                     continue;
                 }
-                int consumed = (int) Math.min(input.getCount(), ((long) Math.max(0, capacity - current) + value - 1) / value);
-                int add = (int) Math.min(Math.max(0, capacity - current), (long) consumed * value);
-                if (add <= 0) { return null; }
-                counts[slot] = (int) (((long) add + value - 1) / value);
-                modifiers.putInt(match.id(), current + add);
+                // 材料按整件消耗，剩余强化额度不足以容纳储存块时将它原样留下。
+                int consumed = Math.min(input.getCount(), Math.max(0, capacity - current) / value);
+                if (consumed == 0) { continue; }
+                counts[slot] = consumed;
+                modifiers.putInt(match.id(), current + consumed * value);
                 changed = true;
             }
         }
-        if (!changed || (modifiers.getInt("silktouch") > 0 && modifiers.getInt("luck") > 0)
-                || (AntiqueTraits.has(source, "squeaky") && (modifiers.getInt("luck") > 0 || modifiers.getInt("silktouch") > 0))) { return null; }
-        if (modifiers.getInt("blasting") > 0 && (item.definition().effectiveBlocks().isEmpty() || modifiers.getInt("luck") > 0
-                || modifiers.getInt("silktouch") > 0 || modifiers.getInt("autosmelt") > 0
-                || AntiqueTraits.has(source, "squeaky") || AntiqueTraits.has(source, "autosmelt"))) { return null; }
-        if (modifiers.getInt("fins") > 0 && !item.isAmmo()) { return null; }
+        if (!changed) { return null; }
         if ((modifiers.getInt("harvestwidth") > 0 || modifiers.getInt("harvestheight") > 0)
                 && !ToolHarvest.supportsExpanders(item.definition().action())) { return null; }
         material.put("Modifiers", modifiers);
         result.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(material));
-        if (((TinkerTools) result.getItem()).getTotalModifierSlots(result) < usedSlots(result)) { return null; }
+        if (!isCompatible(result)) { return null; }
         ToolBuilder.rebuild(result, item.definition());
         return new Plan(result, counts);
     }
@@ -315,21 +303,57 @@ public final class ToolModifiers {
     }
 
     public static void modifyStats(ItemStack tool, ToolStats stats) {
+        modifyStats(tool, stats, stats.attack);
+    }
+
+    static void modifyStats(ItemStack tool, ToolStats stats, float originalAttack) {
         for (Definition definition : MODIFIERS.values()) {
-            int units = units(tool, definition.id());
-            if (units > 0) { definition.modifyStats().accept(stats, Math.min(units, definition.maxLevel() * definition.unitsPerLevel())); }
+            int units = Math.min(units(tool, definition.id()), definition.maxLevel() * definition.unitsPerLevel());
+            if (units == 0) { continue; }
+            if (definition.id().equals("haste") && tool.getItem() instanceof AntiqueTool item) {
+                if (item.definition().hasHarvestCategory()) { definition.modifyStats().accept(stats, units); }
+                if (item.definition().hasWeaponCategory()) { stats.attackSpeed += stats.baseAttackSpeed * units * .004F; }
+                if (item.isLauncher()) { stats.drawSpeed *= 1 + units * .002F; }
+            } else if (definition.id().equals("sharpness")) {
+                // 词条可以增加最终攻击力，石英的递减收益仍以材料组装的攻击力为基准。
+                stats.attack += sharpnessBonus(originalAttack, units);
+            } else {
+                definition.modifyStats().accept(stats, units);
+            }
         }
         var material = TinkerDataComponents.getMaterialTag(tool);
         if (material.contains("FortifiedTier")) { stats.harvestLevel = material.getInt("FortifiedTier"); }
+    }
+
+    private static void boostMiningSpeed(ToolStats stats, int units) {
+        for (int i = 0; i < units; i++) {
+            stats.miningSpeed += stats.miningSpeed <= 15 ? .15F - .05F * stats.miningSpeed / 15
+                    : stats.miningSpeed <= 25 ? .1F - .05F * (stats.miningSpeed - 15) / 10 : .05F;
+        }
+        stats.miningSpeed += units / 50 * .5F;
+    }
+
+    private static float sharpnessBonus(float originalAttack, int units) {
+        float attack = originalAttack;
+        for (int i = 0; i < units; i++) {
+            attack += attack <= 10 ? .05F - .025F * attack / 10 : attack <= 20 ? .025F - .01F * attack / 20 : .015F;
+        }
+        return attack + units / 72 * .25F - originalAttack;
     }
 
     public static boolean isCompatible(ItemStack tool) {
         if (!(tool.getItem() instanceof AntiqueTool item)) { return false; }
         var modifiers = data(tool);
         if (modifiers.getInt("silktouch") > 0 && modifiers.getInt("luck") > 0) { return false; }
-        if (AntiqueTraits.has(tool, "squeaky") && (modifiers.getInt("luck") > 0 || modifiers.getInt("silktouch") > 0 || modifiers.getInt("blasting") > 0)) { return false; }
-        if (modifiers.getInt("blasting") > 0 && (item.definition().effectiveBlocks().isEmpty() || modifiers.getInt("luck") > 0
-                || modifiers.getInt("silktouch") > 0 || modifiers.getInt("autosmelt") > 0 || AntiqueTraits.has(tool, "autosmelt"))) { return false; }
+        boolean squeaky = AntiqueTraits.has(tool, "squeaky");
+        boolean materialAutosmelt = AntiqueTraits.has(tool, "autosmelt");
+        boolean autosmeltModifier = modifiers.getInt("autosmelt") > 0;
+        if (squeaky && (modifiers.getInt("luck") > 0 || modifiers.getInt("silktouch") > 0
+                || modifiers.getInt("blasting") > 0 || autosmeltModifier)) { return false; }
+        if (autosmeltModifier && (!item.definition().hasHarvestCategory() || materialAutosmelt)) { return false; }
+        if ((materialAutosmelt || autosmeltModifier) && modifiers.getInt("silktouch") > 0) { return false; }
+        if (modifiers.getInt("blasting") > 0 && (!item.definition().hasHarvestCategory() || modifiers.getInt("luck") > 0
+                || modifiers.getInt("silktouch") > 0 || autosmeltModifier || materialAutosmelt)) { return false; }
         if (modifiers.getInt("fins") > 0 && !item.isAmmo()) { return false; }
         return item.getTotalModifierSlots(tool) >= usedSlots(tool);
     }
@@ -342,11 +366,23 @@ public final class ToolModifiers {
         builder.removeIf(enchantment -> enchantment.is(Enchantments.FORTUNE) || enchantment.is(Enchantments.LOOTING) || enchantment.is(Enchantments.SILK_TOUCH));
         int luck = level(tool, "luck");
         if (luck > 0) {
-            builder.upgrade(lookup.getOrThrow(Enchantments.FORTUNE), luck);
+            if (tool.getItem() instanceof AntiqueTool item && item.definition().hasHarvestCategory()) {
+                builder.upgrade(lookup.getOrThrow(Enchantments.FORTUNE), luck);
+            }
+            // 怀古的掉落事件也会为主手持用的采集工具补上抢夺。
             builder.upgrade(lookup.getOrThrow(Enchantments.LOOTING), luck);
         }
         if (level(tool, "silktouch") > 0 || AntiqueTraits.has(tool, "squeaky")) { builder.upgrade(lookup.getOrThrow(Enchantments.SILK_TOUCH), 1); }
         tool.set(DataComponents.ENCHANTMENTS, builder.toImmutable());
+    }
+
+    public static int projectileLooting(Holder<Enchantment> enchantment, int equipmentLevel, LootContext context) {
+        if (!enchantment.is(Enchantments.LOOTING)) { return equipmentLevel; }
+        if (context.getParamOrNull(LootContextParams.DIRECT_ATTACKING_ENTITY) instanceof AntiqueProjectile projectile) {
+            // 怀古取命中弹药与正常抢夺等级的较大值，发射器的强化不写入弹药。
+            return Math.max(equipmentLevel, level(projectile.getPickupItemStackOrigin(), "luck"));
+        }
+        return equipmentLevel;
     }
 
     public static float modifyAttack(ItemStack tool, LivingEntity attacker, LivingEntity target, float damage) {
@@ -358,9 +394,24 @@ public final class ToolModifiers {
     public static void afterHit(ItemStack tool, LivingEntity target, LivingEntity attacker) {
         int fire = units(tool, "fiery");
         if (fire > 0) { target.igniteForSeconds(1 + fire / 8); com.gctn.tconstruct.tools.traits.TraitDamage.hurt(target, attacker, "fiery", fire / 15F); }
-        if (units(tool, "knockback") > 0) { target.knockback(units(tool, "knockback") * .1, attacker.getX() - target.getX(), attacker.getZ() - target.getZ()); }
         if (units(tool, "shulking") > 0) { target.addEffect(new MobEffectInstance(MobEffects.LEVITATION, units(tool, "shulking") / 2 + 10)); }
         if (level(tool, "webbed") > 0) { target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, level(tool, "webbed") * 60, 1)); }
+    }
+
+    public static float knockbackBonus(ItemStack tool) {
+        return tool.getItem() instanceof AntiqueTool && !TinkerTools.isBroken(tool) ? units(tool, "knockback") * .1F : 0F;
+    }
+
+    static void applyExtraKnockback(ItemStack tool, LivingEntity target, LivingEntity attacker) {
+        float strength = knockbackBonus(tool);
+        if (strength <= 0) { return; }
+        // 怀古对弹射命中也沿攻击者的朝向加速度，远距离时不以双方坐标连线计算。
+        float yaw = attacker.getYRot() * net.minecraft.util.Mth.DEG_TO_RAD;
+        target.push(-net.minecraft.util.Mth.sin(yaw) * strength * .5F, .1,
+                net.minecraft.util.Mth.cos(yaw) * strength * .5F);
+        target.hurtMarked = true;
+        attacker.setDeltaMovement(attacker.getDeltaMovement().multiply(.6, 1, .6));
+        attacker.setSprinting(false);
     }
 
     public static void rewardLuck(ItemStack tool, LivingEntity user, int attempts) {

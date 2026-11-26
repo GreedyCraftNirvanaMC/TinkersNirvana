@@ -127,7 +127,8 @@ public final class AntiqueParts {
         }
         public boolean acceptsMaterial(Material material) {
             var external = EXTERNAL_PARTS.get(id);
-            return external == null ? material.hasStats(stat) && (!stat.equals("Bow") || material.hasStats("Head")) : external.accepts.test(material);
+            return external == null ? material.hasStats(stat) && (!stat.equals("Bow") || material.hasStats("Head"))
+                    && (!id.equals("knife_blade") || material.hasStats("Extra")) : external.accepts.test(material);
         }
         public ItemStack create(Material material) {
             if (!acceptsMaterial(material)) {

@@ -36,6 +36,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -90,6 +91,8 @@ public final class SmelteryModule {
         }
         ITEMS.put("grout", () -> GROUT.get().asItem());
         MATERIAL_BLOCKS.addAll(java.util.List.of(MUD_BRICKS, LAVAWOOD, CLEAR_GLASS));
+        MATERIAL_BLOCKS.add(BlockRegister.registerBlockWithItem("silky_jewel_block", () ->
+                new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5).sound(SoundType.METAL).requiresCorrectToolForDrops())));
         for (DyeColor color : DyeColor.values()) {
             var glass = BlockRegister.registerBlockWithItem("clear_stained_glass_" + color.getName(), () ->
                     new ClearStainedGlassBlock(color, BlockBehaviour.Properties.ofFullCopy(CLEAR_GLASS.get()).mapColor(color.getMapColor())));

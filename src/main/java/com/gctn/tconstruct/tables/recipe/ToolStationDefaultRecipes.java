@@ -2,8 +2,10 @@ package com.gctn.tconstruct.tables.recipe;
 
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.materials.MaterialInputs;
+import com.gctn.tconstruct.library.toolparts.AntiqueParts;
 import com.gctn.tconstruct.tools.ToolBuilder;
 import com.gctn.tconstruct.tools.ToolModifiers;
+import com.gctn.tconstruct.tools.ToolPartReplacement;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import com.gctn.tconstruct.tools.TinkerTools;
 import com.gctn.tconstruct.tools.TinkerTools.RepairInfo;
@@ -23,78 +25,50 @@ public final class ToolStationDefaultRecipes {
     private ToolStationDefaultRecipes() {
     }
 
-    // 预览结果
     public static ItemStack createResult(Container container) {
-        ItemStack tool = container.getItem(TOOL_SLOT);
-        var special = StationProcessingRecipes.plan(container);
-        if (special != null) { return special.result(); }
-        if (tool.getItem() instanceof com.gctn.tconstruct.tools.PatternItem) {
-            return PartBuilderRecipes.createResult(container);
-        }
-        if (!isTinkerTool(tool)) {
-            return ItemStack.EMPTY;
-        }
-
-        var replacement = com.gctn.tconstruct.tools.ToolPartReplacement.plan(container);
-        if (replacement != null) { return replacement.result(); }
-
-        ItemStack enhancedTool = createEnhancementResult(container);
-        if (!enhancedTool.isEmpty()) {
-            return enhancedTool;
-        }
-
-        return createRepairResult(container);
+        return apply(container, false);
     }
 
-    // 确认后消耗原料
     public static void consumeInputs(Container container) {
+        apply(container, true);
+    }
+
+    private static ItemStack apply(Container container, boolean consume) {
         var special = StationProcessingRecipes.plan(container);
-        if (special != null) { special.consume(container); return; }
+        if (special != null) {
+            if (consume) { special.consume(container); }
+            return special.result();
+        }
         ItemStack tool = container.getItem(TOOL_SLOT);
         if (tool.getItem() instanceof com.gctn.tconstruct.tools.PatternItem) {
-            PartBuilderRecipes.consumeInputs(container);
-            return;
+            ItemStack result = PartBuilderRecipes.createResult(container);
+            if (consume && !result.isEmpty()) { PartBuilderRecipes.consumeInputs(container); }
+            return result;
         }
-        if (!isTinkerTool(tool)) {
-            return;
-        }
+        if (!isTinkerTool(tool)) { return ItemStack.EMPTY; }
 
-        var replacement = com.gctn.tconstruct.tools.ToolPartReplacement.plan(container);
-        if (replacement != null) { replacement.consume(container); return; }
-
-        ItemStack enhancedTool = createEnhancementResult(container);
-        if (!enhancedTool.isEmpty()) {
-            consumeEnhancementInputs(container);
-            return;
-        }
-
-        RepairPlan repairPlan = createRepairPlan(container);
-        if (repairPlan == null || repairPlan.isEmpty()) {
-            return;
-        }
-
-        container.setItem(TOOL_SLOT, ItemStack.EMPTY);
-        for (int i = 0; i < MATERIAL_SLOT_COUNT; i++) {
-            if (repairPlan.repairCount[i] > 0) {
-                container.removeItem(FIRST_MATERIAL_SLOT + i, repairPlan.repairCount[i]);
+        // 怀古先修复，再换件和强化。磨制套件与燧石同时适用时，预览和扣料必须选中同一种操作。
+        RepairPlan repair = createRepairPlan(container, LAST_MATERIAL_SLOT);
+        if (repair != null && !repair.isEmpty()) {
+            if (consume) {
+                container.setItem(TOOL_SLOT, ItemStack.EMPTY);
+                for (int i = 0; i < MATERIAL_SLOT_COUNT; i++) {
+                    if (repair.repairCount[i] > 0) {
+                        container.removeItem(FIRST_MATERIAL_SLOT + i, repair.repairCount[i]);
+                    }
+                }
             }
+            return repair.resultTool;
         }
-    }
-
-    // 强化预览与提交共用同一计划。
-    private static ItemStack createEnhancementResult(Container container) {
-        var plan = com.gctn.tconstruct.tools.ToolModifiers.plan(container);
-        return plan == null ? ItemStack.EMPTY : plan.result();
-    }
-
-    private static void consumeEnhancementInputs(Container container) {
-        var plan = com.gctn.tconstruct.tools.ToolModifiers.plan(container);
-        if (plan != null) { plan.consume(container); }
-    }
-
-    // 获取修复结果
-    private static ItemStack createRepairResult(Container container) {
-        return repairResult(container, LAST_MATERIAL_SLOT);
+        var replacement = ToolPartReplacement.plan(container);
+        if (replacement != null) {
+            if (consume) { replacement.consume(container); }
+            return replacement.result();
+        }
+        var enhancement = ToolModifiers.plan(container);
+        if (enhancement == null) { return ItemStack.EMPTY; }
+        if (consume) { enhancement.consume(container); }
+        return enhancement.result();
     }
 
     /** Shared by stations and the native crafting-grid sharpening-kit recipe. Slot zero is the tool. */
@@ -105,16 +79,10 @@ public final class ToolStationDefaultRecipes {
             return ItemStack.EMPTY;
         }
 
-        ItemStack repairedTool = repairPlan.resultTool.copy();
-        repairedTool.setCount(1);
-        return repairedTool;
+        return repairPlan.resultTool;
     }
 
     // 获取修复方案(包括修复量和材料消耗情况)
-    private static RepairPlan createRepairPlan(Container container) {
-        return createRepairPlan(container, LAST_MATERIAL_SLOT);
-    }
-
     private static RepairPlan createRepairPlan(Container container, int lastMaterialSlot) {
 
         ItemStack sourceTool = container.getItem(TOOL_SLOT);
@@ -129,6 +97,9 @@ public final class ToolStationDefaultRecipes {
             if (stack.isEmpty()) {
                 continue;
             }
+            var toolPart = AntiqueParts.get(stack);
+            boolean kit = toolPart != null && toolPart.id().equals("sharpening_kit");
+            if (toolPart != null && !kit && !toolPart.id().equals("shard")) { return null; }
             var input = MaterialInputs.match(stack);
             if (input == null) {
                 return null;
@@ -139,10 +110,26 @@ public final class ToolStationDefaultRecipes {
             if (info == null) {
                 return null;
             }
-            matches.add(new RepairMatch(slot, info, input.value()));
+            matches.add(new RepairMatch(slot, info, input.value(), kit));
         }
 
         int[] consumed = new int[lastMaterialSlot];
+        // 怀古逐个可修理部件检查第一个修理包。原料可单独匹配，额外的修理包槽位必须也能匹配。
+        var kits = matches.stream().filter(RepairMatch::kit).toList();
+        int kitIndex = 0;
+        for (RepairInfo info : materials) {
+            if (kitIndex >= kits.size()) { break; }
+            RepairMatch kit = kits.get(kitIndex);
+            if (kit.info().material() == info.material()) {
+                if (++consumed[kit.slot() - FIRST_MATERIAL_SLOT] >= container.getItem(kit.slot()).getCount()) { kitIndex++; }
+            }
+        }
+        for (RepairMatch kit : kits) {
+            if (consumed[kit.slot() - FIRST_MATERIAL_SLOT] == 0) { return null; }
+        }
+        Arrays.fill(consumed, 0);
+        List<RepairInfo> repairParts = materials.stream().filter(info -> info.partEfficient() > 0)
+                .filter(info -> matches.stream().anyMatch(match -> match.info().equals(info))).distinct().toList();
         var data = TinkerDataComponents.getMaterialTag(tool);
         int repairCount = Math.clamp(data.getInt("RepairCount"), 0, 100);
         int baseDurability = ToolBuilder.savedStats(tool).getInt("BaseDurability");
@@ -155,32 +142,45 @@ public final class ToolStationDefaultRecipes {
         int usedModifiers = Math.min(3, ToolModifiers.usedSlots(tool));
 
         while (tool.isDamaged()) {
-            var batch = new LinkedHashMap<RepairInfo, RepairMatch>();
+            List<RepairMatch> batch = new ArrayList<>();
+            var raw = new HashMap<RepairInfo, RepairMatch>();
+            var availableKits = new ArrayDeque<RepairMatch>();
             for (RepairMatch match : matches) {
-                if (consumed[match.slot() - FIRST_MATERIAL_SLOT] < container.getItem(match.slot()).getCount()) {
-                    batch.putIfAbsent(match.info(), match);
+                if (consumed[match.slot() - FIRST_MATERIAL_SLOT] >= container.getItem(match.slot()).getCount()) { continue; }
+                if (match.kit()) { availableKits.addLast(match); }
+                else { raw.merge(match.info(), match, (first, second) -> first.value() >= second.value() ? first : second); }
+            }
+            float amount = 0;
+            int rawMaterials = 0;
+            for (RepairInfo info : repairParts) {
+                RepairMatch kit = availableKits.peekFirst();
+                if (kit != null && kit.info().equals(info)) {
+                    batch.add(kit);
+                    amount += (int) (info.durability() * kit.value()) * info.partEfficient();
+                    if (consumed[kit.slot() - FIRST_MATERIAL_SLOT] + 1 >= container.getItem(kit.slot()).getCount()) {
+                        availableKits.removeFirst();
+                    }
+                }
+                RepairMatch ingredient = raw.get(info);
+                if (ingredient != null) {
+                    batch.add(ingredient);
+                    amount += info.durability() * ingredient.value() * info.partEfficient();
+                    rawMaterials++;
                 }
             }
-            if (batch.isEmpty()) {
-                break;
-            }
-            // 同种材料每轮只算一次。材料属性决定基础修复量，再计入多材料加成和修复衰减。
-            double amount = batch.values().stream()
-                    .mapToDouble(match -> match.info().durability() * match.info().partEfficient() * match.value()).sum();
-            amount *= 1 + (batch.size() - 1) / 9.0;
-            amount = Math.max((int) amount * Math.min(10, durabilityFactor), tool.getMaxDamage() / 64.0);
-            amount *= (1 - usedModifiers * .05) * (1 - (repairCount / 2) / 100.0);
-            int healed = Math.min(tool.getDamageValue(), ToolTraits.modifyHealing(tool, (int) Math.ceil(amount), null));
-            if (healed <= 0) {
-                break;
-            }
-            for (RepairMatch match : batch.values()) {
-                consumed[match.slot() - FIRST_MATERIAL_SLOT]++;
-            }
+            // 修理包单独计入修复量，多材料倍率只按普通原料的种数计算。
+            int baseRepair = (int) (amount * (1 + (rawMaterials - 1) / 9F));
+            if (baseRepair <= 0) { break; }
+            double adjusted = Math.max(baseRepair * Math.min(10, durabilityFactor), tool.getMaxDamage() / 64.0);
+            adjusted *= (1 - usedModifiers * .05) * (1 - (repairCount / 2) / 100.0);
+            int healed = Math.min(tool.getDamageValue(), ToolTraits.modifyHealing(tool, (int) Math.ceil(adjusted), null));
+            if (healed <= 0) { break; }
+            for (RepairMatch match : batch) { consumed[match.slot() - FIRST_MATERIAL_SLOT]++; }
             tool.setDamageValue(tool.getDamageValue() - healed);
             ToolTraits.forEach(tool, (trait, level) -> trait.onRepair(tool, level, healed));
             repairCount = Math.min(100, repairCount + 1);
         }
+        tool.setCount(1);
         data = TinkerDataComponents.getMaterialTag(tool);
         data.putInt("RepairCount", repairCount);
         tool.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
@@ -209,6 +209,6 @@ public final class ToolStationDefaultRecipes {
         }
     }
 
-    private record RepairMatch(int slot, RepairInfo info, double value) {
+    private record RepairMatch(int slot, RepairInfo info, float value, boolean kit) {
     }
 }

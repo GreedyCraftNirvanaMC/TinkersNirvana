@@ -12,6 +12,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
@@ -45,8 +46,16 @@ public final class ToolRanged {
 
     public static int drawTime(AntiqueTool item, ItemStack stack) {
         float speed = ToolBuilder.savedStats(stack).getFloat("DrawSpeed");
-        int base = switch (item.definition().action()) { case LONGBOW -> 30; case CROSSBOW -> 45; default -> 12; };
-        return Math.max(3, Math.round(base / Math.max(.1F, speed)));
+        return (int) Math.ceil(baseDrawTime(item) / (double) Math.max(Float.MIN_NORMAL, speed));
+    }
+
+    public static float drawProgress(AntiqueTool item, ItemStack stack, int used) {
+        float speed = ToolBuilder.savedStats(stack).getFloat("DrawSpeed");
+        return Math.clamp(speed * used / baseDrawTime(item), 0, 1);
+    }
+
+    private static int baseDrawTime(AntiqueTool item) {
+        return switch (item.definition().action()) { case LONGBOW -> 30; case CROSSBOW -> 45; default -> 12; };
     }
 
     private static boolean supported(AntiqueTool launcher, ItemStack stack) {
@@ -63,25 +72,46 @@ public final class ToolRanged {
             if (supported(launcher, stack)) { return stack; }
         }
         for (ItemStack stack : player.getInventory().items) { if (supported(launcher, stack)) { return stack; } }
-        return player.getAbilities().instabuild ? new ItemStack(Items.ARROW) : ItemStack.EMPTY;
+        return ItemStack.EMPTY;
+    }
+
+    public static ItemStack ammoForDisplay(AntiqueTool launcher, ItemStack tool, Player player) {
+        if (launcher.definition().action() == ToolDefinition.Action.CROSSBOW && isLoaded(tool)) {
+            return loadedAmmo(launcher, tool, player);
+        }
+        return creativeFallback(findAmmo(launcher, player), player);
+    }
+
+    private static ItemStack loadedAmmo(AntiqueTool launcher, ItemStack tool, Player player) {
+        var legacy = tool.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
+        return !legacy.isEmpty() ? legacy.getItems().getFirst() : creativeFallback(findAmmo(launcher, player), player);
+    }
+
+    private static ItemStack creativeFallback(ItemStack ammo, Player player) {
+        return ammo.isEmpty() && player.getAbilities().instabuild ? new ItemStack(Items.ARROW) : ammo;
     }
 
     public static InteractionResultHolder<ItemStack> use(AntiqueTool item, Level level, Player player, InteractionHand hand) {
         ItemStack tool = player.getItemInHand(hand);
         if (item.definition().action() == ToolDefinition.Action.SHURIKEN) {
-            if (!player.getAbilities().instabuild && remainingAmmo(tool) == 0) {
+            if (player.getCooldowns().isOnCooldown(tool.getItem())
+                    || (!player.getAbilities().instabuild && remainingAmmo(tool) == 0)) {
                 return InteractionResultHolder.fail(tool);
             }
             if (!level.isClientSide) {
-                shoot(item, tool, tool, player, 1, 1, hand, false);
+                ToolBuilder.ensureCurrent(tool, item.definition());
+                if (!shoot(item, tool, tool, player, 1, 1, hand, false)) {
+                    return InteractionResultHolder.fail(tool);
+                }
             }
+            player.getCooldowns().addCooldown(tool.getItem(), 4);
             return InteractionResultHolder.sidedSuccess(tool, level.isClientSide);
         }
         if (item.definition().action() == ToolDefinition.Action.CROSSBOW && isLoaded(tool)) {
             if (!level.isClientSide) {
                 var legacy = tool.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
                 boolean prepaid = !legacy.isEmpty();
-                ItemStack ammo = prepaid ? legacy.getItems().getFirst() : findAmmo(item, player);
+                ItemStack ammo = loadedAmmo(item, tool, player);
                 if (ammo.isEmpty() || shoot(item, tool, ammo, player, 1, 1, hand, prepaid)) {
                     setLoaded(tool, false);
                     tool.remove(DataComponents.CHARGED_PROJECTILES);
@@ -92,7 +122,7 @@ public final class ToolRanged {
         boolean hasAmmo = !findAmmo(item, player).isEmpty();
         var hook = EventHooks.onArrowNock(tool, level, player, hand, hasAmmo);
         if (hook != null) { return hook; }
-        if (!hasAmmo) { return InteractionResultHolder.fail(tool); }
+        if (!hasAmmo && !player.getAbilities().instabuild) { return InteractionResultHolder.fail(tool); }
         player.startUsingItem(hand);
         return InteractionResultHolder.consume(tool);
     }
@@ -117,9 +147,8 @@ public final class ToolRanged {
         if (!(entity instanceof Player player)) {
             return;
         }
-        float progress = Math.min(1, used / (float) drawTime(item, tool));
         if (item.definition().action() == ToolDefinition.Action.CROSSBOW) {
-            if (!level.isClientSide && progress >= 1 && !isLoaded(tool)) {
+            if (!level.isClientSide && drawProgress(item, tool, used) >= 1 && !isLoaded(tool)) {
                 // 怀古的上弦只保存就绪状态，发射时才从当时的背包消耗弩箭。
                 setLoaded(tool, true);
                 level.playSound(null, player.blockPosition(), ToolSounds.CROSSBOW_RELOAD.get(), SoundSource.PLAYERS, 1.5F, .9F + level.random.nextFloat() * .1F);
@@ -127,15 +156,16 @@ public final class ToolRanged {
             return;
         }
         ItemStack ammo = findAmmo(item, player);
+        if (ammo.isEmpty() && !player.getAbilities().instabuild) { return; }
         used = EventHooks.onArrowLoose(tool, level, player, used, !ammo.isEmpty());
-        if (used < 0 || ammo.isEmpty() || level.isClientSide) {
+        if (used < 5 || level.isClientSide) {
             return;
         }
-        progress = Math.min(1, used / (float) drawTime(item, tool));
+        // 怀古以实际拉弓五刻为下限。长弓在五刻后的低速箭仍会发射。
+        ammo = creativeFallback(ammo, player);
+        float progress = drawProgress(item, tool, used);
         float power = BowItem.getPowerForTime((int) (progress * 20)) * progress;
-        if (power >= .1F) {
-            shoot(item, tool, ammo, player, power, progress, player.getUsedItemHand(), false);
-        }
+        shoot(item, tool, ammo, player, power, progress, player.getUsedItemHand(), false);
     }
 
     private static int remainingAmmo(ItemStack ammo) {
@@ -258,8 +288,11 @@ public final class ToolRanged {
             extra.pickup = AbstractArrow.Pickup.DISALLOWED;
             player.level().addFreshEntity(extra);
         }
-        player.level().playSound(null, player.blockPosition(), crossbow ? SoundEvents.CROSSBOW_SHOOT : SoundEvents.ARROW_SHOOT,
-                SoundSource.PLAYERS, 1, 1 / (player.getRandom().nextFloat() * .4F + 1.2F) + power * .5F);
+        if (!shuriken) { player.awardStat(Stats.ITEM_USED.get(launcher)); }
+        float random = player.getRandom().nextFloat();
+        float pitch = crossbow ? .5F + random * .1F : 1 / (random * .4F + 1.2F) + (shuriken ? power : velocity) * .5F;
+        player.level().playSound(null, player.blockPosition(), SoundEvents.ARROW_SHOOT,
+                shuriken ? SoundSource.PLAYERS : SoundSource.NEUTRAL, 1, pitch);
         return true;
     }
 

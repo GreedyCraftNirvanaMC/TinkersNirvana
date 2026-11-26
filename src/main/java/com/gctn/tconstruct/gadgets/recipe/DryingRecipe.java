@@ -16,9 +16,14 @@ import net.minecraft.world.level.Level;
 
 /** Datapacks and KubeJS ServerEvents.recipes can add ingredient/result/time recipes without Java hooks. */
 public record DryingRecipe(Ingredient ingredient, ItemStack result, int time, boolean leather) implements Recipe<SingleRecipeInput> {
+    public int duration() {
+        return Math.max(1, (int) Math.min(Integer.MAX_VALUE, time * Config.DRYING_TIME_MULTIPLIER.get()));
+    }
+
     @Override public boolean matches(SingleRecipeInput input, Level level) { return (!leather || Config.LEATHER_DRYING.get()) && ingredient.test(input.item()); }
     @Override public ItemStack assemble(SingleRecipeInput input, HolderLookup.Provider registries) { return result.copy(); }
     @Override public boolean canCraftInDimensions(int width, int height) { return width * height >= 1; }
+    @Override public boolean isSpecial() { return true; }
     @Override public ItemStack getResultItem(HolderLookup.Provider registries) { return result; }
     @Override public NonNullList<Ingredient> getIngredients() { return NonNullList.of(Ingredient.EMPTY, ingredient); }
     @Override public RecipeSerializer<?> getSerializer() { return RemainingGadgets.DRYING_SERIALIZER.get(); }

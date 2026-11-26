@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "blocks",
+  "ingredient": {
+    "item": "tconsnirvana:ardite_ore"
+  },
+  "result": {
+    "id": "tconsnirvana:ardite_ingot"
+  },
+  "experience": 1.0,
+  "cookingtime": 200
+}

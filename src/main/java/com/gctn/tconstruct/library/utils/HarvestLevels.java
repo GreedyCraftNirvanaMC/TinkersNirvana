@@ -1,11 +1,21 @@
 package com.gctn.tconstruct.library.utils;
 
 import com.gctn.tconstruct.library.TinkerMaterials;
+import com.gctn.tconstruct.TinkersNirvana;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.component.Tool;
 import net.minecraft.tags.TagKey;
+import net.neoforged.neoforge.registries.holdersets.AndHolderSet;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class HarvestLevels {
 
@@ -14,6 +24,9 @@ public class HarvestLevels {
     public static final int DIAMOND = 2;
     public static final int OBSIDIAN = 3;
     public static final int COBALT = 4;
+    public static final TagKey<Block> SWORD_EFFICIENT = TagKey.create(Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(TinkersNirvana.MODID, "sword_efficient"));
+    private static final Map<ToolTier, Tool.Rule> RESTRICTED_RULES = new ConcurrentHashMap<>();
 
     private HarvestLevels() {
     } // non-instantiable
@@ -48,7 +61,17 @@ public class HarvestLevels {
         if (harvestLevel == HarvestLevels.OBSIDIAN) {
             return BlockTags.INCORRECT_FOR_DIAMOND_TOOL;
         }
-        // 四级镐必须使用下界合金级拒绝标签，才能正确采掘默认四级的阿迪特矿石。
+        // 钴级与下界合金共用采掘门槛，涵盖默认四级的钴和阿迪特矿石。
         return BlockTags.INCORRECT_FOR_NETHERITE_TOOL;
     }
+
+    public static Tool.Rule restrictToolToTier(TagKey<Block> toolBlocks, int harvestLevel) {
+        var key = new ToolTier(toolBlocks, getIncorrectBlocksForDrops(harvestLevel));
+        // 每组标签只注册一次重载监听。交集由 NeoForge 在数据包重载后重新计算。
+        return RESTRICTED_RULES.computeIfAbsent(key, tier -> new Tool.Rule(new AndHolderSet<>(
+                BuiltInRegistries.BLOCK.getOrCreateTag(tier.toolBlocks()),
+                BuiltInRegistries.BLOCK.getOrCreateTag(tier.incorrectBlocks())), Optional.of(1F), Optional.of(false)));
+    }
+
+    private record ToolTier(TagKey<Block> toolBlocks, TagKey<Block> incorrectBlocks) {}
 }

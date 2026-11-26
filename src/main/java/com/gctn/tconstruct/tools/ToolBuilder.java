@@ -15,6 +15,7 @@ import com.gctn.tconstruct.tools.traits.ToolTraits;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -23,11 +24,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class ToolBuilder {
+    private static final String SHURIKEN_TRAITS = "ShurikenBladeTraits";
     private ToolBuilder() {}
 
     public static ItemStack assemble(AntiqueTools.Entry entry, List<Material> materials) {
@@ -46,12 +49,14 @@ public final class ToolBuilder {
             ToolDefinition.Part part = definition.parts().get(i);
             if (material == null || !material.hasStats(part.stat())
                     || (part.stat().equals("Bow") && !material.hasStats("Head"))
+                    || (definition.action() == ToolDefinition.Action.SHURIKEN && !material.hasStats("Extra"))
                     || (part.stat().equals("Handle") && definition.action() == ToolDefinition.Action.CROSSBOW && !material.hasStats("Extra"))) {
                 return ItemStack.EMPTY;
             }
             data.putString(part.key(), material.identifier);
             ToolTraits.addTraits(traits, material.getTraitsForStats(part.traitStats(definition.action())));
         }
+        if (definition.action() == ToolDefinition.Action.SHURIKEN) { data.putBoolean(SHURIKEN_TRAITS, true); }
         tool.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
         tool.set(TinkerDataComponents.TINKER_TRAITS.get(), CustomData.of(traits));
         rebuild(tool, definition);
@@ -65,11 +70,13 @@ public final class ToolBuilder {
 
     /** 强化和材料变更共用的确定性重算入口；损耗和未知组件保留。 */
     public static void rebuild(ItemStack tool, ToolDefinition definition) {
+        updateShurikenTraits(tool, definition);
         ToolStats stats = calculate(tool, definition);
+        float originalAttack = stats.attack;
         ToolTraits.forEach(tool, (trait, level) -> trait.modifyStats(tool, level, stats));
         stats.durability = ToolTraits.modifyDurability(tool, stats.durability);
         stats.baseDurability = stats.durability;
-        ToolModifiers.modifyStats(tool, stats);
+        ToolModifiers.modifyStats(tool, stats, originalAttack);
         stats.durability += stats.growthDurability;
         stats.attack += stats.growthAttack;
         stats.miningSpeed += stats.growthSpeed;
@@ -90,18 +97,41 @@ public final class ToolBuilder {
         tool.set(DataComponents.MAX_DAMAGE, Math.max(1, stats.durability));
         tool.set(DataComponents.DAMAGE, Math.min(tool.getDamageValue(), tool.getMaxDamage()));
         List<Tool.Rule> rules = new ArrayList<>();
-        rules.add(Tool.Rule.deniesDrops(HarvestLevels.getIncorrectBlocksForDrops(stats.harvestLevel)));
+        var incorrectBlocks = HarvestLevels.getIncorrectBlocksForDrops(stats.harvestLevel);
+        if (definition.action() != ToolDefinition.Action.MATTOCK) {
+            rules.add(Tool.Rule.deniesDrops(incorrectBlocks));
+            // 怀古组装工具在等级不足时按徒手速度挖掘。原版镐保留自己的速度规则。
+            rules.add(Tool.Rule.overrideSpeed(incorrectBlocks, 1));
+        }
+        if (definition.action() == ToolDefinition.Action.AXE) {
+            rules.add(Tool.Rule.overrideSpeed(BlockTags.LEAVES, stats.miningSpeed));
+        }
+        if (definition.isSword()) {
+            // 怀古的剑类按材料速度的一半清理植被，蜘蛛网再乘以 7.5。
+            rules.add(Tool.Rule.minesAndDrops(List.of(Blocks.COBWEB), stats.miningSpeed * 3.75F));
+            rules.add(Tool.Rule.overrideSpeed(HarvestLevels.SWORD_EFFICIENT, stats.miningSpeed * .5F));
+        }
         for (var tag : definition.effectiveBlocks()) {
+            if (definition.action() == ToolDefinition.Action.MATTOCK) {
+                int tier = tag.equals(BlockTags.MINEABLE_WITH_AXE) ? headHarvestLevel(tool, "Head")
+                        : tag.equals(BlockTags.MINEABLE_WITH_SHOVEL) ? headHarvestLevel(tool, "Shovel") : stats.harvestLevel;
+                rules.add(HarvestLevels.restrictToolToTier(tag, tier));
+            }
             rules.add(Tool.Rule.minesAndDrops(tag, stats.miningSpeed));
         }
         tool.set(DataComponents.TOOL, new Tool(rules, 1, 1));
-        var attributes = ItemAttributeModifiers.builder()
-                .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID,
-                        Math.max(0, stats.attack), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
-                .add(Attributes.ATTACK_SPEED, new AttributeModifier(Item.BASE_ATTACK_SPEED_ID,
-                        stats.attackSpeed - 4, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
-        for (var entry : stats.attributes()) { attributes.add(entry.attribute(), entry.modifier(), entry.slot()); }
-        tool.set(DataComponents.ATTRIBUTE_MODIFIERS, attributes.build());
+        if (definition.isAmmo()) {
+            // 怀古只在弹射命中时使用弹药的攻击属性，握在手里时按普通物品处理。
+            tool.set(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
+        } else {
+            var attributes = ItemAttributeModifiers.builder()
+                    .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID,
+                            Math.max(0, stats.attack), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                    .add(Attributes.ATTACK_SPEED, new AttributeModifier(Item.BASE_ATTACK_SPEED_ID,
+                            stats.attackSpeed - 4, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+            for (var entry : stats.attributes()) { attributes.add(entry.attribute(), entry.modifier(), entry.slot()); }
+            tool.set(DataComponents.ATTRIBUTE_MODIFIERS, attributes.build());
+        }
         CompoundTag data = TinkerDataComponents.getMaterialTag(tool);
         CompoundTag saved = new CompoundTag();
         saved.putInt("BaseDurability", stats.baseDurability);
@@ -122,13 +152,43 @@ public final class ToolBuilder {
         }
     }
 
+    public static int headHarvestLevel(ItemStack tool, String partKey) {
+        var material = TinkerMaterials.getMaterial(TinkerDataComponents.getMaterialTag(tool).getString(partKey));
+        var stats = material == null ? null : material.getStats("Head", HeadMaterialStats.class);
+        return stats == null ? HarvestLevels.STONE : stats.harvestLevel;
+    }
+
     public static boolean ensureCurrent(ItemStack tool, ToolDefinition definition) {
         String current = com.gctn.tconstruct.tools.traits.TinkerTraits.definitionSession();
-        if (!current.isEmpty() && !current.equals(TinkerDataComponents.getMaterialTag(tool).getString("DefinitionSession"))) {
+        var data = TinkerDataComponents.getMaterialTag(tool);
+        if ((definition.action() == ToolDefinition.Action.SHURIKEN && !data.getBoolean(SHURIKEN_TRAITS))
+                || (!current.isEmpty() && !current.equals(data.getString("DefinitionSession")))) {
             rebuild(tool, definition);
             return true;
         }
         return false;
+    }
+
+    private static void updateShurikenTraits(ItemStack tool, ToolDefinition definition) {
+        if (definition.action() != ToolDefinition.Action.SHURIKEN) { return; }
+        CompoundTag data = TinkerDataComponents.getMaterialTag(tool);
+        if (data.getBoolean(SHURIKEN_TRAITS)) { return; }
+        // 旧存档只安装了头部词条。替换材料来源的词条，同时保留运行状态和刻印。
+        var previous = new CompoundTag();
+        var replacement = new CompoundTag();
+        for (var part : definition.parts()) {
+            var material = TinkerMaterials.getMaterial(data.getString(part.key()));
+            if (material == null) { continue; }
+            ToolTraits.addTraits(previous, material.getTraits("Head"));
+            ToolTraits.addTraits(replacement, material.getTraitsForStats(part.traitStats(definition.action())));
+        }
+        ToolTraits.addTraits(replacement, ToolTraits.entriesFrom(data.getCompound("EmbossedTraits")));
+        var actual = TinkerDataComponents.getTraitsTag(tool);
+        ToolTraits.replaceMaterialTraits(actual, previous, replacement,
+                data.contains("Embossed") && !data.contains("EmbossedTraits"));
+        data.putBoolean(SHURIKEN_TRAITS, true);
+        tool.set(TinkerDataComponents.TINKER_TRAITS.get(), CustomData.of(actual));
+        tool.set(TinkerDataComponents.TINKER_MATERIAL.get(), CustomData.of(data));
     }
 
     public static ToolStats calculate(ItemStack tool, ToolDefinition definition) {

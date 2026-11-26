@@ -42,11 +42,14 @@ public final class NearbyInventory {
     public static Source read(RegistryFriendlyByteBuf buffer) { return buffer.readBoolean() ? Source.read(buffer) : null; }
     public static Source find(Player player, BlockPos origin, Kind kind) {
         if (kind == Kind.CRAFTING) {
-            for (Direction direction : Direction.Plane.HORIZONTAL) {
+            // 怀古按水平索引顺序选邻居，并优先使用库存主动提供的无侧面访问。
+            for (int i = 0; i < 4; i++) {
+                Direction direction = Direction.from2DDataValue(i);
                 BlockPos pos = origin.relative(direction);
                 if (WorkshopModule.isTable(player.level(), pos)) { continue; }
                 if (blacklisted(player, pos)) { continue; }
-                Source source = inspect(player, pos, direction.getOpposite());
+                Source source = inspect(player, pos, null);
+                if (source == null) { source = inspect(player, pos, direction.getOpposite()); }
                 if (source != null) { return source; }
             }
         } else if (kind == null || kind == Kind.STENCIL || kind == Kind.PART_BUILDER) {

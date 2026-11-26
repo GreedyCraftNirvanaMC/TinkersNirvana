@@ -37,8 +37,10 @@ public final class SlimeLakeShape {
     }
     public static boolean generate(WorldGenLevel level, RandomSource random, BlockPos origin, BlockState liquid, BlockState bottom, List<BlockState> rim, boolean pool, EntityType<? extends Slime> spawns) {
         BlockPos ground = pool ? origin.offset(-8, 0, -8) : origin;
-        while (ground.getY() > level.getMinBuildHeight() + 5 && level.isEmptyBlock(ground)) { ground = ground.below(); }
-        if (ground.getY() <= level.getMinBuildHeight() + 4) { return false; }
+        // 怀古的地下池不搜索至 Y=5 以下，自定义维度的较高底界仍需保留四格挖掘空间。
+        int minGround = Math.max(pool ? 5 : Integer.MIN_VALUE, level.getMinBuildHeight() + 5);
+        while (ground.getY() > minGround && level.isEmptyBlock(ground)) { ground = ground.below(); }
+        if (ground.getY() < minGround) { return false; }
         BlockPos base = pool ? ground.below(4) : ground.offset(-8, -4, -8);
         if (base.getY() < level.getMinBuildHeight() || base.getY() + 8 >= level.getMaxBuildHeight()) { return false; }
         boolean[] shape = shape(random);
@@ -66,7 +68,7 @@ public final class SlimeLakeShape {
                 if (!pool && random.nextInt(10) == 0) { level.setBlock(pos, bottom, 2); }
             } else if (!rim.isEmpty()) { level.setBlock(pos, rim.get(random.nextInt(rim.size())), 2); }
         } } }
-        if (pool) {
+        if (pool && !liquid.is(Blocks.LAVA)) {
             for (int x = 0; x < 16; x++) { for (int z = 0; z < 16; z++) { for (int y = 4; y < 8; y++) {
                 BlockPos pos = base.offset(x, y - 1, z);
                 if (shape[index(x, y, z)] && level.getBlockState(pos).is(Blocks.DIRT) && level.getLevel().dimensionType().hasSkyLight() && level.canSeeSky(pos.above())) {

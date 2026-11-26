@@ -131,12 +131,13 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     public void inputsChanged() {
         if (this.disassemblyState == DISASSEMBLY_COMMITTED && this.areInputSlotsEmpty()) {
             this.disassemblyState = DISASSEMBLY_NONE;
+            this.mode = Mode.DEFAULT;
         }
         this.updateResult();
     }
 
     public boolean canPlaceDisassemblySource(ItemStack stack) {
-        return this.mode == Mode.DISASSEMBLE
+        return (this.mode == Mode.DEFAULT || this.mode == Mode.DISASSEMBLE)
                 && this.disassemblyState == DISASSEMBLY_NONE
                 && this.getItem(RESULT_SLOT).isEmpty()
                 && this.areInputSlotsEmpty()
@@ -160,6 +161,11 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     }
 
     public void resultSlotChanged(ItemStack newStack) {
+        // 怀古从默认页的输出槽进入拆解，内部保留原有状态以兼容已存的预览和部件。
+        if (this.mode == Mode.DEFAULT && !newStack.isEmpty() && this.areInputSlotsEmpty()
+                && ToolStationDisassemblyRecipes.canDisassemble(newStack, isForge())) {
+            this.mode = Mode.DISASSEMBLE;
+        }
         if (this.mode != Mode.DISASSEMBLE) {
             return;
         }
@@ -269,11 +275,10 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     }
 
     private boolean canRenameAlone() {
-        if (mode != Mode.DEFAULT || pendingName.isEmpty() || !canRenameItem(getItem(0))) { return false; }
-        Component current = getItem(0).get(net.minecraft.core.component.DataComponents.CUSTOM_NAME);
-        if (current != null && current.getString().equals(pendingName)) { return false; }
-        for (int i = 1; i < INPUT_SLOT_COUNT; i++) { if (!getItem(i).isEmpty()) { return false; } }
-        return true;
+        ItemStack tool = getItem(0);
+        return mode == Mode.DEFAULT && !pendingName.isEmpty()
+                && tool.getItem() instanceof com.gctn.tconstruct.tools.TinkerTools
+                && canRenameItem(tool) && !tool.getHoverName().getString().equals(pendingName);
     }
 
     private static boolean canRenameItem(ItemStack stack) {
@@ -288,8 +293,12 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         }
 
         if (this.mode == Mode.DEFAULT) {
-            if (canRenameAlone()) { setItem(0, ItemStack.EMPTY); }
-            else { ToolStationDefaultRecipes.consumeInputs(this); }
+            // 旧版在未匹配修理、换件或强化时仍允许重命名，并保留其他输入。
+            if (canRenameAlone() && ToolStationDefaultRecipes.createResult(this).isEmpty()) {
+                setItem(0, ItemStack.EMPTY);
+            } else {
+                ToolStationDefaultRecipes.consumeInputs(this);
+            }
         } else {
             ToolAssemblyRecipe recipe = ToolStationAssemblyRecipes.get(this.mode);
             if (recipe == null) {
@@ -297,6 +306,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
                 return;
             }
             recipe.consumeInputs(this);
+            pendingName = "";
         }
         this.updateResult();
     }
@@ -324,6 +334,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         this.items.set(RESULT_SLOT, ItemStack.EMPTY);
         this.clearInputSlots();
         this.disassemblyState = DISASSEMBLY_NONE;
+        this.mode = Mode.DEFAULT;
 
         if (returnSource && player != null && !sourceTool.isEmpty()) {
             player.getInventory().placeItemBackInInventory(sourceTool);
@@ -361,6 +372,9 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         this.disassemblyState = loadedState >= DISASSEMBLY_NONE && loadedState <= DISASSEMBLY_COMMITTED
                 ? loadedState
                 : DISASSEMBLY_NONE;
+        if (this.mode == Mode.DISASSEMBLE && this.disassemblyState == DISASSEMBLY_NONE) {
+            this.mode = Mode.DEFAULT;
+        }
     }
 
     @Override

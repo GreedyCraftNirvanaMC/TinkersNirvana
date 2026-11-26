@@ -7,12 +7,14 @@ package com.gctn.tconstruct.smeltery.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
+import java.util.Optional;
 
 public final class SmelteryRendering {
     private SmelteryRendering() {
@@ -45,6 +47,23 @@ public final class SmelteryRendering {
             sum--;
         }
         return heights;
+    }
+
+    public record FluidLayer(int index, FluidStack fluid, Rect2i area) {}
+
+    static Optional<FluidLayer> fluidLayerAt(List<FluidStack> fluids, int[] heights, Rect2i tank, double x, double y) {
+        int bottom = tank.getY() + tank.getHeight();
+        if (x < tank.getX() || x >= tank.getX() + tank.getWidth() || y < tank.getY() || y >= bottom) {
+            return Optional.empty();
+        }
+        for (int i = 0; i < heights.length; i++) {
+            bottom -= heights[i];
+            if (y >= bottom) {
+                return Optional.of(new FluidLayer(i, fluids.get(i),
+                        new Rect2i(tank.getX(), bottom, tank.getWidth(), heights[i])));
+            }
+        }
+        return Optional.empty();
     }
 
     public static TextureAtlasSprite sprite(FluidStack fluid) {

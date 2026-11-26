@@ -16,6 +16,12 @@ public abstract class PlayerOffhandHarvestMixin {
     private float tconstruct$offhandSpeed(BlockState state, BlockPos pos, Operation<Float> original) {
         return DualToolHarvest.withTool((Player) (Object) this, state, () -> original.call(state, pos));
     }
+    @WrapMethod(method = "hasCorrectToolForDrops(Lnet/minecraft/world/level/block/state/BlockState;)Z")
+    private boolean tconstruct$offhandHarvestCheck(BlockState state, Operation<Boolean> original) {
+        // 1.21.1 用这个重载初始化破坏进度的采集资格，随后才派发带坐标的 NeoForge 事件。
+        return DualToolHarvest.withTool((Player) (Object) this, state, () -> original.call(state));
+    }
+
     @WrapMethod(method = "hasCorrectToolForDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Z")
     private boolean tconstruct$offhandDrops(BlockState state, Level level, BlockPos pos, Operation<Boolean> original) {
         return DualToolHarvest.withTool((Player) (Object) this, state, () -> original.call(state, level, pos));

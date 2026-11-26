@@ -3,9 +3,8 @@ package com.gctn.tconstruct.book.client;
 
 import com.gctn.tconstruct.library.TinkerMaterials;
 import com.gctn.tconstruct.library.materials.Material;
-import com.gctn.tconstruct.library.stats.*;
+import com.gctn.tconstruct.client.MaterialStatText;
 import com.gctn.tconstruct.library.toolparts.AntiqueParts;
-import com.gctn.tconstruct.library.utils.HarvestLevels;
 import com.gctn.tconstruct.tools.AntiqueTools;
 import com.gctn.tconstruct.tools.ToolBuilder;
 import net.minecraft.ChatFormatting;
@@ -13,14 +12,11 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.world.item.ItemStack;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 
 /** Original paper coordinates and presentation; all values still come from registered materials. */
 final class BookMaterialLayout {
     static final List<String> RANGED = List.of("Bow", "BowString", "Shaft", "Fletching");
-    private static final int GREEN = 0x47cc47, SPEED = 0x78a0cd, ATTACK = 0xd76464, MULTIPLIER = 0xb9b95a;
     private final Font font;
     private final List<BookDocument.Element> elements = new ArrayList<>();
     private BookMaterialLayout(Font font) { this.font = font; }
@@ -65,7 +61,7 @@ final class BookMaterialLayout {
             page.title(source.title(), y, true);
             var parts = parts(material, role);
             if (!parts.isEmpty()) { page.elements.add(new BookDocument.Icon(10, y + 21, parts)); }
-            page.text(stats(material.stats.get(role)), 30, y + 20, BookDocument.WIDTH / 2 - 10, y + 57);
+            page.text(MaterialStatText.stats(material.stats.get(role)), 30, y + 20, BookDocument.WIDTH / 2 - 10, y + 57);
             page.text(traits(material, role), 120, y + 20, BookDocument.WIDTH / 2 - 10, y + 57);
         }
         return new BookDocument.Leaf(id, "bowmaterials", Component.empty(), List.copyOf(page.elements), id);
@@ -74,8 +70,8 @@ final class BookMaterialLayout {
         if (!material.hasStats(role)) { return; }
         var parts = parts(material, role);
         if (!parts.isEmpty()) { elements.add(new BookDocument.Icon(x, y + 1, parts, .5F, null)); }
-        text(List.of(Component.translatable("stat." + type(role) + ".name").withStyle(ChatFormatting.UNDERLINE)), x + 10, y, width - 10, y + 10);
-        List<Component> lines = new ArrayList<>(stats(material.stats.get(role))); lines.addAll(traits(material, role));
+        text(List.of(Component.translatable("stat." + MaterialStatText.type(role) + ".name").withStyle(ChatFormatting.UNDERLINE)), x + 10, y, width - 10, y + 10);
+        List<Component> lines = new ArrayList<>(MaterialStatText.stats(material.stats.get(role))); lines.addAll(traits(material, role));
         text(lines, x, y + 12, width, BookDocument.HEIGHT - 10);
     }
     private static List<ItemStack> parts(Material material, String role) {
@@ -91,28 +87,6 @@ final class BookMaterialLayout {
         }
         return lines;
     }
-    static List<Component> stats(AbstractMaterialStats stats) {
-        List<Component> lines = new ArrayList<>();
-        if (stats instanceof HeadMaterialStats head) {
-            number(lines, "head.durability", head.durability, GREEN);
-            lines.add(Component.translatable("stat.head.harvestlevel.name").append(": ").append(HarvestLevels.getHarvestLevelName(head.harvestLevel)).withStyle(style -> style.withHoverEvent(description("head.harvestlevel"))));
-            number(lines, "head.miningspeed", head.miningspeed, SPEED); number(lines, "head.attack", head.attack, ATTACK);
-        } else if (stats instanceof HandleMaterialStats handle) { number(lines, "handle.modifier", handle.modifer, MULTIPLIER); number(lines, "handle.durability", handle.durability, GREEN); }
-        else if (stats instanceof ExtraMaterialStats extra) { number(lines, "extra.durability", extra.durability, GREEN); }
-        else if (stats instanceof BowMaterialStats bow) { number(lines, "bow.drawspeed", 1 / bow.drawSpeed, 0x808080); number(lines, "bow.range", bow.range, 0x8cafaf); number(lines, "bow.damage", bow.bonusDamage, 0x9b5041); }
-        else if (stats instanceof BowStringMaterialStats string) { number(lines, "bowstring.modifier", string.modifier, MULTIPLIER); }
-        else if (stats instanceof ArrowShaftMaterialStats shaft) { number(lines, "shaft.modifier", shaft.modifier, MULTIPLIER); number(lines, "shaft.ammo", shaft.bonusAmmo, GREEN); }
-        else if (stats instanceof FletchingMaterialStats fletching) { number(lines, "fletching.accuracy", fletching.accuracy * 100, 0xcdaacd, "%"); number(lines, "fletching.modifier", fletching.modifier, MULTIPLIER); }
-        return lines;
-    }
-    private static HoverEvent description(String key) { return new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("stat." + key + ".desc")); }
-    private static void number(List<Component> lines, String key, double value, int color) { number(lines, key, value, color, ""); }
-    private static void number(List<Component> lines, String key, double value, int color, String suffix) {
-        if (value == 0 || !Double.isFinite(value)) { return; }
-        String number = BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();
-        lines.add(Component.translatable("stat." + key + ".name").append(": ").append(Component.literal(number + suffix).withColor(color)).withStyle(style -> style.withHoverEvent(description(key))));
-    }
-    static String type(String role) { return switch (role) { case "BowString" -> "bowstring"; case "Shaft" -> "shaft"; default -> role.toLowerCase(Locale.ROOT); }; }
     void title(Component title, int y, boolean shadow) {
         title = BookContents.paper(title.copy().withStyle(ChatFormatting.UNDERLINE));
         elements.add(new BookDocument.Text((BookDocument.WIDTH - (int) Math.ceil(font.width(title) * 1.2F)) / 2, y, title.getVisualOrderText(), 1.2F, shadow));

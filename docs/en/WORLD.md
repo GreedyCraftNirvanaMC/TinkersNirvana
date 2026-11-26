@@ -6,7 +6,7 @@ New Overworld chunks can contain slime islands with green, blue, or purple slime
 
 Plant slime saplings on slime soil. Bone meal grows saplings, grass, and ferns. Harvest leaves with shears or Silk Touch. Blue and purple vines grow downward through three stages. Slime leaves and vines can also supply fletching or shaft materials.
 
-Tool workshops and smelteries can generate in all five vanilla village styles. Chests generate random loot on first opening. Buildings use vanilla jigsaw pools and coexist with other mods that add structures to those pools.
+Tool workshops and smelteries can generate in all five vanilla village styles. Each workshop starts with one toolsmith. Chests generate random loot on first opening. Buildings use vanilla jigsaw pools and coexist with other mods that add structures to those pools.
 
 ## Configuration
 
@@ -22,7 +22,7 @@ Edit `config/tconsnirvana-common.toml`. World generation settings affect future 
 | `world.generateIslandsInSuperflat` | `false` | Slime islands in superflat worlds |
 | `world.generateSlimePools` | `false` | Underground slime and magma pools |
 | `world.slimePoolRate` / `world.magmaPoolRate` | `30` | Underground pool attempt frequency |
-| `world.slimePoolHeightMax` | `64` | Maximum pool attempt height |
+| `world.slimePoolHeightMax` | `64` | Maximum pool attempt height. The downward search stops at Y=5 or the dimension floor plus five blocks, whichever is higher. |
 | `world.generateVillageStructures` | `true` | Both village structure families |
 | `world.villageWorkshopWeight` / `world.villageSmelteryWeight` | `30` / `9` | Village structure weights |
 
