@@ -20,6 +20,7 @@
 | `liquidTransferRate` | `6` |
 | `oreToIngotRatio` | `2.0` |
 | `obsidianAlloy` | `true` |
+| `entityMeltingBlood` | `true` |
 | `claycasts` | `true` |
 | `allowBrickCasting` | `true` |
 | `steelAlloy` | `true` |
@@ -27,6 +28,8 @@
 | `minFluidHeight` | `3` |
 | `maxSmelteryItemRenders` | `-1`（不限） |
 | `temperatureCelsius` | `true` |
+
+关闭 `entityMeltingBlood` 后，运行中的冶炼炉仍会对生物造成伤害，所有实体熔炼液体均停止产出。
 
 `oredictMeltingIgnore` 支持物品 ID 或 `#物品标签`。从合成原料推导熔化配方时，可忽略列出的原料，默认包括木材、木棍、线、红石和箱子。同一物品的各条合成路线及其备选原料都必须得到相同流体和单位回收量，才能自动生成熔化配方。显式熔化配方优先。数据包重载后会重新推导。
 

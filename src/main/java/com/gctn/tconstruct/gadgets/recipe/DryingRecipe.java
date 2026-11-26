@@ -23,6 +23,7 @@ public record DryingRecipe(Ingredient ingredient, ItemStack result, int time, bo
     @Override public boolean matches(SingleRecipeInput input, Level level) { return (!leather || Config.LEATHER_DRYING.get()) && ingredient.test(input.item()); }
     @Override public ItemStack assemble(SingleRecipeInput input, HolderLookup.Provider registries) { return result.copy(); }
     @Override public boolean canCraftInDimensions(int width, int height) { return width * height >= 1; }
+    @Override public boolean isSpecial() { return true; }
     @Override public ItemStack getResultItem(HolderLookup.Provider registries) { return result; }
     @Override public NonNullList<Ingredient> getIngredients() { return NonNullList.of(Ingredient.EMPTY, ingredient); }
     @Override public RecipeSerializer<?> getSerializer() { return RemainingGadgets.DRYING_SERIALIZER.get(); }

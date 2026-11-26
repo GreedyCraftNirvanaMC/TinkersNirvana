@@ -41,6 +41,7 @@ Configuration is in `config/tconsnirvana-common.toml`, under `[smeltery]`:
 | `liquidTransferRate` | `6` |
 | `oreToIngotRatio` | `2.0` |
 | `obsidianAlloy` | `true` |
+| `entityMeltingBlood` | `true` |
 | `claycasts` | `true` |
 | `allowBrickCasting` | `true` |
 | `steelAlloy` | `true` |
@@ -48,6 +49,8 @@ Configuration is in `config/tconsnirvana-common.toml`, under `[smeltery]`:
 | `minFluidHeight` | `3` |
 | `maxSmelteryItemRenders` | `-1` (unlimited) |
 | `temperatureCelsius` | `true` |
+
+Disabling `entityMeltingBlood` lets the fueled Smeltery continue to damage mobs and stops all fluid production from entities.
 
 `oredictMeltingIgnore` contains item IDs or `#item_tag` IDs that may be ignored
 when deriving melting recipes from crafting ingredients. Its defaults allow

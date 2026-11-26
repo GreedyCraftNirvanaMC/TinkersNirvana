@@ -5,6 +5,7 @@
  */
 package com.gctn.tconstruct.smeltery.block.entity;
 
+import com.gctn.tconstruct.Config;
 import com.gctn.tconstruct.smeltery.SmelteryModule;
 import com.gctn.tconstruct.smeltery.SmelteryTank;
 import com.gctn.tconstruct.smeltery.SmelteryFluids;
@@ -348,8 +349,8 @@ public class SmelteryBlockEntity extends BaseContainerBlockEntity implements Hea
             } else if (entity instanceof LivingEntity living && living.isAlive()) {
                 if (fuel <= 0) {
                     needsFuel = true;
-                } else if (living.hurt(level.damageSources().source(net.minecraft.resources.ResourceKey.create(
-                        net.minecraft.core.registries.Registries.DAMAGE_TYPE, SmelteryFluids.id("smeltery"))), 2.0F)) {
+                } else if (living.hurt(level.damageSources().source(SmelteryEvents.ENTITY_MELTING_DAMAGE), 2.0F)
+                        && Config.ENTITY_MELTING_BLOOD.get()) {
                     liquids.fill(SmelteryRecipes.entityMelting(living), FluidAction.EXECUTE);
                 }
             }

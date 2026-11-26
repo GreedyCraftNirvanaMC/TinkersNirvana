@@ -1,6 +1,7 @@
 package com.gctn.tconstruct.compat.jei;
 
 import com.gctn.tconstruct.TinkersNirvana;
+import com.gctn.tconstruct.gadgets.RemainingGadgets;
 import com.gctn.tconstruct.init.TinkerDataComponents;
 import com.gctn.tconstruct.library.toolparts.AntiqueParts;
 import com.gctn.tconstruct.library.utils.Tags;
@@ -8,6 +9,7 @@ import com.gctn.tconstruct.smeltery.SmelteryModule;
 import com.gctn.tconstruct.smeltery.client.SmelteryScreen;
 import com.gctn.tconstruct.smeltery.client.TinkerTankScreen;
 import com.gctn.tconstruct.tables.WorkshopModule;
+import com.gctn.tconstruct.tables.block.TableBlocks;
 import com.gctn.tconstruct.tables.client.PersistentCraftingScreen;
 import com.gctn.tconstruct.tables.client.ToolStationScreen;
 import com.gctn.tconstruct.tables.client.WorkshopScreen;
@@ -118,6 +120,16 @@ public final class TinkerJeiPlugin implements IModPlugin {
     }
 
     @Override public void registerItemSubtypes(ISubtypeRegistration registration) {
+        var tableSubtype = new Subtype(stack -> {
+            var material = stack.get(TinkerDataComponents.TABLE_MATERIAL.get());
+            return material == null ? "" : material.toString();
+        });
+        for (var table : WorkshopModule.BLOCKS.values()) {
+            registration.registerSubtypeInterpreter(table.get().asItem(), tableSubtype);
+        }
+        registration.registerSubtypeInterpreter(TableBlocks.TOOL_FORGE.get().asItem(), tableSubtype);
+        registration.registerSubtypeInterpreter(RemainingGadgets.ITEM_RACK.get().asItem(), tableSubtype);
+        registration.registerSubtypeInterpreter(RemainingGadgets.DRYING_RACK.get().asItem(), tableSubtype);
         registration.registerSubtypeInterpreter(PatternItem.PATTERN.get(), new Subtype(
                 stack -> TinkerDataComponents.getMaterialTag(stack).getString("Pattern")));
         for (var part : AntiqueParts.entries().values()) {

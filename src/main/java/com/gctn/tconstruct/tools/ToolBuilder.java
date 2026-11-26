@@ -92,13 +92,20 @@ public final class ToolBuilder {
         tool.set(DataComponents.DAMAGE, Math.min(tool.getDamageValue(), tool.getMaxDamage()));
         List<Tool.Rule> rules = new ArrayList<>();
         var incorrectBlocks = HarvestLevels.getIncorrectBlocksForDrops(stats.harvestLevel);
-        rules.add(Tool.Rule.deniesDrops(incorrectBlocks));
-        // 怀古组装工具在等级不足时按徒手速度挖掘。原版镐保留自己的速度规则。
-        rules.add(Tool.Rule.overrideSpeed(incorrectBlocks, 1));
+        if (definition.action() != ToolDefinition.Action.MATTOCK) {
+            rules.add(Tool.Rule.deniesDrops(incorrectBlocks));
+            // 怀古组装工具在等级不足时按徒手速度挖掘。原版镐保留自己的速度规则。
+            rules.add(Tool.Rule.overrideSpeed(incorrectBlocks, 1));
+        }
         if (definition.action() == ToolDefinition.Action.AXE) {
             rules.add(Tool.Rule.overrideSpeed(BlockTags.LEAVES, stats.miningSpeed));
         }
         for (var tag : definition.effectiveBlocks()) {
+            if (definition.action() == ToolDefinition.Action.MATTOCK) {
+                int tier = tag.equals(BlockTags.MINEABLE_WITH_AXE) ? headHarvestLevel(tool, "Head")
+                        : tag.equals(BlockTags.MINEABLE_WITH_SHOVEL) ? headHarvestLevel(tool, "Shovel") : stats.harvestLevel;
+                rules.add(HarvestLevels.restrictToolToTier(tag, tier));
+            }
             rules.add(Tool.Rule.minesAndDrops(tag, stats.miningSpeed));
         }
         tool.set(DataComponents.TOOL, new Tool(rules, 1, 1));
@@ -127,6 +134,12 @@ public final class ToolBuilder {
             tool.set(DataComponents.ITEM_NAME, Component.translatable("item.tconsnirvana.material_part",
                     Material.nameOf(displayId), Component.translatable("item.tconsnirvana." + definition.id() + ".name")));
         }
+    }
+
+    public static int headHarvestLevel(ItemStack tool, String partKey) {
+        var material = TinkerMaterials.getMaterial(TinkerDataComponents.getMaterialTag(tool).getString(partKey));
+        var stats = material == null ? null : material.getStats("Head", HeadMaterialStats.class);
+        return stats == null ? HarvestLevels.STONE : stats.harvestLevel;
     }
 
     public static boolean ensureCurrent(ItemStack tool, ToolDefinition definition) {

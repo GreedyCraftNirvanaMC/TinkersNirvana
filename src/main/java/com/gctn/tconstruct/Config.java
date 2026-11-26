@@ -95,6 +95,9 @@ public class Config {
     public static final ModConfigSpec.DoubleValue ORE_TO_INGOT_RATIO = BUILDER
             .defineInRange("smeltery.oreToIngotRatio", 2.0, 0.1, 100.0);
     public static final ModConfigSpec.BooleanValue OBSIDIAN_ALLOY = BUILDER.define("smeltery.obsidianAlloy", true);
+    public static final ModConfigSpec.BooleanValue ENTITY_MELTING_BLOOD = BUILDER
+            .comment("Whether damage to living entities in a fueled Smeltery produces fluid.")
+            .define("smeltery.entityMeltingBlood", true);
     public static final ModConfigSpec.BooleanValue CLAY_CASTS = BUILDER.define("smeltery.claycasts", true);
     public static final ModConfigSpec.BooleanValue ALLOW_BRICK_CASTING = BUILDER.define("smeltery.allowBrickCasting", true);
     public static final ModConfigSpec.BooleanValue STEEL_ALLOY = BUILDER.define("smeltery.steelAlloy", true);

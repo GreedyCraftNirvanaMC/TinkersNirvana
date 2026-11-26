@@ -8,6 +8,7 @@ import com.gctn.tconstruct.tables.menu.ToolStationMenu;
 import com.gctn.tconstruct.tables.recipe.ToolStationAssemblyRecipes;
 import com.gctn.tconstruct.tools.TinkerTools;
 import com.gctn.tconstruct.tools.ToolBuilder;
+import com.gctn.tconstruct.tools.ToolDefinition.Action;
 import com.gctn.tconstruct.tools.ToolModifiers;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import com.gctn.tconstruct.tools.traits.ToolTraits;
@@ -80,8 +81,15 @@ final class ToolStationInfoPanel extends AbstractScrollWidget {
         if (tool instanceof AntiqueTool antique) {
             var stats = ToolBuilder.savedStats(stack);
             if (!antique.definition().effectiveBlocks().isEmpty()) {
-                addLine(content, Component.translatable("tooltip.tconsnirvana.tool.mininglevel",
-                        HarvestLevels.getHarvestLevelName(stats.getInt("HarvestLevel"))));
+                if (antique.definition().action() == Action.MATTOCK) {
+                    addLine(content, Component.translatable("stat.mattock.axelevel.name").append(" ")
+                            .append(HarvestLevels.getHarvestLevelName(ToolBuilder.headHarvestLevel(stack, "Head"))));
+                    addLine(content, Component.translatable("stat.mattock.shovellevel.name").append(" ")
+                            .append(HarvestLevels.getHarvestLevelName(ToolBuilder.headHarvestLevel(stack, "Shovel"))));
+                } else {
+                    addLine(content, Component.translatable("tooltip.tconsnirvana.tool.mininglevel",
+                            HarvestLevels.getHarvestLevelName(stats.getInt("HarvestLevel"))));
+                }
                 addLine(content, stat("tooltip.tconsnirvana.tool.miningspeed", stats.getFloat("MiningSpeed")));
             }
             switch (antique.definition().action()) {
