@@ -7,6 +7,6 @@
     "PlayerAttackMixin", "ToolHurtKnockbackMixin", "ServerOffhandHarvestMixin", "LivingEntityDamageAccessor", "ExperienceOrbMixin", "WorldgenTreeFeatureMixin",
     "VillageBuildingLimitsMixin", "AntiqueProjectileDamageMixin", "LootingCountMixin", "LootingChanceMixin"],
   "client": ["ClientOffhandHarvestMixin", "OffhandHarvestSwingMixin", "MiningOutlineInvoker", "MiningTargetAccessor",
-    "LauncherHandRendererMixin", "CrossbowChargeAnimationMixin", "LauncherAmmoRendererMixin"],
+    "LauncherHandRendererMixin", "CrossbowChargeAnimationMixin", "LauncherAmmoRendererMixin", "ToolChargeMovementMixin"],
   "injectors": {"defaultRequire": 1}
 }
