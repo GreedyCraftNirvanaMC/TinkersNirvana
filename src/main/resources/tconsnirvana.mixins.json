@@ -5,7 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": ["EntityChannelFluidMixin", "PlayerOffhandHarvestMixin",
     "PlayerAttackMixin", "ServerOffhandHarvestMixin", "LivingEntityDamageAccessor", "ExperienceOrbMixin", "WorldgenTreeFeatureMixin",
-    "VillageBuildingLimitsMixin", "AntiqueProjectileDamageMixin"],
+    "VillageBuildingLimitsMixin", "AntiqueProjectileDamageMixin", "LootingCountMixin", "LootingChanceMixin"],
   "client": ["ClientOffhandHarvestMixin"],
   "injectors": {"defaultRequire": 1}
 }

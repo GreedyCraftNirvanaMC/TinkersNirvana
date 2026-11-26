@@ -13,6 +13,7 @@ import com.gctn.tconstruct.library.utils.Tags;
 import com.gctn.tconstruct.tools.tools.AntiqueTool;
 import com.gctn.tconstruct.tools.traits.AntiqueTraits;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.EntityTypeTags;
@@ -29,6 +30,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 
@@ -370,6 +373,15 @@ public final class ToolModifiers {
         }
         if (level(tool, "silktouch") > 0 || AntiqueTraits.has(tool, "squeaky")) { builder.upgrade(lookup.getOrThrow(Enchantments.SILK_TOUCH), 1); }
         tool.set(DataComponents.ENCHANTMENTS, builder.toImmutable());
+    }
+
+    public static int projectileLooting(Holder<Enchantment> enchantment, int equipmentLevel, LootContext context) {
+        if (!enchantment.is(Enchantments.LOOTING)) { return equipmentLevel; }
+        if (context.getParamOrNull(LootContextParams.DIRECT_ATTACKING_ENTITY) instanceof AntiqueProjectile projectile) {
+            // 怀古取命中弹药与正常抢夺等级的较大值，发射器的强化不写入弹药。
+            return Math.max(equipmentLevel, level(projectile.getPickupItemStackOrigin(), "luck"));
+        }
+        return equipmentLevel;
     }
 
     public static float modifyAttack(ItemStack tool, LivingEntity attacker, LivingEntity target, float damage) {
