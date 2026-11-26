@@ -6,7 +6,7 @@ New Overworld chunks can contain slime islands with green, blue, or purple slime
 
 Plant slime saplings on slime soil. Bone meal grows saplings, grass, and ferns. Harvest leaves with shears or Silk Touch. Blue and purple vines grow downward through three stages. Slime leaves and vines can also supply fletching or shaft materials.
 
-Tool workshops and smelteries can generate in all five vanilla village styles. Chests generate random loot on first opening. Buildings use vanilla jigsaw pools and coexist with other mods that add structures to those pools.
+Tool workshops and smelteries can generate in all five vanilla village styles. Each workshop starts with one toolsmith. Chests generate random loot on first opening. Buildings use vanilla jigsaw pools and coexist with other mods that add structures to those pools.
 
 ## Configuration
 

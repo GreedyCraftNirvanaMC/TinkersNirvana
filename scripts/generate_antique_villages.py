@@ -61,12 +61,11 @@ class Template:
                 for z in range(start[2], end[2] + 1):
                     self.set(x, y, z, name, properties)
 
-    def jigsaw(self, x, y, z, biome, villager=False, final_state="minecraft:air"):
-        self.set(x, y, z, "minecraft:jigsaw", {"orientation": "up_north" if villager else "north_up"}, {
-            "id": "minecraft:jigsaw", "name": "minecraft:bottom" if villager else "minecraft:building_entrance",
-            "target": "minecraft:bottom" if villager else "minecraft:building_entrance",
-            "pool": f"minecraft:village/{biome}/" + ("villagers" if villager else "streets"),
-            "joint": "rollable" if villager else "aligned", "final_state": final_state, "selection_priority": 0, "placement_priority": 0})
+    def jigsaw(self, x, y, z, biome, final_state="minecraft:air"):
+        self.set(x, y, z, "minecraft:jigsaw", {"orientation": "north_up"}, {
+            "id": "minecraft:jigsaw", "name": "minecraft:building_entrance",
+            "target": "minecraft:building_entrance", "pool": f"minecraft:village/{biome}/streets",
+            "joint": "aligned", "final_state": final_state, "selection_priority": 0, "placement_priority": 0})
 
     def save(self, name):
         palette, blocks = [], []
@@ -129,7 +128,13 @@ for biome, (wood, log, cobble, bricks) in themes.items():
     table.set(4, 1, 5, "minecraft:chest", {"facing": "north", "type": "single", "waterlogged": "false"}, {"id": "minecraft:chest", "LootTable": "tconsnirvana:chests/workshop_parts"})
     table.set(5, 1, 5, "minecraft:piston", {"facing": "north", "extended": "false"})
     table.jigsaw(3, 0, 0, biome, final_state=f"minecraft:{wood}_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]")
-    table.jigsaw(3, 0, 3, biome, villager=True, final_state="minecraft:white_wool")
+    # 怀古的工坊固定生成一名铁匠。少量职业经验使新版工具匠即使暂时没有工作方块也保留职业。
+    villager_type = "snow" if biome == "snowy" else biome
+    table.entities.append({
+        "pos": [3.5, 1.0, 3.5], "blockPos": [3, 1, 3],
+        "nbt": {"id": "minecraft:villager", "Xp": 1, "VillagerData": {
+            "type": f"minecraft:{villager_type}", "profession": "minecraft:toolsmith", "level": 1}},
+    })
     table.save(f"{biome}/tool_workshop")
 
     smeltery = Template((9, 4, 7))
