@@ -1130,6 +1130,8 @@
   "item.tconstruct.bolt_core.name": "Bolt Core",
   "item.tconstruct.material_part": "%s %s",
   "jei.tconsnirvana.melting": "Smeltery Melting",
+  "jei.tconsnirvana.entity_melting": "Entity Melting",
+  "jei.tconsnirvana.entity_melting_amount": "%s mB / 2 HP",
   "jei.tconsnirvana.casting_table": "Casting Table",
   "jei.tconsnirvana.casting_basin": "Casting Basin",
   "jei.tconsnirvana.alloying": "Smeltery Alloying",

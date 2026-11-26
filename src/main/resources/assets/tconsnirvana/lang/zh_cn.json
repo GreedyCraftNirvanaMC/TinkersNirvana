@@ -1130,6 +1130,8 @@
   "item.tconstruct.bolt_core.name": "弩箭核心",
   "item.tconstruct.material_part": "%s%s",
   "jei.tconsnirvana.melting": "冶炼炉熔炼",
+  "jei.tconsnirvana.entity_melting": "实体熔炼",
+  "jei.tconsnirvana.entity_melting_amount": "每 2 点伤害 %s mB",
   "jei.tconsnirvana.casting_table": "浇铸台",
   "jei.tconsnirvana.casting_basin": "浇铸盆",
   "jei.tconsnirvana.alloying": "冶炼炉合金",

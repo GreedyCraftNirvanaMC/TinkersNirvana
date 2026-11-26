@@ -328,15 +328,18 @@ public final class SmelteryRecipes {
     }
 
     public static FluidStack entityMelting(net.minecraft.world.entity.LivingEntity entity) {
+        FluidStack registered = explicitEntityMelting(entity);
+        return registered.isEmpty() ? fluid("blood", 20) : registered;
+    }
+
+    public static FluidStack explicitEntityMelting(net.minecraft.world.entity.LivingEntity entity) {
         initialize();
         for (int i = ENTITY_MELTING.size() - 1; i >= 0; i--) {
             if (ENTITY_MELTING.get(i).input.test(entity)) {
                 return ENTITY_MELTING.get(i).output.copy();
             }
         }
-        FluidStack configured = ConfiguredEntityMelting.find(entity);
-        if (!configured.isEmpty()) { return configured; }
-        return fluid("blood", 20);
+        return ConfiguredEntityMelting.find(entity);
     }
 
     public static Casting findCasting(boolean basin, ItemStack cast, Fluid fluid) {

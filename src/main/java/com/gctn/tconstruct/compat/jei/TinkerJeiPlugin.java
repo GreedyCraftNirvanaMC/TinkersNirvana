@@ -8,6 +8,7 @@ import com.gctn.tconstruct.library.utils.Tags;
 import com.gctn.tconstruct.smeltery.SmelteryModule;
 import com.gctn.tconstruct.smeltery.client.SmelteryScreen;
 import com.gctn.tconstruct.smeltery.client.TinkerTankScreen;
+import com.gctn.tconstruct.smeltery.network.EntityMeltingSync;
 import com.gctn.tconstruct.tables.WorkshopModule;
 import com.gctn.tconstruct.tables.block.TableBlocks;
 import com.gctn.tconstruct.tables.client.PersistentCraftingScreen;
@@ -32,12 +33,17 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
+import mezz.jei.api.recipe.transfer.IRecipeTransferInfo;
 import mezz.jei.api.runtime.IClickableIngredient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.Collection;
 import java.util.List;
@@ -57,14 +63,21 @@ public final class TinkerJeiPlugin implements IModPlugin {
         for (var kind : RecipeCatalog.Kind.values()) {
             registration.addRecipeCategories(new ProcessingCategory(kind, helpers.getGuiHelper(), itemRenderer));
         }
+        registration.addRecipeCategories(new EntityMeltingCategory(helpers.getGuiHelper()));
     }
 
     @Override public void registerRecipes(IRecipeRegistration registration) {
-        var level = Minecraft.getInstance().level;
+        var minecraft = Minecraft.getInstance();
+        var level = minecraft.level;
         if (level == null) { return; }
         var catalog = RecipeCatalog.create(level.getRecipeManager(), level.registryAccess());
         for (var kind : RecipeCatalog.Kind.values()) {
             registration.addRecipes(ProcessingCategory.type(kind), catalog.get(kind));
+        }
+        var connection = minecraft.getConnection();
+        if (connection != null) {
+            registration.addRecipes(EntityMeltingCategory.TYPE,
+                    EntityMeltingCategory.displays(EntityMeltingSync.recipes(connection.getConnection())));
         }
     }
 
@@ -73,14 +86,30 @@ public final class TinkerJeiPlugin implements IModPlugin {
             registration.addRecipeCatalyst(new ItemStack(kind.station.get()), ProcessingCategory.type(kind));
         }
         registration.addRecipeCatalyst(new ItemStack(SmelteryModule.CONTROLLER.get()), ProcessingCategory.type(RecipeCatalog.Kind.FUEL));
+        registration.addRecipeCatalyst(new ItemStack(SmelteryModule.CONTROLLER.get()), EntityMeltingCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(SmelteryModule.FURNACE.get()),
                 RecipeTypes.SMELTING, ProcessingCategory.type(RecipeCatalog.Kind.FUEL));
         registration.addRecipeCatalyst(new ItemStack(WorkshopModule.BLOCKS.get(WorkshopModule.Kind.CRAFTING).get()), RecipeTypes.CRAFTING);
     }
 
     @Override public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        registration.addRecipeTransferHandler(PersistentCraftingMenu.class, WorkshopModule.CRAFTING_MENU.get(),
-                RecipeTypes.CRAFTING, 1, 9, 10, 36);
+        registration.addRecipeTransferHandler(new IRecipeTransferInfo<PersistentCraftingMenu, RecipeHolder<CraftingRecipe>>() {
+            @Override public Class<PersistentCraftingMenu> getContainerClass() { return PersistentCraftingMenu.class; }
+            @Override public Optional<MenuType<PersistentCraftingMenu>> getMenuType() {
+                return Optional.of(WorkshopModule.CRAFTING_MENU.get());
+            }
+            @Override public mezz.jei.api.recipe.RecipeType<RecipeHolder<CraftingRecipe>> getRecipeType() {
+                return RecipeTypes.CRAFTING;
+            }
+            @Override public boolean canHandle(PersistentCraftingMenu menu, RecipeHolder<CraftingRecipe> recipe) { return true; }
+            @Override public List<Slot> getRecipeSlots(PersistentCraftingMenu menu, RecipeHolder<CraftingRecipe> recipe) {
+                return menu.slots.subList(1, 10);
+            }
+            @Override public List<Slot> getInventorySlots(PersistentCraftingMenu menu, RecipeHolder<CraftingRecipe> recipe) {
+                // 合成站将附近库存接在玩家库存后面，转移时只用当前页的有效槽。
+                return menu.slots.subList(10, menu.slots.size()).stream().filter(Slot::isActive).toList();
+            }
+        });
     }
 
     @Override public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
