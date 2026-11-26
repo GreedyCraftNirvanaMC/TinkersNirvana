@@ -131,12 +131,13 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     public void inputsChanged() {
         if (this.disassemblyState == DISASSEMBLY_COMMITTED && this.areInputSlotsEmpty()) {
             this.disassemblyState = DISASSEMBLY_NONE;
+            this.mode = Mode.DEFAULT;
         }
         this.updateResult();
     }
 
     public boolean canPlaceDisassemblySource(ItemStack stack) {
-        return this.mode == Mode.DISASSEMBLE
+        return (this.mode == Mode.DEFAULT || this.mode == Mode.DISASSEMBLE)
                 && this.disassemblyState == DISASSEMBLY_NONE
                 && this.getItem(RESULT_SLOT).isEmpty()
                 && this.areInputSlotsEmpty()
@@ -160,6 +161,11 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
     }
 
     public void resultSlotChanged(ItemStack newStack) {
+        // 怀古从默认页的输出槽进入拆解，内部保留原有状态以兼容已存的预览和部件。
+        if (this.mode == Mode.DEFAULT && !newStack.isEmpty() && this.areInputSlotsEmpty()
+                && ToolStationDisassemblyRecipes.canDisassemble(newStack, isForge())) {
+            this.mode = Mode.DISASSEMBLE;
+        }
         if (this.mode != Mode.DISASSEMBLE) {
             return;
         }
@@ -328,6 +334,7 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         this.items.set(RESULT_SLOT, ItemStack.EMPTY);
         this.clearInputSlots();
         this.disassemblyState = DISASSEMBLY_NONE;
+        this.mode = Mode.DEFAULT;
 
         if (returnSource && player != null && !sourceTool.isEmpty()) {
             player.getInventory().placeItemBackInInventory(sourceTool);
@@ -365,6 +372,9 @@ public class ToolStationBlockEntity extends BaseContainerBlockEntity {
         this.disassemblyState = loadedState >= DISASSEMBLY_NONE && loadedState <= DISASSEMBLY_COMMITTED
                 ? loadedState
                 : DISASSEMBLY_NONE;
+        if (this.mode == Mode.DISASSEMBLE && this.disassemblyState == DISASSEMBLY_NONE) {
+            this.mode = Mode.DEFAULT;
+        }
     }
 
     @Override

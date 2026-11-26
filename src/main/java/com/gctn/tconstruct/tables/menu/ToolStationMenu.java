@@ -196,6 +196,11 @@ public class ToolStationMenu extends AbstractContainerMenu {
         return this.data.get(2) != 0;
     }
 
+    public boolean isReadyForDisassembly() {
+        return com.gctn.tconstruct.Config.DECONSTRUCT_TOOLS.get()
+                && isMode(Mode.DEFAULT) && areInputSlotsEmpty() && areSlotsEmpty(RESULT_SLOT_INDEX);
+    }
+
     public ItemStack displayedTool() {
         ItemStack result = this.toolStation.getItem(RESULT_SLOT_INDEX);
         if (result.getItem() instanceof com.gctn.tconstruct.tools.TinkerTools) {
@@ -207,7 +212,6 @@ public class ToolStationMenu extends AbstractContainerMenu {
     public boolean isModeButtonVisible(Mode mode) {
         if (mode.requiresForge() && !this.isForge()) { return false; }
         return mode == Mode.DEFAULT
-                || mode == Mode.DISASSEMBLE
                 || (ToolStationAssemblyRecipes.get(mode) != null
                 && ToolStationSlotPositions.getActiveInputSlotCount(mode) <= MAX_VISIBLE_SPECIAL_MODE_INPUTS);
     }
@@ -227,7 +231,16 @@ public class ToolStationMenu extends AbstractContainerMenu {
     }
 
     public SlotPosition getInputSlotPosition(int inputSlot) {
-        return ToolStationSlotPositions.getDisplayInputSlotPosition(this.getMode(), inputSlot);
+        Mode mode = this.getMode();
+        if (ToolStationSlotPositions.isInputSlotActive(mode, inputSlot) || this.areSlotsEmpty(inputSlot)) {
+            return ToolStationSlotPositions.getDisplayInputSlotPosition(mode, inputSlot);
+        }
+        // 怀古将切换工具后仍未取出的部件排在槽区右下角。
+        int parked = 0;
+        for (int slot = 0; slot < inputSlot; slot++) {
+            if (!ToolStationSlotPositions.isInputSlotActive(mode, slot) && !this.areSlotsEmpty(slot)) { parked++; }
+        }
+        return new SlotPosition(86 + 20 * parked, 61);
     }
 
     /** Client display slots keep the same container and network indices when they move. */
@@ -275,7 +288,7 @@ public class ToolStationMenu extends AbstractContainerMenu {
     public boolean canPlaceResultSlot(ItemStack stack) {
         return this.blockEntity != null
                 ? this.blockEntity.canPlaceDisassemblySource(stack)
-                : this.isMode(Mode.DISASSEMBLE)
+                : (this.isMode(Mode.DEFAULT) || this.isMode(Mode.DISASSEMBLE))
                 && this.data.get(DATA_DISASSEMBLY_STATE) == 0
                 && this.toolStation.getItem(RESULT_SLOT_INDEX).isEmpty()
                 && this.areInputSlotsEmpty()
