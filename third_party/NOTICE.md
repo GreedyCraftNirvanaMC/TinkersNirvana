@@ -47,6 +47,7 @@ Source areas used for this port:
   `client/module/GuiSmelterySideInventory.java`, `tools/common/client/module/GuiSideInventory.java`
 - `library/client/texture/CastTexture.java` and `smeltery/client/*Renderer.java`
 - Original GUI, block, fluid, material-item, cast, sound, crafting, and language assets
+- The Silky Block of Jewel texture, recipes, and behavior from `shared/block/BlockMetal.java`
 - `shared/block/BlockClearGlass.java`, `BlockClearStainedGlass.java`,
   the `clearGlassSilkTouch` configuration, and original connected stained-glass assets
 
