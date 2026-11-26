@@ -84,9 +84,10 @@ public final class GearPhysics {
         if (count > 0) {
             state.active = true;
             var effect = player.getEffect(SlimeGear.CARRY);
-            if (effect == null || effect.getAmplifier() != count - 1 || effect.getDuration() <= 300) {
+            if (effect == null || effect.getAmplifier() != count - 1 || effect.getDuration() <= 300 || !effect.showIcon()) {
                 if (effect != null && effect.getAmplifier() != count - 1) { player.removeEffect(SlimeGear.CARRY); }
-                player.addEffect(new MobEffectInstance(SlimeGear.CARRY, 600, count - 1, true, false));
+                // 怀古的背负效果不产生粒子，但会在 HUD 和物品栏显示对应乘客数量的图标。
+                player.addEffect(new MobEffectInstance(SlimeGear.CARRY, 600, count - 1, true, false, true));
             }
         } else { state.active = false; player.removeEffect(SlimeGear.CARRY); }
         int[] passengers = player.getPassengers().stream().mapToInt(net.minecraft.world.entity.Entity::getId).toArray();
