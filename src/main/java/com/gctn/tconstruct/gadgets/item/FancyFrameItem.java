@@ -16,7 +16,7 @@ public class FancyFrameItem extends HangingEntityItem {
     public FancyFrameItem(FancyFrames.Kind kind) { super(FancyFrames.ENTITY.get(), new Properties()); this.kind = kind; }
     @Override public InteractionResult useOn(UseOnContext context) {
         var face = context.getClickedFace();
-        if (!face.getAxis().isHorizontal()) { return InteractionResult.FAIL; }
+        // 展示框沿用新版原版物品展示框的地面、天花板和墙面放置。
         var pos = context.getClickedPos().relative(face);
         var player = context.getPlayer();
         var stack = context.getItemInHand();
