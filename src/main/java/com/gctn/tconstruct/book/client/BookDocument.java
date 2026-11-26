@@ -114,7 +114,7 @@ final class BookDocument {
         List<Element> listing = new ArrayList<>(); int row = 0;
         for (String role : BookMaterialLayout.RANGED) {
             if (entries.stream().anyMatch(page -> TinkerMaterials.getMaterial(page.data().get("material").getAsString()).hasStats(role))) {
-                listing.add(new Link(0, 20 + row++ * 9, WIDTH, Component.translatable("stat." + BookMaterialLayout.type(role) + ".name"), "ranged:" + role, ItemStack.EMPTY));
+                listing.add(new Link(0, 20 + row++ * 9, WIDTH, Component.translatable("stat." + com.gctn.tconstruct.client.MaterialStatText.type(role) + ".name"), "ranged:" + role, ItemStack.EMPTY));
             }
         }
         add(new Leaf("section:bowmaterials", "bowmaterials", Component.translatable("book.tconsnirvana.section.bowmaterials"), listing, "section:bowmaterials"));
@@ -125,7 +125,7 @@ final class BookDocument {
                 var page = valid.get(i);
                 icons.add(new BookContents.Page("ranged:" + role + ":" + i / 3, "bowmaterials", i, page.title(), page.text(), page.icons(), null, null, page.data()));
             }
-            materialContents("ranged:" + role, "bowmaterials", Component.translatable("stat." + BookMaterialLayout.type(role) + ".name"), icons, 1);
+            materialContents("ranged:" + role, "bowmaterials", Component.translatable("stat." + com.gctn.tconstruct.client.MaterialStatText.type(role) + ".name"), icons, 1);
             for (int i = 0; i < valid.size(); i += 3) {
                 String id = "ranged:" + role + ":" + i / 3;
                 for (int j = i; j < Math.min(i + 3, valid.size()); j++) { locations.putIfAbsent(valid.get(j).id(), leaves.size()); }

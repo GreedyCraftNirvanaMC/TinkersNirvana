@@ -58,6 +58,10 @@ public final class BookScreen extends Screen {
         if (!saved.isEmpty()) { spread = spreadFor(document.find(saved)); }
     }
     public static void open(InteractionHand hand) { Minecraft.getInstance().setScreen(new BookScreen(hand)); }
+    public static void openMaterialPage(String target) {
+        var client = Minecraft.getInstance();
+        client.setScreen(new BookScreen(null, -1, new BookDocument(client.font, BookContents.pages()), target));
+    }
     private static int spreadFor(int page) { return page == 0 ? 0 : (page + 1) / 2; }
     private int lastSpread() { return document.leaves.size() / 2; }
     private BookDocument.Leaf leaf(int side) {
@@ -275,7 +279,7 @@ public final class BookScreen extends Screen {
         return super.keyPressed(key, scan, modifiers);
     }
     @Override public void removed() {
-        if (!closed) { closed = true; var leaf = leaf(spread == 0 ? 1 : 0); if (minecraft.getConnection() != null) { PacketDistributor.sendToServer(new BookNetwork.SavePage(hand, slot, leaf == null ? "" : leaf.id())); } } super.removed();
+        if (!closed) { closed = true; var leaf = leaf(spread == 0 ? 1 : 0); if (hand != null && minecraft.getConnection() != null) { PacketDistributor.sendToServer(new BookNetwork.SavePage(hand, slot, leaf == null ? "" : leaf.id())); } } super.removed();
     }
     private enum Kind {
         NEXT(412, 0, 18, 10), PREV(412, 10, 18, 10), LEFT(412, 30, 18, 10), INDEX(412, 40, 18, 18), REFRESH(412, 76, 18, 18), COVER(0, 0, 206, 200);

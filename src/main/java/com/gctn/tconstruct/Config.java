@@ -11,6 +11,7 @@ public class Config {
     public static final ModConfigSpec.BooleanValue LIST_ALL_TABLES = BUILDER.define("client.listAllTables", true);
     public static final ModConfigSpec.BooleanValue LIST_ALL_TOOL_MATERIALS = BUILDER.define("client.listAllToolMaterials", true);
     public static final ModConfigSpec.BooleanValue LIST_ALL_PART_MATERIALS = BUILDER.define("client.listAllPartMaterials", true);
+    public static final ModConfigSpec.BooleanValue JEI_GUIDEBOOK_BUTTON = BUILDER.define("client.jeiGuidebookButton", false);
     public static final ModConfigSpec.BooleanValue FANCY_JEI_BEHEADING = BUILDER.define("client.fancyJEIBeheadingAnimation", true);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> JEI_ENTITY_SCALES = BUILDER
             .comment("Entity model scale overrides in JEI, in entity_id;positive_scale format.")

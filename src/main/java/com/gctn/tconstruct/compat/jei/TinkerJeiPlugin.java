@@ -66,6 +66,9 @@ public final class TinkerJeiPlugin implements IModPlugin {
         }
         registration.addRecipeCategories(new EntityMeltingCategory(helpers.getGuiHelper()));
         registration.addRecipeCategories(new BeheadingCategory(helpers.getGuiHelper()));
+        for (var kind : MaterialCategory.Kind.values()) {
+            registration.addRecipeCategories(new MaterialCategory(kind, helpers.getGuiHelper()));
+        }
     }
 
     @Override public void registerRecipes(IRecipeRegistration registration) {
@@ -76,6 +79,7 @@ public final class TinkerJeiPlugin implements IModPlugin {
         for (var kind : RecipeCatalog.Kind.values()) {
             registration.addRecipes(ProcessingCategory.type(kind), catalog.get(kind));
         }
+        MaterialCategory.collect(catalog).forEach((kind, recipes) -> registration.addRecipes(kind.type(), recipes));
         var connection = minecraft.getConnection();
         if (connection != null) {
             var entities = EntityRecipeSync.recipes(connection.getConnection());
@@ -95,6 +99,10 @@ public final class TinkerJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(SmelteryModule.FURNACE.get()),
                 RecipeTypes.SMELTING, ProcessingCategory.type(RecipeCatalog.Kind.FUEL));
         registration.addRecipeCatalyst(new ItemStack(WorkshopModule.BLOCKS.get(WorkshopModule.Kind.CRAFTING).get()), RecipeTypes.CRAFTING);
+        for (var kind : MaterialCategory.Kind.values()) {
+            registration.addRecipeCatalyst(new ItemStack(TableBlocks.TOOL_STATION.get()), kind.type());
+            registration.addRecipeCatalyst(new ItemStack(TableBlocks.TOOL_FORGE.get()), kind.type());
+        }
     }
 
     @Override public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
