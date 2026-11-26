@@ -67,7 +67,7 @@ public final class ToolHarvest {
         try {
             if (action == ToolDefinition.Action.LUMBERAXE && isTree(level, pos)) {
                 InteractionHand hand = DualToolHarvest.active(player) ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
-                var task = new TreeHarvest(player.serverLevel(), tool, hand, expandedWidth || expandedHeight ? 4 : 1);
+                var task = new TreeHarvest(player.serverLevel(), tool, hand, expandedWidth || expandedHeight ? 4 : 1, pos);
                 task.addBranches(pos);
                 if (!task.queue.isEmpty()) {
                     TREES.computeIfAbsent(player, ignored -> new ArrayDeque<>()).addLast(task);
@@ -360,28 +360,23 @@ public final class ToolHarvest {
         if (tasks == null) {
             return;
         }
-        TreeHarvest task = tasks.getFirst();
-        if (task.level != player.level() || !player.isAlive() || player.isSpectator()
-                || player.getItemInHand(task.hand) != task.tool || TinkerTools.isBroken(task.tool) || task.tool.isEmpty()) {
-            tasks.removeFirst();
-        } else {
-            // 每刻处理有限数量的原木。副手伐木也沿用原版破坏事件和已有的副手耐久逻辑。
-            HARVESTING.set(true);
-            try {
-                if (task.hand == InteractionHand.OFF_HAND) {
-                    DualToolHarvest.withOffhandTool(player, () -> {
-                        task.step(player);
-                        return null;
-                    });
-                } else {
-                    task.step(player);
+        // 怀古分别推进已启动的每棵树。每个任务单独结算每刻的砍伐量。
+        var iterator = tasks.iterator();
+        HARVESTING.set(true);
+        try {
+            while (iterator.hasNext()) {
+                TreeHarvest task = iterator.next();
+                if (!task.canContinue(player)) {
+                    iterator.remove();
+                    continue;
                 }
-            } finally {
-                HARVESTING.remove();
+                boolean hasMore = task.hand == InteractionHand.OFF_HAND
+                        ? DualToolHarvest.withOffhandTool(player, () -> task.step(player))
+                        : task.step(player);
+                if (!hasMore) { iterator.remove(); }
             }
-            if (task.queue.isEmpty()) {
-                tasks.removeFirst();
-            }
+        } finally {
+            HARVESTING.remove();
         }
         if (tasks.isEmpty()) {
             TREES.remove(player);
@@ -403,35 +398,50 @@ public final class ToolHarvest {
         private final ItemStack tool;
         private final InteractionHand hand;
         private final int blocksPerTick;
+        private final BlockPos root;
         private final ArrayDeque<BlockPos> queue = new ArrayDeque<>();
         private final Set<BlockPos> visited = new HashSet<>();
+        private boolean started;
 
-        private TreeHarvest(ServerLevel level, ItemStack tool, InteractionHand hand, int blocksPerTick) {
+        private TreeHarvest(ServerLevel level, ItemStack tool, InteractionHand hand, int blocksPerTick, BlockPos root) {
             this.level = level;
             this.tool = tool;
             this.hand = hand;
             this.blocksPerTick = blocksPerTick;
+            this.root = root.immutable();
+        }
+
+        private boolean canContinue(ServerPlayer player) {
+            // 如果中心原木实际未移除，不能从它开始向外砍其他原木。
+            return level == player.level() && player.isAlive() && !player.isSpectator()
+                    && player.getItemInHand(hand) == tool && !tool.isEmpty() && !TinkerTools.isBroken(tool)
+                    && (started || level.hasChunkAt(root) && !isLog(level, root));
         }
 
         private void addBranches(BlockPos origin) {
             visited.add(origin);
-            for (BlockPos candidate : BlockPos.betweenClosed(origin.offset(-1, 0, -1), origin.offset(1, 1, 1))) {
-                if (isLog(level, candidate)) {
-                    BlockPos pos = candidate.immutable();
-                    if (visited.add(pos)) {
-                        queue.addLast(pos);
+            for (int x = -1; x <= 1; x++) {
+                for (int z = -1; z <= 1; z++) {
+                    for (int y = 0; y <= 1; y++) {
+                        BlockPos pos = origin.offset(x, y, z);
+                        if (isLog(level, pos) && visited.add(pos)) { queue.addLast(pos); }
                     }
                 }
             }
         }
 
-        private void step(ServerPlayer player) {
-            for (int i = 0; i < blocksPerTick && !queue.isEmpty() && !TinkerTools.isBroken(tool) && !tool.isEmpty(); i++) {
+        private boolean step(ServerPlayer player) {
+            started = true;
+            int left = blocksPerTick;
+            while (left > 0 && !queue.isEmpty() && !TinkerTools.isBroken(tool) && !tool.isEmpty()) {
                 BlockPos pos = queue.removeFirst();
-                if (isLog(level, pos) && harvest(player, tool, pos, pos, level.getBlockState(pos))) {
+                if (!isLog(level, pos)) { continue; }
+                if (harvest(player, tool, pos, pos, level.getBlockState(pos)) && !isLog(level, pos)) {
                     addBranches(pos);
                 }
+                left--;
             }
+            return !queue.isEmpty() && !tool.isEmpty() && !TinkerTools.isBroken(tool);
         }
     }
 
