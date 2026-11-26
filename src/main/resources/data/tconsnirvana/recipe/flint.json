@@ -7,13 +7,13 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "minecraft:gravel"
+      "tag": "c:gravels"
     },
     {
-      "item": "minecraft:gravel"
+      "tag": "c:gravels"
     },
     {
-      "item": "minecraft:gravel"
+      "tag": "c:gravels"
     }
   ],
   "result": {

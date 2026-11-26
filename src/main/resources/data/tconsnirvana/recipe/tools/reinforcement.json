@@ -10,7 +10,7 @@
       "item": "minecraft:obsidian"
     },
     "C": {
-      "item": "tconsnirvana:cast_blank"
+      "tag": "tconsnirvana:metal_casts"
     }
   },
   "result": {
